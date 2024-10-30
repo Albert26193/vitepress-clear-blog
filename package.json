@@ -9,7 +9,7 @@
     "preview": "vitepress preview"
   },
   "keywords": [],
-  "author": "",
+  "author": "Albert26193",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "markdown-it-mathjax3": "^4.3.2",
+    "medium-zoom": "^1.1.0",
     "unocss": "^0.58.6"
   }
 }

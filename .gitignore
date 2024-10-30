@@ -1,16 +1,24 @@
+# Dependencies
 node_modules
-.DS_Store
+package-lock.json
+pnpm-lock.yaml
+
+# Build outputs
 dist
 dist-ssr
-*.local
+**/dist.tar.gz
+
+# IDE and OS files
+.DS_Store
 .idea
-pnpm-lock.yaml
-smartmontools.md
-zsh_history.md
-/*.md
-/package-lock.json
-origin_theme.css
+*.local
 .vitepress/cache
 
-**/dist.tar.gz
+# Documentation files
+/*.md
+smartmontools.md
+zsh_history.md
 **/pages/page*.md
+
+# Theme files
+origin_theme.css

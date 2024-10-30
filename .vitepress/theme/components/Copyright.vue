@@ -9,6 +9,7 @@
         <a class="vitepress" target="_blank" href="//github.com/airene/vitepress-blog-pure">Vitepress-blog</a>
     </div>
 </template>
+
 <script lang="ts" setup>
 import { useData } from 'vitepress'
 
