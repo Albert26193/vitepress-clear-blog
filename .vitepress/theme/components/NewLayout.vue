@@ -20,10 +20,10 @@
 </template>
 
 <script setup>
-import { withBase } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
-import timePng from '../assets/icon/time.png'
-import Copyright from './Copyright.vue'
+  import { withBase } from 'vitepress'
+  import DefaultTheme from 'vitepress/theme'
+  import timePng from '../assets/icon/time.png'
+  import Copyright from './Copyright.vue'
 
-const { Layout } = DefaultTheme
+  const { Layout } = DefaultTheme
 </script>

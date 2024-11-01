@@ -23,15 +23,15 @@ export default defineConfig({
   markdown: {
     config: (md) => {
       md.use(mathjax3)
-    },
+    }
   },
   head,
   vue: {
     template: {
       compilerOptions: {
-        isCustomElement: (tag) => customElements.includes(tag),
-      },
-    },
+        isCustomElement: (tag) => customElements.includes(tag)
+      }
+    }
   },
   title: 'VitePress Pure',
   base: '/',
@@ -44,17 +44,17 @@ export default defineConfig({
     posts: postArcticles,
     website: 'https://github.com/airene/vitepress-blog-pure',
     search: {
-      provider: 'local',
+      provider: 'local'
     },
     nav,
     outline: [2, 3],
     outlineTitle: 'Table of Contents',
-    socialLinks: [{ icon: 'github', link: 'https://github.com/airene/vitepress-blog-pure' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/airene/vitepress-blog-pure' }]
   } as BlogConfig,
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {
     //build: { minify: false }
     server: { port: 5000 },
-    plugins: [UnoCSS()],
-  },
+    plugins: [UnoCSS()]
+  }
 })

@@ -1,9 +1,5 @@
 <template>
-  <div
-    v-for="curYearPostList in dataByYear"
-    :key="getYear(curYearPostList)"
-    class="my-4"
-  >
+  <div v-for="curYearPostList in dataByYear" :key="getYear(curYearPostList)" class="my-4">
     <div @click="toggleYear(getYear(curYearPostList))">
       <span class="font-800 accent-black text-xl"> {{ getYear(curYearPostList) }} </span>
       <span class="ml-2 font-600 text-base text-blue-700 .dark:text-blue-200">
@@ -41,50 +37,73 @@
 </template>
 
 <script lang="ts" setup>
-import { useData, withBase } from 'vitepress'
-import { computed, reactive, onMounted } from 'vue'
-import { useYearSort, useMonthYearSort } from '../utils'
-const { theme } = useData()
+  import { useData, withBase } from 'vitepress'
+  import { computed, reactive, onMounted } from 'vue'
+  import { useYearSort, useMonthYearSort } from '../utils'
+  const { theme } = useData()
 
-// Helper functions to extract year, month, and day
-const getYear = (yearList: { frontMatter: { date: string } }[]) =>
-  yearList[0].frontMatter.date.split('-')[0]
-const getMonth = (monthList: { frontMatter: { date: string } }[]) =>
-  monthList[0].frontMatter.date.split('-')[1]
-const getYearMonth = (monthList: { frontMatter: { date: string } }[]) =>
-  monthList[0].frontMatter.date.split('-').slice(0, 2).join('-')
-const getDay = (article: { frontMatter: { date: string } }) =>
-  article.frontMatter.date.slice(5)
+  interface DisplayStatus {
+    years: { [year: string]: boolean }
+    months: { [yearMonth: string]: boolean }
+  }
 
-const dataByYear = computed(() => useYearSort(theme.value.posts))
-const dataByYearMonth = computed(() => useMonthYearSort(theme.value.posts))
+  interface PostList {
+    title: string
+    date: string
+    // ... 其他属性
+  }
 
-// New display status management
-const displayStatus = reactive({
-  years: {},
-  months: {}
-})
+  interface DataByYear {
+    [year: string]: PostList[]
+  }
 
-// Initialize display status for each year and month
-onMounted(() => {
-  for (const year of Object.keys(dataByYear.value)) {
-    const currentYear = getYear(dataByYear.value[year])
-    displayStatus.years[currentYear] = true // Default: year is expanded
-    const months = dataByYearMonth.value[currentYear]
-    for (const month in months) {
-      displayStatus.months[`${currentYear}-${month}`] = true // Default: month is expanded
+  interface DataByYearMonth {
+    [year: string]: {
+      [month: string]: PostList[]
     }
   }
-})
 
-// Toggle year expansion
-const toggleYear = (year: string | number) => {
-  displayStatus.years[year] = !displayStatus.years[year]
-}
+  // Helper functions to extract year, month, and day
+  const getYear = (yearList: { frontMatter: { date: string } }[]) =>
+    yearList[0].frontMatter.date.split('-')[0]
+  const getMonth = (monthList: { frontMatter: { date: string } }[]) =>
+    monthList[0].frontMatter.date.split('-')[1]
+  const getYearMonth = (monthList: { frontMatter: { date: string } }[]) =>
+    monthList[0].frontMatter.date.split('-').slice(0, 2).join('-')
+  const getDay = (article: { frontMatter: { date: string } }) => article.frontMatter.date.slice(5)
 
-// Toggle month expansion
-const toggleMonth = (year: string, month: string) => {
-  const key = `${year}-${month}`
-  displayStatus.months[key] = !displayStatus.months[key]
-}
+  const dataByYear = computed(() => useYearSort(theme.value.posts))
+  const dataByYearMonth = computed(() => useMonthYearSort(theme.value.posts))
+
+  // New display status management
+  const displayStatus: DisplayStatus = reactive({
+    years: {},
+    months: {}
+  })
+
+  // Initialize display status for each year and month
+  onMounted(() => {
+    Object.entries(dataByYear.value).forEach(([year, posts]) => {
+      const currentYear = getYear(posts)
+      displayStatus.years[currentYear] = true
+
+      const months = dataByYearMonth.value[currentYear]
+      if (months) {
+        Object.keys(months).forEach((month) => {
+          displayStatus.months[`${currentYear}-${month}`] = true
+        })
+      }
+    })
+  })
+
+  // Toggle year expansion
+  const toggleYear = (year: string | number) => {
+    displayStatus.years[year] = !displayStatus.years[year]
+  }
+
+  // Toggle month expansion
+  const toggleMonth = (year: string, month: string) => {
+    const key = `${year}-${month}`
+    displayStatus.months[key] = !displayStatus.months[key]
+  }
 </script>

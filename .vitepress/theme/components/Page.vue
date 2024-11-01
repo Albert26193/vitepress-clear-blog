@@ -39,117 +39,117 @@
 </template>
 
 <script lang="ts" setup>
-import { withBase } from 'vitepress'
-import { type PropType } from 'vue'
-import timePng from '../assets/icon/time.png'
+  import { withBase } from 'vitepress'
+  import { type PropType } from 'vue'
+  import timePng from '../assets/icon/time.png'
 
-type Article = {
-  regularPath: string
-  frontMatter: {
-    title: string
-    description: string
-    date: string
-    tags: string[]
+  type Article = {
+    regularPath: string
+    frontMatter: {
+      title: string
+      description: string
+      date: string
+      tags: string[]
+    }
   }
-}
 
-const props = defineProps({
-  posts: {
-    type: Array as PropType<Article[]>,
-    required: true
-  },
-  pageCurrent: {
-    type: Number as PropType<number>,
-    required: true
-  },
-  pagesNum: {
-    type: Number as PropType<number>,
-    required: true
-  }
-})
+  const props = defineProps({
+    posts: {
+      type: Array as PropType<Article[]>,
+      required: true
+    },
+    pageCurrent: {
+      type: Number as PropType<number>,
+      required: true
+    },
+    pagesNum: {
+      type: Number as PropType<number>,
+      required: true
+    }
+  })
 </script>
 
 <style scoped>
-.post-list {
-  border-bottom: 1px solid rgba(78, 145, 200, 0.586);
-  padding: 24px 0 14px 0;
-}
-
-.post-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.post-title {
-  font-size: 1.125rem;
-  font-weight: 500;
-  margin: 0.1rem 0;
-}
-
-.describe {
-  font-size: 0.9375rem;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  /* -webkit-line-clamp: 3; */
-  overflow: hidden;
-  color: var(--vp-c-text-2);
-  margin: 10px 0;
-  line-height: 1.5rem;
-}
-
-.pagination {
-  margin-top: 24px;
-  display: flex;
-  justify-content: center;
-}
-
-.link {
-  display: inline-block;
-  width: 24px;
-  text-align: center;
-  border: 1px var(--vp-c-divider-light) solid;
-  border-right: none;
-  font-weight: 400;
-  border-radius: 25%;
-}
-
-.link.active {
-  background: var(--vp-c-text-1);
-  color: var(--vp-c-neutral-inverse);
-  background-color: var(--vp-c-brand);
-}
-
-.dark .link.active {
-  color: var(--vp-c-neutral-inverse);
-  font-weight: bolder;
-}
-
-@media screen and (max-width: 768px) {
   .post-list {
-    padding: 14px 0 14px 0;
+    border-bottom: 1px solid rgba(78, 145, 200, 0.586);
+    padding: 24px 0 14px 0;
   }
+
   .post-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
+
   .post-title {
-    font-size: 1.0625rem;
-    font-weight: 400;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    /* -webkit-line-clamp: 2; */
-    overflow: hidden;
-    width: 17rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0.1rem 0;
   }
+
   .describe {
     font-size: 0.9375rem;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     /* -webkit-line-clamp: 3; */
     overflow: hidden;
-    margin: 0.5rem 0 1rem;
+    color: var(--vp-c-text-2);
+    margin: 10px 0;
+    line-height: 1.5rem;
   }
-}
+
+  .pagination {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .link {
+    display: inline-block;
+    width: 24px;
+    text-align: center;
+    border: 1px var(--vp-c-divider-light) solid;
+    border-right: none;
+    font-weight: 400;
+    border-radius: 25%;
+  }
+
+  .link.active {
+    background: var(--vp-c-text-1);
+    color: var(--vp-c-neutral-inverse);
+    background-color: var(--vp-c-brand);
+  }
+
+  .dark .link.active {
+    color: var(--vp-c-neutral-inverse);
+    font-weight: bolder;
+  }
+
+  @media screen and (max-width: 768px) {
+    .post-list {
+      padding: 14px 0 14px 0;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .post-title {
+      font-size: 1.0625rem;
+      font-weight: 400;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      /* -webkit-line-clamp: 2; */
+      overflow: hidden;
+      width: 17rem;
+    }
+    .describe {
+      font-size: 0.9375rem;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      /* -webkit-line-clamp: 3; */
+      overflow: hidden;
+      margin: 0.5rem 0 1rem;
+    }
+  }
 </style>

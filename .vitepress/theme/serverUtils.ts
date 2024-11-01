@@ -27,9 +27,9 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
 
       return {
         frontMatter: data,
-        regularPath: `/${path.replace('.md', '.html')}`,
+        regularPath: `/${path.replace('.md', '.html')}`
       }
-    }),
+    })
   )
   posts.sort(_compareDate)
 
@@ -47,7 +47,8 @@ const generatePaginationPages = async (total: number, pageSize: number): Promise
 
   if (total <= 0) return
 
-  const generatePage = (pageNum: number) => `
+  const generatePage = (pageNum: number) =>
+    `
 ---
 page: true
 title: ${pageNum === 1 ? 'home' : 'page_' + pageNum}

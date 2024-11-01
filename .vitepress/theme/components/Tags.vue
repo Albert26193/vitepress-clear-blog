@@ -30,100 +30,100 @@
 </template>
 
 <script lang="ts" setup>
-import { useData, withBase } from 'vitepress'
-import { computed, ref } from 'vue'
-import tagPng from '../assets/icon/tag.png'
-import { initTags } from '../utils'
+  import { useData, withBase } from 'vitepress'
+  import { computed, ref } from 'vue'
+  import tagPng from '../assets/icon/tag.png'
+  import { initTags } from '../utils'
 
-let url
+  let url
 
-// for ssr
-if (typeof window !== 'undefined') {
-  url = window.location.href.split('?')[1]
-}
+  // for ssr
+  if (typeof window !== 'undefined') {
+    url = window.location.href.split('?')[1]
+  }
 
-const params = new URLSearchParams(url)
-const { theme } = useData()
-const data = computed(() => initTags(theme.value.posts))
+  const params = new URLSearchParams(url)
+  const { theme } = useData()
+  const data = computed(() => initTags(theme.value.posts))
 
-const selectTag = ref(params.get('tag') ? params.get('tag') : '')
-const toggleTag = (tag: string) => {
-  selectTag.value = tag
-}
+  const selectTag = ref(params.get('tag') ? params.get('tag') : '')
+  const toggleTag = (tag: string) => {
+    selectTag.value = tag
+  }
 </script>
 
 <style scoped>
-.tags {
-  margin-top: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  font-weight: 600;
-}
+  .tags {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    font-weight: 600;
+  }
 
-.tags .count {
-  margin-left: 2px;
-  font-weight: 600;
-  font-size: 1rem;
-  margin-left: 8px;
-  color: var(--vp-c-brand);
-}
+  .tags .count {
+    margin-left: 2px;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-left: 8px;
+    color: var(--vp-c-brand);
+  }
 
-.tags .count:hover {
-  color: var(--tag-hover-color);
-}
+  .tags .count:hover {
+    color: var(--tag-hover-color);
+  }
 
-.tag {
-  display: inline-block;
-  padding: 1px 12px;
-  margin: 4px 4px 6px 4px;
-  font-size: 0.875rem;
-  line-height: 25px;
-  border: 1px solid var(--tag-border-color);
-  transition: 0.4s;
-  color: var(--vp-c-text-1);
-  cursor: pointer;
-}
+  .tag {
+    display: inline-block;
+    padding: 1px 12px;
+    margin: 4px 4px 6px 4px;
+    font-size: 0.875rem;
+    line-height: 25px;
+    border: 1px solid var(--tag-border-color);
+    transition: 0.4s;
+    color: var(--vp-c-text-1);
+    cursor: pointer;
+  }
 
-.tags .tag.active {
-  border: 1px solid var(--vp-c-brand);
-  color: var(--vp-c-brand);
-  box-sizing: border-box;
-  font-weight: 900;
-}
+  .tags .tag.active {
+    border: 1px solid var(--vp-c-brand);
+    color: var(--vp-c-brand);
+    box-sizing: border-box;
+    font-weight: 900;
+  }
 
-.tags .tag.active .count {
-  color: var(--vp-c-brand);
-  transition: 0.4s;
-}
+  .tags .tag.active .count {
+    color: var(--vp-c-brand);
+    transition: 0.4s;
+  }
 
-.tag:hover {
-  border: 1px solid var(--tag-info-color);
-  font-weight: 600;
-}
+  .tag:hover {
+    border: 1px solid var(--tag-info-color);
+    font-weight: 600;
+  }
 
-.tag:hover .count {
-  color: var(--tag-hover-color);
-  transition: 0.4s;
-}
+  .tag:hover .count {
+    color: var(--tag-hover-color);
+    transition: 0.4s;
+  }
 
-.tag-header {
-  font-size: 1.5rem;
-  font-weight: 500;
-  text-align: left;
-  color: var(--vp-c-brand);
-}
-
-.tag-img {
-  margin-right: 8px;
-  vertical-align: -45%;
-}
-
-@media screen and (max-width: 768px) {
   .tag-header {
     font-size: 1.5rem;
+    font-weight: 500;
+    text-align: left;
+    color: var(--vp-c-brand);
   }
-  .date {
-    font-size: 0.75rem;
+
+  .tag-img {
+    margin-right: 8px;
+    vertical-align: -45%;
   }
-}
+
+  @media screen and (max-width: 768px) {
+    .tag-header {
+      font-size: 1.5rem;
+    }
+    .date {
+      font-size: 0.75rem;
+    }
+  }
 </style>

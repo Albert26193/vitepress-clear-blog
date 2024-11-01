@@ -1,20 +1,22 @@
-module.exports = {
-  printWidth: 100, // 最大行长规则通常设置为 100 或 120。
-  tabWidth: 2, // 指定每个标签缩进级别的空格数。
-  useTabs: false, // 使用制表符而不是空格缩进行。
-  semi: false, // true（默认）: 在每条语句的末尾添加一个分号。false：仅在可能导致 ASI 失败的行的开头添加分号。
-  vueIndentScriptAndStyle: true, // Vue 文件脚本和样式标签缩进
-  singleQuote: true, // 使用单引号而不是双引号
-  quoteProps: 'as-needed', // 引用对象中的属性时，仅在需要时在对象属性周围添加引号。
-  bracketSpacing: true, // 在对象文字中的括号之间打印空格。
-  trailingComma: 'none', // "none":没有尾随逗号。"es5": 在 ES5 中有效的尾随逗号（对象、数组等），TypeScript 中的类型参数中没有尾随逗号。"all"- 尽可能使用尾随逗号。
-  bracketSameLine: false, // 将>多行 HTML（HTML、JSX、Vue、Angular）元素放在最后一行的末尾，而不是单独放在下一行（不适用于自闭合元素）。
-  jsxSingleQuote: false, // 在 JSX 中使用单引号而不是双引号。
-  arrowParens: 'always', // 在唯一的箭头函数参数周围始终包含括号。
-  insertPragma: false, // 插入编译指示
-  requirePragma: false, // 需要编译指示
-  proseWrap: 'never', // 如果散文超过打印宽度，则换行
-  htmlWhitespaceSensitivity: 'strict', // 所有标签周围的空格（或缺少空格）被认为是重要的。
-  endOfLine: 'lf', // 确保在文本文件中仅使用 ( \n)换行，常见于 Linux 和 macOS 以及 git repos 内部。
-  rangeStart: 0, // 格式化文件时，回到包含所选语句的第一行的开头。
+const configPrettier = {
+  printWidth: 100,
+  tabWidth: 2, // Specify the number of spaces per indentation-level.
+  useTabs: false, // Indent lines with tabs instead of spaces.
+  semi: false, // true (default): Add a semicolon at the end of every statement. false: Only add semicolons at the beginning of lines that may introduce ASI failures.
+  vueIndentScriptAndStyle: true, // Indent script and style tags in Vue files
+  singleQuote: true, // Use single quotes instead of double quotes
+  quoteProps: 'as-needed', // Only add quotes around object properties where required.
+  bracketSpacing: true, // Print spaces between brackets in object literals.
+  trailingComma: 'none', // "none": No trailing commas. "es5": Trailing commas where valid in ES5 (objects, arrays, etc.). "all": Trailing commas wherever possible (including function arguments).
+  bracketSameLine: false, // Put the > of a multi-line HTML element at the end of the last line instead of being alone on the next line (does not apply to self closing elements).
+  jsxSingleQuote: false, // Use single quotes instead of double quotes in JSX.
+  arrowParens: 'always', // Always include parens around a sole arrow function parameter.
+  insertPragma: false, // Insert @format pragma into file's first docblock comment.
+  requirePragma: false, // Require @prettier pragma to be present in the file's first docblock comment for the file to be formatted.
+  proseWrap: 'never', // Wrap prose if it exceeds the print width.
+  htmlWhitespaceSensitivity: 'strict', // All whitespace in and around all tags is considered significant.
+  endOfLine: 'lf', // Ensure to use only (\n) line endings in text files, common on Linux and macOS as well as inside git repos.
+  rangeStart: 0 // Format only a segment of a file, starting at the beginning of the file.
 }
+
+export default configPrettier
