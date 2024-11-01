@@ -92,5 +92,6 @@ export default {
 
 ## 玩转侧边栏 以后再写吧
 
-$\frac{1}{x}$
+<Comment />
+
 

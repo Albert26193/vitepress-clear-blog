@@ -1,22 +1,63 @@
-export default {
-    env: {
-        browser: true,
-        es2021: true,
-        node: true
+import globals from 'globals'
+import pluginJs from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import pluginVue from 'eslint-plugin-vue'
+
+export default [
+  // Specify file matching patterns and language options
+  { files: ['**/*.{js,mjs,cjs,ts,vue}'] }, //["**/*.vue"]
+
+  // Specify global variables and environment
+  {
+    languageOptions: {
+      globals: globals.browser,
+      ecmaVersion: 12, // Use latest ECMAScript syntax
+      sourceType: 'module', // Code is ECMAScript module
+      parserOptions: { parser: tseslint.parser }, // Use TypeScript parser
     },
-    extends: ['eslint:recommended', 'plugin:vue/vue3-recommended', 'plugin:prettier/recommended'],
-    parser: 'vue-eslint-parser',
-    parserOptions: {
-        parser: '@typescript-eslint/parser',
-        ecmaVersion: 2021,
-        sourceType: 'module',
-        ecmaFeatures: {
-            // tsx: true,
-            jsx: true
-        }
-    },
-    plugins: ['vue', '@typescript-eslint'],
+  },
+
+  // Used extension configurations and parser options
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
+  ...pluginVue.configs['flat/essential'],
+
+  // Custom rules
+  {
     rules: {
-        'array-bracket-newline': ['error', 'consistent']
-    }
-}
+      'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off', // Warn about console usage in production, off in development
+      'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off', // Warn about debugger usage in production, off in development
+      indent: ['warn', 2], // Use 2 spaces for indentation instead of 4
+      'linebreak-style': ['warn', 'unix'], // Use Unix-style line endings
+      quotes: ['warn', 'single'], // Use single quotes
+      semi: ['warn', 'never'], // No semicolons at the end of statements
+      'no-unused-vars': 'off', // Turn off unused variables warning
+      '@typescript-eslint/no-unused-vars': 'off', // Turn off unused variables warning for TypeScript
+      'vue/multi-word-component-names': 'off', // Vue component names should be multi-word for better readability and maintainability
+    },
+  },
+  // Ignored files
+  {
+    ignores: [
+      '**/dist',
+      './src/main.ts',
+      '.vscode',
+      '.idea',
+      '*.sh',
+      '**/node_modules',
+      '*.md',
+      '*.woff',
+      '*.woff',
+      '*.ttf',
+      'yarn.lock',
+      'package-lock.json',
+      '/public',
+      '/docs',
+      '**/output',
+      '.husky',
+      '.local',
+      '/bin',
+      'Dockerfile',
+    ],
+  },
+]
