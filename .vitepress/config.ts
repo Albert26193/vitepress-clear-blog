@@ -33,7 +33,7 @@ export default defineConfig({
       }
     }
   },
-  title: 'VitePress Pure',
+  title: 'VitePress Clear',
   base: '/',
   srcDir: './docs',
   cacheDir: './node_modules/vitepress_cache',
