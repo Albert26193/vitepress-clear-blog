@@ -35,11 +35,12 @@ export default defineConfig({
   },
   title: 'VitePress Pure',
   base: '/',
-  srcDir: './src',
+  srcDir: './docs',
   cacheDir: './node_modules/vitepress_cache',
   rewrites: {},
   description: 'vitepress,blog,blog-theme',
   ignoreDeadLinks: true,
+  // TODO: fix type error
   themeConfig: {
     posts: postArcticles,
     website: 'https://github.com/airene/vitepress-blog-pure',

@@ -1,24 +1,24 @@
 <template>
   <div class="tags">
     <span
-      v-for="(_, key, index) in data"
+      @click="toggleTag(String(key))"
+      v-for="(_, key, index) in sortTags(tagsList)"
       :key="`tag-${index}`"
       class="tag hover:.dark:bg-blue-500 hover:bg-blue-200 rounded-full"
       :class="{ active: selectTag == String(key) }"
-      @click="toggleTag(String(key))"
     >
       {{ key }}
-      <span class="count">{{ data[key].length }}</span>
+      <span class="count">{{ tagsList[key].length }}</span>
     </span>
   </div>
-  <div v-if="selectTag?.length" class="tag-header mt-6 mb-2">
+  <div class="tag-header mt-6 mb-2" v-if="selectTag && selectTag.length">
     <img :src="tagPng" class="w-8 h-8 inline tag-img" />
     <span class="h-80">{{ selectTag }}</span>
   </div>
   <a
-    v-for="(article, index) in selectTag ? data[selectTag] : []"
-    :key="index"
     :href="withBase(article.regularPath)"
+    v-for="(article, index) in tagsList[selectTag || '']"
+    :key="index"
     class="posts"
   >
     <div class="post-container .dark:text-slate-200 font-bold mt-1 text-slate-900">
@@ -30,21 +30,32 @@
 </template>
 
 <script lang="ts" setup>
-  import { useData, withBase } from 'vitepress'
   import { computed, ref } from 'vue'
-  import tagPng from '../assets/icon/tag.png'
+  import { useData, withBase } from 'vitepress'
   import { initTags } from '../utils'
+  import tagPng from '../assets/icon/tag.png'
+  import { Post } from '../types'
 
   let url
-
-  // for ssr
-  if (typeof window !== 'undefined') {
+  if (typeof window != 'undefined') {
     url = window.location.href.split('?')[1]
   }
-
   const params = new URLSearchParams(url)
   const { theme } = useData()
-  const data = computed(() => initTags(theme.value.posts))
+
+  const tagsList = computed(() => initTags(theme.value.posts))
+
+  // sort tag according to dict order
+  const sortTags = (tags: Record<string, Post[]>) => {
+    const sortedTags = Object.keys(tags).sort((a, b) => {
+      return a.localeCompare(b)
+    })
+    const sortedTagsList: Record<string, Post[]> = {}
+    sortedTags.forEach((tag) => {
+      sortedTagsList[tag] = tags[tag]
+    })
+    return sortedTagsList
+  }
 
   const selectTag = ref(params.get('tag') ? params.get('tag') : '')
   const toggleTag = (tag: string) => {
@@ -88,7 +99,7 @@
     border: 1px solid var(--vp-c-brand);
     color: var(--vp-c-brand);
     box-sizing: border-box;
-    font-weight: 900;
+    font-weight: 600;
   }
 
   .tags .tag.active .count {

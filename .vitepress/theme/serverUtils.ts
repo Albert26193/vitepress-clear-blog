@@ -10,7 +10,7 @@ import { Post, PostFrontMatter } from './types'
  * @returns List of posts
  */
 const getPosts = async (pageSize: number): Promise<Post[]> => {
-  const paths = await globby(['src/posts/**/**.md'])
+  const paths = await globby(['docs/posts/**/**.md'])
   await generatePaginationPages(paths.length, pageSize)
 
   const posts = await Promise.all(
@@ -23,7 +23,7 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
       const data = parsed.data as PostFrontMatter
 
       data.date = _convertDate(data.date)
-      const path = item.split('src/').pop() as string
+      const path = item.split('docs/').pop() as string
 
       return {
         frontMatter: data,
@@ -43,7 +43,7 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
  */
 const generatePaginationPages = async (total: number, pageSize: number): Promise<void> => {
   const pagesNum = total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
-  const basePath = resolve('./src/pages')
+  const basePath = resolve('./docs/pages')
 
   if (total <= 0) return
 
