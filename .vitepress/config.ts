@@ -1,23 +1,34 @@
 import mathjax3 from 'markdown-it-mathjax3'
 import UnoCSS from 'unocss/vite'
-
+import fse from 'fs-extra'
+import path from 'path'
+import { parse } from 'smol-toml'
 import { defineConfig } from 'vitepress'
 import { customElements } from './theme/config/constant'
 import { head } from './theme/config/head'
 import { nav } from './theme/config/nav'
 import { getPosts } from './theme/serverUtils'
 import { BlogConfig } from './theme/types'
+import svgLoader from 'vite-svg-loader'
+import { generateSidebar } from 'vitepress-sidebar'
 
-//每页的文章数量
+// const vitepressSidebarOptions = {
+//   /* Options... */
+//   documentRootPath: 'docs',
+//   scanStartPath: 'collections',
+//   resolvePath: 'docs/collections'
+// }
+
 const pageSize = 10
-
-declare module 'vitepress' {
-  interface ThemeConfig {
-    themeConfig: BlogConfig | ThemeConfig
-  }
-}
-
 const postArcticles = await getPosts(pageSize)
+
+const parsedConfigToml = parse(
+  await fse.readFile(
+    path.resolve(path.resolve(__dirname, '..'), '.vitepress/theme/config/config.toml'),
+    'utf-8'
+  )
+)
+console.log(parsedConfigToml)
 
 export default defineConfig({
   markdown: {
@@ -33,17 +44,17 @@ export default defineConfig({
       }
     }
   },
-  title: 'VitePress Clear',
+  title: parsedConfigToml.title as string,
   base: '/',
   srcDir: './docs',
   cacheDir: './node_modules/vitepress_cache',
   rewrites: {},
   description: 'vitepress,blog,blog-theme',
   ignoreDeadLinks: true,
-  // TODO: fix type error
   themeConfig: {
+    // sidebar: generateSidebar(vitepressSidebarOptions),
     posts: postArcticles,
-    website: 'https://github.com/airene/vitepress-blog-pure',
+    website: '',
     search: {
       provider: 'local'
     },
@@ -56,6 +67,6 @@ export default defineConfig({
   vite: {
     //build: { minify: false }
     server: { port: 5000 },
-    plugins: [UnoCSS()]
+    plugins: [UnoCSS(), svgLoader()]
   }
 })

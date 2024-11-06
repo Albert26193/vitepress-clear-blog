@@ -7,23 +7,22 @@ aside: false
 
 ## About this site
 
--   本站点基于 `vitepress-blog-pure` 搭建，用以记录一些学习笔记和技术分享。
--   欢迎 `star` 和 `fork` 本项目，也欢迎提出 `issue` 和 `pr`。
--   本站点的源码托管在 [vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure)
+- 本站点基于 `vitepress-blog-pure` 搭建，用以记录一些学习笔记和技术分享。
+- 欢迎 `star` 和 `fork` 本项目，也欢迎提出 `issue` 和 `pr`。
+- 本站点的源码托管在 [vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure)
 
 ## About me
 
 ---
 
--   👋 Hi, I'm [ your name ]
--   🚀️ I'm currently working as [ your position ]
--   📮️ How to reach me: [your Github](https://github.com)
--   📖 My motto: [ your motto ]
+- 👋 Hi, I'm [ your name ]
+- 🚀️ I'm currently working as [ your position ]
+- 📮️ How to reach me: [your Github](https://github.com)
+- 📖 My motto: [ your motto ]
 
 ---
 
-> [!tip]
-> 在以下内容当中，挑选您熟悉的 `icon` 进行展示
+> [!tip] 在以下内容当中，挑选您熟悉的 `icon` 进行展示
 
 ### 后端
 

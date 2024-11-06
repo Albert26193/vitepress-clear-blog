@@ -10,7 +10,7 @@ import { Post, PostFrontMatter } from './types'
  * @returns List of posts
  */
 const getPosts = async (pageSize: number): Promise<Post[]> => {
-  const paths = await globby(['docs/posts/**/**.md'])
+  const paths = await globby(['docs/blogs/**/*.md', 'docs/collections/**/**.md'])
   await generatePaginationPages(paths.length, pageSize)
 
   const posts = await Promise.all(

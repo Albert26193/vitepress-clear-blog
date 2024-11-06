@@ -29,7 +29,4 @@ export interface Post {
 export interface BlogConfig extends DefaultTheme.Config {
   posts: Post[]
   website: string
-  search: {
-    provider: 'local' | 'algolia'
-  }
 }
