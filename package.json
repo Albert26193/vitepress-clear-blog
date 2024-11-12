@@ -9,19 +9,28 @@
     "preview": "vitepress preview",
     "prepare": "husky",
     "lint": "eslint './.vitepress/**/*.{ts,tsx,js,jsx,vue}'",
-    "lint:fix": "eslint --fix './.vitepress/**/*.{ts,tsx,js,jsx,vue}'"
+    "lint:fix": "eslint --fix './.vitepress/**/*.{ts,tsx,js,jsx,vue}'",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,tsx,ts}": [
+      "eslint --fix"
+    ]
   },
   "keywords": [],
   "author": "Albert26193",
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
     "@formkit/auto-animate": "^0.8.2",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.11.25",
     "@vue/compiler-sfc": "^3.4.21",
     "commitlint": "^19.5.0",
+    "conventional-changelog-cli": "^5.0.0",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",

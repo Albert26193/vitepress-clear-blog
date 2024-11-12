@@ -1,8 +1,9 @@
-import globals from 'globals'
 import pluginJs from '@eslint/js'
+import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import pluginVue from 'eslint-plugin-vue'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import commitlintConfig from '@commitlint/config-conventional'
 
 export default [
   // Specify file matching patterns and language options
@@ -14,8 +15,8 @@ export default [
       globals: globals.browser,
       ecmaVersion: 12, // Use latest ECMAScript syntax
       sourceType: 'module', // Code is ECMAScript module
-      parserOptions: { parser: tseslint.parser }, // Use TypeScript parser
-    },
+      parserOptions: { parser: tseslint.parser } // Use TypeScript parser
+    }
   },
 
   // Used extension configurations and parser options
@@ -61,4 +62,12 @@ export default [
       'Dockerfile',
     ],
   },
+  // Commitlint configuration
+  {
+    extends: commitlintConfig.extends,
+    rules: {
+      ...commitlintConfig.rules,
+      'body-max-line-length': [1, 'always', 200]
+    }
+  }
 ]
