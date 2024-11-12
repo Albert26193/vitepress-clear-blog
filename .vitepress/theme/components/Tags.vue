@@ -30,11 +30,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref } from 'vue'
   import { useData, withBase } from 'vitepress'
-  import { initTags } from '../utils'
+  import { computed, ref } from 'vue'
+
   import tagPng from '../assets/icon/tag.png'
   import { Post } from '../types'
+  import { initTags } from '../utils'
 
   let url
   if (typeof window != 'undefined') {

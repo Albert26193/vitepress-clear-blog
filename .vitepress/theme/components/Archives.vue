@@ -38,8 +38,10 @@
 
 <script lang="ts" setup>
   import { useData, withBase } from 'vitepress'
-  import { computed, reactive, onMounted } from 'vue'
-  import { useYearSort, useMonthYearSort } from '../utils'
+  import { computed, onMounted, reactive } from 'vue'
+
+  import { useMonthYearSort, useYearSort } from '../utils'
+
   const { theme } = useData()
 
   interface DisplayStatus {

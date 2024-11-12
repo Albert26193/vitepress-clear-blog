@@ -26,15 +26,21 @@
 <script setup lang="ts">
   import { useData, withBase } from 'vitepress'
   import DefaultTheme from 'vitepress/theme'
-  import { nextTick, provide, ref, onMounted } from 'vue'
+  import { nextTick, onMounted, provide, ref } from 'vue'
 
   import TimeLogo from '../assets/icon/time.svg?component'
   import Copyright from './Copyright.vue'
-  import { json } from 'stream/consumers'
+
   const { Layout } = DefaultTheme
+  const brandColor = ref('')
+
+  onMounted(() => {
+    brandColor.value = '#f563eb'
+    // document.documentElement.style.setProperty('--vp-c-brand', brandColor.value)
+  })
 
   const { isDark, frontmatter, page } = useData()
-  const content = ref(null)
+  // const content = ref(null)
 
   onMounted(() => {
     const contentContainer = document.querySelector('.content-container')?.querySelector('.main')
@@ -90,3 +96,10 @@
   // 2. frontmatter --> date/date-time/date created/created by/created at ... --> in config.toml
   // 3. if can not get date from frontmatter, use file last modified date
 </script>
+
+<style>
+  :root {
+    --vp-c-brand: v-bind(brandColor) !important;
+    /* --vp-c-bg: #09f9f9 !important; */
+  }
+</style>

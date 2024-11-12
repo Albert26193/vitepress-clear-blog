@@ -16,6 +16,8 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@formkit/auto-animate": "^0.8.2",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.11.25",
     "@vue/compiler-sfc": "^3.4.21",

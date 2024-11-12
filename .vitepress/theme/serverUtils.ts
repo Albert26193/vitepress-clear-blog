@@ -1,8 +1,16 @@
 import fs from 'fs-extra'
 import { globby } from 'globby'
 import matter from 'gray-matter'
-import { resolve } from 'path'
+import path, { resolve } from 'path'
+import { parse } from 'smol-toml'
+
 import { Post, PostFrontMatter } from './types'
+
+export async function loadConfig() {
+  const configPath = path.resolve(__dirname, 'config.toml')
+  const configContent = await fs.readFile(configPath, 'utf-8')
+  return parse(configContent)
+}
 
 /**
  * Get all posts and generate pagination pages

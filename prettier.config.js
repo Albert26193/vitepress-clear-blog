@@ -16,7 +16,11 @@ const configPrettier = {
   proseWrap: 'never', // Wrap prose if it exceeds the print width.
   htmlWhitespaceSensitivity: 'strict', // All whitespace in and around all tags is considered significant.
   endOfLine: 'lf', // Ensure to use only (\n) line endings in text files, common on Linux and macOS as well as inside git repos.
-  rangeStart: 0 // Format only a segment of a file, starting at the beginning of the file.
+  rangeStart: 0, // Format only a segment of a file, starting at the beginning of the file.
+  plugins: ['@trivago/prettier-plugin-sort-imports'],
+  importOrder: ['^@core/(.*)$', '^@server/(.*)$', '^@ui/(.*)$', '^[./]'],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true
 }
 
 export default configPrettier

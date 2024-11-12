@@ -9,6 +9,16 @@ import { DefaultTheme } from 'vitepress'
 //   categories?: string[]
 // }
 
+type Article = {
+  regularPath: string
+  frontMatter: {
+    title: string
+    description: string
+    date: string
+    tags: string[]
+  }
+}
+
 export interface PostFrontMatter {
   title: string
   date: string
