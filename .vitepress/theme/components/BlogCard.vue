@@ -4,7 +4,9 @@
   >
     <div class="post-header -mt-1">
       <div class="post-title">
-        <a :href="withBase(article.regularPath)"> {{ article.frontMatter.title }}</a>
+        <a :href="withBase(article.regularPath)">
+          {{ article.frontMatter.title }}</a
+        >
       </div>
     </div>
     <p

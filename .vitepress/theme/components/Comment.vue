@@ -16,7 +16,10 @@
         utterances.setAttribute('src', 'https://utteranc.es/client.js')
         utterances.setAttribute('repo', repo)
         utterances.setAttribute('issue-term', issueTerm)
-        utterances.setAttribute('theme', isDark.value ? 'github-dark' : 'github-light')
+        utterances.setAttribute(
+          'theme',
+          isDark.value ? 'github-dark' : 'github-light'
+        )
         utterances.setAttribute('crossorigin', 'anonymous')
         utterancesRef.value.appendChild(utterances)
       }

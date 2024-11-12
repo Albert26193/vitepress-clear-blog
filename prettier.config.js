@@ -1,5 +1,5 @@
 const configPrettier = {
-  printWidth: 100,
+  printWidth: 80,
   tabWidth: 2, // Specify the number of spaces per indentation-level.
   useTabs: false, // Indent lines with tabs instead of spaces.
   semi: false, // true (default): Add a semicolon at the end of every statement. false: Only add semicolons at the beginning of lines that may introduce ASI failures.

@@ -3,7 +3,6 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import pluginVue from 'eslint-plugin-vue'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
-import commitlintConfig from '@commitlint/config-conventional'
 
 export default [
   // Specify file matching patterns and language options
@@ -61,13 +60,5 @@ export default [
       '/bin',
       'Dockerfile',
     ],
-  },
-  // Commitlint configuration
-  {
-    extends: commitlintConfig.extends,
-    rules: {
-      ...commitlintConfig.rules,
-      'body-max-line-length': [1, 'always', 200]
-    }
   }
 ]

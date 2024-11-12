@@ -23,30 +23,40 @@ export function initTags(post: Post[]) {
 }
 
 export function useYearSort(posts: Post[]): Post[][] {
-  const sortedByYear = posts.reduce((acc: Record<string, Post[]>, post: Post) => {
-    if (post.frontMatter.date) {
-      const year = post.frontMatter.date.split('-')[0]
-      if (!acc[year]) {
-        acc[year] = []
+  const sortedByYear = posts.reduce(
+    (acc: Record<string, Post[]>, post: Post) => {
+      if (post.frontMatter.date) {
+        const year = post.frontMatter.date.split('-')[0]
+        if (!acc[year]) {
+          acc[year] = []
+        }
+        acc[year].push(post)
       }
-      acc[year].push(post)
-    }
-    return acc
-  }, {})
+      return acc
+    },
+    {}
+  )
 
-  const sortedYears = Object.keys(sortedByYear).sort((a, b) => b.localeCompare(a))
+  const sortedYears = Object.keys(sortedByYear).sort((a, b) =>
+    b.localeCompare(a)
+  )
   const sortedPostsByYear = sortedYears.map((year) => sortedByYear[year])
   return sortedPostsByYear
 }
 
-export function useMonthYearSort(posts: Post[]): Record<string, Record<string, Post[]>> {
-  return posts.reduce((acc: Record<string, Record<string, Post[]>>, post: Post) => {
-    if (post.frontMatter.date) {
-      const [year, month] = post.frontMatter.date.split('-')
-      acc[year] = acc[year] || {}
-      acc[year][month] = acc[year][month] || []
-      acc[year][month].push(post)
-    }
-    return acc
-  }, {})
+export function useMonthYearSort(
+  posts: Post[]
+): Record<string, Record<string, Post[]>> {
+  return posts.reduce(
+    (acc: Record<string, Record<string, Post[]>>, post: Post) => {
+      if (post.frontMatter.date) {
+        const [year, month] = post.frontMatter.date.split('-')
+        acc[year] = acc[year] || {}
+        acc[year][month] = acc[year][month] || []
+        acc[year][month].push(post)
+      }
+      return acc
+    },
+    {}
+  )
 }

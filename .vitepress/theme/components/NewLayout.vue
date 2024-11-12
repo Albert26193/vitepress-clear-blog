@@ -43,14 +43,22 @@
   // const content = ref(null)
 
   onMounted(() => {
-    const contentContainer = document.querySelector('.content-container')?.querySelector('.main')
+    const contentContainer = document
+      .querySelector('.content-container')
+      ?.querySelector('.main')
     if (contentContainer) {
       const firstH1 = contentContainer.querySelector('h1')
       const cleanText = (text: string | null | undefined) =>
         JSON.stringify(text?.trim()).replace(/\s+/g, ' ').trim()
-      const firstH1Text = cleanText(firstH1?.textContent)?.trim()?.replace(/#/g, '')
+      const firstH1Text = cleanText(firstH1?.textContent)
+        ?.trim()
+        ?.replace(/#/g, '')
       const pageTitle = cleanText(page.value.title)
-      console.log(`firstH1:${firstH1Text},${pageTitle}.`, firstH1Text?.length, pageTitle?.length)
+      console.log(
+        `firstH1:${firstH1Text},${pageTitle}.`,
+        firstH1Text?.length,
+        pageTitle?.length
+      )
       if (firstH1 && firstH1Text === pageTitle) {
         console.log('remove first h1:', firstH1Text, pageTitle)
         firstH1.remove()
@@ -62,34 +70,37 @@
     'startViewTransition' in document &&
     window.matchMedia('(prefers-reduced-motion: no-preference)').matches
 
-  provide('toggle-appearance', async ({ clientX: x, clientY: y }: MouseEvent) => {
-    if (!enableTransitions()) {
-      isDark.value = !isDark.value
-      return
-    }
-
-    const clipPath = [
-      `circle(0px at ${x}px ${y}px)`,
-      `circle(${Math.hypot(
-        Math.max(x, innerWidth - x),
-        Math.max(y, innerHeight - y)
-      )}px at ${x}px ${y}px)`
-    ]
-
-    await document.startViewTransition(async () => {
-      isDark.value = !isDark.value
-      await nextTick()
-    }).ready
-
-    document.documentElement.animate(
-      { clipPath: isDark.value ? clipPath.reverse() : clipPath },
-      {
-        duration: 300,
-        easing: 'ease-in',
-        pseudoElement: `::view-transition-${isDark.value ? 'old' : 'new'}(root)`
+  provide(
+    'toggle-appearance',
+    async ({ clientX: x, clientY: y }: MouseEvent) => {
+      if (!enableTransitions()) {
+        isDark.value = !isDark.value
+        return
       }
-    )
-  })
+
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${Math.hypot(
+          Math.max(x, innerWidth - x),
+          Math.max(y, innerHeight - y)
+        )}px at ${x}px ${y}px)`
+      ]
+
+      await document.startViewTransition(async () => {
+        isDark.value = !isDark.value
+        await nextTick()
+      }).ready
+
+      document.documentElement.animate(
+        { clipPath: isDark.value ? clipPath.reverse() : clipPath },
+        {
+          duration: 300,
+          easing: 'ease-in',
+          pseudoElement: `::view-transition-${isDark.value ? 'old' : 'new'}(root)`
+        }
+      )
+    }
+  )
 
   // TODO: modify date time format:
   // 1. validate date format from frontmatter.date

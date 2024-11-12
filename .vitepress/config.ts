@@ -10,21 +10,9 @@ import { customElements } from './theme/config/constant'
 import { head } from './theme/config/head'
 import { nav } from './theme/config/nav'
 import { getPosts } from './theme/serverUtils'
+import { parsedConfigToml } from './theme/serverUtils'
 import { BlogConfig } from './theme/types'
 
-// const vitepressSidebarOptions = {
-//   /* Options... */
-//   documentRootPath: 'docs',
-//   scanStartPath: 'collections',
-//   resolvePath: 'docs/collections'
-// }
-
-const parsedConfigToml = parse(
-  await fse.readFile(
-    path.resolve(path.resolve(__dirname, '..'), '.vitepress/theme/config/config.toml'),
-    'utf-8'
-  )
-)
 const pageSize = 10
 const postArcticles = await getPosts(pageSize)
 
@@ -64,7 +52,9 @@ export default defineConfig({
     nav,
     outline: [2, 3],
     outlineTitle: 'Table of Contents',
-    socialLinks: [{ icon: 'github', link: 'https://github.com/airene/vitepress-blog-pure' }]
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/airene/vitepress-blog-pure' }
+    ]
   } as BlogConfig,
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {

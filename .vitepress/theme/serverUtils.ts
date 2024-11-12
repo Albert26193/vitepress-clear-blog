@@ -6,19 +6,16 @@ import { parse } from 'smol-toml'
 
 import { Post, PostFrontMatter } from './types'
 
-export async function loadConfig() {
-  const configPath = path.resolve(__dirname, 'config.toml')
-  const configContent = await fs.readFile(configPath, 'utf-8')
-  return parse(configContent)
-}
-
 /**
  * Get all posts and generate pagination pages
  * @param pageSize Number of posts per page
  * @returns List of posts
  */
 const getPosts = async (pageSize: number): Promise<Post[]> => {
-  const paths = await globby(['docs/blogs/**/*.md', 'docs/collections/**/**.md'])
+  const paths = await globby([
+    'docs/blogs/**/*.md',
+    'docs/collections/**/**.md'
+  ])
   await generatePaginationPages(paths.length, pageSize)
 
   const posts = await Promise.all(
@@ -49,8 +46,12 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
  * @param total Total number of posts
  * @param pageSize Number of posts per page
  */
-const generatePaginationPages = async (total: number, pageSize: number): Promise<void> => {
-  const pagesNum = total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
+const generatePaginationPages = async (
+  total: number,
+  pageSize: number
+): Promise<void> => {
+  const pagesNum =
+    total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
   const basePath = resolve('./docs/pages')
 
   if (total <= 0) return
@@ -78,7 +79,9 @@ const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * p
     })
   )
 
-  await fs.move(`${basePath}/page_1.md`, `${basePath}/index.md`, { overwrite: true })
+  await fs.move(`${basePath}/page_1.md`, `${basePath}/index.md`, {
+    overwrite: true
+  })
 }
 
 /**
@@ -102,4 +105,15 @@ function _compareDate(a: Post, b: Post): number {
   return a.frontMatter.date < b.frontMatter.date ? 1 : -1
 }
 
-export { getPosts }
+/**
+ * parse custom config file(.toml)
+ */
+const parseToml = async (configPath: string) => {
+  const configContent = await fs.readFile(configPath, 'utf-8')
+  return parse(configContent)
+}
+const parsedConfigToml = await parseToml(
+  path.resolve(__dirname, '..', '.vitepress/theme/config/config.toml')
+)
+
+export { getPosts, parsedConfigToml }

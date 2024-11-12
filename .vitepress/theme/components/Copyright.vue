@@ -4,9 +4,14 @@
     <a class="ml-4" href="https://beian.miit.gov.cn/">沪ICP备2024051666号</a>
     <br />
     Powered by
-    <a class="vitepress" target="_blank" href="//vitepress.vuejs.org/">VitePress</a>
+    <a class="vitepress" target="_blank" href="//vitepress.vuejs.org/"
+      >VitePress</a
+    >
     Theme by
-    <a class="vitepress" target="_blank" href="//github.com/airene/vitepress-blog-pure"
+    <a
+      class="vitepress"
+      target="_blank"
+      href="//github.com/airene/vitepress-blog-pure"
       >Vitepress-blog</a
     >
   </div>

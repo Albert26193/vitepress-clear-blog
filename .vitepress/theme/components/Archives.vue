@@ -1,7 +1,13 @@
 <template>
-  <div v-for="curYearPostList in dataByYear" :key="getYear(curYearPostList)" class="my-4">
+  <div
+    v-for="curYearPostList in dataByYear"
+    :key="getYear(curYearPostList)"
+    class="my-4"
+  >
     <div @click="toggleYear(getYear(curYearPostList))">
-      <span class="font-800 accent-black text-xl"> {{ getYear(curYearPostList) }} </span>
+      <span class="font-800 accent-black text-xl">
+        {{ getYear(curYearPostList) }}
+      </span>
       <span class="ml-2 font-600 text-base text-blue-700 .dark:text-blue-200">
         {{ `(${curYearPostList.length})` }}
       </span>
@@ -18,14 +24,22 @@
         <span class="font-600">{{ getYearMonth(monthList) }}</span>
         <span class="font-600 ml-1 text-sm">{{ `(${monthList.length})` }}</span>
       </div>
-      <div v-show="displayStatus.months[`${getYear(curYearPostList)}-${getMonth(monthList)}`]">
+      <div
+        v-show="
+          displayStatus.months[
+            `${getYear(curYearPostList)}-${getMonth(monthList)}`
+          ]
+        "
+      >
         <a
           :href="withBase(article.regularPath)"
           v-for="(article, index) in monthList"
           :key="index"
           class="posts"
         >
-          <div class="post-container .dark:text-slate-100 text-slate-800 font-bold">
+          <div
+            class="post-container .dark:text-slate-100 text-slate-800 font-bold"
+          >
             <div class="post-dot"></div>
             {{ article.frontMatter.title }}
           </div>
@@ -72,7 +86,8 @@
     monthList[0].frontMatter.date.split('-')[1]
   const getYearMonth = (monthList: { frontMatter: { date: string } }[]) =>
     monthList[0].frontMatter.date.split('-').slice(0, 2).join('-')
-  const getDay = (article: { frontMatter: { date: string } }) => article.frontMatter.date.slice(5)
+  const getDay = (article: { frontMatter: { date: string } }) =>
+    article.frontMatter.date.slice(5)
 
   const dataByYear = computed(() => useYearSort(theme.value.posts))
   const dataByYearMonth = computed(() => useMonthYearSort(theme.value.posts))
