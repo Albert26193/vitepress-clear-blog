@@ -1,32 +1,40 @@
 <template>
   <div
-    class="backdrop-blur-md blog-card-cover card-border flex flex-col h-full overflow-hidden justify-between card border-red border-solid max-h-32"
+    class="blog-card flex flex-col h-full overflow-hidden justify-between border border-solid border-gray-800 rounded-lg shadow-sm p-4 bg-white dark:bg-gray-800"
   >
-    <div class="post-header -mt-1">
-      <div class="post-title">
-        <a :href="withBase(article.regularPath)">
-          {{ article.frontMatter.title }}</a
+    <div class="post-header mb-2">
+      <h2 class="post-title text-xl font-semibold mb-1">
+        <a
+          :href="withBase(article.regularPath)"
+          class="text-blue-600 hover:underline"
         >
-      </div>
+          {{ article.frontMatter.title }}
+        </a>
+      </h2>
     </div>
     <p
       v-if="article.frontMatter.description"
-      class="describe indent-8"
-      v-html="article.frontMatter.description"
-    ></p>
+      class="describe text-gray-700 dark:text-gray-300 mb-4"
+    >
+      {{ useCardDescription(article.frontMatter.description).value }}
+    </p>
     <div v-else class="mt-4"></div>
-    <div class="post-info">
-      <div class="flex justify-left">
-        <timeLogo class="w-4 h-4 mt-2 inline-block"></timeLogo>
-        <span class=""> {{ article.frontMatter.date }}</span>
+    <div
+      class="post-info flex items-center justify-between text-sm text-gray-500 dark:text-gray-400"
+    >
+      <div class="flex items-center">
+        <timeLogo class="w-4 h-4 mr-1" />
+        <span>{{ article.frontMatter.date }}</span>
       </div>
-      <span
-        v-for="item in article.frontMatter.tags"
-        :key="item + 'key'"
-        class="hover:.dark:bg-blue-500 hover:.dark:text-slate-800 hover:bg-blue-200 tag rounded-full hover:font-bold"
-      >
-        <a :href="withBase(`/tags.html?tag=${item}`)"> {{ item }}</a>
-      </span>
+      <div class="tags flex space-x-2">
+        <span
+          v-for="item in article.frontMatter.tags"
+          :key="item + 'key'"
+          class="tag bg-blue-100 text-blue-600 rounded-full px-2 py-1 hover:bg-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:hover:bg-blue-600"
+        >
+          <a :href="withBase(`/tags.html?tag=${item}`)">{{ item }}</a>
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +44,7 @@
   import { type PropType } from 'vue'
 
   import timeLogo from '../assets/icon/time.svg?component'
+  import { useCardDescription } from '../composables/useMeta'
   import { type Article } from '../types'
 
   const props = defineProps({

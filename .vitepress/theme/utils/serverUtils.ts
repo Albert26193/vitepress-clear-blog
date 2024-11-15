@@ -4,7 +4,7 @@ import matter from 'gray-matter'
 import path, { resolve } from 'path'
 import { parse } from 'smol-toml'
 
-import { Post, PostFrontMatter } from './types'
+import { Post, PostFrontMatter } from '../types'
 
 /**
  * Get all posts and generate pagination pages
@@ -13,8 +13,8 @@ import { Post, PostFrontMatter } from './types'
  */
 const getPosts = async (pageSize: number): Promise<Post[]> => {
   const paths = await globby([
-    'docs/blogs/**/*.md',
-    'docs/collections/**/**.md'
+    'docs/blogs/**/*.md'
+    // 'docs/collections/**/**.md'
   ])
   await generatePaginationPages(paths.length, pageSize)
 
@@ -59,9 +59,9 @@ const generatePaginationPages = async (
   const generatePage = (pageNum: number) =>
     `
 ---
-page: true
 title: ${pageNum === 1 ? 'home' : 'page_' + pageNum}
 aside: false
+layout: page
 ---
 <script setup>
 import Page from "../../.vitepress/theme/components/Page.vue";
@@ -107,13 +107,15 @@ function _compareDate(a: Post, b: Post): number {
 
 /**
  * parse custom config file(.toml)
+ *
+ * @param configPath the path of the config file
+ * @return the parsed config object
  */
 const parseToml = async (configPath: string) => {
   const configContent = await fs.readFile(configPath, 'utf-8')
   return parse(configContent)
 }
-const parsedConfigToml = await parseToml(
-  path.resolve(__dirname, '..', '.vitepress/theme/config/config.toml')
-)
+const assignedConfigPath = path.resolve(__dirname, '../../custom/config.toml')
+const parsedConfigToml = await parseToml(assignedConfigPath)
 
-export { getPosts, parsedConfigToml }
+export { getPosts, parseToml, parsedConfigToml, assignedConfigPath }

@@ -9,8 +9,9 @@ import { nextTick, onMounted, watch } from 'vue'
 import Archives from './components/Archives.vue'
 import NewLayout from './components/NewLayout.vue'
 import Page from './components/Page.vue'
-import Tags from './components/Tags.vue'
-import './custom.css'
+import Tags from './components/common/Tags.vue'
+import './styles/generated.css'
+import './styles/main.css'
 
 export default {
   ...DefaultTheme,

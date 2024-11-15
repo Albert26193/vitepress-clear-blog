@@ -1,7 +1,7 @@
 ---
-page: true
 title: home
 aside: false
+layout: page
 ---
 <script setup>
 import Page from "../../.vitepress/theme/components/Page.vue";

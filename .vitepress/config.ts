@@ -1,25 +1,22 @@
-import fse from 'fs-extra'
 import mathjax3 from 'markdown-it-mathjax3'
 import path from 'path'
-import { parse } from 'smol-toml'
 import UnoCSS from 'unocss/vite'
 import svgLoader from 'vite-svg-loader'
 import { defineConfig } from 'vitepress'
 
+import { generateThemePlugin } from './plugins/preBuild'
 import { customElements } from './theme/config/constant'
 import { head } from './theme/config/head'
 import { nav } from './theme/config/nav'
-import { getPosts } from './theme/serverUtils'
-import { parsedConfigToml } from './theme/serverUtils'
 import { BlogConfig } from './theme/types'
+import { getPosts } from './theme/utils/serverUtils'
+import { parsedConfigToml } from './theme/utils/serverUtils'
 
+// TODO: config.toml: [theme] -> brandColor
 const pageSize = 10
 const postArcticles = await getPosts(pageSize)
 
-console.log(parsedConfigToml)
-
-const tomlTheme = parsedConfigToml.theme as { brandColor?: string } | undefined
-const brandColor = tomlTheme?.brandColor || '#ae1f7c'
+// console.log(parsedConfigToml)
 
 export default defineConfig({
   markdown: {
@@ -35,7 +32,7 @@ export default defineConfig({
       }
     }
   },
-  title: parsedConfigToml.title as string,
+  title: parsedConfigToml.meta.title,
   base: '/',
   srcDir: './docs',
   cacheDir: './node_modules/vitepress_cache',
@@ -58,12 +55,12 @@ export default defineConfig({
   } as BlogConfig,
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {
-    //build: { minify: false }
     server: { port: 5000 },
-    plugins: [UnoCSS(), svgLoader()],
-    define: {
-      'process.env': {
-        VITE_BRAND_COLOR: JSON.stringify(brandColor)
+    plugins: [UnoCSS(), svgLoader(), generateThemePlugin()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, '/.vitepress/theme'),
+        '@docs': path.resolve(__dirname, '/docs')
       }
     }
   }

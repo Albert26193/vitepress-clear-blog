@@ -35,9 +35,9 @@
   import { useData, withBase } from 'vitepress'
   import { computed, ref } from 'vue'
 
-  import tagPng from '../assets/icon/tag.png'
-  import { Post } from '../types'
-  import { initTags } from '../utils'
+  import tagPng from '../../assets/icon/tag.png'
+  import { Post } from '../../types'
+  import { initTags } from '../../utils/themeUtils'
 
   let url
   if (typeof window != 'undefined') {

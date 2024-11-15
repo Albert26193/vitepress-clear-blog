@@ -54,7 +54,7 @@
   import { useData, withBase } from 'vitepress'
   import { computed, onMounted, reactive } from 'vue'
 
-  import { useMonthYearSort, useYearSort } from '../utils'
+  import { useMonthYearSort, useYearSort } from '../utils/themeUtils'
 
   const { theme } = useData()
 
