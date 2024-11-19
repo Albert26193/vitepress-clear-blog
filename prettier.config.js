@@ -1,5 +1,5 @@
 const configPrettier = {
-  printWidth: 80,
+  printWidth: 80, // Specify the line length that the printer will wrap on.
   tabWidth: 2, // Specify the number of spaces per indentation-level.
   useTabs: false, // Indent lines with tabs instead of spaces.
   semi: false, // true (default): Add a semicolon at the end of every statement. false: Only add semicolons at the beginning of lines that may introduce ASI failures.
@@ -17,7 +17,10 @@ const configPrettier = {
   htmlWhitespaceSensitivity: 'strict', // All whitespace in and around all tags is considered significant.
   endOfLine: 'lf', // Ensure to use only (\n) line endings in text files, common on Linux and macOS as well as inside git repos.
   rangeStart: 0, // Format only a segment of a file, starting at the beginning of the file.
-  plugins: ['@trivago/prettier-plugin-sort-imports'],
+  plugins: [
+    '@trivago/prettier-plugin-sort-imports',
+    // 'prettier-plugin-tailwindcss'
+  ],
   importOrder: ['^@core/(.*)$', '^@server/(.*)$', '^@ui/(.*)$', '^[./]'],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true

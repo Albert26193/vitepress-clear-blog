@@ -2,21 +2,21 @@
   <Layout class="clear-layout">
     <template v-if="!frontmatter.page" #doc-before>
       <div
-        class="post-info h-8 mb-2 flex items-center meta-des"
+        class="post-info meta-des mb-2 flex h-8 items-center"
         id="hack-article-des"
         ref="$des"
       >
         <div class="time-info flex items-center">
-          <TimeLogo class="inline align-middle w-5 h-5" />
-          <span class="align-middle text-black font-semibold text-sm ml-2">
+          <TimeLogo class="inline size-5 align-middle" />
+          <span class="ml-2 align-middle text-sm font-semibold text-black">
             {{ frontmatter.date?.substring(0, 10) }}
           </span>
         </div>
-        <div class="tags flex-grow ml-8">
+        <div class="tags ml-8 grow">
           <span
             v-for="item in frontmatter.tags"
             :key="item"
-            class="hover:.dark:bg-blue-500 hover:bg-blue-200 hover:.dark:text-slate-100 tag rounded-full"
+            class="hover:.dark:bg-blue-500 hover:.dark:text-slate-100 tag rounded-full hover:bg-blue-200"
           >
             <a :href="withBase(`/tags.html?tag=${item}`)"> {{ item }}</a>
           </span>

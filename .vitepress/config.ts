@@ -14,7 +14,7 @@ import { parsedConfigToml } from './theme/utils/serverUtils'
 
 // TODO: config.toml: [theme] -> brandColor
 const pageSize = 10
-const postArcticles = await getPosts(pageSize)
+const postArticles = await getPosts(pageSize)
 
 // console.log(parsedConfigToml)
 
@@ -41,7 +41,7 @@ export default defineConfig({
   ignoreDeadLinks: true,
   themeConfig: {
     // sidebar: generateSidebar(vitepressSidebarOptions),
-    posts: postArcticles,
+    posts: postArticles,
     website: '',
     search: {
       provider: 'local'

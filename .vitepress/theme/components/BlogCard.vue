@@ -1,9 +1,7 @@
 <template>
-  <div
-    class="blog-card flex flex-col h-full overflow-hidden justify-between border border-solid border-gray-800 rounded-lg shadow-sm p-4 bg-white dark:bg-gray-800"
-  >
+  <div class="blog-card">
     <div class="post-header mb-2">
-      <h2 class="post-title text-xl font-semibold mb-1">
+      <h2 class="post-title mb-1 text-xl font-semibold">
         <a
           :href="withBase(article.regularPath)"
           class="text-blue-600 hover:underline"
@@ -14,7 +12,7 @@
     </div>
     <p
       v-if="article.frontMatter.description"
-      class="describe text-gray-700 dark:text-gray-300 mb-4"
+      class="describe mb-4 text-gray-700 dark:text-gray-300"
     >
       {{ useCardDescription(article.frontMatter.description).value }}
     </p>
@@ -23,14 +21,14 @@
       class="post-info flex items-center justify-between text-sm text-gray-500 dark:text-gray-400"
     >
       <div class="flex items-center">
-        <timeLogo class="w-4 h-4 mr-1" />
+        <timeLogo class="mr-1 size-4" />
         <span>{{ article.frontMatter.date }}</span>
       </div>
       <div class="tags flex space-x-2">
         <span
           v-for="item in article.frontMatter.tags"
           :key="item + 'key'"
-          class="tag bg-blue-100 text-blue-600 rounded-full px-2 py-1 hover:bg-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:hover:bg-blue-600"
+          class="tag"
         >
           <a :href="withBase(`/tags.html?tag=${item}`)">{{ item }}</a>
         </span>
@@ -56,6 +54,15 @@
 </script>
 
 <style scoped>
+  .blog-card {
+    @apply flex h-full flex-col justify-between overflow-hidden rounded-lg;
+    @apply border border-solid border-gray-800 bg-white p-4 shadow-sm dark:bg-gray-800;
+  }
+
+  .tag {
+    @apply rounded-full bg-blue-100 px-2 py-1 text-blue-600 hover:bg-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:hover:bg-blue-600;
+  }
+
   .blog-card-cover img {
     opacity: 0.9;
     transition: opacity 0.3s ease;
@@ -122,11 +129,13 @@
     .post-list {
       padding: 14px 0 14px 0;
     }
+
     .post-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
+
     .post-title {
       font-size: 1.0625rem;
       font-weight: 400;
@@ -136,6 +145,7 @@
       overflow: hidden;
       width: 17rem;
     }
+
     .describe {
       font-size: 0.9375rem;
       display: -webkit-box;

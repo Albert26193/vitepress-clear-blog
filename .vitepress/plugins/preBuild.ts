@@ -4,7 +4,7 @@ import path from 'path'
 import { assignedConfigPath, parseToml } from '../theme/utils/serverUtils'
 
 /**
- * gerneate the theme custom css
+ * generate the theme custom css
  *
  * @param configPath the path of the config file
  * @output the custom css file named generated.css
@@ -14,7 +14,7 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
   const theme = config.theme as { brandColor?: string } | undefined
   const brandColor = theme?.brandColor || '#ae1f7c'
 
-  const gerenatedCssPath = path.resolve(
+  const generatedCssPath = path.resolve(
     __dirname,
     '../theme/styles/generated.css'
   )
@@ -25,12 +25,12 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
 }
 `.trim()
 
-  await fs.writeFile(gerenatedCssPath, generatedCssTemplate)
+  await fs.writeFile(generatedCssPath, generatedCssTemplate)
 }
 
 const generateThemePlugin = (configPath: string = assignedConfigPath) => {
   return {
-    name: 'vite-plugin-genereate-theme',
+    name: 'vite-plugin-generated-theme',
     async buildStart() {
       await generateThemeFile(configPath)
     }

@@ -1,8 +1,8 @@
 import pluginJs from '@eslint/js'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import pluginVue from 'eslint-plugin-vue'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
-import pluginVue from 'eslint-plugin-vue'
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 export default [
   // Specify file matching patterns and language options
@@ -35,7 +35,8 @@ export default [
       'no-unused-vars': 'off', // Turn off unused variables warning
       '@typescript-eslint/no-unused-vars': 'off', // Turn off unused variables warning for TypeScript
       'vue/multi-word-component-names': 'off', // Vue component names should be multi-word for better readability and maintainability
-    },
+      'prettier/prettier': ['error', { singleQuote: true }],
+    }
   },
   // Ignored files
   {
@@ -58,7 +59,7 @@ export default [
       '.husky',
       '.local',
       '/bin',
-      'Dockerfile',
-    ],
+      'Dockerfile'
+    ]
   }
 ]

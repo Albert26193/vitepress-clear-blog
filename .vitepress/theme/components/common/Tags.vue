@@ -4,15 +4,15 @@
       @click="toggleTag(String(key))"
       v-for="(_, key, index) in sortTags(tagsList)"
       :key="`tag-${index}`"
-      class="tag hover:.dark:bg-blue-500 hover:bg-blue-200 rounded-full"
+      class="tag hover:.dark:bg-blue-500 rounded-full hover:bg-blue-200"
       :class="{ active: selectTag == String(key) }"
     >
       {{ key }}
       <span class="count">{{ tagsList[key].length }}</span>
     </span>
   </div>
-  <div class="tag-header mt-6 mb-2" v-if="selectTag && selectTag.length">
-    <img :src="tagPng" class="w-8 h-8 inline tag-img" />
+  <div class="tag-header mb-2 mt-6" v-if="selectTag && selectTag.length">
+    <img :src="tagPng" class="tag-img inline size-8" />
     <span class="h-80">{{ selectTag }}</span>
   </div>
   <a
@@ -22,7 +22,7 @@
     class="posts"
   >
     <div
-      class="post-container .dark:text-slate-200 font-bold mt-1 text-slate-900"
+      class="post-container .dark:text-slate-200 mt-1 font-bold text-slate-900"
     >
       <div class="post-dot"></div>
       {{ article.frontMatter.title }}

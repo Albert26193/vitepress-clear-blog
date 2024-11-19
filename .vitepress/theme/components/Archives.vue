@@ -5,10 +5,10 @@
     class="my-4"
   >
     <div @click="toggleYear(getYear(curYearPostList))">
-      <span class="font-800 accent-black text-xl">
+      <span class="font-800 text-xl accent-black">
         {{ getYear(curYearPostList) }}
       </span>
-      <span class="ml-2 font-600 text-base text-blue-700 .dark:text-blue-200">
+      <span class="font-600 .dark:text-blue-200 ml-2 text-base text-blue-700">
         {{ `(${curYearPostList.length})` }}
       </span>
     </div>
@@ -18,7 +18,7 @@
       v-show="displayStatus.years[getYear(curYearPostList)]"
     >
       <div
-        class="ml-4 pt-4 pb-1 italic text-blue-700 .dark:text-blue-400"
+        class=".dark:text-blue-400 ml-4 pb-1 pt-4 italic text-blue-700"
         @click="toggleMonth(getYear(monthList), getMonth(monthList))"
       >
         <span class="font-600">{{ getYearMonth(monthList) }}</span>
@@ -38,7 +38,7 @@
           class="posts"
         >
           <div
-            class="post-container .dark:text-slate-100 text-slate-800 font-bold"
+            class="post-container .dark:text-slate-100 font-bold text-slate-800"
           >
             <div class="post-dot"></div>
             {{ article.frontMatter.title }}

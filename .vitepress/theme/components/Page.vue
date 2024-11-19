@@ -1,7 +1,7 @@
 <template>
   <div
     v-auto-animate="{ duration: 300 }"
-    class="post-list mt-2 grid grid-cols-1 gap-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-3 border-2 w-[80%] mx-auto"
+    class="post-list mx-auto mt-2 grid w-4/5 grid-cols-1 gap-4 border-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3"
   >
     <div v-for="(article, index) in posts" :key="index">
       <BlogCard :article="article"></BlogCard>
