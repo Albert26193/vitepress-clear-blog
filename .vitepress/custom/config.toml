@@ -12,4 +12,20 @@ theme-color = "#42b983"
 pageSize = 10
 
 [theme]
-brandColor = "#42b983"
+vp-c-brand = "#42b983"
+c-text-code = "#00ff00"
+c-text-strong = "#ff0000"
+c-text-em = "#0000ff"
+tag-info = "#42b983"
+tag-count = "#42b983"
+tag-hover = "#42b983"
+
+[theme.dark]
+vp-c-bg = "#020405"
+c-text-code = "#00ff00"
+c-text-strong = "#ff0000"
+c-text-em = "#00ffff"
+vp-c-brand = "#42b983"
+tag-info = "#42b983"
+tag-count = "#42b983"
+tag-hover = "#42b983"

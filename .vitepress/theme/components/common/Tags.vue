@@ -1,28 +1,28 @@
 <template>
-  <div class="tags">
+  <div class="tags border border-gray-300 rounded-lg p-4">
     <span
       @click="toggleTag(String(key))"
       v-for="(_, key, index) in sortTags(tagsList)"
       :key="`tag-${index}`"
       class="tag hover:.dark:bg-blue-500 rounded-full hover:bg-blue-200"
-      :class="{ active: selectTag == String(key) }"
+      :class="{ active: selectedTags.has(String(key)) }"
     >
       {{ key }}
       <span class="count">{{ tagsList[key].length }}</span>
     </span>
   </div>
-  <div class="tag-header mb-2 mt-6" v-if="selectTag && selectTag.length">
-    <img :src="tagPng" class="tag-img inline size-8" />
-    <span class="h-80">{{ selectTag }}</span>
+  <div class="tag-header mb-2 mt-6" v-if="selectedTags.size">
+    <span class="i-carbon-tag-group ml-2" />
+    <span class="h-80">{{ Array.from(selectedTags).join(', ') }}</span>
   </div>
   <a
     :href="withBase(article.regularPath)"
-    v-for="(article, index) in tagsList[selectTag || '']"
+    v-for="(article, index) in filteredArticles"
     :key="index"
     class="posts"
   >
     <div
-      class="post-container .dark:text-slate-200 mt-1 font-bold text-slate-900"
+      class="post-container dark:text-slate-200 mt-1 font-bold text-slate-900"
     >
       <div class="post-dot"></div>
       {{ article.frontMatter.title }}
@@ -35,7 +35,6 @@
   import { useData, withBase } from 'vitepress'
   import { computed, ref } from 'vue'
 
-  import tagPng from '../../assets/icon/tag.png'
   import { Post } from '../../types'
   import { initTags } from '../../utils/themeUtils'
 
@@ -60,10 +59,25 @@
     return sortedTagsList
   }
 
-  const selectTag = ref(params.get('tag') ? params.get('tag') : '')
+  const selectedTags = ref(new Set<string>())
   const toggleTag = (tag: string) => {
-    selectTag.value = tag
+    if (selectedTags.value.has(tag)) {
+      selectedTags.value.delete(tag)
+    } else {
+      selectedTags.value.add(tag)
+    }
   }
+
+  const filteredArticles = computed(() => {
+    if (selectedTags.value.size === 0) {
+      return []
+    }
+    return theme.value.posts.filter((article: Post) =>
+      Array.from(selectedTags.value).some((tag) =>
+        article.frontMatter.tags?.includes(tag)
+      )
+    )
+  })
 </script>
 
 <style scoped>

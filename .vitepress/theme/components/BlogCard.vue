@@ -1,6 +1,6 @@
 <template>
   <div class="blog-card">
-    <div class="post-header mb-2">
+    <div class="post-header">
       <h2 class="post-title mb-1 text-xl font-semibold">
         <a
           :href="withBase(article.regularPath)"
@@ -12,24 +12,18 @@
     </div>
     <p
       v-if="article.frontMatter.description"
-      class="describe mb-4 text-gray-700 dark:text-gray-300"
+      class="describe mb-4 text-gray-700 dark:text-gray-300 indent-2"
     >
       {{ useCardDescription(article.frontMatter.description).value }}
     </p>
     <div v-else class="mt-4"></div>
-    <div
-      class="post-info flex items-center justify-between text-sm text-gray-500 dark:text-gray-400"
-    >
-      <div class="flex items-center">
-        <timeLogo class="mr-1 size-4" />
+    <div class="card-banner">
+      <div class="flex items-center flex-wrap">
+        <div class="i-carbon-time mr-1" />
         <span>{{ article.frontMatter.date }}</span>
       </div>
-      <div class="tags flex space-x-2">
-        <span
-          v-for="item in article.frontMatter.tags"
-          :key="item + 'key'"
-          class="tag"
-        >
+      <div class="flex space-x-2 flex-wrap">
+        <span v-for="item in partedTags" :key="item + 'key'" class="tag">
           <a :href="withBase(`/tags.html?tag=${item}`)">{{ item }}</a>
         </span>
       </div>
@@ -41,7 +35,6 @@
   import { withBase } from 'vitepress'
   import { type PropType } from 'vue'
 
-  import timeLogo from '../assets/icon/time.svg?component'
   import { useCardDescription } from '../composables/useMeta'
   import { type Article } from '../types'
 
@@ -51,108 +44,78 @@
       required: true
     }
   })
+
+  const partedTags = props.article.frontMatter.tags.slice(0, 2)
 </script>
 
 <style scoped>
   .blog-card {
-    @apply flex h-full flex-col justify-between overflow-hidden rounded-lg;
-    @apply border border-solid border-gray-800 bg-white p-4 shadow-sm dark:bg-gray-800;
-  }
-
-  .tag {
-    @apply rounded-full bg-blue-100 px-2 py-1 text-blue-600 hover:bg-blue-200 dark:bg-blue-700 dark:text-blue-100 dark:hover:bg-blue-600;
+    @apply flex h-full flex-col justify-between overflow-hidden;
+    @apply rounded-xl border border-solid border-gray-800;
+    @apply bg-white p-4 shadow-sm dark:bg-gray-800;
   }
 
   .blog-card-cover img {
-    opacity: 0.9;
-    transition: opacity 0.3s ease;
+    @apply opacity-90 transition-opacity duration-300 ease;
+  }
+
+  .card-banner {
+    @apply flex justify-between items-center text-sm text-gray-500 mt-2;
   }
 
   .dark .blog-card-cover img {
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
+    @apply opacity-70 transition-opacity duration-300 ease;
   }
 
   .blog-card-cover:hover img {
-    opacity: 1;
-    padding: 2px;
+    @apply opacity-100 p-2;
   }
 
   .blog-content-image {
-    opacity: 0.8;
-    transition: all 0.5s ease;
+    @apply opacity-80 transition-all duration-500 ease;
   }
 
   .blog-content-image:hover {
-    opacity: 1;
+    @apply opacity-100;
   }
 
   .post-title {
-    font-size: 1.125rem;
-    font-weight: 500;
-    margin: 0.1rem 0;
+    @apply text-lg font-medium my-1;
   }
 
   .describe {
-    font-size: 0.9375rem;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    /* -webkit-line-clamp: 3; */
-    overflow: hidden;
-    color: var(--vp-c-text-2);
-    margin: 10px 0;
-    line-height: 1.5rem;
+    @apply text-sm text-gray-700 dark:text-gray-300 my-2;
   }
 
   .link {
-    display: inline-block;
-    width: 24px;
-    text-align: center;
-    border: 1px var(--vp-c-divider-light) solid;
-    border-right: none;
-    font-weight: 400;
-    border-radius: 25%;
+    @apply inline-block w-6 text-center;
+    @apply border border-solid border-gray-300 border-r-0;
+    @apply font-normal rounded-md;
   }
 
   .link.active {
-    background: var(--vp-c-text-1);
-    color: var(--vp-c-neutral-inverse);
-    background-color: var(--vp-c-brand);
+    @apply bg-gray-800 text-white;
   }
 
   .dark .link.active {
-    color: var(--vp-c-neutral-inverse);
-    font-weight: bolder;
+    @apply text-white font-bold;
   }
 
   @media screen and (max-width: 768px) {
     .post-list {
-      padding: 14px 0 14px 0;
+      @apply py-4;
     }
 
     .post-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      @apply flex items-center justify-between;
     }
 
     .post-title {
-      font-size: 1.0625rem;
-      font-weight: 400;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      /* -webkit-line-clamp: 2; */
-      overflow: hidden;
-      width: 17rem;
+      @apply text-base font-normal truncate w-44;
     }
 
     .describe {
-      font-size: 0.9375rem;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      /* -webkit-line-clamp: 3; */
-      overflow: hidden;
-      margin: 0.5rem 0 1rem;
+      @apply text-sm truncate my-2;
     }
   }
 </style>

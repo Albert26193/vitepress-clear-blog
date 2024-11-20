@@ -5,6 +5,11 @@
     class="my-4"
   >
     <div @click="toggleYear(getYear(curYearPostList))">
+      <span
+        v-if="displayStatus.years[getYear(curYearPostList)]"
+        class="i-carbon-caret-down text-lg"
+      />
+      <span class="i-carbon-caret-right text-lg" v-else />
       <span class="font-800 text-xl accent-black">
         {{ getYear(curYearPostList) }}
       </span>
@@ -21,6 +26,15 @@
         class=".dark:text-blue-400 ml-4 pb-1 pt-4 italic text-blue-700"
         @click="toggleMonth(getYear(monthList), getMonth(monthList))"
       >
+        <span
+          v-if="
+            displayStatus.months[
+              `${getYear(curYearPostList)}-${getMonth(monthList)}`
+            ]
+          "
+          class="i-carbon-caret-down"
+        />
+        <span class="i-carbon-caret-right" v-else />
         <span class="font-600">{{ getYearMonth(monthList) }}</span>
         <span class="font-600 ml-1 text-sm">{{ `(${monthList.length})` }}</span>
       </div>
@@ -35,7 +49,7 @@
           :href="withBase(article.regularPath)"
           v-for="(article, index) in monthList"
           :key="index"
-          class="posts"
+          class="posts ml-2"
         >
           <div
             class="post-container .dark:text-slate-100 font-bold text-slate-800"
@@ -66,7 +80,6 @@
   interface PostList {
     title: string
     date: string
-    // ... 其他属性
   }
 
   interface DataByYear {

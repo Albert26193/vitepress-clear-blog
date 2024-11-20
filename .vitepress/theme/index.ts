@@ -6,9 +6,9 @@ import { useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { nextTick, onMounted, watch } from 'vue'
 
-import Archives from './components/Archives.vue'
 import NewLayout from './components/NewLayout.vue'
 import Page from './components/Page.vue'
+import Timeline from './components/Timeline.vue'
 import Tags from './components/common/Tags.vue'
 import './styles/generated.css'
 import './styles/main.css'
@@ -19,7 +19,7 @@ export default {
   enhanceApp({ app, router }: EnhanceAppContext) {
     // register global compoment
     app.component('Tags', Tags)
-    app.component('Archives', Archives)
+    app.component('Timeline', Timeline)
     app.component('Page', Page)
     app.use(autoAnimatePlugin)
   },

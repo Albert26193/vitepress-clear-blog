@@ -27,6 +27,12 @@ importers:
       '@formkit/auto-animate':
         specifier: ^0.8.2
         version: 0.8.2
+      '@iconify-json/carbon':
+        specifier: ^1.2.4
+        version: 1.2.4
+      '@iconify-json/mdi':
+        specifier: ^1.2.1
+        version: 1.2.1
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(@vue/compiler-sfc@3.5.12)(prettier@3.3.3)
@@ -36,6 +42,9 @@ importers:
       '@types/node':
         specifier: ^20.11.25
         version: 20.17.3
+      '@unocss/preset-icons':
+        specifier: ^0.64.1
+        version: 0.64.1
       '@vue/compiler-sfc':
         specifier: ^3.4.21
         version: 3.5.12
@@ -653,6 +662,12 @@ packages:
     resolution: {integrity: sha512-e5+YUKENATs1JgYHMzTr2MW/NDcXGfYFAuOQU8gJgF/kEh4EqKgfGrfLI67bMD4tbhZVlkigz/9YYwWcbOFthg==}
     engines: {node: '>=10.13.0'}
 
+  '@iconify-json/carbon@1.2.4':
+    resolution: {integrity: sha512-DhW2jjMVGwV0DLHc0cmDYohdtGxMra8UuwgjHrryPy+rQX4gXhJwCBBVP2h2UG/92AoRCTn7zUJve4WvY5MLYg==}
+
+  '@iconify-json/mdi@1.2.1':
+    resolution: {integrity: sha512-dSkQU78gsZV6Yxnq78+LuX7jzeFC/5NAmz7O3rh558GimGFcwMVY/OtqRowIzjqJBmMmWZft7wkFV4TrwRXjlg==}
+
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
 
@@ -972,6 +987,9 @@ packages:
   '@unocss/core@0.58.9':
     resolution: {integrity: sha512-wYpPIPPsOIbIoMIDuH8ihehJk5pAZmyFKXIYO/Kro98GEOFhz6lJoLsy6/PZuitlgp2/TSlubUuWGjHWvp5osw==}
 
+  '@unocss/core@0.64.1':
+    resolution: {integrity: sha512-D1ULd70a24/k6kGyHCIijbrrIn9UjFUEBg2R4xKX2/ViQb1k2MIgOs4VS20MkJX6kbZXqqm/zAFHzDhsQGIhBA==}
+
   '@unocss/extractor-arbitrary-variants@0.58.9':
     resolution: {integrity: sha512-M/BvPdbEEMdhcFQh/z2Bf9gylO1Ky/ZnpIvKWS1YJPLt4KA7UWXSUf+ZNTFxX+X58Is5qAb5hNh/XBQmL3gbXg==}
 
@@ -989,6 +1007,9 @@ packages:
 
   '@unocss/preset-icons@0.58.9':
     resolution: {integrity: sha512-9dS48+yAunsbS0ylOW2Wisozwpn3nGY1CqTiidkUnrMnrZK3al579A7srUX9NyPWWDjprO7eU/JkWbdDQSmFFA==}
+
+  '@unocss/preset-icons@0.64.1':
+    resolution: {integrity: sha512-aQ4hN2NFdJo08pzUYc1FpwTkNUByE7FB51KmRwXclsVKeXFGvFO3YUYeg5IDlTxqCfvFVWZ3q8NhnmpKGkbutw==}
 
   '@unocss/preset-mini@0.58.9':
     resolution: {integrity: sha512-m4aDGYtueP8QGsU3FsyML63T/w5Mtr4htme2jXy6m50+tzC1PPHaIBstMTMQfLc6h8UOregPJyGHB5iYQZGEvQ==}
@@ -3582,6 +3603,14 @@ snapshots:
 
   '@hutson/parse-repository-url@5.0.0': {}
 
+  '@iconify-json/carbon@1.2.4':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/mdi@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify/types@2.0.0': {}
 
   '@iconify/utils@2.1.33':
@@ -3916,6 +3945,8 @@ snapshots:
 
   '@unocss/core@0.58.9': {}
 
+  '@unocss/core@0.64.1': {}
+
   '@unocss/extractor-arbitrary-variants@0.58.9':
     dependencies:
       '@unocss/core': 0.58.9
@@ -3945,6 +3976,14 @@ snapshots:
     dependencies:
       '@iconify/utils': 2.1.33
       '@unocss/core': 0.58.9
+      ofetch: 1.4.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@unocss/preset-icons@0.64.1':
+    dependencies:
+      '@iconify/utils': 2.1.33
+      '@unocss/core': 0.64.1
       ofetch: 1.4.1
     transitivePeerDependencies:
       - supports-color

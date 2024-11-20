@@ -74,6 +74,7 @@
   .post-list {
     /* border-bottom: 1px solid rgba(78, 145, 200, 0.586); */
     padding: 24px 0 14px 0;
+    max-width: 1280px;
   }
 
   .post-header {

@@ -1,3 +1,4 @@
+import flexSearchIndexOptions from 'flexsearch'
 import mathjax3 from 'markdown-it-mathjax3'
 import path from 'path'
 import UnoCSS from 'unocss/vite'
@@ -18,6 +19,7 @@ const postArticles = await getPosts(pageSize)
 
 // console.log(parsedConfigToml)
 
+//default options
 export default defineConfig({
   markdown: {
     config: (md) => {
@@ -65,3 +67,6 @@ export default defineConfig({
     }
   }
 })
+function vue(): import('vite').PluginOption {
+  throw new Error('Function not implemented.')
+}
