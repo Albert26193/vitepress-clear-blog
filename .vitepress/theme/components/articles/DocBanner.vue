@@ -6,6 +6,7 @@
   >
     <div class="time-info flex items-center">
       <div class="i-carbon-time" />
+      <div> {{ wordsCount }} </div>
       <span class="ml-2 align-middle text-sm font-semibold text-black">
         {{ frontmatter.date?.substring(0, 10) }}
       </span>
@@ -20,14 +21,22 @@
 
 <script setup lang="ts">
   import { useData, withBase } from 'vitepress'
-  import { onMounted, ref } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
 
-  const { frontmatter } = useData()
+  import { calculateWords } from '../../utils/serverUtils'
 
+  const { frontmatter, page } = useData()
   const $des = ref<HTMLDivElement>()
 
-  function reposition() {
-    console.log($des.value, '111111')
+  console.log(page.value)
+
+  const wordsCount = computed(() => {
+    const docDomContainer = window.document.querySelector('#VPContent')
+    const words = calculateWords(docDomContainer?.textContent || '')
+    return words
+  })
+
+  const reposition = () => {
     if (!$des.value) {
       return
     }
@@ -46,7 +55,6 @@
       if (!targetInstance) {
         reposition()
       }
-      console.log('here')
     })
     observer.observe(document.body, {
       childList: true,

@@ -1,20 +1,13 @@
-import { useData, useRoute, withBase } from 'vitepress'
+import { useData } from 'vitepress'
 import { computed, nextTick, provide } from 'vue'
 
-export function useDocMetaInsertSelector() {
-  const { frontmatter } = useData()
-  return computed(() => frontmatter.value?.docMetaInsertSelector || 'h1')
-}
-
-export function useDocMetaInsertPosition() {
-  const { frontmatter } = useData()
-  return computed(() => frontmatter.value?.docMetaInsertPosition || 'after')
-}
-
 /**
- * @overview: use description for page cards, if the length of words
+ * @abstract: use description for page cards, if the length of words
  * is more than 40 words, show the first 40 words followed by an ellipsis.
  * if the description is Chinese, the length of words is more than 20 words.
+ *
+ * @param description: string
+ * @return truncated description
  */
 export function useCardDescription(description: string) {
   const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
@@ -36,6 +29,9 @@ export function useCardDescription(description: string) {
   })
 }
 
+/**
+ * @abstract: use transition for dark mode
+ */
 export function useDarkTransition() {
   const { isDark } = useData()
   const enableTransitions = () =>

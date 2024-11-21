@@ -1,8 +1,6 @@
-import flexSearchIndexOptions from 'flexsearch'
 import mathjax3 from 'markdown-it-mathjax3'
 import path from 'path'
 import UnoCSS from 'unocss/vite'
-import svgLoader from 'vite-svg-loader'
 import { defineConfig } from 'vitepress'
 
 import { generateThemePlugin } from './plugins/preBuild'
@@ -58,7 +56,7 @@ export default defineConfig({
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {
     server: { port: 5000 },
-    plugins: [UnoCSS(), svgLoader(), generateThemePlugin()],
+    plugins: [UnoCSS(), generateThemePlugin()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '/.vitepress/theme'),

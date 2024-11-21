@@ -7,7 +7,9 @@ import { parse } from 'smol-toml'
 import { Post, PostFrontMatter } from '../types'
 
 /**
- * Get all posts and generate pagination pages
+import { Theme } from 'vitepress'
+import { Theme } from 'vitepress'
+ * @abstract Get all posts and generate pagination pages
  * @param pageSize Number of posts per page
  * @returns List of posts
  */
@@ -42,7 +44,7 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
 }
 
 /**
- * Generate pagination pages
+ * @abstract Generate pagination pages
  * @param total Total number of posts
  * @param pageSize Number of posts per page
  */
@@ -85,7 +87,8 @@ const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * p
 }
 
 /**
- * Convert date to YYYY-MM-DD format
+ * @abstract Convert date to YYYY-MM-DD format
+ *
  * @param date Date string
  * @returns Date string in YYYY-MM-DD format
  */
@@ -96,7 +99,8 @@ function _convertDate(date = new Date().toString()) {
 }
 
 /**
- * Compare two posts by date
+ * @abstract Compare two posts by date
+ *
  * @param a First post
  * @param b Second post
  * @returns 1 if a is newer than b, -1 otherwise
@@ -106,7 +110,7 @@ function _compareDate(a: Post, b: Post): number {
 }
 
 /**
- * parse custom config file(.toml)
+ * @abstract: parse custom config file(.toml)
  *
  * @param configPath the path of the config file
  * @return the parsed config object
@@ -118,4 +122,43 @@ const parseToml = async (configPath: string) => {
 const assignedConfigPath = path.resolve(__dirname, '../../custom/config.toml')
 const parsedConfigToml = await parseToml(assignedConfigPath)
 
-export { getPosts, parseToml, parsedConfigToml, assignedConfigPath }
+/**
+ * @abstract: Calculate the number of words in the post
+ * @param content: the content of the post to calculate
+ */
+const calculateWords = (content: string): number => {
+  const pattern =
+    /[a-zA-Z0-9_\u0392-\u03C9\u00C0-\u00FF\u0600-\u06FF\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u3040-\u309F\uAC00-\uD7AF]+/g
+  const m = content.match(pattern)
+  let count = 0
+  if (!m) {
+    return 0
+  }
+  for (let i = 0; i < m.length; i += 1) {
+    if (m[i].charCodeAt(0) >= 0x4e00) {
+      count += m[i].length
+    } else {
+      count += 1
+    }
+  }
+  return count
+}
+
+/**
+ * @abstract: Calculate the reading time of the post
+ *
+ * @param content the content of post to calculate
+ * @returns the reading time of the post
+ */
+const calculateReadingTime = (content: string) => {
+  const words = calculateWords(content)
+  return Math.ceil(words / 110)
+}
+
+export {
+  getPosts,
+  parseToml,
+  parsedConfigToml,
+  assignedConfigPath,
+  calculateWords
+}
