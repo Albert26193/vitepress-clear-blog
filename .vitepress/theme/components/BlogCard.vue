@@ -1,10 +1,10 @@
 <template>
   <div class="blog-card">
-    <div class="post-header">
-      <h2 class="post-title mb-1 text-xl font-semibold">
+    <div class="card-header">
+      <h2 class="card-title mb-1 text-xl font-semibold">
         <a
           :href="withBase(article.regularPath)"
-          class="text-blue-600 hover:underline"
+          class="text-color-[var(--vp-c-brand)] hover:underline"
         >
           {{ article.frontMatter.title }}
         </a>
@@ -53,33 +53,15 @@
     @apply flex h-full flex-col justify-between overflow-hidden;
     @apply rounded-xl border border-solid border-gray-800;
     @apply bg-white p-4 shadow-sm dark:bg-gray-800;
-  }
-
-  .blog-card-cover img {
-    @apply opacity-90 transition-opacity duration-300 ease;
+    @apply min-w-[220px];
+    @apply hover:shadow-lg hover:border-color-[var(--vp-c-brand)] transition-shadow duration-300;
   }
 
   .card-banner {
     @apply flex justify-between items-center text-sm text-gray-500 mt-2;
   }
 
-  .dark .blog-card-cover img {
-    @apply opacity-70 transition-opacity duration-300 ease;
-  }
-
-  .blog-card-cover:hover img {
-    @apply opacity-100 p-2;
-  }
-
-  .blog-content-image {
-    @apply opacity-80 transition-all duration-500 ease;
-  }
-
-  .blog-content-image:hover {
-    @apply opacity-100;
-  }
-
-  .post-title {
+  .card-title {
     @apply text-lg font-medium my-1;
   }
 
@@ -102,15 +84,11 @@
   }
 
   @media screen and (max-width: 768px) {
-    .post-list {
-      @apply py-4;
-    }
-
-    .post-header {
+    .card-header {
       @apply flex items-center justify-between;
     }
 
-    .post-title {
+    .card-title {
       @apply text-base font-normal truncate w-44;
     }
 

@@ -5,17 +5,13 @@
     ref="$des"
   >
     <div class="time-info flex items-center">
-      <TimeLogo class="inline size-5 align-middle" />
+      <div class="i-carbon-time" />
       <span class="ml-2 align-middle text-sm font-semibold text-black">
         {{ frontmatter.date?.substring(0, 10) }}
       </span>
     </div>
     <div class="ml-8 grow space-x-2">
-      <span
-        v-for="item in frontmatter.tags"
-        :key="item"
-        class="hover:.dark:bg-blue-500 hover:.dark:text-slate-100 tag rounded-full hover:bg-blue-200"
-      >
+      <span v-for="item in frontmatter.tags" :key="item" class="tag">
         <a :href="withBase(`/tags.html?tag=${item}`)"> {{ item }}</a>
       </span>
     </div>
@@ -25,8 +21,6 @@
 <script setup lang="ts">
   import { useData, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
-
-  import TimeLogo from '../../assets/icon/time.svg?component'
 
   const { frontmatter } = useData()
 

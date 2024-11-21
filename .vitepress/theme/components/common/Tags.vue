@@ -1,17 +1,17 @@
 <template>
-  <div class="tags border border-gray-300 rounded-lg p-4">
+  <div class="tags">
     <span
       @click="toggleTag(String(key))"
       v-for="(_, key, index) in sortTags(tagsList)"
       :key="`tag-${index}`"
-      class="tag hover:.dark:bg-blue-500 rounded-full hover:bg-blue-200"
+      class="tag text-sm"
       :class="{ active: selectedTags.has(String(key)) }"
     >
       {{ key }}
       <span class="count">{{ tagsList[key].length }}</span>
     </span>
   </div>
-  <div class="tag-header mb-2 mt-6" v-if="selectedTags.size">
+  <div class="tag-header" v-if="selectedTags.size">
     <span class="i-carbon-tag-group ml-2" />
     <span class="h-80">{{ Array.from(selectedTags).join(', ') }}</span>
   </div>
@@ -21,9 +21,7 @@
     :key="index"
     class="posts"
   >
-    <div
-      class="post-container dark:text-slate-200 mt-1 font-bold text-slate-900"
-    >
+    <div class="dark:text-slate-200 mt-1 font-bold text-slate-900">
       <div class="post-dot"></div>
       {{ article.frontMatter.title }}
     </div>
@@ -82,76 +80,60 @@
 
 <style scoped>
   .tags {
-    margin-top: 12px;
-    display: flex;
-    flex-wrap: wrap;
-    font-weight: 600;
+    @apply mt-3 flex flex-wrap font-semibold;
+    @apply p-4 space-x-2;
+    @apply border-b-dashed border-gray-500;
   }
 
-  .tags .count {
-    margin-left: 2px;
-    font-weight: 600;
-    font-size: 1rem;
-    margin-left: 8px;
-    color: var(--vp-c-brand);
+  .count {
+    @apply ml-2 font-semibold;
+    @apply color-[var(--vp-c-brand)];
   }
 
-  .tags .count:hover {
-    color: var(--tag-hover-color);
+  .count:hover {
+    @apply color-[var(--vp-c-brand)];
   }
 
   .tag {
-    display: inline-block;
-    padding: 1px 12px;
-    margin: 4px 4px 6px 4px;
-    font-size: 0.875rem;
-    line-height: 25px;
-    border: 1px solid var(--tag-border-color);
-    transition: 0.4s;
-    color: var(--vp-c-text-1);
-    cursor: pointer;
+    @apply inline-block px-3 py-1 m-1 text-sm border rounded-full cursor-pointer transition-colors duration-300;
+    border-color: var(--tag-border-color);
   }
 
-  .tags .tag.active {
-    border: 1px solid var(--vp-c-brand);
-    color: var(--vp-c-brand);
-    box-sizing: border-box;
-    font-weight: 600;
+  .tag.active {
+    @apply box-border font-semibold;
+    @apply border-[var(--vp-c-brand)] color-[var(--vp-c-brand)];
   }
 
-  .tags .tag.active .count {
-    color: var(--vp-c-brand);
-    transition: 0.4s;
+  .tag.active .count {
+    @apply transition-colors duration-300;
+    @apply color-gray-700;
   }
 
   .tag:hover {
-    border: 1px solid var(--tag-info-color);
-    font-weight: 600;
+    @apply font-semibold;
+    @apply border-[var(--tag-info-color)];
   }
 
   .tag:hover .count {
-    color: var(--tag-hover-color);
-    transition: 0.4s;
+    @apply transition-colors duration-300;
+    @apply color-[var(--tag-hover-color)];
   }
 
   .tag-header {
-    font-size: 1.5rem;
-    font-weight: 500;
-    text-align: left;
-    color: var(--vp-c-brand);
+    @apply mb-2 mt-6 text-xl font-medium text-left;
+    @apply color-[var(--vp-c-brand)];
   }
 
   .tag-img {
-    margin-right: 8px;
-    vertical-align: -45%;
+    @apply mr-2 align-middle;
   }
 
   @media screen and (max-width: 768px) {
     .tag-header {
-      font-size: 1.5rem;
+      @apply text-xl;
     }
     .date {
-      font-size: 0.75rem;
+      @apply text-sm;
     }
   }
 </style>

@@ -46,6 +46,7 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
   --c-text-code: ${darkCodeColor} !important;
   --c-text-strong: ${darkStrongColor} !important;
   --c-text-em: ${darkEmColor} !important;
+}
 `.trim()
 
   await fs.writeFile(generatedCssPath, generatedCssTemplate)

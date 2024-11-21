@@ -4,17 +4,22 @@
     :key="getYear(curYearPostList)"
     class="my-4"
   >
-    <div @click="toggleYear(getYear(curYearPostList))">
-      <span
-        v-if="displayStatus.years[getYear(curYearPostList)]"
-        class="i-carbon-caret-down text-lg"
-      />
-      <span class="i-carbon-caret-right text-lg" v-else />
-      <span class="font-800 text-xl accent-black">
-        {{ getYear(curYearPostList) }}
-      </span>
-      <span class="font-600 .dark:text-blue-200 ml-2 text-base text-blue-700">
-        {{ `(${curYearPostList.length})` }}
+    <div>
+      <!-- year and post count -->
+      <span @click="toggleYear(getYear(curYearPostList))">
+        <span
+          v-if="displayStatus.years[getYear(curYearPostList)]"
+          class="i-carbon-caret-down text-lg"
+        />
+        <span class="i-carbon-caret-right text-lg" v-else />
+        <span class="font-800 text-xl accent-black">
+          {{ getYear(curYearPostList) }}
+        </span>
+        <span
+          class="font-600 dark:text-[var(--vp-c-brand)] ml-3 text-base text-[var(--vp-c-brand)]"
+        >
+          {{ `( ${curYearPostList.length} )` }}
+        </span>
       </span>
     </div>
     <div
@@ -23,20 +28,23 @@
       v-show="displayStatus.years[getYear(curYearPostList)]"
     >
       <div
-        class=".dark:text-blue-400 ml-4 pb-1 pt-4 italic text-blue-700"
-        @click="toggleMonth(getYear(monthList), getMonth(monthList))"
+        class="dark:text-[var(--vp-c-brand)] ml-4 pb-1 pt-4 text-[var(--vp-c-brand)]"
       >
-        <span
-          v-if="
-            displayStatus.months[
-              `${getYear(curYearPostList)}-${getMonth(monthList)}`
-            ]
-          "
-          class="i-carbon-caret-down"
-        />
-        <span class="i-carbon-caret-right" v-else />
-        <span class="font-600">{{ getYearMonth(monthList) }}</span>
-        <span class="font-600 ml-1 text-sm">{{ `(${monthList.length})` }}</span>
+        <span @click="toggleMonth(getYear(monthList), getMonth(monthList))">
+          <span
+            v-if="
+              displayStatus.months[
+                `${getYear(curYearPostList)}-${getMonth(monthList)}`
+              ]
+            "
+            class="i-carbon-caret-down"
+          />
+          <span class="i-carbon-caret-right" v-else />
+          <span class="font-600">{{ getYearMonth(monthList) }}</span>
+          <span class="font-600 ml-2 text-sm">
+            {{ `( ${monthList.length} )` }}
+          </span>
+        </span>
       </div>
       <div
         v-show="
@@ -51,12 +59,11 @@
           :key="index"
           class="posts ml-2"
         >
-          <div
-            class="post-container .dark:text-slate-100 font-bold text-slate-800"
-          >
+          <div class="dark:text-slate-100 font-bold text-slate-800">
             <div class="post-dot"></div>
             {{ article.frontMatter.title }}
           </div>
+          <div class="mx-3 flex-1 border-dashed border-gray-300"></div>
           <div class="date">{{ getDay(article) }}</div>
         </a>
       </div>
