@@ -2,7 +2,7 @@
   <div
     v-for="curYearPostList in dataByYear"
     :key="getYear(curYearPostList)"
-    class="my-4"
+    class="my-4 custom-page-layout"
   >
     <div>
       <!-- year and post count -->
@@ -145,3 +145,26 @@
     displayStatus.months[key] = !displayStatus.months[key]
   }
 </script>
+
+<style>
+  .posts {
+    @apply px-6 py-1 flex justify-between items-center;
+  }
+
+  .post-dot {
+    @apply inline-block mr-2.5 mb-0.5 w-1 h-1 rounded-full;
+    background-color: var(--li-dot-color);
+  }
+
+  .post-container {
+    @apply text-[var(--vp-c-text-2)] text-[0.9375rem] font-400;
+  }
+  .post-container:hover {
+    @apply text-[var(--vp-c-brand)];
+  }
+
+  .date {
+    color: var(--date-color);
+    font-family: var(--date-font-family);
+  }
+</style>

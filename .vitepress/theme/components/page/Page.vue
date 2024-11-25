@@ -1,34 +1,40 @@
 <template>
-  <button class="w-16 h-8 mt-4 ml-4" @click="toggleStatus"> clike me </button>
-  <div
-    class="border-solid border-gray-400"
-    v-if="currentPageType === 'ListType'"
-  >
-    <div v-auto-animate="{ duration: 300 }" class="post-list">
-      <div v-for="(article, index) in posts" :key="index">
-        <BlogList :article="article"></BlogList>
-      </div>
-    </div>
-  </div>
-  <div
-    class="border-solid border-gray-400"
-    v-if="currentPageType === 'cardType'"
-  >
-    <div v-auto-animate="{ duration: 300 }" class="post-list">
-      <div v-for="(article, index) in posts" :key="index">
-        <BlogCard :article="article"></BlogCard>
-      </div>
-    </div>
-  </div>
-  <div class="pagination">
-    <a
-      v-for="i in pagesNum"
-      :key="i"
-      class="link ml-1"
-      :class="{ active: pageCurrent === i }"
-      :href="withBase(i === 1 ? '/pages/index.html' : `/pages/page_${i}.html`)"
-      >{{ i }}</a
+  <div class="custom-page-layout">
+    <button class="w-16 h-8 mt-4 ml-4" @click="toggleStatus">
+      {{ `click me` }}
+    </button>
+    <div
+      class="border-solid border-gray-400"
+      v-if="currentPageType === 'ListType'"
     >
+      <div v-auto-animate="{ duration: 300 }" class="">
+        <div v-for="(article, index) in posts" :key="index">
+          <BlogList :article="article"></BlogList>
+        </div>
+      </div>
+    </div>
+    <div
+      class="border-solid border-gray-400"
+      v-if="currentPageType === 'cardType'"
+    >
+      <div v-auto-animate="{ duration: 300 }" class="card-container">
+        <div v-for="(article, index) in posts" :key="index">
+          <BlogCard :article="article"></BlogCard>
+        </div>
+      </div>
+    </div>
+    <div class="pagination">
+      <a
+        v-for="i in pagesNum"
+        :key="i"
+        class="link ml-1"
+        :class="{ active: pageCurrent === i }"
+        :href="
+          withBase(i === 1 ? '/pages/index.html' : `/pages/page_${i}.html`)
+        "
+        >{{ i }}</a
+      >
+    </div>
   </div>
 </template>
 
@@ -67,9 +73,9 @@
 </script>
 
 <style scoped>
-  .post-list {
-    @apply border-b p-6 max-w-1280;
-    @apply mx-auto mt-2 grid w-4/5 grid-cols-1 gap-4;
+  .card-container {
+    @apply border-b p-6;
+    @apply mx-auto mt-2 grid grid-cols-1 gap-4;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
   }
 

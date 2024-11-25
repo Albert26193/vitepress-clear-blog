@@ -1,6 +1,11 @@
 import { Post } from '../types'
 
-export function initTags(post: Post[]) {
+/**
+ * @abstract Initialize tags from posts and group posts by tag
+ * @param post Array of posts to process
+ * @returns Record object with tags as keys and arrays of posts as values
+ */
+const initTags = (post: Post[]) => {
   const data: Record<string, Post[]> = {}
 
   for (let index = 0; index < post.length; index++) {
@@ -22,7 +27,12 @@ export function initTags(post: Post[]) {
   return data
 }
 
-export function useYearSort(posts: Post[]): Post[][] {
+/**
+ * @abstract Sort posts by year and return them as nested arrays
+ * @param posts Array of posts to sort
+ * @returns Array of arrays, where each inner array contains posts from the same year
+ */
+const useYearSort = (posts: Post[]): Post[][] => {
   const sortedByYear = posts.reduce(
     (acc: Record<string, Post[]>, post: Post) => {
       if (post.frontMatter.date) {
@@ -44,9 +54,14 @@ export function useYearSort(posts: Post[]): Post[][] {
   return sortedPostsByYear
 }
 
-export function useMonthYearSort(
+/**
+ * @abstract Sort posts by year and month, organizing them in a nested structure
+ * @param posts Array of posts to sort
+ * @returns Nested record object with years as top-level keys and months as second-level keys
+ */
+const useMonthYearSort = (
   posts: Post[]
-): Record<string, Record<string, Post[]>> {
+): Record<string, Record<string, Post[]>> => {
   return posts.reduce(
     (acc: Record<string, Record<string, Post[]>>, post: Post) => {
       if (post.frontMatter.date) {
@@ -62,10 +77,11 @@ export function useMonthYearSort(
 }
 
 /**
- * @abstract: Calculate the number of words in the post
- * @param content: the content of the post to calculate
+ * @abstract Calculate the number of words in the post
+ * @param content The content of the post to calculate
+ * @returns Number of words, counting Chinese characters individually
  */
-const calculateWords = (content: string) => {
+const calculateWords = (content: string): number => {
   const pattern =
     /[a-zA-Z0-9_\u0392-\u03C9\u00C0-\u00FF\u0600-\u06FF\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u3040-\u309F\uAC00-\uD7AF]+/g
   const m = content.match(pattern)
@@ -83,4 +99,4 @@ const calculateWords = (content: string) => {
   return count
 }
 
-export { calculateWords }
+export { initTags, useYearSort, useMonthYearSort, calculateWords }

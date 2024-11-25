@@ -14,6 +14,7 @@ pageSize = 10
 [theme]
 vp-c-bg = "#fafafa"
 vp-c-brand = "#42b983"
+vp-c-brand-1 = "#4269b3"
 vp-button-brand-bg = "#129083"
 c-text-code = "#00ff00"
 c-text-strong = "#ff0000"
@@ -22,6 +23,7 @@ c-text-em = "#0000ff"
 [theme.dark]
 vp-c-bg = "#020405"
 vp-c-brand = "#42b983"
+vp-c-brand-1 = "#4269b3"
 vp-button-brand-bg = "#f2b983"
 c-text-code = "#00ff00"
 c-text-strong = "#ff0000"

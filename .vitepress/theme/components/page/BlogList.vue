@@ -1,5 +1,5 @@
 <template>
-  <div class="list-card">
+  <div class="list-list">
     <div class="list-header">
       <h2 class="list-title mb-1 text-xl font-semibold">
         <a
@@ -32,11 +32,10 @@
 </template>
 
 <script lang="ts" setup>
+  import { useListDescription } from '@/theme/composables/useMeta'
+  import { type Article } from '@/theme/types'
   import { withBase } from 'vitepress'
   import { type PropType } from 'vue'
-
-  import { useListDescription } from '../../composables/useMeta'
-  import { type Article } from '../../types'
 
   const props = defineProps({
     article: {
@@ -49,19 +48,19 @@
 </script>
 
 <style scoped>
-  .blog-card {
+  /* .blog-list {
     @apply flex h-full flex-col justify-between overflow-hidden;
     @apply rounded-xl border border-solid border-gray-800;
     @apply bg-white p-4 shadow-sm dark:bg-gray-800;
     @apply min-w-[220px];
     @apply hover:shadow-lg hover:border-color-[var(--vp-c-brand)] transition-shadow duration-300;
-  }
+  } */
 
-  .card-banner {
+  /* .list-banner {
     @apply flex justify-between items-center text-sm text-gray-500 mt-2;
   }
 
-  .card-title {
+  .list-title {
     @apply text-lg font-medium my-1;
   }
 
@@ -84,16 +83,16 @@
   }
 
   @media screen and (max-width: 768px) {
-    .card-header {
+    .list-header {
       @apply flex items-center justify-between;
     }
 
-    .card-title {
+    .list-title {
       @apply text-base font-normal truncate w-44;
     }
 
     .describe {
       @apply text-sm truncate my-2;
     }
-  }
+  } */
 </style>

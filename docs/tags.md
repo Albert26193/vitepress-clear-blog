@@ -1,5 +1,5 @@
 ---
-page: true
+layout: page
 title: Tags
 description: Tags
 aside: false

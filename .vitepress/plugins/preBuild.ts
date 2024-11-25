@@ -17,6 +17,7 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
 
   const bgColor = theme?.['vp-c-bg'] || '#fff'
   const brandColor = theme?.['vp-c-brand'] || '#ae1f7c'
+  const brandColor1 = theme?.['vp-c-brand-1'] || '#ae1f7c'
   const codeColor = theme?.['c-text-code'] || '#333'
   const strongColor = theme?.['c-text-strong'] || '#000'
   const emColor = theme?.['c-text-em'] || '#000'
@@ -24,6 +25,7 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
 
   const darkBgColor = darkTheme?.['vp-c-bg'] || '#000'
   const darkBrandColor = darkTheme?.['vp-c-brand'] || '#ae1f7c'
+  const darkBrandColor1 = darkTheme?.['vp-c-brand-1'] || '#ae1f7c'
   const darkCodeColor = darkTheme?.['c-text-code'] || '#333'
   const darkStrongColor = darkTheme?.['c-text-strong'] || '#000'
   const darkEmColor = darkTheme?.['c-text-em'] || '#000'
@@ -38,6 +40,7 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
 :root {
   --vp-c-bg: ${bgColor}; !important;
   --vp-c-brand: ${brandColor} !important;
+  --vp-c-brand-1: ${brandColor1} !important;
   --vp-button-brand-bg: ${buttonBgColor} !important;
   --c-text-code: ${codeColor} !important;
   --c-text-strong: ${strongColor} !important;
@@ -47,6 +50,7 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
 .dark {
   --vp-c-bg: ${darkBgColor} !important;
   --vp-c-brand: ${darkBrandColor} !important;
+  --vp-c-brand-1: ${darkBrandColor1} !important;
   --vp-button-brand-bg: ${darkButtonBgColor} !important;
   --c-text-code: ${darkCodeColor} !important;
   --c-text-strong: ${darkStrongColor} !important;

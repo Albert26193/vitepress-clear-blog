@@ -1,7 +1,6 @@
 ---
 layout: home
-
-titlP: VitePress Clear
+title: VitePress Clear
 titleTemplate:
 
 hero:

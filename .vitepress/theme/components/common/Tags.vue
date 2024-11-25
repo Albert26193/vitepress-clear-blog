@@ -1,40 +1,46 @@
 <template>
-  <div class="tags">
-    <span
-      @click="toggleTag(String(key))"
-      v-for="(_, key, index) in sortTags(tagsList)"
-      :key="`tag-${index}`"
-      class="tag text-sm"
-      :class="{ active: selectedTag === String(key) }"
-    >
-      {{ key }}
-      <span class="count">{{ tagsList[key].length }}</span>
-    </span>
-  </div>
-  <div class="tag-header" v-if="selectedTag">
-    <span class="i-carbon-tag-group ml-2" />
-    <span class="h-80">{{ selectedTag }}</span>
-  </div>
-  <a
-    :href="withBase(article.regularPath)"
-    v-for="(article, index) in filteredArticles"
-    :key="index"
-    class="posts"
-  >
-    <div class="dark:text-slate-200 mt-1 font-bold text-slate-900">
-      <div class="post-dot"></div>
-      {{ article.frontMatter.title }}
+  <div class="custom-page-layout">
+    <div class="tags-container">
+      <span
+        @click="toggleTag(String(key))"
+        v-for="(_, key, index) in sortTags(tagsList)"
+        :key="`tag-${index}`"
+        class="tag text-sm"
+        :class="{ active: selectedTag === String(key) }"
+      >
+        {{ key }}
+        <span class="count">{{ tagsList[key].length }}</span>
+      </span>
     </div>
-    <div class="date">{{ article.frontMatter.date }}</div>
-  </a>
+    <div class="tag-header">
+      <span class="i-carbon-tag-group ml-2 text-3xl" />
+      <span class="ml-2">
+        <span v-if="selectedTag"> {{ selectedTag }}</span>
+        <span v-else class="text-gray-400 dark:text-gray-200">{{
+          `Choose a tag to filter`
+        }}</span>
+      </span>
+    </div>
+    <a
+      :href="withBase(article.regularPath)"
+      v-for="(article, index) in filteredArticles"
+      :key="index"
+      class="posts"
+    >
+      <div class="dark:text-slate-200 mt-1 font-bold text-slate-900">
+        <div class="post-dot"></div>
+        {{ article.frontMatter.title }}
+      </div>
+      <div class="date">{{ article.frontMatter.date }}</div>
+    </a>
+  </div>
 </template>
 
 <script lang="ts" setup>
+  import { Post } from '@/theme/types'
+  import { initTags } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
-
-  import { Post } from '../../types'
-  import { initTags } from '../../utils/themeUtils'
 
   const { theme } = useData()
 
@@ -80,9 +86,17 @@
   }
 
   const filteredArticles = computed(() => {
+    // If no tag is selected, return all articles
     if (!selectedTag.value) {
-      return []
+      return theme.value.posts
     }
+    console.log(
+      'filteredArticles',
+      theme.value.posts.filter((article: Post) =>
+        article.frontMatter.tags?.includes(selectedTag.value)
+      ),
+      selectedTag.value
+    )
     return theme.value.posts.filter((article: Post) =>
       article.frontMatter.tags?.includes(selectedTag.value)
     )
@@ -90,7 +104,7 @@
 </script>
 
 <style scoped>
-  .tags {
+  .tags-container {
     @apply mt-3 flex flex-wrap font-semibold;
     @apply p-4 space-x-2;
     @apply border-b-dashed border-gray-500;
@@ -102,12 +116,12 @@
   }
 
   .count:hover {
-    @apply color-[var(--vp-c-brand)];
+    @apply color-[var(--vp-c-brand-1)];
   }
 
   .tag {
     @apply inline-block px-3 py-1 m-1 text-sm border rounded-full cursor-pointer transition-colors duration-300;
-    border-color: var(--tag-border-color);
+    /* border-color: var(--tag-border-color); */
   }
 
   .tag.active {
@@ -117,7 +131,7 @@
 
   .tag.active .count {
     @apply transition-colors duration-300;
-    @apply color-gray-700;
+    @apply color-[var(--vp-c-brand-1)];
   }
 
   .tag:hover {

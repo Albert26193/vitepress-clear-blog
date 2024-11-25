@@ -1,5 +1,5 @@
 ---
-page: true
+layout: page
 title: Timeline
 description: Timeline
 aside: false

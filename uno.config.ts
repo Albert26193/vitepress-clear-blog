@@ -29,6 +29,7 @@ export default defineConfig({
     [
       'tag',
       'rounded-full px-[5.5px] py-1 text-xs border-solid border-gray-700 dark:border-gray-200 text-gray-900 dark:text-gray-100 hover:text-[var(--vp-c-brand)] hover:border-[var(--vp-c-brand)]'
-    ]
+    ],
+    ['custom-page-layout', 'w-4/5 h-full mx-auto max-w-1280px']
   ]
 })

@@ -51,8 +51,8 @@
   .blog-card {
     @apply flex h-full flex-col justify-between overflow-hidden;
     @apply rounded-xl border border-solid border-gray-800;
-    @apply bg-white p-4 shadow-sm dark:bg-gray-800;
-    @apply min-w-[220px];
+    @apply bg-white p-6 shadow-sm dark:bg-gray-800;
+    @apply min-w-220px;
     @apply hover:shadow-lg hover:border-color-[var(--vp-c-brand)] transition-shadow duration-300;
   }
 

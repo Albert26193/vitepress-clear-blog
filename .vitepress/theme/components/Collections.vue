@@ -10,9 +10,8 @@
 </template>
 
 <script lang="ts">
+  import BlogCard from '@/theme/components/page/BlogCard.vue'
   import { ref } from 'vue'
-
-  import BlogCard from './BlogCard.vue'
 
   const demoData = ref([
     {

@@ -1,5 +1,5 @@
 ---
-page: true
+layout: page
 title: About
 description: About me test
 aside: false

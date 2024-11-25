@@ -1,24 +1,29 @@
 <template>
   <div
-    class="meta-des mb-2 flex h-8 items-center mt-1"
+    class="meta-des flex-col items-center space-y-4"
     id="hack-article-des"
     ref="$des"
   >
-    <div class="time-info flex items-center">
-      <div class="i-carbon-time" />
-      <span class="ml-2 align-middle text-sm font-semibold text-black">
-        {{ frontmatter.date?.substring(0, 10) }}
-      </span>
-    </div>
-    <div class="ml-8 grow space-x-2">
+    <!-- tags -->
+    <div class="grow space-x-2">
       <span v-for="item in frontmatter.tags" :key="item" class="tag">
         <a :href="withBase(`/tags.html?tag=${item}`)"> {{ item }}</a>
       </span>
+    </div>
+    <!-- time and word count -->
+    <div class="flex items-center mt-2">
+      <div class="i-carbon-time" />
+      <span class="ml-1 align-middle text-sm">
+        {{ frontmatter.date?.substring(0, 10) }}
+      </span>
+      <div class="i-carbon-document ml-3" />
+      <span class="ml-1 align-middle text-sm"> {{ wordsCount }} words </span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+  //TODO: how to calculate layout on mobile? if we have too many tags?
   import { calculateWords } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
@@ -63,3 +68,12 @@
     // wordsCount.value = calculateWords(textContent)
   })
 </script>
+
+<style scoped>
+  .meta-des {
+    /* border-bottom: 1px solid var(--vp-c-divider); */
+    @apply pb-2 mt-4;
+    @apply border-b-dashed border-gray-300;
+    /* @apply border-2 border-dashed border-gray-500; */
+  }
+</style>
