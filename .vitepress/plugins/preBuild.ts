@@ -20,14 +20,14 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
   const codeColor = theme?.['c-text-code'] || '#333'
   const strongColor = theme?.['c-text-strong'] || '#000'
   const emColor = theme?.['c-text-em'] || '#000'
-  const buttonBgColor = theme?.['vp-c-button-bg'] || '#ae1f7c'
+  const buttonBgColor = theme?.['vp-button-brand-bg'] || '#ae1f7c'
 
   const darkBgColor = darkTheme?.['vp-c-bg'] || '#000'
   const darkBrandColor = darkTheme?.['vp-c-brand'] || '#ae1f7c'
   const darkCodeColor = darkTheme?.['c-text-code'] || '#333'
   const darkStrongColor = darkTheme?.['c-text-strong'] || '#000'
   const darkEmColor = darkTheme?.['c-text-em'] || '#000'
-  const darkButtonBgColor = darkTheme?.['vp-c-button-bg'] || '#ae1f7c'
+  const darkButtonBgColor = darkTheme?.['vp-button-brand-bg'] || '#ae1f7c'
 
   const generatedCssPath = path.resolve(
     __dirname,

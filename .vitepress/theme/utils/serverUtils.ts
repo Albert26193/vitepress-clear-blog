@@ -66,7 +66,7 @@ aside: false
 layout: page
 ---
 <script setup>
-import Page from "../../.vitepress/theme/components/Page.vue";
+import Page from "../../.vitepress/theme/components/page/Page.vue";
 import { useData } from "vitepress";
 const { theme } = useData();
 const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * pageNum})
@@ -123,36 +123,20 @@ const assignedConfigPath = path.resolve(__dirname, '../../custom/config.toml')
 const parsedConfigToml = await parseToml(assignedConfigPath)
 
 /**
- * @abstract: Calculate the number of words in the post
- * @param content: the content of the post to calculate
+ * @abstract: get root path for project
  */
-const calculateWords = (content: string): number => {
-  const pattern =
-    /[a-zA-Z0-9_\u0392-\u03C9\u00C0-\u00FF\u0600-\u06FF\u0400-\u04FF]+|[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u3040-\u309F\uAC00-\uD7AF]+/g
-  const m = content.match(pattern)
-  let count = 0
-  if (!m) {
-    return 0
-  }
-  for (let i = 0; i < m.length; i += 1) {
-    if (m[i].charCodeAt(0) >= 0x4e00) {
-      count += m[i].length
-    } else {
-      count += 1
-    }
-  }
-  return count
+const getRootPath = () => {
+  return path.resolve(process.cwd())
 }
 
 /**
- * @abstract: Calculate the reading time of the post
- *
- * @param content the content of post to calculate
- * @returns the reading time of the post
+ * @abstract: get src path for project
+ * @param srcName - src name
+ * @returns src path
  */
-const calculateReadingTime = (content: string) => {
-  const words = calculateWords(content)
-  return Math.ceil(words / 110)
+const getSrcPath = (srcName = 'src') => {
+  const rootPath = getRootPath()
+  return `${rootPath}/${srcName}`
 }
 
 export {
@@ -160,5 +144,6 @@ export {
   parseToml,
   parsedConfigToml,
   assignedConfigPath,
-  calculateWords
+  getRootPath,
+  getSrcPath
 }

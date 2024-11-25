@@ -7,9 +7,9 @@ import DefaultTheme from 'vitepress/theme'
 import { nextTick, onMounted, watch } from 'vue'
 
 import NewLayout from './components/NewLayout.vue'
-import Page from './components/Page.vue'
 import Timeline from './components/Timeline.vue'
 import Tags from './components/common/Tags.vue'
+import Page from './components/page/Page.vue'
 import './styles/generated.css'
 import './styles/main.css'
 

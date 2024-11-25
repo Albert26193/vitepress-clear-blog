@@ -5,15 +5,15 @@
       v-for="(_, key, index) in sortTags(tagsList)"
       :key="`tag-${index}`"
       class="tag text-sm"
-      :class="{ active: selectedTags.has(String(key)) }"
+      :class="{ active: selectedTag === String(key) }"
     >
       {{ key }}
       <span class="count">{{ tagsList[key].length }}</span>
     </span>
   </div>
-  <div class="tag-header" v-if="selectedTags.size">
+  <div class="tag-header" v-if="selectedTag">
     <span class="i-carbon-tag-group ml-2" />
-    <span class="h-80">{{ Array.from(selectedTags).join(', ') }}</span>
+    <span class="h-80">{{ selectedTag }}</span>
   </div>
   <a
     :href="withBase(article.regularPath)"
@@ -31,16 +31,11 @@
 
 <script lang="ts" setup>
   import { useData, withBase } from 'vitepress'
-  import { computed, ref } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
 
   import { Post } from '../../types'
   import { initTags } from '../../utils/themeUtils'
 
-  let url
-  if (typeof window != 'undefined') {
-    url = window.location.href.split('?')[1]
-  }
-  const params = new URLSearchParams(url)
   const { theme } = useData()
 
   const tagsList = computed(() => initTags(theme.value.posts))
@@ -57,23 +52,39 @@
     return sortedTagsList
   }
 
-  const selectedTags = ref(new Set<string>())
+  const selectedTag = ref('')
+
+  onMounted(() => {
+    // Get tag from URL on initial load
+    const urlParams = new URLSearchParams(window.location.search)
+    const tagFromUrl = urlParams.get('tag')
+    if (tagFromUrl && tagsList.value[tagFromUrl]) {
+      selectedTag.value = tagFromUrl
+    }
+  })
+
   const toggleTag = (tag: string) => {
-    if (selectedTags.value.has(tag)) {
-      selectedTags.value.delete(tag)
+    if (selectedTag.value === tag) {
+      selectedTag.value = ''
+      // Remove tag from URL
+      const url = new URL(window.location.href)
+      url.searchParams.delete('tag')
+      history.pushState({}, '', url)
     } else {
-      selectedTags.value.add(tag)
+      selectedTag.value = tag
+      // Add tag to URL
+      const url = new URL(window.location.href)
+      url.searchParams.set('tag', tag)
+      history.pushState({}, '', url)
     }
   }
 
   const filteredArticles = computed(() => {
-    if (selectedTags.value.size === 0) {
+    if (!selectedTag.value) {
       return []
     }
     return theme.value.posts.filter((article: Post) =>
-      Array.from(selectedTags.value).some((tag) =>
-        article.frontMatter.tags?.includes(tag)
-      )
+      article.frontMatter.tags?.includes(selectedTag.value)
     )
   })
 </script>

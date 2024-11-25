@@ -6,7 +6,6 @@
   >
     <div class="time-info flex items-center">
       <div class="i-carbon-time" />
-      <div> {{ wordsCount }} </div>
       <span class="ml-2 align-middle text-sm font-semibold text-black">
         {{ frontmatter.date?.substring(0, 10) }}
       </span>
@@ -20,26 +19,25 @@
 </template>
 
 <script setup lang="ts">
+  import { calculateWords } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
-  import { computed, onMounted, ref } from 'vue'
+  import { onMounted, ref } from 'vue'
 
-  import { calculateWords } from '../../utils/serverUtils'
-
-  const { frontmatter, page } = useData()
+  const { frontmatter } = useData()
   const $des = ref<HTMLDivElement>()
 
-  console.log(page.value)
+  const domContainer = window.document.querySelector('#VPContent')
+  const textContent =
+    domContainer?.querySelector('.content-container .main')?.textContent || ''
 
-  const wordsCount = computed(() => {
-    const docDomContainer = window.document.querySelector('#VPContent')
-    const words = calculateWords(docDomContainer?.textContent || '')
-    return words
-  })
-
+  const wordsCount = calculateWords(textContent)
+  console.log(wordsCount)
+  console.log(textContent)
   const reposition = () => {
     if (!$des.value) {
       return
     }
+
     document.querySelectorAll('.meta-des').forEach((v) => v.remove())
     const docDomContainer = window.document.querySelector('#VPContent')
     let el = docDomContainer?.querySelector('h1')
@@ -62,5 +60,6 @@
     })
 
     reposition()
+    // wordsCount.value = calculateWords(textContent)
   })
 </script>

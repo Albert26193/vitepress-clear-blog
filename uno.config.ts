@@ -27,12 +27,8 @@ export default defineConfig({
     ],
     ['card-border', 'rounded-md z-50 hover:cursor-default'],
     [
-      'card',
-      'rounded-md shadow-sm border border-[#ddd] dark:border-[#333] transition-all ease-in-out  hover:border-blue  hover:dark:border-blue ring-inset hover:border-blue hover:ring-2 hover:ring-blue'
-    ],
-    [
       'tag',
-      'rounded-full px-[5.5px] py-1 text-xs border-solid border-gray-700 dark:border-gray-200 text-gray-900 dark:text-gray-100'
+      'rounded-full px-[5.5px] py-1 text-xs border-solid border-gray-700 dark:border-gray-200 text-gray-900 dark:text-gray-100 hover:text-[var(--vp-c-brand)] hover:border-[var(--vp-c-brand)]'
     ]
   ]
 })

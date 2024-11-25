@@ -72,10 +72,9 @@
 </template>
 
 <script lang="ts" setup>
+  import { useMonthYearSort, useYearSort } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
-  import { computed, onMounted, reactive } from 'vue'
-
-  import { useMonthYearSort, useYearSort } from '../utils/themeUtils'
+  import { computed, reactive } from 'vue'
 
   const { theme } = useData()
 
@@ -119,7 +118,7 @@
   })
 
   // Initialize display status for each year and month
-  onMounted(() => {
+  const initDisplayStatus = () => {
     Object.entries(dataByYear.value).forEach(([year, posts]) => {
       const currentYear = getYear(posts)
       displayStatus.years[currentYear] = true
@@ -131,7 +130,9 @@
         })
       }
     })
-  })
+  }
+
+  initDisplayStatus()
 
   // Toggle year expansion
   const toggleYear = (year: string | number) => {

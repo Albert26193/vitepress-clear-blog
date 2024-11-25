@@ -1,7 +1,7 @@
 <template>
-  <div class="blog-card">
-    <div class="card-header">
-      <h2 class="card-title mb-1 text-xl font-semibold">
+  <div class="list-card">
+    <div class="list-header">
+      <h2 class="list-title mb-1 text-xl font-semibold">
         <a
           :href="withBase(article.regularPath)"
           class="text-color-[var(--vp-c-brand)] hover:underline"
@@ -14,10 +14,10 @@
       v-if="article.frontMatter.description"
       class="describe mb-4 text-gray-700 dark:text-gray-300 indent-2"
     >
-      {{ useCardDescription(article.frontMatter.description).value }}
+      {{ useListDescription(article.frontMatter.description).value }}
     </p>
     <div v-else class="mt-4"></div>
-    <div class="card-banner">
+    <div class="list-banner">
       <div class="flex items-center flex-wrap">
         <div class="i-carbon-time mr-1" />
         <span>{{ article.frontMatter.date }}</span>
@@ -35,8 +35,8 @@
   import { withBase } from 'vitepress'
   import { type PropType } from 'vue'
 
-  import { useCardDescription } from '../composables/useMeta'
-  import { type Article } from '../types'
+  import { useListDescription } from '../../composables/useMeta'
+  import { type Article } from '../../types'
 
   const props = defineProps({
     article: {
@@ -45,7 +45,7 @@
     }
   })
 
-  const partedTags = props.article.frontMatter.tags.slice(0, 2)
+  const partedTags = props.article.frontMatter.tags.slice(0, 4)
 </script>
 
 <style scoped>

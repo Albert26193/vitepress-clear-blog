@@ -14,10 +14,13 @@
       "DOM"
     ],
     "types": [],
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@/*": [
-        ".vitepress/theme/*"
+        "./.vitepress/*"
+      ],
+      "~/*": [
+        "./*"
       ]
     }
   },

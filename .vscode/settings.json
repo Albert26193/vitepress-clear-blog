@@ -1,5 +1,9 @@
 {
   "css.customData": [
     ".vscode/unocss.json"
-  ]
+  ],
+  "pathAlias.aliasMap": {
+    "@": "${cwd}/.vitepress",
+    "~": "${cwd}",
+  },
 }
