@@ -1,5 +1,5 @@
 <template>
-  <div class="list-list">
+  <div class="blog-list">
     <div class="list-header">
       <h2 class="list-title mb-1 text-xl font-semibold">
         <a
@@ -48,15 +48,15 @@
 </script>
 
 <style scoped>
-  /* .blog-list {
+  .blog-list {
     @apply flex h-full flex-col justify-between overflow-hidden;
     @apply rounded-xl border border-solid border-gray-800;
-    @apply bg-white p-4 shadow-sm dark:bg-gray-800;
-    @apply min-w-[220px];
+    @apply bg-white px-6 py-4 shadow-sm dark:bg-gray-800;
+    @apply min-w-220px w-4/5 mx-auto;
     @apply hover:shadow-lg hover:border-color-[var(--vp-c-brand)] transition-shadow duration-300;
-  } */
+  }
 
-  /* .list-banner {
+  .list-banner {
     @apply flex justify-between items-center text-sm text-gray-500 mt-2;
   }
 
@@ -94,5 +94,5 @@
     .describe {
       @apply text-sm truncate my-2;
     }
-  } */
+  }
 </style>

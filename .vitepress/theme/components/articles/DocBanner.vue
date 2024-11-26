@@ -72,8 +72,9 @@
 <style scoped>
   .meta-des {
     /* border-bottom: 1px solid var(--vp-c-divider); */
-    @apply pb-2 mt-4;
-    @apply border-b-dashed border-gray-300;
+    @apply mt-4 px-6 pt-6 pb-3;
+    @apply border-dashed border-gray-300 rounded-lg w-full;
+    @apply hover:shadow-lg transition-shadow duration-300;
     /* @apply border-2 border-dashed border-gray-500; */
   }
 </style>

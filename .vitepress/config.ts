@@ -22,6 +22,10 @@ export default defineConfig({
   markdown: {
     config: (md) => {
       md.use(mathjax3)
+    },
+    theme: {
+      light: 'github-light',
+      dark: 'ayu-dark'
     }
   },
   head,

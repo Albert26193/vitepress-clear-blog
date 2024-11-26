@@ -13,7 +13,7 @@ pageSize = 10
 
 [theme]
 vp-c-bg = "#fafafa"
-vp-c-brand = "#42b983"
+vp-c-brand = "#4259f3"
 vp-c-brand-1 = "#4269b3"
 vp-button-brand-bg = "#129083"
 c-text-code = "#00ff00"

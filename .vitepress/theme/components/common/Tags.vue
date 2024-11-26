@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-page-layout">
+  <div class="custom-page-layout max-w-780px">
     <div class="tags-container">
       <span
         @click="toggleTag(String(key))"
