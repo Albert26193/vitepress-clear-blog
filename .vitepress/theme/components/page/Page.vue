@@ -1,26 +1,29 @@
 <template>
   <div class="custom-page-layout page-wrapper">
-    <div class="page-content">
+    <div
+      class="page-content"
+      v-auto-animate="{ duration: 300, easing: 'ease-in-out' }"
+    >
       <button class="w-16 h-8 mt-4 ml-4" @click="toggleStatus">
-        {{ `click me` }}
+        {{ currentPageType === 'ListType' ? 'Card View' : 'List View' }}
       </button>
-      <div v-if="currentPageType === 'ListType'">
-        <div v-auto-animate="{ duration: 300 }" class="list-container">
-          <div v-for="(article, index) in posts" :key="index">
+      <div v-if="currentPageType === 'ListType'" :key="'list-view'">
+        <div class="list-container">
+          <div v-for="article in posts" :key="article.regularPath">
             <BlogList :article="article"></BlogList>
           </div>
         </div>
       </div>
-      <div v-if="currentPageType === 'cardType'">
-        <div v-auto-animate="{ duration: 300 }" class="card-container">
-          <div v-for="(article, index) in posts" :key="index">
+      <div v-if="currentPageType === 'cardType'" :key="'card-view'">
+        <div class="card-container">
+          <div v-for="article in posts" :key="article.regularPath">
             <BlogCard :article="article"></BlogCard>
           </div>
         </div>
       </div>
     </div>
     <footer class="page-footer">
-      <div class="pagination">
+      <div class="pagination" v-auto-animate>
         <a
           v-for="i in pagesNum"
           :key="i"

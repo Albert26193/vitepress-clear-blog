@@ -11,7 +11,7 @@ import { assignedConfigPath, parseToml } from '../theme/utils/serverUtils'
  */
 const generateThemeFile = async (configPath: string = assignedConfigPath) => {
   const config = await parseToml(configPath)
-  console.log(config)
+  // console.log(config)
   const theme = config.theme
   const darkTheme = config.theme?.dark
 
@@ -38,7 +38,7 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
 
   const generatedCssTemplate = `
 :root {
-  --vp-c-bg: ${bgColor}; !important;
+  --vp-c-bg: ${bgColor} !important;
   --vp-c-brand: ${brandColor} !important;
   --vp-c-brand-1: ${brandColor1} !important;
   --vp-button-brand-bg: ${buttonBgColor} !important;

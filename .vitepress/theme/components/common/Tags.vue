@@ -1,10 +1,10 @@
 <template>
   <div class="custom-page-layout max-w-780px">
-    <div class="tags-container">
+    <div class="tags-container" v-auto-animate>
       <span
         @click="toggleTag(String(key))"
-        v-for="(_, key, index) in sortTags(tagsList)"
-        :key="`tag-${index}`"
+        v-for="(_, key) in sortTags(tagsList)"
+        :key="key"
         class="tag text-sm"
         :class="{ active: selectedTag === String(key) }"
       >
@@ -14,11 +14,13 @@
     </div>
     <div class="tag-header">
       <span class="i-carbon-tag-group ml-2 text-3xl" />
-      <span class="ml-2">
-        <span v-if="selectedTag"> {{ selectedTag }}</span>
-        <span v-else class="text-gray-400 dark:text-gray-200">{{
-          `Choose a tag to filter`
-        }}</span>
+      <span class="ml-2" v-auto-animate>
+        <span v-if="selectedTag" :key="'selected-' + selectedTag">
+          {{ selectedTag }}</span
+        >
+        <span v-else :key="'default'" class="text-gray-400 dark:text-gray-200">
+          Choose a tag to filter
+        </span>
       </span>
     </div>
     <a

@@ -23,6 +23,6 @@
   const { Layout } = DefaultTheme
   const { frontmatter } = useData()
   onMounted(() => {
-    console.log('frontmatter', frontmatter.value)
+    // console.log('frontmatter', frontmatter.value)
   })
 </script>

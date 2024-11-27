@@ -1,12 +1,12 @@
 import mathjax3 from 'markdown-it-mathjax3'
-import path from 'path'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
+import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
+import { head } from './custom/head'
+import { nav } from './custom/nav'
 import { generateThemePlugin } from './plugins/preBuild'
 import { customElements } from './theme/config/constant'
-import { head } from './theme/config/head'
-import { nav } from './theme/config/nav'
 import { BlogConfig } from './theme/types'
 import { getPosts, getRootPath, getSrcPath } from './theme/utils/serverUtils'
 import { parsedConfigToml } from './theme/utils/serverUtils'
@@ -16,6 +16,12 @@ const pageSize = 10
 const postArticles = await getPosts(pageSize)
 const rootPath = getRootPath()
 const srcPath = getSrcPath('.vitepress')
+
+const RSS: RSSOptions = {
+  title: '222222222',
+  baseUrl: 'http://10.177.73.149:5000',
+  copyright: 'Copyright 111111111'
+}
 
 //default options
 export default defineConfig({
@@ -60,7 +66,7 @@ export default defineConfig({
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {
     server: { port: 5000 },
-    plugins: [UnoCSS(), generateThemePlugin()],
+    plugins: [UnoCSS(), generateThemePlugin(), RssPlugin(RSS)],
     resolve: {
       alias: {
         '@': srcPath,

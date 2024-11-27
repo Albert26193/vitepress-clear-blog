@@ -36,8 +36,6 @@
     domContainer?.querySelector('.content-container .main')?.textContent || ''
 
   const wordsCount = calculateWords(textContent)
-  console.log(wordsCount)
-  console.log(textContent)
   const reposition = () => {
     if (!$des.value) {
       return
@@ -75,6 +73,20 @@
     @apply mt-4 px-6 pt-6 pb-3;
     @apply border-dashed border-gray-300 rounded-lg w-full;
     @apply hover:shadow-lg transition-shadow duration-300;
+    @apply hover:scale-[1.02];
+    @apply transition-all duration-300;
+    animation: slideDown 0.5s ease-out;
     /* @apply border-2 border-dashed border-gray-500; */
+  }
+
+  @keyframes slideDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
