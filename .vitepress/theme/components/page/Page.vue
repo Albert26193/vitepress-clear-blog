@@ -1,31 +1,32 @@
 <template>
   <div class="custom-page-layout page-wrapper">
-    <div
-      class="page-content"
-      v-auto-animate="{ duration: 300, easing: 'ease-in-out' }"
-    >
-      <button class="w-16 h-8 mt-4 ml-4" @click="toggleStatus">
+    <div class="page-content">
+      <button class="w-24 h-8 mt-4 ml-4" @click="toggleStatus">
         {{ currentPageType === 'ListType' ? 'Card View' : 'List View' }}
       </button>
-      <div v-if="currentPageType === 'ListType'" :key="'list-view'">
+      <div
+        v-if="currentPageType === 'ListType'"
+        :key="'list-view'"
+        class="animate-fade-in"
+      >
         <div class="list-container">
-          <div v-for="article in posts" :key="article.regularPath">
+          <div v-for="article in props.posts" :key="article.regularPath">
             <BlogList :article="article"></BlogList>
           </div>
         </div>
       </div>
       <div v-if="currentPageType === 'cardType'" :key="'card-view'">
         <div class="card-container">
-          <div v-for="article in posts" :key="article.regularPath">
+          <div v-for="article in props.posts" :key="article.regularPath">
             <BlogCard :article="article"></BlogCard>
           </div>
         </div>
       </div>
     </div>
     <footer class="page-footer">
-      <div class="pagination" v-auto-animate>
+      <div class="pagination">
         <a
-          v-for="i in pagesNum"
+          v-for="i in props.pagesNum"
           :key="i"
           class="link ml-1"
           :class="{ active: pageCurrent === i }"
@@ -43,9 +44,8 @@
   import BlogCard from '@/theme/components/page/BlogCard.vue'
   import BlogList from '@/theme/components/page/BlogList.vue'
   import { Article } from '@/theme/types'
-  import autoAnimate from '@formkit/auto-animate'
   import { withBase } from 'vitepress'
-  import { type PropType, ref } from 'vue'
+  import { type PropType, onMounted, ref } from 'vue'
 
   const props = defineProps({
     posts: {
@@ -65,12 +65,22 @@
   type pageType = 'cardType' | 'ListType'
   const currentPageType = ref<pageType>('cardType')
 
-  const toggleStatus = () => {
-    if (currentPageType.value === 'cardType') {
-      currentPageType.value = 'ListType'
-    } else {
-      currentPageType.value = 'cardType'
+  onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const viewFromUrl = urlParams.get('view')
+    if (viewFromUrl === 'list' || viewFromUrl === 'card') {
+      currentPageType.value = viewFromUrl === 'list' ? 'ListType' : 'cardType'
     }
+  })
+
+  const toggleStatus = () => {
+    const newType =
+      currentPageType.value === 'cardType' ? 'ListType' : 'cardType'
+    currentPageType.value = newType
+
+    const url = new URL(window.location.href)
+    url.searchParams.set('view', newType === 'ListType' ? 'list' : 'card')
+    history.pushState({}, '', url)
   }
 </script>
 
@@ -88,12 +98,11 @@
   }
 
   .list-container {
-    @apply space-y-4;
+    @apply space-y-4 mx-auto mt-12;
   }
 
   .card-container {
-    @apply py-6;
-    @apply mx-auto mt-2 grid grid-cols-1 gap-4;
+    @apply mx-auto mt-12 grid grid-cols-1 gap-4 w-full;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
   }
 

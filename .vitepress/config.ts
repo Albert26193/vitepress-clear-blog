@@ -59,9 +59,7 @@ export default defineConfig({
     nav,
     outline: [2, 3],
     outlineTitle: 'Table of Contents',
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/airene/vitepress-blog-pure' }
-    ]
+    socialLinks: [{ icon: 'github', link: 'https://github.com' }]
   } as BlogConfig,
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {

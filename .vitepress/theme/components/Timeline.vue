@@ -63,7 +63,7 @@
             <div class="post-dot"></div>
             {{ article.frontMatter.title }}
           </div>
-          <div class="mx-3 flex-1 border-dashed border-gray-300"></div>
+          <div class="mx-3 flex-1 border-b-dashed border-gray-300"></div>
           <div class="date">{{ getDay(article) }}</div>
         </a>
       </div>
@@ -148,7 +148,7 @@
 
 <style>
   .posts {
-    @apply px-6 py-1 flex justify-between items-center;
+    @apply px-8 py-1 flex justify-between items-center;
   }
 
   .post-dot {

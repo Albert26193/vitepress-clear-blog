@@ -1,3 +1,5 @@
+import mediumZoom from 'medium-zoom'
+
 import { Post } from '../types'
 
 /**
@@ -99,4 +101,31 @@ const calculateWords = (content: string): number => {
   return count
 }
 
-export { initTags, useYearSort, useMonthYearSort, calculateWords }
+const mediumZoomInit = () => {
+  const zoom = mediumZoom('.main img', {
+    background: 'var(--vp-c-bg)',
+    margin: 48
+  })
+  zoom.on('open', () => {
+    document.querySelectorAll('.shiki [data-language]').forEach((el) => {
+      if (el instanceof HTMLElement) {
+        el.style.display = 'none'
+      }
+    })
+  })
+  zoom.on('close', () => {
+    document.querySelectorAll('.shiki [data-language]').forEach((el) => {
+      if (el instanceof HTMLElement) {
+        el.style.display = ''
+      }
+    })
+  })
+}
+
+export {
+  initTags,
+  useYearSort,
+  useMonthYearSort,
+  calculateWords,
+  mediumZoomInit
+}

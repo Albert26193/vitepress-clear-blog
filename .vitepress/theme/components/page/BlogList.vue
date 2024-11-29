@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-list">
+  <div class="blog-list" @click="navigateToPost">
     <div class="list-header">
       <h2 class="list-title mb-1 text-xl font-semibold">
         <a
@@ -24,7 +24,9 @@
       </div>
       <div class="flex space-x-2 flex-wrap">
         <span v-for="item in partedTags" :key="item + 'key'" class="tag">
-          <a :href="withBase(`/tags.html?tag=${item}`)">{{ item }}</a>
+          <a @click.stop :href="withBase(`/tags.html?tag=${item}`)">{{
+            item
+          }}</a>
         </span>
       </div>
     </div>
@@ -45,15 +47,27 @@
   })
 
   const partedTags = props.article.frontMatter.tags.slice(0, 4)
+
+  const navigateToPost = (event: MouseEvent) => {
+    window.location.href = props.article.regularPath
+  }
 </script>
 
 <style scoped>
   .blog-list {
-    @apply flex h-full flex-col justify-between overflow-hidden;
-    @apply rounded-xl border border-solid border-gray-800;
-    @apply bg-white px-6 py-4 shadow-sm dark:bg-gray-800;
-    @apply min-w-220px w-4/5 mx-auto;
-    @apply hover:shadow-lg hover:border-color-[var(--vp-c-brand)] transition-shadow duration-300;
+    @apply flex h-full flex-col justify-between overflow-hidden relative;
+    @apply rounded-xl bg-white py-6 px-8 shadow-sm dark:bg-gray-800;
+    @apply min-w-220px w-2/3 mx-auto;
+    @apply cursor-pointer;
+  }
+
+  .blog-list::before {
+    @apply content-[''] absolute inset-0 rounded-xl border-1 border-solid;
+    @apply border-gray-800 pointer-events-none;
+  }
+
+  .blog-list:hover::before {
+    @apply border-2 border-[var(--vp-c-brand)];
   }
 
   .list-banner {
@@ -61,7 +75,7 @@
   }
 
   .list-title {
-    @apply text-lg font-medium my-1;
+    @apply text-lg my-1 cursor-pointer;
   }
 
   .describe {
@@ -80,6 +94,14 @@
 
   .dark .link.active {
     @apply text-white font-bold;
+  }
+
+  .tag {
+    @apply cursor-pointer hover:text-[var(--vp-c-brand)];
+  }
+
+  .tag a {
+    @apply cursor-pointer hover:text-[var(--vp-c-brand)];
   }
 
   @media screen and (max-width: 768px) {

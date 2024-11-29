@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-card">
+  <div class="blog-card" @click="navigateToPost">
     <div class="card-header">
       <h2 class="card-title mb-1 text-xl font-semibold">
         <a
@@ -24,7 +24,9 @@
       </div>
       <div class="flex space-x-2 flex-wrap">
         <span v-for="item in partedTags" :key="item + 'key'" class="tag">
-          <a :href="withBase(`/tags.html?tag=${item}`)">{{ item }}</a>
+          <a @click.stop :href="withBase(`/tags.html?tag=${item}`)"
+            >{{ item }}
+          </a>
         </span>
       </div>
     </div>
@@ -45,15 +47,27 @@
   })
 
   const partedTags = props.article.frontMatter.tags.slice(0, 2)
+
+  const navigateToPost = (event: MouseEvent) => {
+    window.location.href = props.article.regularPath
+  }
 </script>
 
 <style scoped>
   .blog-card {
-    @apply flex h-full flex-col justify-between overflow-hidden;
-    @apply rounded-xl border border-solid border-gray-800;
-    @apply bg-white p-6 shadow-sm dark:bg-gray-800;
+    @apply flex h-full flex-col justify-between overflow-hidden relative;
+    @apply rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800;
     @apply min-w-220px;
-    @apply hover:shadow-lg hover:border-color-[var(--vp-c-brand)] transition-shadow duration-300;
+    @apply cursor-pointer;
+  }
+
+  .blog-card::before {
+    @apply content-[''] absolute inset-0 rounded-xl border-1 border-solid;
+    @apply border-gray-800 pointer-events-none;
+  }
+
+  .blog-card:hover::before {
+    @apply border-2 border-[var(--vp-c-brand)];
   }
 
   .card-banner {
@@ -61,7 +75,7 @@
   }
 
   .card-title {
-    @apply text-lg font-medium my-1;
+    @apply text-lg my-1;
   }
 
   .describe {
@@ -80,6 +94,10 @@
 
   .dark .link.active {
     @apply text-white font-bold;
+  }
+
+  .tag-view a {
+    @apply cursor-pointer hover:text-[var(--vp-c-brand)];
   }
 
   @media screen and (max-width: 768px) {

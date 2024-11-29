@@ -1,23 +1,22 @@
+import NewLayout from '@/theme/components/NewLayout.vue'
+import Timeline from '@/theme/components/Timeline.vue'
+import Tags from '@/theme/components/common/Tags.vue'
+import Page from '@/theme/components/page/Page.vue'
+import '@/theme/styles/generated.css'
+import '@/theme/styles/main.css'
+import { mediumZoomInit } from '@/theme/utils/themeUtils'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
-import mediumZoom from 'medium-zoom'
 import 'virtual:uno.css'
 import type { EnhanceAppContext, Theme } from 'vitepress'
 import { useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { nextTick, onMounted, watch } from 'vue'
 
-import NewLayout from './components/NewLayout.vue'
-import Timeline from './components/Timeline.vue'
-import Tags from './components/common/Tags.vue'
-import Page from './components/page/Page.vue'
-import './styles/generated.css'
-import './styles/main.css'
-
 export default {
   ...DefaultTheme,
   Layout: NewLayout,
   enhanceApp({ app, router }: EnhanceAppContext) {
-    // register global compoment
+    // register global component
     app.component('Tags', Tags)
     app.component('Timeline', Timeline)
     app.component('Page', Page)
@@ -27,14 +26,10 @@ export default {
     const route = useRoute()
 
     onMounted(() => {
-      const initZoom = () => {
-        mediumZoom('.main img', { background: 'var(--vp-c-bg)' })
-      }
-
-      initZoom()
+      mediumZoomInit()
       watch(
         () => route.path,
-        () => nextTick(() => initZoom())
+        () => nextTick(() => mediumZoomInit())
       )
     })
   }

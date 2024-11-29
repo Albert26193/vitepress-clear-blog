@@ -1,20 +1,20 @@
 <template>
   <div class="custom-page-layout max-w-780px">
-    <div class="tags-container" v-auto-animate>
+    <div class="tags-container animate-count-8">
       <span
         @click="toggleTag(String(key))"
         v-for="(_, key) in sortTags(tagsList)"
         :key="key"
-        class="tag text-sm"
+        class="tag-view text-sm tag"
         :class="{ active: selectedTag === String(key) }"
       >
         {{ key }}
         <span class="count">{{ tagsList[key].length }}</span>
       </span>
     </div>
-    <div class="tag-header">
-      <span class="i-carbon-tag-group ml-2 text-3xl" />
-      <span class="ml-2" v-auto-animate>
+    <div class="tag-header mx-4">
+      <span class="i-carbon-tag-group text-xl" />
+      <span class="ml-2">
         <span v-if="selectedTag" :key="'selected-' + selectedTag">
           {{ selectedTag }}</span
         >
@@ -92,16 +92,8 @@
     if (!selectedTag.value) {
       return theme.value.posts
     }
-    console.log(
-      'filteredArticles',
-      theme.value.posts.filter((article: Post) =>
-        article.frontMatter.tags?.includes(selectedTag.value)
-      ),
-      selectedTag.value
-    )
-    return theme.value.posts.filter((article: Post) =>
-      article.frontMatter.tags?.includes(selectedTag.value)
-    )
+    // Use the pre-computed tagsList instead of filtering again
+    return tagsList.value[selectedTag.value] || []
   })
 </script>
 
@@ -113,42 +105,30 @@
   }
 
   .count {
-    @apply ml-2 font-semibold;
-    @apply color-[var(--vp-c-brand)];
+    @apply ml-2 font-semibold color-[var(--vp-c-brand)] hover:color-[var(--vp-c-brand-1)] transition-colors duration-300;
   }
 
-  .count:hover {
-    @apply color-[var(--vp-c-brand-1)];
+  .tag-view {
+    @apply inline-block px-3 py-1 m-1 text-sm border rounded-full;
+    @apply cursor-pointer transition-colors duration-300;
+    @apply hover:font-semibold hover:border-[var(--tag-info-color)];
   }
 
-  .tag {
-    @apply inline-block px-3 py-1 m-1 text-sm border rounded-full cursor-pointer transition-colors duration-300;
-    /* border-color: var(--tag-border-color); */
-  }
-
-  .tag.active {
+  .tag-view.active {
     @apply box-border font-semibold;
     @apply border-[var(--vp-c-brand)] color-[var(--vp-c-brand)];
   }
 
-  .tag.active .count {
-    @apply transition-colors duration-300;
-    @apply color-[var(--vp-c-brand-1)];
+  .tag-view.active .count {
+    @apply transition-colors duration-300 color-[var(--vp-c-brand-1)];
   }
 
-  .tag:hover {
-    @apply font-semibold;
-    @apply border-[var(--tag-info-color)];
-  }
-
-  .tag:hover .count {
-    @apply transition-colors duration-300;
+  .tag-view:hover .count {
     @apply color-[var(--tag-hover-color)];
   }
 
   .tag-header {
-    @apply mb-2 mt-6 text-xl font-medium text-left;
-    @apply color-[var(--vp-c-brand)];
+    @apply mb-2 mt-6 text-xl font-medium text-left color-[var(--vp-c-brand)];
   }
 
   .tag-img {

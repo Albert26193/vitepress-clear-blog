@@ -148,6 +148,12 @@ h3 {
   @apply font-800 text-[1.3rem] text-[--vp-c-brand];
 }
 
+/* medium zoom */
+.medium-zoom-overlay,
+.medium-zoom-image--opened {
+  z-index: 999;
+}
+
 /* dark mode transition */
 ::view-transition-old(root),
 ::view-transition-new(root) {

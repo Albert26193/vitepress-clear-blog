@@ -14,7 +14,7 @@ hero:
       link: /pages/index
     - theme: alt
       text: 在 GitHub 查看
-      link: https://github.com/airene/vitepress-blog-pure
+      link: https://github.com
 
 features:
   - title: 基于 VitePress

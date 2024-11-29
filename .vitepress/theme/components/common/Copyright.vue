@@ -8,12 +8,7 @@
       >VitePress</a
     >
     Theme by
-    <a
-      class="vitepress"
-      target="_blank"
-      href="//github.com/airene/vitepress-blog-pure"
-      >Vitepress-blog</a
-    >
+    <a class="vitepress" target="_blank" href="">Vitepress-blog</a>
   </div>
 </template>
 

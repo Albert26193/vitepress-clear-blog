@@ -14,6 +14,28 @@ export default defineConfig({
       }
     })
   ],
+  theme: {
+    animation: {
+      keyframes: {
+        custom: '{0%, 100% {opacity:1} 50% {opacity:.5}}'
+      },
+      durations: {
+        custom: '1s'
+      },
+      timingFns: {
+        custom: 'cubic-bezier(0.4,0,.6,1)'
+      },
+      properties: {
+        custom: { 'transform-origin': 'center' }
+      },
+      counts: {
+        custom: 2
+      },
+      category: {
+        custom: 'custom'
+      }
+    }
+  },
   shortcuts: [
     [
       'card-hover',
@@ -28,7 +50,7 @@ export default defineConfig({
     ['card-border', 'rounded-md z-50 hover:cursor-default'],
     [
       'tag',
-      'rounded-full px-[5.5px] py-1 text-xs border-solid border-gray-700 dark:border-gray-200 text-gray-900 dark:text-gray-100 hover:text-[var(--vp-c-brand)] hover:border-[var(--vp-c-brand)]'
+      'rounded-full px-[5.5px] py-1 text-xs border-solid box-border border-gray-700 dark:border-gray-200 text-gray-900 dark:text-gray-100 hover:text-[var(--vp-c-brand)] hover:border-[var(--vp-c-brand)]'
     ],
     ['custom-page-layout', 'w-4/5 h-full mx-auto max-w-1280px']
   ]
