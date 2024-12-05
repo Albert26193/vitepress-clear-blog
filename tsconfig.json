@@ -13,6 +13,7 @@
       "ESNext",
       "DOM"
     ],
+    "allowJs": true,
     "types": [],
     "baseUrl": ".",
     "paths": {
@@ -29,7 +30,8 @@
     ".vitepress/**/*.d.ts",
     ".vitepress/**/*.tsx",
     ".vitepress/**/*.vue",
-    "shims-vue.d.ts"
+    "shims-vue.d.ts",
+    "**/*.d.ts"
   ],
   "exclude": [
     "dist",

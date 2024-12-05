@@ -1,4 +1,6 @@
 import mathjax3 from 'markdown-it-mathjax3'
+// @ts-expect-error: no type definitions available
+import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
@@ -23,11 +25,16 @@ const RSS: RSSOptions = {
   copyright: 'Copyright 111111111'
 }
 
+const wikilinksOptions = {
+  baseURL: 'http://10.177.73.149:5000'
+}
+
 //default options
 export default defineConfig({
   markdown: {
     config: (md) => {
       md.use(mathjax3)
+      md.use(wikilinks(wikilinksOptions))
     },
     theme: {
       light: 'github-light',
