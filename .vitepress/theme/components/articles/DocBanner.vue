@@ -18,18 +18,25 @@
       </span>
       <div class="i-carbon-document ml-3" />
       <span class="ml-1 align-middle text-sm"> {{ wordsCount }} words </span>
+      <div class="i-carbon-user ml-3" />
+      <a class="ml-1 align-middle text-sm" :href="`/about.html`">
+        {{ author }}
+      </a>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   //TODO: how to calculate layout on mobile? if we have too many tags?
+  import { useAuthor } from '@/theme/composables/useMeta'
   import { calculateWords } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
 
   const { frontmatter } = useData()
   const $des = ref<HTMLDivElement>()
+
+  const author = useAuthor(frontmatter.value) || 'blogger'
 
   const domContainer = window.document.querySelector('#VPContent')
   const textContent =

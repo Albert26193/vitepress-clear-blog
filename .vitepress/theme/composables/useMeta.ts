@@ -1,6 +1,9 @@
 import { useData } from 'vitepress'
 import { computed, nextTick, provide } from 'vue'
 
+import { type PostFrontMatter } from '../types'
+import { assignedConfigPath, parseToml } from '../utils/serverUtils'
+
 /**
  * @abstract: use description for page cards, if the length of words
  * is more than 30 words, show the first 30 words followed by an ellipsis.
@@ -53,6 +56,29 @@ export function useListDescription(description: string) {
     }
     return description
   })
+}
+
+/**
+ * @abstract: use author for article,
+ * if author is set in frontmatter,use author from frontmatter,
+ * if author is not set in frontmatter, use author from config,
+ * if author is not set in config, use default author
+ *
+ * @param frontMatter
+ * @returns author name
+ */
+export function useAuthor(frontMatter: PostFrontMatter) {
+  const { site } = useData()
+  // 1. first use author from frontmatter
+  if (frontMatter.author) {
+    return frontMatter.author
+  }
+  // 2. otherwise use default author from config
+  if (site.value.themeConfig?.meta?.author) {
+    return site.value.themeConfig.meta.author
+  }
+  // 3. otherwise use default author from vitepress
+  return 'Blogger'
 }
 
 /**

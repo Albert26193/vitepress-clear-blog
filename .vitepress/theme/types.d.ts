@@ -1,42 +1,19 @@
 import { DefaultTheme } from 'vitepress'
-
-// export interface Post {
-//   title: string
-//   date: string
-//   excerpt: string
-//   link: string
-//   tags?: string[]
-//   categories?: string[]
-// }
+import { PageData } from 'vitepress'
 
 type Article = {
   regularPath: string
-  frontMatter: {
-    title: string
-    description: string
-    date: string
-    tags: string[]
-  }
+  frontMatter: PostFrontMatter
 }
 
-export interface PostFrontMatter {
-  title: string
-  date: string
-  tags?: string[]
-  categories?: string[]
-  excerpt?: string
-  description?: string
-  author?: string
-  draft?: boolean
-  [key: string]: string | string[] | boolean | undefined
-}
+export type PostFrontMatter = PageData['frontmatter']
 
-export interface Post {
+export type Post = {
   frontMatter: PostFrontMatter
   regularPath: string
 }
 
-export interface BlogConfig extends DefaultTheme.Config {
+export type BlogConfig = DefaultTheme.Config & {
   posts: Post[]
   website: string
 }

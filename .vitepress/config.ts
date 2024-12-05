@@ -13,6 +13,8 @@ import { BlogConfig } from './theme/types'
 import { getPosts, getRootPath, getSrcPath } from './theme/utils/serverUtils'
 import { parsedConfigToml } from './theme/utils/serverUtils'
 
+// Load TOML config at build time
+
 // TODO: config.toml: [theme] -> brandColor
 const pageSize = 10
 const postArticles = await getPosts(pageSize)
@@ -20,7 +22,7 @@ const rootPath = getRootPath()
 const srcPath = getSrcPath('.vitepress')
 
 const RSS: RSSOptions = {
-  title: '222222222',
+  title: parsedConfigToml.meta.title || '222222222',
   baseUrl: 'http://10.177.73.149:5000',
   copyright: 'Copyright 111111111'
 }
@@ -66,7 +68,8 @@ export default defineConfig({
     nav,
     outline: [2, 3],
     outlineTitle: 'Table of Contents',
-    socialLinks: [{ icon: 'github', link: 'https://github.com' }]
+    socialLinks: [{ icon: 'github', link: 'https://github.com' }],
+    meta: parsedConfigToml.meta
   } as BlogConfig,
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {
