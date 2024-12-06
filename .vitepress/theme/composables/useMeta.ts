@@ -2,7 +2,6 @@ import { useData } from 'vitepress'
 import { computed, nextTick, provide } from 'vue'
 
 import { type PostFrontMatter } from '../types'
-import { assignedConfigPath, parseToml } from '../utils/serverUtils'
 
 /**
  * @abstract: use description for page cards, if the length of words

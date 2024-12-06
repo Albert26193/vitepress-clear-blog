@@ -1,7 +1,7 @@
 import NewLayout from '@/theme/components/NewLayout.vue'
 import Timeline from '@/theme/components/Timeline.vue'
 import Tags from '@/theme/components/common/Tags.vue'
-import Page from '@/theme/components/page/Page.vue'
+import BlogContainer from '@/theme/components/page/BlogContainer.vue'
 import '@/theme/styles/generated.css'
 import '@/theme/styles/main.css'
 import { mediumZoomInit } from '@/theme/utils/themeUtils'
@@ -19,7 +19,7 @@ export default {
     // register global component
     app.component('Tags', Tags)
     app.component('Timeline', Timeline)
-    app.component('Page', Page)
+    app.component('BlogContainer', BlogContainer)
     app.use(autoAnimatePlugin)
   },
   setup() {

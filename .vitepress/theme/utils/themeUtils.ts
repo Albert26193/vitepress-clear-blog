@@ -15,7 +15,7 @@ const initTags = (post: Post[]) => {
     const tags = element.frontMatter.tags
 
     if (tags) {
-      tags.forEach((item) => {
+      tags.forEach((item: string) => {
         if (data[item]) {
           data[item].push(element)
         } else {

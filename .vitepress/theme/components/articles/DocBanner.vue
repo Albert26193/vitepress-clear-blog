@@ -10,14 +10,16 @@
         <a :href="withBase(`/tags.html?tag=${item}`)"> {{ item }}</a>
       </span>
     </div>
-    <!-- time and word count -->
     <div class="flex items-center mt-2">
+      <!-- time -->
       <div class="i-carbon-time" />
       <span class="ml-1 align-middle text-sm">
         {{ frontmatter.date?.substring(0, 10) }}
       </span>
+      <!-- word count -->
       <div class="i-carbon-document ml-3" />
       <span class="ml-1 align-middle text-sm"> {{ wordsCount }} words </span>
+      <!-- author -->
       <div class="i-carbon-user ml-3" />
       <a class="ml-1 align-middle text-sm" :href="`/about.html`">
         {{ author }}
@@ -29,6 +31,7 @@
 <script setup lang="ts">
   //TODO: how to calculate layout on mobile? if we have too many tags?
   import { useAuthor } from '@/theme/composables/useMeta'
+  import type { PostFrontMatter } from '@/theme/types'
   import { calculateWords } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
@@ -36,7 +39,7 @@
   const { frontmatter } = useData()
   const $des = ref<HTMLDivElement>()
 
-  const author = useAuthor(frontmatter.value) || 'blogger'
+  const author = useAuthor(frontmatter.value as PostFrontMatter) || 'Blogger'
 
   const domContainer = window.document.querySelector('#VPContent')
   const textContent =

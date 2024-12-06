@@ -4,6 +4,8 @@ title: aa
 tags:
   - vitepress
   - markdown
+  - UpperCase
+  - 中文
 description: this is the demo for vitepress
 ---
 

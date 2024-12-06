@@ -3,30 +3,39 @@
     <div class="list-header">
       <h2 class="list-title mb-1 text-xl font-semibold">
         <a
-          :href="withBase(article.regularPath)"
+          :href="withBase(post.regularPath)"
           class="text-color-[var(--vp-c-brand)] hover:underline"
         >
-          {{ article.frontMatter.title }}
+          {{ post.frontMatter.title }}
         </a>
       </h2>
     </div>
     <p
-      v-if="article.frontMatter.description"
+      v-if="post.frontMatter.description"
       class="describe mb-4 text-gray-700 dark:text-gray-300 indent-2"
     >
-      {{ useListDescription(article.frontMatter.description).value }}
+      {{ useListDescription(post.frontMatter.description).value }}
     </p>
     <div v-else class="mt-4"></div>
     <div class="list-banner">
-      <div class="flex items-center flex-wrap">
-        <div class="i-carbon-time mr-1" />
-        <span>{{ article.frontMatter.date }}</span>
+      <div class="flex items-center mt-2">
+        <!-- time -->
+        <div class="i-carbon-time" />
+        <span class="ml-1 align-middle text-sm">
+          {{ post.frontMatter.date?.substring(0, 10) }}
+        </span>
+        <!-- author -->
+        <div class="i-carbon-user ml-3" />
+        <a class="ml-1 align-middle text-sm" :href="`/about.html`">
+          {{ author }}
+        </a>
       </div>
+      <!-- tags -->
       <div class="flex space-x-2 flex-wrap">
         <span v-for="item in partedTags" :key="item + 'key'" class="tag">
-          <a @click.stop :href="withBase(`/tags.html?tag=${item}`)">{{
-            item
-          }}</a>
+          <a @click.stop :href="withBase(`/tags.html?tag=${item}`)"
+            >{{ item }}
+          </a>
         </span>
       </div>
     </div>
@@ -35,21 +44,23 @@
 
 <script lang="ts" setup>
   import { useListDescription } from '@/theme/composables/useMeta'
-  import { type Article } from '@/theme/types'
+  import { useAuthor } from '@/theme/composables/useMeta'
+  import type { Post } from '@/theme/types'
   import { withBase } from 'vitepress'
-  import { type PropType } from 'vue'
+  import { PropType } from 'vue'
 
   const props = defineProps({
-    article: {
-      type: Object as PropType<Article>,
+    post: {
+      type: Object as PropType<Post>,
       required: true
     }
   })
 
-  const partedTags = props.article.frontMatter.tags.slice(0, 4)
+  const partedTags = props.post.frontMatter.tags.slice(0, 4)
 
+  const author = useAuthor(props.post.frontMatter) || 'Blogger'
   const navigateToPost = (event: MouseEvent) => {
-    window.location.href = props.article.regularPath
+    window.location.href = props.post.regularPath
   }
 </script>
 

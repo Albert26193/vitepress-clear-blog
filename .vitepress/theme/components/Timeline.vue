@@ -53,19 +53,20 @@
           ]
         "
       >
-        <a
-          :href="withBase(article.regularPath)"
+        <div
           v-for="(article, index) in monthList"
           :key="index"
           class="posts ml-2"
         >
-          <div class="dark:text-slate-100 font-bold text-slate-800">
-            <div class="post-dot"></div>
-            {{ article.frontMatter.title }}
-          </div>
+          <a
+            class="dark:text-slate-100 font-bold text-slate-800"
+            :href="withBase(article.regularPath)"
+          >
+            {{ article.frontMatter.title ?? 'Untitled' }}
+          </a>
           <div class="mx-3 flex-1 border-b-dashed border-gray-300"></div>
           <div class="date">{{ getDay(article) }}</div>
-        </a>
+        </div>
       </div>
     </div>
   </div>
@@ -83,20 +84,20 @@
     months: { [yearMonth: string]: boolean }
   }
 
-  interface PostList {
-    title: string
-    date: string
-  }
+  // interface PostList {
+  //   title: string
+  //   date: string
+  // }
 
-  interface DataByYear {
-    [year: string]: PostList[]
-  }
+  // interface DataByYear {
+  //   [year: string]: PostList[]
+  // }
 
-  interface DataByYearMonth {
-    [year: string]: {
-      [month: string]: PostList[]
-    }
-  }
+  // interface DataByYearMonth {
+  //   [year: string]: {
+  //     [month: string]: PostList[]
+  //   }
+  // }
 
   // Helper functions to extract year, month, and day
   const getYear = (yearList: { frontMatter: { date: string } }[]) =>

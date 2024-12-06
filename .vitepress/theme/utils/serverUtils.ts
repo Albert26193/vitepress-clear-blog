@@ -66,12 +66,12 @@ aside: false
 layout: page
 ---
 <script setup>
-import Page from "../../.vitepress/theme/components/page/Page.vue";
+import BlogContainer from "../../.vitepress/theme/components/page/BlogContainer.vue";
 import { useData } from "vitepress";
 const { theme } = useData();
 const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * pageNum})
 </script>
-<Page :posts="posts" :pageCurrent="${pageNum}" :pagesNum="${pagesNum}" />
+<BlogContainer :posts="posts" :pageCurrent="${pageNum}" :pagesNum="${pagesNum}" />
 `.trim()
 
   await Promise.all(

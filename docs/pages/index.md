@@ -4,9 +4,9 @@ aside: false
 layout: page
 ---
 <script setup>
-import Page from "../../.vitepress/theme/components/page/Page.vue";
+import BlogContainer from "../../.vitepress/theme/components/page/BlogContainer.vue";
 import { useData } from "vitepress";
 const { theme } = useData();
 const posts = theme.value.posts.slice(0,10)
 </script>
-<Page :posts="posts" :pageCurrent="1" :pagesNum="1" />
+<BlogContainer :posts="posts" :pageCurrent="1" :pagesNum="1" />

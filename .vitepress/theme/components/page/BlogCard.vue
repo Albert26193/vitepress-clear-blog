@@ -3,25 +3,26 @@
     <div class="card-header">
       <h2 class="card-title mb-1 text-xl font-semibold">
         <a
-          :href="withBase(article.regularPath)"
+          :href="withBase(post.regularPath)"
           class="text-color-[var(--vp-c-brand)] hover:underline"
         >
-          {{ article.frontMatter.title }}
+          {{ post.frontMatter.title }}
         </a>
       </h2>
     </div>
     <p
-      v-if="article.frontMatter.description"
+      v-if="post.frontMatter.description"
       class="describe mb-4 text-gray-700 dark:text-gray-300 indent-2"
     >
-      {{ useCardDescription(article.frontMatter.description).value }}
+      {{ useCardDescription(post.frontMatter.description).value }}
     </p>
     <div v-else class="mt-4"></div>
     <div class="card-banner">
       <div class="flex items-center flex-wrap">
         <div class="i-carbon-time mr-1" />
-        <span>{{ article.frontMatter.date }}</span>
+        <span>{{ post.frontMatter.date }}</span>
       </div>
+      <!-- tags -->
       <div class="flex space-x-2 flex-wrap">
         <span v-for="item in partedTags" :key="item + 'key'" class="tag">
           <a @click.stop :href="withBase(`/tags.html?tag=${item}`)"
@@ -35,21 +36,21 @@
 
 <script lang="ts" setup>
   import { useCardDescription } from '@/theme/composables/useMeta'
-  import { Article } from '@/theme/types'
+  import type { Post } from '@/theme/types'
   import { withBase } from 'vitepress'
-  import { type PropType } from 'vue'
+  import { PropType } from 'vue'
 
   const props = defineProps({
-    article: {
-      type: Object as PropType<Article>,
+    post: {
+      type: Object as PropType<Post>,
       required: true
     }
   })
 
-  const partedTags = props.article.frontMatter.tags.slice(0, 2)
+  const partedTags = props.post.frontMatter.tags.slice(0, 2)
 
   const navigateToPost = (event: MouseEvent) => {
-    window.location.href = props.article.regularPath
+    window.location.href = props.post.regularPath
   }
 </script>
 

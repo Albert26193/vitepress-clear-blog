@@ -10,15 +10,15 @@
         class="animate-fade-in"
       >
         <div class="list-container">
-          <div v-for="article in props.posts" :key="article.regularPath">
-            <BlogList :article="article"></BlogList>
+          <div v-for="post in props.posts" :key="post.regularPath">
+            <BlogList :post="post"></BlogList>
           </div>
         </div>
       </div>
       <div v-if="currentPageType === 'cardType'" :key="'card-view'">
         <div class="card-container">
-          <div v-for="article in props.posts" :key="article.regularPath">
-            <BlogCard :article="article"></BlogCard>
+          <div v-for="post in props.posts" :key="post.regularPath">
+            <BlogCard :post="post"></BlogCard>
           </div>
         </div>
       </div>
@@ -43,13 +43,13 @@
 <script lang="ts" setup>
   import BlogCard from '@/theme/components/page/BlogCard.vue'
   import BlogList from '@/theme/components/page/BlogList.vue'
-  import { Article } from '@/theme/types'
+  import { Post } from '@/theme/types'
   import { withBase } from 'vitepress'
   import { type PropType, onMounted, ref } from 'vue'
 
   const props = defineProps({
     posts: {
-      type: Array as PropType<Article[]>,
+      type: Array as PropType<Post[]>,
       required: true
     },
     pageCurrent: {
