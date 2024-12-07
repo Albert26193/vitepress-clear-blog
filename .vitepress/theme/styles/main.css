@@ -1,3 +1,22 @@
+/* for homepage */
+:root {
+  --main-page-bg: #f0f0f0;
+  --main-page-text: #050505;
+  --main-page-from: #222222;
+  --main-page-to: #585858;
+  --main-page-menu: #525861;
+  --main-page-appearance: #e0e0e0;
+}
+
+.dark {
+  --main-page-bg: #050505;
+  --main-page-text: #f0f0f0;
+  --main-page-from: #f0f0f0;
+  --main-page-to: #575757;
+  --main-page-menu: #969ba6;
+  --main-page-appearance: #222222;
+}
+
 /* theme reset start */
 h1 {
   @apply text-[1.6rem] font-800 -ml-4;

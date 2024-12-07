@@ -1,6 +1,7 @@
 import NewLayout from '@/theme/components/NewLayout.vue'
 import Timeline from '@/theme/components/Timeline.vue'
 import Tags from '@/theme/components/common/Tags.vue'
+import Homepage from '@/theme/components/homepage/Homepage.vue'
 import BlogContainer from '@/theme/components/page/BlogContainer.vue'
 import '@/theme/styles/generated.css'
 import '@/theme/styles/main.css'
@@ -20,6 +21,7 @@ export default {
     app.component('Tags', Tags)
     app.component('Timeline', Timeline)
     app.component('BlogContainer', BlogContainer)
+    app.component('Homepage', Homepage)
     app.use(autoAnimatePlugin)
   },
   setup() {
