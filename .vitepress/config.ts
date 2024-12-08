@@ -59,8 +59,12 @@ export default defineConfig({
   description: 'vitepress,blog,blog-theme',
   ignoreDeadLinks: true,
   themeConfig: {
-    // sidebar: generateSidebar(vitepressSidebarOptions),
-    posts: postArticles,
+    sidebar: [
+      {
+        text: '',
+        items: []
+      }
+    ],
     website: '',
     search: {
       provider: 'local'
@@ -69,8 +73,10 @@ export default defineConfig({
     outline: [2, 3],
     outlineTitle: 'Table of Contents',
     socialLinks: [{ icon: 'github', link: 'https://github.com' }],
+    // TODO: use 'usefunc' to get the meta data and post articles
+    posts: postArticles,
     meta: parsedConfigToml.meta
-  } as BlogConfig,
+  } as any,
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {
     server: { port: 5000 },

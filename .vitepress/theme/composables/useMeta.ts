@@ -11,7 +11,7 @@ import { type PostFrontMatter } from '../types'
  * @param description: string
  * @return truncated description
  */
-export function useCardDescription(description: string) {
+const useCardDescription = (description: string) => {
   const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
   return computed(() => {
     // for Chinese: if the length of words is more than 42 words, show the first 42 words followed by an ellipsis.
@@ -38,7 +38,7 @@ export function useCardDescription(description: string) {
  * @param description: string
  * @returns truncated description
  */
-export function useListDescription(description: string) {
+const useListDescription = (description: string) => {
   const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
   return computed(() => {
     // for Chinese: if the length of words is more than 42 words, show the first 42 words followed by an ellipsis.
@@ -66,7 +66,7 @@ export function useListDescription(description: string) {
  * @param frontMatter
  * @returns author name
  */
-export function useAuthor(frontMatter: PostFrontMatter) {
+const useAuthor = (frontMatter: PostFrontMatter) => {
   const { site } = useData()
   // 1. first use author from frontmatter
   if (frontMatter.author) {
@@ -83,7 +83,7 @@ export function useAuthor(frontMatter: PostFrontMatter) {
 /**
  * @abstract: use transition for dark mode
  */
-export function useDarkTransition() {
+const useDarkTransition = () => {
   const { isDark } = useData()
   const enableTransitions = () =>
     'startViewTransition' in document &&
@@ -118,3 +118,5 @@ export function useDarkTransition() {
     }
   )
 }
+
+export { useCardDescription, useListDescription, useAuthor, useDarkTransition }

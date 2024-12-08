@@ -63,6 +63,7 @@ const generatePaginationPages = async (
 ---
 title: ${pageNum === 1 ? 'home' : 'page_' + pageNum}
 aside: false
+sidebar: false
 layout: page
 ---
 <script setup>

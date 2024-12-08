@@ -148,7 +148,7 @@
       var(--main-page-from),
       var(--main-page-to)
     );
-    filter: blur(40px);
+    /* filter: blur(40px); */
     inset: 0;
   }
 

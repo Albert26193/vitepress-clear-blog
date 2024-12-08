@@ -79,7 +79,7 @@
 <style scoped>
   .meta-des {
     @apply mt-4 px-6 pt-6 pb-3;
-    @apply border-dashed border-gray-300 rounded-lg w-full;
+    @apply border border-solid border-gray-300 rounded-lg w-full;
     @apply hover:shadow-md transition-shadow duration-300 hover:border-solid;
     @apply transition-all duration-300;
   }

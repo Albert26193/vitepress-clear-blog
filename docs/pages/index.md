@@ -1,6 +1,7 @@
 ---
 title: home
 aside: false
+sidebar: false
 layout: page
 ---
 <script setup>
