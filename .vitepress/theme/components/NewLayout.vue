@@ -9,6 +9,7 @@
     </template>
     <template #sidebar-nav-after>
       <TagSidebar />
+      <LinkSidebar />
     </template>
     <Copyright />
   </Layout>
@@ -19,6 +20,7 @@
   import DocBanner from '@/theme/components/articles/DocBanner.vue'
   import Copyright from '@/theme/components/common/Copyright.vue'
   import { useDarkTransition } from '@/theme/composables/useMeta'
+  import LinkSidebar from '@theme/components/sidebar/LinkSidebar.vue'
   import TagSidebar from '@theme/components/sidebar/TagSidebar.vue'
   import DefaultTheme from 'vitepress/theme'
 

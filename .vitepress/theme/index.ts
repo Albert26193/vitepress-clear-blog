@@ -6,6 +6,7 @@ import BlogContainer from '@/theme/components/page/BlogContainer.vue'
 import '@/theme/styles/generated.css'
 import '@/theme/styles/main.css'
 import { mediumZoomInit } from '@/theme/utils/themeUtils'
+import LinkSidebar from '@theme/components/sidebar/LinkSidebar.vue'
 import TagSidebar from '@theme/components/sidebar/TagSidebar.vue'
 import 'virtual:uno.css'
 import type { EnhanceAppContext, Theme } from 'vitepress'
@@ -23,6 +24,7 @@ export default {
     app.component('BlogContainer', BlogContainer)
     app.component('Homepage', Homepage)
     app.component('TagSidebar', TagSidebar)
+    app.component('LinkSidebar', LinkSidebar)
   },
   setup() {
     const route = useRoute()

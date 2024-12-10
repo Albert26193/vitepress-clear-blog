@@ -91,7 +91,7 @@
   }
 
   .tag-title {
-    @apply flex items-center text-lg font-semibold mb-4;
+    @apply flex items-center text-base font-semibold mb-4;
     color: var(--vp-c-text-1);
   }
 

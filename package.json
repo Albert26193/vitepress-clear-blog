@@ -52,6 +52,7 @@
     "vitepress-plugin-rss": "^0.3.0"
   },
   "dependencies": {
+    "markdown-it": "^14.1.0",
     "markdown-it-mathjax3": "^4.3.2",
     "markdown-it-wikilinks": "^1.4.0",
     "markdown-link-extractor": "^4.0.2",

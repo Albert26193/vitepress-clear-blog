@@ -7,9 +7,9 @@ import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
 import { head } from './custom/head'
 import { nav } from './custom/nav'
+import { markdownAnalyzerPlugin } from './plugins/analyze'
 import { generateThemePlugin } from './plugins/preBuild'
 import { customElements } from './theme/config/constant'
-import { BlogConfig } from './theme/types'
 import { getPosts, getRootPath, getSrcPath } from './theme/utils/serverUtils'
 import { parsedConfigToml } from './theme/utils/serverUtils'
 
@@ -71,7 +71,7 @@ export default defineConfig({
     },
     nav,
     outline: [2, 3],
-    outlineTitle: 'Table of Contents',
+    outlineTitle: 'On this page',
     socialLinks: [{ icon: 'github', link: 'https://github.com' }],
     // TODO: use 'usefunc' to get the meta data and post articles
     posts: postArticles,
@@ -80,7 +80,12 @@ export default defineConfig({
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   vite: {
     server: { port: 5000 },
-    plugins: [UnoCSS(), generateThemePlugin(), RssPlugin(RSS)],
+    plugins: [
+      UnoCSS(),
+      generateThemePlugin(),
+      RssPlugin(RSS),
+      markdownAnalyzerPlugin()
+    ],
     resolve: {
       alias: {
         '@': srcPath,
