@@ -1,6 +1,12 @@
+import {
+  D3Data,
+  D3Link,
+  D3Node,
+  PageLink,
+  Post,
+  SiteMetadata
+} from '@/theme/types'
 import mediumZoom from 'medium-zoom'
-
-import { Post } from '../types'
 
 /**
  * @abstract Initialize tags from posts and group posts by tag
@@ -122,10 +128,110 @@ const mediumZoomInit = () => {
   })
 }
 
+/**
+ * Transform post links into D3 force graph data structure for current page
+ *
+ * @param postLinks Links from the current page to other pages
+ * @param currentPath Path of the current page
+ * @returns D3 force graph data structure with nodes and links
+ */
+const transformPageD3Data = (
+  postLinks: PageLink[],
+  currentPath: string
+): D3Data => {
+  // Store unique nodes in a map
+  const nodesMap = new Map<string, D3Node>()
+
+  // Add current page as source node
+  if (!nodesMap.has(currentPath)) {
+    nodesMap.set(currentPath, {
+      id: currentPath,
+      text: currentPath.split('/').pop() || currentPath,
+      type: 'page'
+    })
+  }
+
+  // Add target nodes from links
+  postLinks.forEach((link) => {
+    if (!nodesMap.has(link.path)) {
+      nodesMap.set(link.path, {
+        id: link.path,
+        text: link.text,
+        type: link.type
+      })
+    }
+  })
+
+  // Convert to D3 data structure
+  return {
+    nodes: Array.from(nodesMap.values()),
+    links: postLinks.map((link) => ({
+      source: currentPath,
+      target: link.path,
+      type: link.type
+    }))
+  }
+}
+
+/**
+ * Transform all site links into D3 force graph data structure
+ *
+ * @param siteMetadata Metadata containing all pages and their links
+ * @returns D3 force graph data structure with nodes and links for the entire site
+ */
+const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
+  // Store unique nodes in a map
+  const nodesMap = new Map<string, D3Node>()
+
+  // Process all pages
+  Object.entries(siteMetadata).forEach(([path, metadata]) => {
+    // Add current page as a node
+    if (!nodesMap.has(path)) {
+      nodesMap.set(path, {
+        id: path,
+        text: path.split('/').pop() || path,
+        type: 'page',
+        group: path.split('/').length - 1
+      })
+    }
+
+    // Add target nodes from page's inner links
+    metadata.innerLinks.forEach((link) => {
+      if (!nodesMap.has(link.path)) {
+        nodesMap.set(link.path, {
+          id: link.path,
+          text: link.text,
+          type: link.type
+        })
+      }
+    })
+  })
+
+  // Collect all links between pages
+  const links: D3Link[] = []
+  Object.entries(siteMetadata).forEach(([path, metadata]) => {
+    metadata.innerLinks.forEach((link) => {
+      links.push({
+        source: path,
+        target: link.path,
+        type: link.type
+      })
+    })
+  })
+
+  // Convert to D3 data structure
+  return {
+    nodes: Array.from(nodesMap.values()),
+    links
+  }
+}
+
 export {
   initTags,
   useYearSort,
   useMonthYearSort,
   calculateWords,
-  mediumZoomInit
+  mediumZoomInit,
+  transformPageD3Data,
+  transformSiteD3Data
 }

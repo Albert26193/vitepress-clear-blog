@@ -23,7 +23,7 @@
           v-for="post in filteredRelatedPosts"
           :key="post.regularPath"
           :href="withBase(post.regularPath)"
-          class="post-link"
+          class="page-link"
         >
           {{ post.frontMatter.title }}
         </a>
@@ -36,10 +36,12 @@
 
 <script setup lang="ts">
   import type { Post } from '@/theme/types'
-  import { useData, withBase } from 'vitepress'
+  import { useData, useRoute, withBase } from 'vitepress'
   import { computed, ref } from 'vue'
 
   const { theme, frontmatter } = useData()
+
+  const currentPath = useRoute().data.relativePath.replace(/\.md$/, '')
 
   // get tags for current article
   const currentTags = computed(() => {
@@ -57,28 +59,23 @@
   // get related posts
   const filteredRelatedPosts = computed(() => {
     const posts = theme.value.posts as Post[]
-    const currentPath = frontmatter.value.relativePath
-
     // if no tags, return empty
     if (!currentTags.value.length) {
       return []
     }
-
     // filter posts
     return posts.filter((post) => {
+      console.log(post.regularPath, currentPath)
       // exclude current article
-      if (post.regularPath === currentPath) {
+      if (withBase(post.regularPath) === `/${currentPath}.html`) {
         return false
       }
-
       // check if post has any of the current article's tags
       const postTags = post.frontMatter.tags || []
-
       // if no active tag, show all related posts
       if (!activeTag.value) {
         return postTags.some((tag) => currentTags.value.includes(tag))
       }
-
       // if active tag is set, only show posts with that tag
       return postTags.includes(activeTag.value)
     })
@@ -97,7 +94,7 @@
 
   .current-tags {
     @apply flex flex-wrap gap-2 pb-4;
-    @apply border-b-1 border-b-solid border-gray-300;
+    @apply border-b-1 border-b-solid border-gray-500;
   }
 
   .sidebar-tag {
@@ -114,15 +111,32 @@
     @apply flex flex-col gap-2 pt-4;
   }
 
-  .post-link {
+  .page-link {
     @apply text-sm py-[1px] px-2 rounded-md font-normal;
-    @apply text-gray-600 dark:text-gray-300;
-    @apply hover:text-[var(--vp-c-brand)] hover:font-semibold;
+    @apply text-gray-600 dark:text-gray-500;
+    @apply relative no-underline;
     @apply transition-colors duration-300;
   }
 
+  .page-link::after {
+    @apply content-[''];
+    @apply absolute left-[50%] bottom-0;
+    @apply w-0 h-[1px];
+    @apply bg-[var(--vp-c-brand)];
+    @apply transition-all duration-300;
+    transform: translateX(-50%);
+  }
+
+  .page-link:hover {
+    @apply text-[var(--vp-c-brand)];
+  }
+
+  .page-link:hover::after {
+    @apply w-full;
+  }
+
   .no-related {
-    @apply text-sm text-gray-500 dark:text-gray-400;
+    @apply text-sm text-gray-500 dark:text-gray-500;
     @apply mt-2;
   }
 </style>

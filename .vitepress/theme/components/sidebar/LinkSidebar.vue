@@ -11,7 +11,7 @@
           v-for="link in pageLinks"
           :key="link.path"
           :href="withBase(link.path)"
-          class="link-item"
+          class="page-link"
           :title="link.raw"
         >
           <span class="link-icon" :class="{ 'is-wiki': link.type === 'wiki' }">
@@ -58,12 +58,28 @@
     @apply flex flex-col gap-2;
   }
 
-  .link-item {
+  .page-link {
     @apply text-sm py-[1px] px-2 rounded-md font-normal;
-    @apply text-gray-600 dark:text-gray-300;
-    @apply hover:text-[var(--vp-c-brand)] hover:font-semibold;
+    @apply text-gray-600 dark:text-gray-500;
+    @apply relative no-underline;
     @apply transition-colors duration-300;
-    @apply flex items-center gap-1;
+  }
+
+  .page-link::after {
+    @apply content-[''];
+    @apply absolute left-[50%] bottom-0;
+    @apply w-0 h-[1px];
+    @apply bg-[var(--vp-c-brand)];
+    @apply transition-all duration-300;
+    transform: translateX(-50%);
+  }
+
+  .page-link:hover {
+    @apply text-[var(--vp-c-brand)];
+  }
+
+  .page-link:hover::after {
+    @apply w-full;
   }
 
   .link-icon {
@@ -76,7 +92,7 @@
   }
 
   .no-links {
-    @apply text-sm text-gray-500 dark:text-gray-400;
+    @apply text-sm text-gray-500 dark:text-gray-500;
     @apply mt-2;
   }
 </style>

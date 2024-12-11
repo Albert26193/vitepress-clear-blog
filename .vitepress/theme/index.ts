@@ -7,6 +7,7 @@ import '@/theme/styles/generated.css'
 import '@/theme/styles/main.css'
 import { mediumZoomInit } from '@/theme/utils/themeUtils'
 import LinkSidebar from '@theme/components/sidebar/LinkSidebar.vue'
+import PageLinkD3 from '@theme/components/sidebar/PageLinkD3.vue'
 import TagSidebar from '@theme/components/sidebar/TagSidebar.vue'
 import 'virtual:uno.css'
 import type { EnhanceAppContext, Theme } from 'vitepress'
@@ -28,6 +29,7 @@ export default {
     app.component('TagSidebar', TagSidebar)
     app.component('LinkSidebar', LinkSidebar)
     app.component('ExampleUsage', ExampleUsage)
+    app.component('PageLinkD3', PageLinkD3)
   },
   setup() {
     const route = useRoute()

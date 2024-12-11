@@ -44,8 +44,33 @@ export interface SiteMetadata {
   [key: string]: MarkdownMetadata
 }
 
+export interface D3Node extends d3.SimulationNodeDatum {
+  id: string | number
+  name?: string
+  text?: string
+  type: 'page' | 'wiki' | 'markdown'
+  color?: string
+  x?: number
+  y?: number
+  group?: number
+}
+
+export interface D3Link extends d3.SimulationLinkDatum<D3Node> {
+  source: string | number | D3Node
+  target: string | number | D3Node
+  type: 'wiki' | 'markdown'
+  color?: string
+  x1?: number
+  y1?: number
+  x2?: number
+  y2?: number
+}
+
+export interface D3Data {
+  nodes: D3Node[]
+  links: D3Link[]
+}
+
 declare module 'virtual:markdown-metadata' {
   export const globalMdMetadata: SiteMetadata
 }
-
-declare module 'markdown-it-wikilinks' {}

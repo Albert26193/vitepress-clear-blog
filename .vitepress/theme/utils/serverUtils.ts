@@ -1,15 +1,13 @@
+import { Post, PostFrontMatter } from '@/theme/types'
 import fs from 'fs-extra'
 import { globby } from 'globby'
 import matter from 'gray-matter'
 import path, { resolve } from 'path'
 import { parse } from 'smol-toml'
 
-import { Post, PostFrontMatter } from '../types'
-
 /**
-import { Theme } from 'vitepress'
-import { Theme } from 'vitepress'
- * @abstract Get all posts and generate pagination pages
+ * Get all posts and generate pagination pages
+ *
  * @param pageSize Number of posts per page
  * @returns List of posts
  */
@@ -44,7 +42,8 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
 }
 
 /**
- * @abstract Generate pagination pages
+ * Generate pagination pages
+ *
  * @param total Total number of posts
  * @param pageSize Number of posts per page
  */
@@ -88,7 +87,7 @@ const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * p
 }
 
 /**
- * @abstract Convert date to YYYY-MM-DD format
+ * Convert date to YYYY-MM-DD format
  *
  * @param date Date string
  * @returns Date string in YYYY-MM-DD format
@@ -100,7 +99,7 @@ function _convertDate(date = new Date().toString()) {
 }
 
 /**
- * @abstract Compare two posts by date
+ * Compare two posts by date
  *
  * @param a First post
  * @param b Second post
@@ -111,7 +110,7 @@ function _compareDate(a: Post, b: Post): number {
 }
 
 /**
- * @abstract: parse custom config file(.toml)
+ * Parse custom config file(.toml)
  *
  * @param configPath the path of the config file
  * @return the parsed config object
@@ -124,14 +123,15 @@ const assignedConfigPath = path.resolve(__dirname, '../../custom/config.toml')
 const parsedConfigToml = await parseToml(assignedConfigPath)
 
 /**
- * @abstract: get root path for project
+ * Get root path for project
  */
 const getRootPath = () => {
   return path.resolve(process.cwd())
 }
 
 /**
- * @abstract: get src path for project
+ * Get src path for project
+ *
  * @param srcName - src name
  * @returns src path
  */
@@ -142,6 +142,7 @@ const getSrcPath = (srcName = 'src') => {
 
 export {
   getPosts,
+  generatePaginationPages,
   parseToml,
   parsedConfigToml,
   assignedConfigPath,
