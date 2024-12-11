@@ -31,13 +31,11 @@
 
 <script setup lang="ts">
   import type { PageLink } from '@/theme/types'
-  // @ts-expect-error markdown metadata
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute, withBase } from 'vitepress'
   import { computed } from 'vue'
 
   const route = useRoute()
-  console.log(route.data.relativePath)
   const pageLinks = computed<PageLink[]>(() => {
     const currentPath = route.data.relativePath.replace(/\.md$/, '')
     console.log(currentPath, globalMdMetadata)

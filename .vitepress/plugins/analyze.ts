@@ -1,8 +1,6 @@
 import type { PageLink, SiteMetadata } from '@/theme/types'
 import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
-// @ts-expect-error: no type definitions available
-import wikilinks from 'markdown-it-wikilinks'
 import path from 'path'
 import { Plugin } from 'vitepress'
 
@@ -11,12 +9,12 @@ const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
 const globalMdMetadata: SiteMetadata = {}
 
-// 创建 markdown 实例
-const md = new MarkdownIt({ linkify: true }).use(wikilinks)
+// Create markdown instance
+const md = new MarkdownIt({ linkify: true })
 
-// 自定义 validLink 钩子来过滤内部链接
+// Custom validLink hook to filter internal links
 md.validateLink = (link: string) => {
-  // 过滤掉外部链接和锚点链接
+  // Filter out external links and anchor links
   return (
     !link.startsWith('http') &&
     !link.startsWith('#') &&
@@ -24,7 +22,7 @@ md.validateLink = (link: string) => {
   )
 }
 
-// 提取所有链接
+// Extract all links
 function extractLinks(content: string): PageLink[] {
   const links: PageLink[] = []
   const tokens = md.parse(content, {})
@@ -34,7 +32,7 @@ function extractLinks(content: string): PageLink[] {
       let currentLink: Partial<PageLink> | null = null
 
       token.children.forEach((child, index) => {
-        // 处理 markdown 标准链接
+        // Handle markdown standard links
         if (child.type === 'link_open') {
           const href = child.attrGet('href')
           if (href && md.validateLink(href)) {
@@ -45,7 +43,7 @@ function extractLinks(content: string): PageLink[] {
           }
         }
 
-        // 获取链接文本
+        // Get link text
         if (
           currentLink &&
           child.type === 'text' &&
@@ -57,7 +55,7 @@ function extractLinks(content: string): PageLink[] {
           currentLink = null
         }
 
-        // 处理 wikilink
+        // Handle wikilink
         if (child.type === 'text' && child.content.includes('[[')) {
           const wikiMatches = child.content.match(/\[\[(.*?)\]\]/g)
           if (wikiMatches) {
@@ -77,7 +75,7 @@ function extractLinks(content: string): PageLink[] {
     }
   })
 
-  // 去重，优先保留 markdown 类型的链接
+  // Remove duplicates, prioritize markdown type links
   return links.filter(
     (link, index, self) =>
       index ===
@@ -91,7 +89,7 @@ function extractLinks(content: string): PageLink[] {
   )
 }
 
-// 提取标题
+// Extract headings
 const extractHeadings = (content: string) => {
   return content
     .split('\n')
@@ -104,7 +102,7 @@ const extractHeadings = (content: string) => {
     })
 }
 
-// 分析 markdown 文件
+// Analyze markdown file
 const analyzeMdFile = (filePath: string) => {
   const content = fs.readFileSync(filePath, 'utf-8')
   const stats = fs.statSync(filePath)
@@ -114,13 +112,13 @@ const analyzeMdFile = (filePath: string) => {
     .replace(/^docs\//, '')
     .replace(/\.md$/, '')
 
-  // 提取所有内部链接
+  // Extract all internal links
   const innerLinks = extractLinks(content)
 
-  // 提取标题
+  // Extract headings
   // const headings = extractHeadings(content)
 
-  // 计算字数
+  // Calculate word count
   const wordCount = content
     .replace(/\s+/g, '')
     .replace(/[\u4e00-\u9fa5]/g, 'm').length
@@ -134,7 +132,7 @@ const analyzeMdFile = (filePath: string) => {
   }
 }
 
-// VitePress 插件用于 markdown 分析
+// VitePress plugin for markdown analysis
 const markdownAnalyzerPlugin = (): Plugin => ({
   name: 'vitepress-markdown-analyzer',
   configureServer(server) {
@@ -162,6 +160,7 @@ const markdownAnalyzerPlugin = (): Plugin => ({
         }
       })
     }
+    //TODO: 'docs' should be configurable
     scanDir(path.resolve(process.cwd(), 'docs'))
   },
   resolveId(id) {

@@ -2,4 +2,5 @@
 layout: home
 ---
 
-<Homepage />
+<!-- <Homepage /> -->
+<ExampleUsage />

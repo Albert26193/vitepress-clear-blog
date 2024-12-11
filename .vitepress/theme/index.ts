@@ -14,6 +14,8 @@ import { useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { nextTick, onMounted, watch } from 'vue'
 
+import ExampleUsage from './components/ExampleUsage.vue'
+
 export default {
   ...DefaultTheme,
   Layout: NewLayout,
@@ -25,6 +27,7 @@ export default {
     app.component('Homepage', Homepage)
     app.component('TagSidebar', TagSidebar)
     app.component('LinkSidebar', LinkSidebar)
+    app.component('ExampleUsage', ExampleUsage)
   },
   setup() {
     const route = useRoute()

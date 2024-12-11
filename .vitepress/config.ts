@@ -1,5 +1,4 @@
 import mathjax3 from 'markdown-it-mathjax3'
-// @ts-expect-error: no type definitions available
 import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'

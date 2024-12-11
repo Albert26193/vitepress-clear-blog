@@ -16,7 +16,10 @@
     "allowJs": true,
     "types": [],
     "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types", "./.vitepress/theme"],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./.vitepress/theme"
+    ],
     "paths": {
       "@/*": [
         "./.vitepress/*"
