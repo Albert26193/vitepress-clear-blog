@@ -156,7 +156,10 @@ const transformPageD3Data = (
     nodesMap.set(currentPath, {
       id: currentPath,
       text: currentPath.split('/').pop() || currentPath,
-      type: 'page'
+      name: currentPath.split('/').pop() || currentPath,
+      type: 'page',
+      inDegree: 0,
+      outDegree: postLinks.length
     })
   }
 
@@ -165,9 +168,16 @@ const transformPageD3Data = (
     if (!nodesMap.has(link.path)) {
       nodesMap.set(link.path, {
         id: link.path,
-        text: link.text,
-        type: link.type
+        text: link.text.split('/').pop() || link.text,
+        name: link.text.split('/').pop() || link.text,
+        type: link.type,
+        inDegree: 0,
+        outDegree: 0
       })
+    } else {
+      // If node already exists, increment its inDegree
+      const node = nodesMap.get(link.path)!
+      node.inDegree++
     }
   })
 
@@ -192,15 +202,18 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   // Store unique nodes in a map
   const nodesMap = new Map<string, D3Node>()
 
-  // Process all pages
+  // First pass: Create all nodes with initial degree values
   Object.entries(siteMetadata).forEach(([path, metadata]) => {
     // Add current page as a node
     if (!nodesMap.has(path)) {
       nodesMap.set(path, {
         id: path,
         text: path.split('/').pop() || path,
+        name: path.split('/').pop() || path,
         type: 'page',
-        group: path.split('/').length - 1
+        group: path.split('/').length - 1,
+        inDegree: 0,
+        outDegree: metadata.innerLinks.length
       })
     }
 
@@ -210,8 +223,15 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
         nodesMap.set(link.path, {
           id: link.path,
           text: link.text,
-          type: link.type
+          name: link.text,
+          type: link.type,
+          inDegree: 0,
+          outDegree: 0
         })
+      } else {
+        // If node already exists, increment its inDegree
+        const node = nodesMap.get(link.path)!
+        node.inDegree++
       }
     })
   })

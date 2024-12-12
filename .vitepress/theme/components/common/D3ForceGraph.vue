@@ -1,6 +1,6 @@
 <template>
   <div class="d3-force-container border border-gray-800 border-solid">
-    <svg ref="svgContainer" :width="width" :height="height">
+    <svg ref="svgRef" :width="width" :height="height">
       <g>
         <line
           v-for="(link, i) in links"
@@ -11,7 +11,7 @@
           :y2="link.y2"
           :style="{
             stroke: link.color,
-            strokeOpacity: 0.6,
+            strokeOpacity: 0.8,
             strokeWidth: '1.5px'
           }"
         ></line>
@@ -25,7 +25,7 @@
   import * as d3 from 'd3'
   import { onMounted, ref, withDefaults } from 'vue'
 
-  const svgContainer = ref<SVGSVGElement | null>(null)
+  const svgRef = ref<SVGSVGElement | null>(null)
 
   const props = withDefaults(defineProps<D3ForceConfig>(), {
     width: 320,
@@ -35,7 +35,7 @@
     circleColor: '#5040c9',
     textColor: '#030303'
   })
-
+  console.log('out', props.nodes)
   const { nodes, links, width, height } = props
   const simulation = d3
     .forceSimulation(nodes)
@@ -71,11 +71,11 @@
   }
 
   onMounted(() => {
-    if (!svgContainer.value) return
+    if (!svgRef.value) return
 
     // Get the actual width of the container
-    const containerWidth = svgContainer.value.parentElement?.clientWidth || 200
-    svgContainer.value.setAttribute('width', containerWidth.toString())
+    const containerWidth = svgRef.value.parentElement?.clientWidth || 200
+    svgRef.value.setAttribute('width', containerWidth.toString())
 
     // Create the zoom behavior
     const zoom = d3
@@ -91,7 +91,7 @@
 
     // Select the SVG element and add zoom behavior
     const svg = d3
-      .select(svgContainer.value)
+      .select(svgRef.value)
       .call(zoom)
       .attr('width', width)
       .attr('height', height)
@@ -136,6 +136,8 @@
       .attr('text-anchor', 'middle')
       .attr('fill', props.textColor)
       .style('font-size', `${props.textSize}px`)
+      .style('opacity', 0.9)
+      .style('font-weight', '500')
       .text((d) => d.name || 'demo')
 
     // Add hover effects
@@ -231,6 +233,11 @@
   :deep(.d3-force-node.d3-force-node-highlight) circle {
     stroke: #ff4444;
     stroke-width: 3px;
+  }
+
+  :deep(.d3-force-node.d3-force-node-highlight) text {
+    font-weight: bold;
+    font-size: 1.2rem;
   }
 
   :deep(.d3-force-node.d3-force-node-dim) circle {

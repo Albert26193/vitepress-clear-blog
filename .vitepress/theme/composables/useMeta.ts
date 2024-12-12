@@ -1,7 +1,7 @@
 import { useData } from 'vitepress'
 import { computed, nextTick, provide } from 'vue'
 
-import { type PostFrontMatter } from '../types'
+import { type PostFrontMatter } from '../types.d'
 
 /**
  * @abstract: use description for page cards, if the length of words

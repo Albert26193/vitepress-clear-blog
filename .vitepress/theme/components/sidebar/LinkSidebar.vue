@@ -37,7 +37,7 @@
 
   const pageLinks = computed<PageLink[]>(() => {
     const currentPath = useRoute().data.relativePath.replace(/\.md$/, '')
-    // console.log(currentPath, globalMdMetadata)
+    console.log(currentPath, globalMdMetadata)
     return globalMdMetadata[currentPath]?.innerLinks || []
   })
 </script>

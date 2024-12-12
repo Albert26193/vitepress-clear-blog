@@ -10,17 +10,14 @@
       :diameter="6"
       :text-size="18"
       circle-color="#bb0cf6"
-      text-color="#4b5563"
+      text-color="#0b0503"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
   import D3ForceGraph from '@/theme/components/common/D3ForceGraph.vue'
-  import {
-    transformPageD3Data,
-    transformSiteD3Data
-  } from '@/theme/utils/themeUtils'
+  import { transformPageD3Data } from '@/theme/utils/themeUtils'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute } from 'vitepress'
 
@@ -29,5 +26,4 @@
   const { nodes, links } = transformPageD3Data(currentPageLinks, currentPath)
 
   console.log(nodes, links, currentPath)
-  // const { nodes, links } = transformSiteD3Data(globalMdMetadata)
 </script>

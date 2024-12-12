@@ -46,6 +46,8 @@ export interface SiteMetadata {
 
 export interface D3Node extends d3.SimulationNodeDatum {
   id: string | number
+  inDegree: number
+  outDegree: number
   name?: string
   text?: string
   type: 'page' | 'wiki' | 'markdown'
