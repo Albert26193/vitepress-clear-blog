@@ -1,4 +1,4 @@
-import type { PageLink, SiteMetadata } from '@/theme/types'
+import type { PageLink, SiteMetadata } from '@/theme/types.d'
 import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
 import path from 'path'

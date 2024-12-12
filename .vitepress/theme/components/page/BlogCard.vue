@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
   import { useCardDescription } from '@/theme/composables/useMeta'
-  import type { Post } from '@/theme/types'
+  import type { Post } from '@/theme/types.d'
   import { withBase } from 'vitepress'
   import { PropType } from 'vue'
 

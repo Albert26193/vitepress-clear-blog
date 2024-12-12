@@ -5,7 +5,7 @@ import {
   PageLink,
   Post,
   SiteMetadata
-} from '@/theme/types'
+} from '@/theme/types.d'
 import mediumZoom from 'medium-zoom'
 
 /**

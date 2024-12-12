@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { PageLink } from '@/theme/types'
+  import type { PageLink } from '@/theme/types.d'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute, withBase } from 'vitepress'
   import { computed } from 'vue'

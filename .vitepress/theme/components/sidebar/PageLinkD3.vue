@@ -27,7 +27,7 @@
   //3. the zoom does not work well
   //4. the drag does not work well
   //5. the name of the nodes is not displayed
-  import { D3Link, D3Node } from '@/theme/types'
+  import { D3Link, D3Node } from '@/theme/types.d'
   import { transformSiteD3Data } from '@/theme/utils/themeUtils'
   import * as d3 from 'd3'
   import { globalMdMetadata } from 'virtual:markdown-metadata'

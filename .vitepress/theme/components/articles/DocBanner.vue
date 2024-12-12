@@ -31,7 +31,7 @@
 <script setup lang="ts">
   //TODO: how to calculate layout on mobile? if we have too many tags?
   import { useAuthor } from '@/theme/composables/useMeta'
-  import type { PostFrontMatter } from '@/theme/types'
+  import type { PostFrontMatter } from '@/theme/types.d'
   import { calculateWords } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'

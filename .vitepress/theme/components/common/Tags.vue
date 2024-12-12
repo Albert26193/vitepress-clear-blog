@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { Post } from '@/theme/types'
+  import { Post } from '@/theme/types.d'
   import { initTags } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
