@@ -71,6 +71,17 @@ export interface D3Data {
   links: D3Link[]
 }
 
+export interface D3ForceConfig {
+  nodes: D3Node[]
+  links: D3Link[]
+  width?: number
+  height?: number
+  diameter?: number
+  textSize?: number
+  circleColor?: string
+  textColor?: string
+}
+
 declare module 'virtual:markdown-metadata' {
   export const globalMdMetadata: SiteMetadata
 }

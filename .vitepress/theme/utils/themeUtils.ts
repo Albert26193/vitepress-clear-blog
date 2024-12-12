@@ -139,6 +139,15 @@ const transformPageD3Data = (
   postLinks: PageLink[],
   currentPath: string
 ): D3Data => {
+  console.log(postLinks, 'before', postLinks.length)
+  if (!postLinks.length) {
+    return {
+      nodes: [],
+      links: []
+    }
+  }
+
+  console.log(postLinks, 'after')
   // Store unique nodes in a map
   const nodesMap = new Map<string, D3Node>()
 

@@ -10,6 +10,7 @@
     <template #sidebar-nav-after>
       <TagSidebar />
       <LinkSidebar />
+      <PageLinkD3 />
     </template>
     <Copyright />
   </Layout>
@@ -19,6 +20,7 @@
   // TODO: doc banner for article pages only
   import DocBanner from '@/theme/components/articles/DocBanner.vue'
   import Copyright from '@/theme/components/common/Copyright.vue'
+  import PageLinkD3 from '@/theme/components/sidebar/PageLinkD3.vue'
   import { useDarkTransition } from '@/theme/composables/useMeta'
   import LinkSidebar from '@theme/components/sidebar/LinkSidebar.vue'
   import TagSidebar from '@theme/components/sidebar/TagSidebar.vue'

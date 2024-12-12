@@ -35,10 +35,9 @@
   import { useRoute, withBase } from 'vitepress'
   import { computed } from 'vue'
 
-  const route = useRoute()
   const pageLinks = computed<PageLink[]>(() => {
-    const currentPath = route.data.relativePath.replace(/\.md$/, '')
-    console.log(currentPath, globalMdMetadata)
+    const currentPath = useRoute().data.relativePath.replace(/\.md$/, '')
+    // console.log(currentPath, globalMdMetadata)
     return globalMdMetadata[currentPath]?.innerLinks || []
   })
 </script>
