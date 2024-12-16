@@ -23,7 +23,7 @@
 <script setup lang="ts">
   import type { D3ForceConfig, D3Link, D3Node } from '@/theme/types.d'
   import * as d3 from 'd3'
-  import { onMounted, ref, withDefaults } from 'vue'
+  import { onMounted, ref } from 'vue'
 
   const svgRef = ref<SVGSVGElement | null>(null)
 

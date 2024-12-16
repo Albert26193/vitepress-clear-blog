@@ -1,6 +1,7 @@
 import type { PageLink, SiteMetadata } from '@/theme/types.d'
 import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
+import type { Token } from 'markdown-it'
 import path from 'path'
 import { Plugin } from 'vitepress'
 
@@ -9,12 +10,18 @@ const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
 const globalMdMetadata: SiteMetadata = {}
 
-// Create markdown instance
-const md = new MarkdownIt({ linkify: true })
+const md = new MarkdownIt({
+  linkify: true,
+  html: true // Enable HTML tag parsing
+})
 
-// Custom validLink hook to filter internal links
-md.validateLink = (link: string) => {
-  // Filter out external links and anchor links
+/**
+ * Custom validate link hook to filter internal links, external links, and wikilinks
+ *
+ * @param {string} link - The link to validate
+ * @returns {boolean} True if link is internal, false otherwise
+ */
+md.validateLink = (link: string): boolean => {
   return (
     !link.startsWith('http') &&
     !link.startsWith('#') &&
@@ -22,8 +29,13 @@ md.validateLink = (link: string) => {
   )
 }
 
-// Extract all links
-function extractLinks(content: string): PageLink[] {
+/**
+ * Extract all links from markdown content
+ *
+ * @param {string} content - The markdown content to parse
+ * @returns {PageLink[]} An array of extracted links
+ */
+const extractLinks = (content: string): PageLink[] => {
   const links: PageLink[] = []
   const tokens = md.parse(content, {})
 
@@ -43,11 +55,24 @@ function extractLinks(content: string): PageLink[] {
           }
         }
 
+        // Handle HTML <a> tags
+        if (child.type === 'html_inline' && child.content.startsWith('<a ')) {
+          const hrefMatch = child.content.match(/href="([^"]*)"/)
+          if (hrefMatch && hrefMatch[1] && md.validateLink(hrefMatch[1])) {
+            currentLink = {
+              path: hrefMatch[1].replace(/\.md$/, ''),
+              type: 'html'
+            }
+          }
+        }
+
         // Get link text
         if (
           currentLink &&
-          child.type === 'text' &&
-          token?.children?.[index - 1]?.type === 'link_open'
+          ((child.type === 'text' &&
+            token?.children?.[index - 1]?.type === 'link_open') ||
+            (child.type === 'text' &&
+              token?.children?.[index - 1]?.type === 'html_inline'))
         ) {
           currentLink.text = child.content
           currentLink.raw = `[${child.content}](${currentLink.path})`
@@ -89,20 +114,77 @@ function extractLinks(content: string): PageLink[] {
   )
 }
 
-// Extract headings
-const extractHeadings = (content: string) => {
-  return content
-    .split('\n')
-    .filter((line) => line.startsWith('#'))
-    .map((line) => {
-      const level = line.match(/^#+/)![0].length
-      const text = line.replace(/^#+\s+/, '')
-      const slug = text.toLowerCase().replace(/\s+/g, '-')
-      return { level, text, slug }
-    })
+// interface HeadingInfo {
+//   level: number
+//   content: string
+// }
+
+const extractHeadingContent = (tokens: Token[], index: number): string => {
+  const contentToken = tokens[index + 1]
+  if (contentToken?.type !== 'inline') return ''
+
+  return (
+    contentToken.children
+      ?.map((child) => (child.content ?? '') as string)
+      .join('')
+      .trim() || ''
+  )
 }
 
-// Analyze markdown file
+/**
+ * Extract the first heading from markdown content, Rules:
+ * 1. if first title is h1 or h2, return first title.
+ * 2. if first title not h1 and h2, return 'no-heading'
+ *
+ * @param {string} content - The markdown content to parse
+ * @returns {string | null} The first heading text or null if not found
+ */
+const extractFirstHeading = (content: string): string | null => {
+  if (!content) return null
+  const tokens: Token[] = md.parse(content, {})
+
+  /**
+   * Rules for valid heading
+   *  - if first heading is H1 or H2, return it
+   *  - if lower than H2, return string 'no-heading'
+   *  - heading must meet all conditions:
+   *    1. type is heading_open or heading_close
+   *    2. markup is 1-6 '#' characters
+   *    3. tag is h1-h6
+   */
+  const isValidHeading = (token: Token): boolean => {
+    const validTypes = ['heading_open', 'heading_close']
+    const markupRegex = /^#{1,6}$/
+    const validTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    return (
+      validTypes.includes(token.type) &&
+      markupRegex.test(token.markup) &&
+      validTags.includes(token.tag)
+    )
+  }
+
+  const findFirstHeading = (tokens: Token[]): string => {
+    if (!tokens.length) return 'no-heading'
+    const headingTokenIndex = tokens.findIndex(isValidHeading)
+    if (headingTokenIndex === -1) return 'no-heading'
+    const token = tokens[headingTokenIndex]
+    const level = token.markup.length
+    const content = extractHeadingContent(tokens, headingTokenIndex)
+    if (!content) return 'no-heading'
+    // if heading is H1 or H2, return it
+    if (level <= 2) return content
+    // if lower than H2, return string 'no-heading'
+    return 'no-heading'
+  }
+
+  return findFirstHeading(tokens)
+}
+
+/**
+ * Analyze a markdown file and extract metadata, such as word count, headings, and links
+ *
+ * @param {string} filePath - Path to the markdown file
+ */
 const analyzeMdFile = (filePath: string) => {
   const content = fs.readFileSync(filePath, 'utf-8')
   const stats = fs.statSync(filePath)
@@ -115,8 +197,11 @@ const analyzeMdFile = (filePath: string) => {
   // Extract all internal links
   const innerLinks = extractLinks(content)
 
-  // Extract headings
-  // const headings = extractHeadings(content)
+  // Extract headings and log results
+  console.log('          ', filePath, content)
+  console.log('          ')
+  const firstHead = extractFirstHeading(content)
+  console.log(filePath, firstHead)
 
   // Calculate word count
   const wordCount = content
@@ -132,7 +217,11 @@ const analyzeMdFile = (filePath: string) => {
   }
 }
 
-// VitePress plugin for markdown analysis
+/**
+ * VitePress plugin for markdown file analysis, including word count, headings, and links
+ *
+ * @returns {Plugin} VitePress plugin instance
+ */
 const markdownAnalyzerPlugin = (): Plugin => ({
   name: 'vitepress-markdown-analyzer',
   configureServer(server) {
@@ -160,7 +249,7 @@ const markdownAnalyzerPlugin = (): Plugin => ({
         }
       })
     }
-    //TODO: 'docs' should be configurable
+    // TODO: 'docs' should be configurable
     scanDir(path.resolve(process.cwd(), 'docs'))
   },
   resolveId(id) {

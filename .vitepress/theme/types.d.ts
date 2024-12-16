@@ -23,7 +23,7 @@ export interface BlogConfig extends DefaultTheme.Config {
 export interface PageLink {
   text: string
   path: string
-  type: 'wiki' | 'markdown'
+  type: 'wiki' | 'markdown' | 'html'
   raw: string
 }
 
@@ -50,7 +50,7 @@ export interface D3Node extends d3.SimulationNodeDatum {
   outDegree: number
   name?: string
   text?: string
-  type: 'page' | 'wiki' | 'markdown'
+  type: 'page' | 'wiki' | 'markdown' | 'html'
   color?: string
   x?: number
   y?: number
@@ -60,7 +60,7 @@ export interface D3Node extends d3.SimulationNodeDatum {
 export interface D3Link extends d3.SimulationLinkDatum<D3Node> {
   source: string | number | D3Node
   target: string | number | D3Node
-  type: 'wiki' | 'markdown'
+  type: 'wiki' | 'markdown' | 'html'
   color?: string
   x1?: number
   y1?: number

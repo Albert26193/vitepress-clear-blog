@@ -9,9 +9,10 @@ import {
 import mediumZoom from 'medium-zoom'
 
 /**
- * @abstract Initialize tags from posts and group posts by tag
- * @param post Array of posts to process
- * @returns Record object with tags as keys and arrays of posts as values
+ * Initialize tags from posts and group posts by tag
+ *
+ * @param {Post[]} post Array of posts to process
+ * @returns {Record<string, Post[]>} Record object with tags as keys and arrays of posts as values
  */
 const initTags = (post: Post[]) => {
   const data: Record<string, Post[]> = {}
@@ -36,9 +37,10 @@ const initTags = (post: Post[]) => {
 }
 
 /**
- * @abstract Sort posts by year and return them as nested arrays
- * @param posts Array of posts to sort
- * @returns Array of arrays, where each inner array contains posts from the same year
+ * Sorts posts by year and returns them as nested arrays
+ *
+ * @param {Post[]} posts Array of posts to sort
+ * @returns {Post[][]} Array of arrays, where each inner array contains posts from the same year
  */
 const useYearSort = (posts: Post[]): Post[][] => {
   const sortedByYear = posts.reduce(
@@ -63,9 +65,10 @@ const useYearSort = (posts: Post[]): Post[][] => {
 }
 
 /**
- * @abstract Sort posts by year and month, organizing them in a nested structure
- * @param posts Array of posts to sort
- * @returns Nested record object with years as top-level keys and months as second-level keys
+ * Sorts posts by year and month, organizing them in a nested structure
+ *
+ * @param {Post[]} posts Array of posts to sort
+ * @returns {Record<string, Record<string, Post[]>>} Nested record object with years as top-level keys and months as second-level keys
  */
 const useMonthYearSort = (
   posts: Post[]
@@ -85,9 +88,10 @@ const useMonthYearSort = (
 }
 
 /**
- * @abstract Calculate the number of words in the post
- * @param content The content of the post to calculate
- * @returns Number of words, counting Chinese characters individually
+ * Calculates the number of words in the post
+ *
+ * @param {string} content The content of the post to calculate
+ * @returns {number} Number of words, counting Chinese characters individually
  */
 const calculateWords = (content: string): number => {
   const pattern =
@@ -107,6 +111,11 @@ const calculateWords = (content: string): number => {
   return count
 }
 
+/**
+ * function for Initialize medium-zoom with custom options
+ *
+ * @returns {void}
+ */
 const mediumZoomInit = () => {
   const zoom = mediumZoom('.main img', {
     background: 'var(--vp-c-bg)',
@@ -131,9 +140,9 @@ const mediumZoomInit = () => {
 /**
  * Transform post links into D3 force graph data structure for current page
  *
- * @param postLinks Links from the current page to other pages
- * @param currentPath Path of the current page
- * @returns D3 force graph data structure with nodes and links
+ * @param {PageLink[]} postLinks Links from the current page to other pages
+ * @param {string} currentPath Path of the current page
+ * @returns {D3Data} D3 force graph data structure with nodes and links
  */
 const transformPageD3Data = (
   postLinks: PageLink[],
@@ -195,8 +204,8 @@ const transformPageD3Data = (
 /**
  * Transform all site links into D3 force graph data structure
  *
- * @param siteMetadata Metadata containing all pages and their links
- * @returns D3 force graph data structure with nodes and links for the entire site
+ * @param {SiteMetadata} siteMetadata Metadata containing all pages and their links
+ * @returns {D3Data} D3 force graph data structure with nodes and links for the entire site
  */
 const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   // Store unique nodes in a map

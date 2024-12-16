@@ -1,13 +1,8 @@
 {
-  "css.customData": [
-    ".vscode/unocss.json"
-  ],
+  "css.customData": [".vscode/unocss.json"],
   "pathAlias.aliasMap": {
     "@": "${cwd}/.vitepress",
-    "~": "${cwd}",
+    "~": "${cwd}"
   },
-  "cSpell.words": [
-    "vitepress",
-    "wikilinks"
-  ],
+  "cSpell.words": ["vitepress", "wikilink", "wikilinks"]
 }
