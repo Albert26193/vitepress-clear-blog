@@ -23,7 +23,7 @@
 <script setup lang="ts">
   import type { D3ForceConfig, D3Link, D3Node } from '@/theme/types.d'
   import * as d3 from 'd3'
-  import { onMounted, ref } from 'vue'
+  import { onMounted, ref, watch } from 'vue'
 
   const svgRef = ref<SVGSVGElement | null>(null)
 
@@ -35,43 +35,49 @@
     circleColor: '#5040c9',
     textColor: '#030303'
   })
-  console.log('out', props.nodes)
-  const { nodes, links, width, height } = props
-  const simulation = d3
-    .forceSimulation(nodes)
-    .force(
-      'link',
-      d3
-        .forceLink<D3Node, D3Link>(links)
-        .id((d) => d.id)
-        .distance(80)
-    )
-    .force('charge', d3.forceManyBody().strength(-300))
-    .force('center', d3.forceCenter(width / 2, height / 2))
-    .force('collision', d3.forceCollide().radius(30))
-    .force('cluster', forceCluster())
 
-  // Add cluster force function
-  function forceCluster() {
-    const strength = 0.15
-    const centerX = width / 2
-    const centerY = height / 2
-    const force = (alpha: number) => {
-      for (const d of nodes) {
-        if (d.group) {
-          const k = alpha * strength
-          const groupCenterX = centerX + (d.group * 200 - 400)
-          const groupCenterY = centerY
-          d.vx! += (groupCenterX - d.x!) * k
-          d.vy! += (groupCenterY - d.y!) * k
+  console.log('out', props.nodes)
+
+  // Create a function to initialize or update the graph
+  const initializeGraph = () => {
+    if (!svgRef.value) return
+
+    // Clear existing content
+    d3.select(svgRef.value).selectAll('*').remove()
+
+    const { nodes, links, width, height } = props
+    const simulation = d3
+      .forceSimulation(nodes)
+      .force(
+        'link',
+        d3
+          .forceLink<D3Node, D3Link>(links)
+          .id((d) => d.id)
+          .distance(80)
+      )
+      .force('charge', d3.forceManyBody().strength(-300))
+      .force('center', d3.forceCenter(width / 2, height / 2))
+      .force('collision', d3.forceCollide().radius(30))
+      .force('cluster', forceCluster())
+
+    // Add cluster force function
+    function forceCluster() {
+      const strength = 0.15
+      const centerX = width / 2
+      const centerY = height / 2
+      const force = (alpha: number) => {
+        for (const d of nodes) {
+          if (d.group) {
+            const k = alpha * strength
+            const groupCenterX = centerX + (d.group * 200 - 400)
+            const groupCenterY = centerY
+            d.vx! += (groupCenterX - d.x!) * k
+            d.vy! += (groupCenterY - d.y!) * k
+          }
         }
       }
+      return force
     }
-    return force
-  }
-
-  onMounted(() => {
-    if (!svgRef.value) return
 
     // Get the actual width of the container
     const containerWidth = svgRef.value.parentElement?.clientWidth || 200
@@ -211,6 +217,19 @@
         .attr('y2', (d) => (d.target as D3Node).y!)
       node.attr('transform', (d) => `translate(${d.x},${d.y})`)
     })
+  }
+
+  // Watch for changes in nodes or links
+  watch(
+    () => [props.nodes, props.links],
+    () => {
+      initializeGraph()
+    },
+    { deep: true }
+  )
+
+  onMounted(() => {
+    initializeGraph()
   })
 </script>
 
