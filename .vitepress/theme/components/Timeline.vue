@@ -2,7 +2,7 @@
   <div
     v-for="curYearPostList in dataByYear"
     :key="getYear(curYearPostList)"
-    class="my-4 custom-page-layout"
+    class="my-4 custom-page-layout slide-enter"
   >
     <div>
       <!-- year and post count -->
@@ -56,7 +56,7 @@
         <div
           v-for="(article, index) in monthList"
           :key="index"
-          class="posts ml-2"
+          class="posts ml-2 slide-enter"
         >
           <a
             class="dark:text-slate-100 font-bold text-slate-800"

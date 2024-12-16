@@ -198,10 +198,7 @@ const analyzeMdFile = (filePath: string) => {
   const innerLinks = extractLinks(content)
 
   // Extract headings and log results
-  console.log('          ', filePath, content)
-  console.log('          ')
   const firstHead = extractFirstHeading(content)
-  console.log(filePath, firstHead)
 
   // Calculate word count
   const wordCount = content

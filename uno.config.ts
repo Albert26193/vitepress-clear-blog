@@ -14,6 +14,15 @@ export default defineConfig({
       }
     })
   ],
+  rules: [
+    [
+      /^slide-enter-(\d+)$/,
+      ([_, n]) => ({
+        '--enter-stage': n
+      })
+    ]
+  ],
+
   theme: {
     animation: {
       keyframes: {

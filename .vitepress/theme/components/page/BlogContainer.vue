@@ -4,19 +4,15 @@
       <button class="w-24 h-8 mt-4 ml-4" @click="toggleStatus">
         {{ currentPageType === 'ListType' ? 'Card View' : 'List View' }}
       </button>
-      <div
-        v-if="currentPageType === 'ListType'"
-        :key="'list-view'"
-        class="animate-fade-in"
-      >
-        <div class="list-container">
+      <div v-if="currentPageType === 'ListType'" :key="'list-view'">
+        <div class="list-container slide-enter-content">
           <div v-for="post in props.posts" :key="post.regularPath">
             <BlogList :post="post"></BlogList>
           </div>
         </div>
       </div>
       <div v-if="currentPageType === 'cardType'" :key="'card-view'">
-        <div class="card-container">
+        <div class="card-container slide-enter-content">
           <div v-for="post in props.posts" :key="post.regularPath">
             <BlogCard :post="post"></BlogCard>
           </div>

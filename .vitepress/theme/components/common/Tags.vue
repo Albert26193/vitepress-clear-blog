@@ -1,6 +1,6 @@
 <template>
   <div class="custom-page-layout max-w-780px">
-    <div class="tags-container animate-count-8">
+    <div class="tags-container animate-count-8 slide-enter-content">
       <span
         @click="toggleTag(String(key))"
         v-for="(_, key) in sortTags(tagsList)"
@@ -27,7 +27,7 @@
       :href="withBase(article.regularPath)"
       v-for="(article, index) in filteredArticles"
       :key="index"
-      class="posts"
+      class="posts slide-enter"
     >
       <div class="dark:text-slate-200 mt-1 font-bold text-slate-900">
         <div class="post-dot"></div>
