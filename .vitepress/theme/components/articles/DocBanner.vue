@@ -1,6 +1,6 @@
 <template>
   <div
-    class="meta-des flex-col items-center space-y-4"
+    class="meta-des flex-col items-center space-y-4 slide-enter-content"
     id="hack-article-des"
     ref="$des"
   >

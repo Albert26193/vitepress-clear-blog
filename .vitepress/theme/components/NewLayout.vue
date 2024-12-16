@@ -8,9 +8,11 @@
       </div>
     </template>
     <template #sidebar-nav-after>
-      <TagSidebar />
-      <LinkSidebar />
-      <PageLinkD3 />
+      <div class="slide-enter-content">
+        <TagSidebar />
+        <LinkSidebar />
+        <PageLinkD3 />
+      </div>
     </template>
     <Copyright />
   </Layout>
