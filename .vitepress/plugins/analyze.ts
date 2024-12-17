@@ -2,7 +2,7 @@ import type { PageLink, SiteMetadata } from '@/theme/types.d'
 import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
 import type { Token } from 'markdown-it'
-import path from 'path'
+import path, { relative } from 'path'
 import { Plugin } from 'vitepress'
 
 const VIRTUAL_MODULE_ID = 'virtual:markdown-metadata'
@@ -21,12 +21,33 @@ const md = new MarkdownIt({
  * @param {string} link - The link to validate
  * @returns {boolean} True if link is internal, false otherwise
  */
-md.validateLink = (link: string): boolean => {
-  return (
-    !link.startsWith('http') &&
-    !link.startsWith('#') &&
-    !link.startsWith('https')
-  )
+const isExternalLink = (link: string): boolean =>
+  link.startsWith('http') ||
+  link.startsWith('https') ||
+  link.startsWith('#') ||
+  link.startsWith('mailto:') ||
+  link.startsWith('tel:')
+
+const normalizeLink = (link: string): string => link.split('#')[0]
+
+const resolveFilePath = (link: string, currentFilePath: string): string =>
+  path.resolve(path.dirname(currentFilePath), normalizeLink(link))
+
+const fileExists = (filePath: string): boolean =>
+  !path.extname(filePath)
+    ? fs.existsSync(filePath + '.md') || fs.existsSync(filePath + '/index.md')
+    : fs.existsSync(filePath)
+
+const createValidateLink =
+  (currentFilePath: string) =>
+  (link: string): boolean =>
+    !isExternalLink(link) && fileExists(resolveFilePath(link, currentFilePath))
+
+md.validateLink = () => false // Initialize with a default value
+
+const getFullUrl = (relativePath: string): string => {
+  const basicUrl = '/blogs'
+  return `${basicUrl}/${relativePath}.html`
 }
 
 /**
@@ -35,9 +56,11 @@ md.validateLink = (link: string): boolean => {
  * @param {string} content - The markdown content to parse
  * @returns {PageLink[]} An array of extracted links
  */
-const extractLinks = (content: string): PageLink[] => {
+const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
   const links: PageLink[] = []
   const tokens = md.parse(content, {})
+
+  md.validateLink = createValidateLink(currentFilePath)
 
   tokens.forEach((token) => {
     if (token.type === 'inline' && token.children) {
@@ -49,7 +72,7 @@ const extractLinks = (content: string): PageLink[] => {
           const href = child.attrGet('href')
           if (href && md.validateLink(href)) {
             currentLink = {
-              path: href.replace(/\.md$/, ''),
+              relativePath: href.replace(/\.md$/, ''),
               type: 'markdown'
             }
           }
@@ -60,7 +83,7 @@ const extractLinks = (content: string): PageLink[] => {
           const hrefMatch = child.content.match(/href="([^"]*)"/)
           if (hrefMatch && hrefMatch[1] && md.validateLink(hrefMatch[1])) {
             currentLink = {
-              path: hrefMatch[1].replace(/\.md$/, ''),
+              relativePath: hrefMatch[1].replace(/\.md$/, ''),
               type: 'html'
             }
           }
@@ -75,11 +98,10 @@ const extractLinks = (content: string): PageLink[] => {
               token?.children?.[index - 1]?.type === 'html_inline'))
         ) {
           currentLink.text = child.content
-          currentLink.raw = `[${child.content}](${currentLink.path})`
+          currentLink.raw = `[${child.content}](${currentLink.relativePath})`
           links.push(currentLink as PageLink)
           currentLink = null
         }
-
         // Handle wikilink
         if (child.type === 'text' && child.content.includes('[[')) {
           const wikiMatches = child.content.match(/\[\[(.*?)\]\]/g)
@@ -89,10 +111,12 @@ const extractLinks = (content: string): PageLink[] => {
               const [text, path] = content.split('|').reverse()
               links.push({
                 text: path || text,
-                path: text.toLowerCase().replace(/\s+/g, '-'),
+                relativePath: text.toLowerCase().replace(/\s+/g, '-'),
+                fullUrl: '',
                 type: 'wiki',
                 raw: match
               })
+              // console.log(links, 'links')
             })
           }
         }
@@ -101,23 +125,23 @@ const extractLinks = (content: string): PageLink[] => {
   })
 
   // Remove duplicates, prioritize markdown type links
-  return links.filter(
-    (link, index, self) =>
-      index ===
-      self.findIndex(
-        (l) =>
-          l.path === link.path &&
-          (l.type === 'markdown' || link.type === 'markdown'
-            ? l.type === link.type
-            : true)
-      )
-  )
+  return links
+    .filter(
+      (link, index, self) =>
+        index ===
+        self.findIndex(
+          (l) =>
+            l.relativePath === link.relativePath &&
+            (l.type === 'markdown' || link.type === 'markdown'
+              ? l.type === link.type
+              : true)
+        )
+    )
+    .map((link) => ({
+      ...link,
+      fullUrl: getFullUrl(link.relativePath)
+    }))
 }
-
-// interface HeadingInfo {
-//   level: number
-//   content: string
-// }
 
 const extractHeadingContent = (tokens: Token[], index: number): string => {
   const contentToken = tokens[index + 1]
@@ -194,8 +218,10 @@ const analyzeMdFile = (filePath: string) => {
     .replace(/^docs\//, '')
     .replace(/\.md$/, '')
 
+  console.log('relative', relativePath)
   // Extract all internal links
-  const innerLinks = extractLinks(content)
+  const innerLinks = extractLinks(content, filePath)
+  console.log(innerLinks, 'inner')
 
   // Extract headings and log results
   const firstHead = extractFirstHeading(content)

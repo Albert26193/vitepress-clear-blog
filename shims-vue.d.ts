@@ -15,4 +15,8 @@ declare module 'virtual:markdown-metadata' {
   export const globalMdMetadata: SiteMetadata
 }
 
-declare module 'markdown-it-wikilinks' {}
+declare module 'markdown-it-wikilinks' {
+  import type MarkdownIt from 'markdown-it'
+  const plugin: (options?: any) => (md: MarkdownIt) => void
+  export default plugin
+}

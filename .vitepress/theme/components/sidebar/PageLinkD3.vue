@@ -30,9 +30,13 @@
   const currentPageLinks = computed(
     () => globalMdMetadata[currentPath.value]?.innerLinks || []
   )
+
+  console.log(currentPath.value, currentPageLinks.value, 'here')
   const graphData = computed(() =>
     transformPageD3Data(currentPageLinks.value, currentPath.value)
   )
+
+  console.log(graphData.value, 'data')
 
   // For debugging
   // watch(currentPath, (newPath) => {

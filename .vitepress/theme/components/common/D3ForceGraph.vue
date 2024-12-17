@@ -23,8 +23,10 @@
 <script setup lang="ts">
   import type { D3ForceConfig, D3Link, D3Node } from '@/theme/types.d'
   import * as d3 from 'd3'
+  import { useRouter } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
 
+  const router = useRouter()
   const svgRef = ref<SVGSVGElement | null>(null)
 
   const props = withDefaults(defineProps<D3ForceConfig>(), {
@@ -126,6 +128,13 @@
       .data(nodes)
       .join('g')
       .attr('class', 'd3-force-node')
+      .style('cursor', 'pointer')
+      .on('click', (event, d) => {
+        if (d.fullUrl) {
+          router.go(d.fullUrl)
+          console.log(d.fullUrl)
+        }
+      })
 
     // add node circles
     node
@@ -251,7 +260,7 @@
 
   :deep(.d3-force-node.d3-force-node-highlight) circle {
     stroke: #ff4444;
-    stroke-width: 3px;
+    stroke-width: 1px;
   }
 
   :deep(.d3-force-node.d3-force-node-highlight) text {

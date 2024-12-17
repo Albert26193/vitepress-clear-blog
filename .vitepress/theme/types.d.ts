@@ -22,7 +22,8 @@ export interface BlogConfig extends DefaultTheme.Config {
 
 export interface PageLink {
   text: string
-  path: string
+  relativePath: string
+  fullUrl: string
   type: 'wiki' | 'markdown' | 'html'
   raw: string
 }
@@ -48,8 +49,9 @@ export interface D3Node extends d3.SimulationNodeDatum {
   id: string | number
   inDegree: number
   outDegree: number
-  name?: string
-  text?: string
+  name: string
+  relativePath: string
+  fullUrl: string
   type: 'page' | 'wiki' | 'markdown' | 'html'
   color?: string
   x?: number

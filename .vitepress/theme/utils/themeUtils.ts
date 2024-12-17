@@ -148,7 +148,6 @@ const transformPageD3Data = (
   postLinks: PageLink[],
   currentPath: string
 ): D3Data => {
-  console.log(postLinks, 'before', postLinks.length)
   if (!postLinks.length) {
     return {
       nodes: [],
@@ -156,7 +155,6 @@ const transformPageD3Data = (
     }
   }
 
-  console.log(postLinks, 'after')
   // Store unique nodes in a map
   const nodesMap = new Map<string, D3Node>()
 
@@ -164,7 +162,8 @@ const transformPageD3Data = (
   if (!nodesMap.has(currentPath)) {
     nodesMap.set(currentPath, {
       id: currentPath,
-      text: currentPath.split('/').pop() || currentPath,
+      relativePath: currentPath,
+      fullUrl: currentPath,
       name: currentPath.split('/').pop() || currentPath,
       type: 'page',
       inDegree: 0,
@@ -174,18 +173,19 @@ const transformPageD3Data = (
 
   // Add target nodes from links
   postLinks.forEach((link) => {
-    if (!nodesMap.has(link.path)) {
-      nodesMap.set(link.path, {
-        id: link.path,
-        text: link.text.split('/').pop() || link.text,
+    if (!nodesMap.has(link.relativePath)) {
+      nodesMap.set(link.relativePath, {
+        id: link.relativePath,
+        relativePath: link.relativePath,
         name: link.text.split('/').pop() || link.text,
+        fullUrl: link.fullUrl,
         type: link.type,
         inDegree: 0,
         outDegree: 0
       })
     } else {
       // If node already exists, increment its inDegree
-      const node = nodesMap.get(link.path)!
+      const node = nodesMap.get(link.relativePath)!
       node.inDegree++
     }
   })
@@ -195,7 +195,7 @@ const transformPageD3Data = (
     nodes: Array.from(nodesMap.values()),
     links: postLinks.map((link) => ({
       source: currentPath,
-      target: link.path,
+      target: link.relativePath,
       type: link.type
     }))
   }
@@ -217,8 +217,9 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
     if (!nodesMap.has(path)) {
       nodesMap.set(path, {
         id: path,
-        text: path.split('/').pop() || path,
+        relativePath: path,
         name: path.split('/').pop() || path,
+        fullUrl: path,
         type: 'page',
         group: path.split('/').length - 1,
         inDegree: 0,
@@ -228,18 +229,19 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
 
     // Add target nodes from page's inner links
     metadata.innerLinks.forEach((link) => {
-      if (!nodesMap.has(link.path)) {
-        nodesMap.set(link.path, {
-          id: link.path,
-          text: link.text,
+      if (!nodesMap.has(link.relativePath)) {
+        nodesMap.set(link.relativePath, {
+          id: link.relativePath,
+          relativePath: link.relativePath,
           name: link.text,
+          fullUrl: link.fullUrl,
           type: link.type,
           inDegree: 0,
           outDegree: 0
         })
       } else {
         // If node already exists, increment its inDegree
-        const node = nodesMap.get(link.path)!
+        const node = nodesMap.get(link.relativePath)!
         node.inDegree++
       }
     })
@@ -251,7 +253,7 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
     metadata.innerLinks.forEach((link) => {
       links.push({
         source: path,
-        target: link.path,
+        target: link.relativePath,
         type: link.type
       })
     })

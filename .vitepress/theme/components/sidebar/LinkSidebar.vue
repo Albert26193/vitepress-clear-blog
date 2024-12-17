@@ -9,8 +9,8 @@
       <div v-if="pageLinks.length" class="page-links">
         <a
           v-for="link in pageLinks"
-          :key="link.path"
-          :href="withBase(link.path)"
+          :key="link.relativePath"
+          :href="withBase(link.relativePath)"
           class="page-link"
           :title="link.raw"
         >

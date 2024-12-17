@@ -26,6 +26,7 @@ const RSS: RSSOptions = {
   copyright: 'Copyright 111111111'
 }
 
+// TODO: temp test options here
 const wikilinksOptions = {
   baseURL: 'http://10.177.73.149:5000'
 }
