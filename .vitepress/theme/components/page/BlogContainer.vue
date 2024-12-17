@@ -1,8 +1,22 @@
 <template>
   <div class="custom-page-layout page-wrapper">
-    <div class="page-content">
-      <button class="w-24 h-8 mt-4 ml-4" @click="toggleStatus">
-        {{ currentPageType === 'ListType' ? 'Card View' : 'List View' }}
+    <div class="page-content border border-black border-solid">
+      <button class="btn-view mt-12" @click="toggleStatus">
+        <div
+          class="icon-wrapper"
+          :class="{ active: currentPageType === 'ListType' }"
+        >
+          <span class="i-carbon-table-of-contents text-lg" />
+        </div>
+        <div
+          class="icon-wrapper"
+          :class="{ active: currentPageType === 'cardType' }"
+        >
+          <span class="i-carbon-grid text-lg" />
+        </div>
+        <!-- <div class="text-sm w-12 text-black">
+          {{ currentPageType === 'cardType' ? 'Card' : 'List' }}
+        </div> -->
       </button>
       <div v-if="currentPageType === 'ListType'" :key="'list-view'">
         <div class="list-container slide-enter-content">
@@ -82,27 +96,51 @@
 
 <style scoped>
   .page-wrapper {
-    @apply min-h-screen flex flex-col;
+    @apply flex flex-col;
+    min-height: calc(100vh - var(--vp-nav-height));
   }
 
   .page-content {
-    @apply flex-1;
+    @apply flex-1 mt-2;
+    min-height: calc(100vh - var(--vp-nav-height) - 30px);
   }
 
   .page-footer {
-    @apply mt-auto py-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700;
+    @apply mt-auto  bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700;
   }
 
   .list-container {
-    @apply space-y-4 mx-auto mt-12;
+    @apply space-y-4 mx-auto mt-8;
   }
 
   .card-container {
-    @apply mx-auto mt-12 grid grid-cols-1 gap-4 w-full;
+    @apply mx-auto mt-8 grid grid-cols-1 gap-4 w-full;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
   }
 
   .pagination {
-    @apply mt-6 flex justify-center;
+    @apply flex justify-center;
+  }
+
+  .pagination .link {
+    @apply w-6 h-6 flex items-center justify-center rounded-md;
+    @apply text-gray-600 dark:text-gray-400;
+  }
+
+  .pagination .link.active {
+    @apply text-gray-100 bg-[var(--vp-c-brand)] shadow-xl;
+  }
+
+  .btn-view {
+    @apply inline-flex gap-1 bg-gray-200/80 rounded-lg py-[5px] px-2 justify-center;
+    @apply text-gray-400 text-lg shadow-inner;
+  }
+
+  .btn-view .icon-wrapper {
+    @apply flex items-center p-1 rounded-md;
+  }
+
+  .btn-view .icon-wrapper.active {
+    @apply text-gray-900 bg-gray-100 shadow-xl drop-shadow;
   }
 </style>
