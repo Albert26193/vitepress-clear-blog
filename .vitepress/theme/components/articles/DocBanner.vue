@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="meta-des flex-col items-center space-y-4 slide-enter-content"
-    id="hack-article-des"
-    ref="$des"
-  >
+  <div class="meta-des" id="hack-article-des" ref="$des">
     <!-- tags -->
     <div class="grow space-x-2">
       <span v-for="item in frontmatter.tags" :key="item" class="tag">
@@ -79,8 +75,9 @@
 <style scoped>
   .meta-des {
     @apply mt-4 px-6 pt-6 pb-3;
-    @apply border border-solid border-gray-300 rounded-lg w-full;
+    @apply border border-solid border-gray-900 rounded-lg w-full;
     @apply hover:shadow-md transition-shadow duration-300 hover:border-solid;
     @apply transition-all duration-300;
+    @apply flex-col items-center space-y-4 slide-enter-content;
   }
 </style>

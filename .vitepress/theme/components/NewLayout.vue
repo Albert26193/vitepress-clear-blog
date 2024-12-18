@@ -9,7 +9,7 @@
     </template>
 
     <template #nav-bar-content-before>
-      <div v-if="!layout || layout == 'doc'">
+      <div v-if="showSidebarButton">
         <HideSidebarButton />
       </div>
     </template>
@@ -42,4 +42,11 @@
   const { Layout } = DefaultTheme
   const { frontmatter } = useData()
   const layout = computed(() => frontmatter.value.layout)
+
+  const showSidebarButton = computed(() => {
+    return (
+      (!layout.value || layout.value == 'doc') &&
+      frontmatter.value.sidebar !== false
+    )
+  })
 </script>
