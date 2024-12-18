@@ -197,3 +197,15 @@ h3 {
 .VPSwitchAppearance .check {
   transform: none !important;
 }
+
+.VPSidebar.hidden {
+  display: none !important;
+}
+
+.clear-layout {
+  --toggle-button-width: 40px;
+}
+
+.clear-layout.sidebar-hidden .VPContent.has-sidebar {
+  padding-left: var(--toggle-button-width) !important;
+}

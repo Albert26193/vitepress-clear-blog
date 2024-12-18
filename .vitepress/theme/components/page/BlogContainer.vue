@@ -133,7 +133,7 @@
 
   .btn-view {
     @apply inline-flex gap-1 bg-gray-200/80 rounded-lg py-[5px] px-2 justify-center;
-    @apply text-gray-400 text-lg shadow-inner;
+    @apply text-gray-900 text-lg shadow-inner;
   }
 
   .btn-view .icon-wrapper {
@@ -141,6 +141,6 @@
   }
 
   .btn-view .icon-wrapper.active {
-    @apply text-gray-900 bg-gray-100 shadow-xl drop-shadow;
+    @apply bg-gray-100 shadow-xl drop-shadow;
   }
 </style>

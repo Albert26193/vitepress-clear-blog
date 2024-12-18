@@ -22,8 +22,15 @@ export default defineConfig({
       })
     ]
   ],
-
   theme: {
+    screens: {
+      xs: '375px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px'
+    },
     animation: {
       keyframes: {
         custom: '{0%, 100% {opacity:1} 50% {opacity:.5}}'
