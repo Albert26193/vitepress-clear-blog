@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d3-force-sidebar-container w-48 h-48 border border-gray-800 mt-16"
+    class="d3-force-sidebar-container w-48 h-48 border border-gray-800 mt-16 hover:shadow-lg"
     v-if="currentPageLinks.length"
   >
     <D3ForceGraph

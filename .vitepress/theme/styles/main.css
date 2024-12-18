@@ -35,11 +35,12 @@ h3 {
 }
 
 .vp-doc a {
-  @apply text-[--vp-c-text-1] font-500 no-underline;
+  @apply text-[--vp-c-text-1] font-400 no-underline;
 }
 
-.vp-doc a:hover {
-  @apply text-[--vp-c-brand];
+.vp-doc .meta-des ~ * a {
+  @apply text-[--vp-c-brand-1] no-underline;
+  @apply hover:underline;
 }
 
 .vp-doc p {

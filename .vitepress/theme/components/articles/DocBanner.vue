@@ -2,7 +2,11 @@
   <div class="meta-des" id="hack-article-des" ref="$des">
     <!-- tags -->
     <div class="grow space-x-2">
-      <span v-for="item in frontmatter.tags" :key="item" class="tag">
+      <span
+        v-for="item in frontmatter.tags"
+        :key="item"
+        class="tag tag-on-page"
+      >
         <a :href="withBase(`/tags.html?tag=${item}`)"> {{ item }}</a>
       </span>
     </div>
@@ -76,8 +80,13 @@
   .meta-des {
     @apply mt-4 px-6 pt-6 pb-3;
     @apply border border-solid border-gray-900 rounded-lg w-full;
-    @apply hover:shadow-md transition-shadow duration-300 hover:border-solid;
+    @apply hover:shadow-lg transition-shadow duration-300 hover:border-solid;
     @apply transition-all duration-300;
     @apply flex-col items-center space-y-4 slide-enter-content;
+  }
+
+  .tag-on-page a {
+    @apply text-gray-700 no-underline;
+    @apply hover:no-underline;
   }
 </style>
