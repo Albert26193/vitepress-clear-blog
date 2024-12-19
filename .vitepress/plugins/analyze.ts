@@ -67,7 +67,7 @@ const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
       let currentLink: Partial<PageLink> | null = null
 
       token.children.forEach((child, index) => {
-        // Handle markdown standard links
+        // 1. Handle markdown standard links
         if (child.type === 'link_open') {
           const href = child.attrGet('href')
           if (href && md.validateLink(href)) {
@@ -78,7 +78,7 @@ const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
           }
         }
 
-        // Handle HTML <a> tags
+        // 2. Handle HTML <a> tags
         if (child.type === 'html_inline' && child.content.startsWith('<a ')) {
           const hrefMatch = child.content.match(/href="([^"]*)"/)
           if (hrefMatch && hrefMatch[1] && md.validateLink(hrefMatch[1])) {
@@ -88,7 +88,6 @@ const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
             }
           }
         }
-
         // Get link text
         if (
           currentLink &&
@@ -102,20 +101,23 @@ const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
           links.push(currentLink as PageLink)
           currentLink = null
         }
-        // Handle wikilink
+
+        // 3. Handle wikilink
         if (child.type === 'text' && child.content.includes('[[')) {
           const wikiMatches = child.content.match(/\[\[(.*?)\]\]/g)
-          if (wikiMatches) {
+          if (wikiMatches && wikiMatches.length > 0) {
             wikiMatches.forEach((match) => {
               const content = match.slice(2, -2)
               const [text, path] = content.split('|').reverse()
-              links.push({
-                text: path || text,
-                relativePath: text.toLowerCase().replace(/\s+/g, '-'),
-                fullUrl: '',
-                type: 'wiki',
-                raw: match
-              })
+              if (md.validateLink(text)) {
+                links.push({
+                  text: text || path,
+                  relativePath: text.toLowerCase().replace(/\s+/g, '-'),
+                  fullUrl: '',
+                  type: 'wiki',
+                  raw: match
+                })
+              }
               // console.log(links, 'links')
             })
           }

@@ -35,7 +35,7 @@ h3 {
 }
 
 .vp-doc a {
-  @apply text-[--vp-c-text-1] font-400 no-underline;
+  @apply text-[--vp-c-text-1] no-underline;
 }
 
 .vp-doc .meta-des ~ * a {
@@ -191,14 +191,15 @@ h3 {
   @apply z-[9999];
 }
 
-.VPSwitchAppearance {
+/* .VPSwitchAppearance {
   width: 22px !important;
 }
 
 .VPSwitchAppearance .check {
   transform: none !important;
-}
+} */
 
+/* for vp sidebar hidden button */
 .VPSidebar.hidden {
   display: none !important;
 }
@@ -209,4 +210,20 @@ h3 {
 
 .clear-layout.sidebar-hidden .VPContent.has-sidebar {
   padding-left: var(--toggle-button-width) !important;
+}
+
+/* for wikilinks */
+.VPDoc .main .vp-doc .clear-wikilink {
+  @apply text-[var(--vp-c-brand-1)] relative whitespace-nowrap;
+  @apply inline-block overflow-hidden text-ellipsis max-w-[200px] pl-[13px] pr-[13px];
+}
+
+.VPDoc .main .vp-doc .clear-wikilink::before {
+  content: '[[';
+  @apply absolute left-0 top-0;
+}
+
+.VPDoc .main .vp-doc .clear-wikilink::after {
+  content: ']]';
+  @apply absolute right-0 top-0;
 }

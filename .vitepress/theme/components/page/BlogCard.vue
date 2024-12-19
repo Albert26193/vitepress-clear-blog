@@ -23,9 +23,9 @@
         <span>{{ post.frontMatter.date }}</span>
       </div>
       <!-- tags -->
-      <div class="flex space-x-2 flex-wrap">
-        <span v-for="item in partedTags" :key="item + 'key'" class="tag">
-          <a @click.stop :href="withBase(`/tags.html?tag=${item}`)"
+      <div class="flex gap-1 flex-wrap">
+        <span v-for="item in partedTags" :key="item + 'key'">
+          <a @click.stop :href="withBase(`/tags.html?tag=${item}`)" class="tag"
             >{{ item }}
           </a>
         </span>

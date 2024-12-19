@@ -2,12 +2,10 @@
   <div class="meta-des" id="hack-article-des" ref="$des">
     <!-- tags -->
     <div class="grow space-x-2">
-      <span
-        v-for="item in frontmatter.tags"
-        :key="item"
-        class="tag tag-on-page"
-      >
-        <a :href="withBase(`/tags.html?tag=${item}`)"> {{ item }}</a>
+      <span v-for="item in frontmatter.tags" :key="item">
+        <a :href="withBase(`/tags.html?tag=${item}`)" class="tag">
+          {{ item }}</a
+        >
       </span>
     </div>
     <div class="flex items-center mt-2">
@@ -85,8 +83,13 @@
     @apply flex-col items-center space-y-4 slide-enter-content;
   }
 
+  .tag-on-page {
+    @apply cursor-pointer;
+  }
   .tag-on-page a {
-    @apply text-gray-700 no-underline;
-    @apply hover:no-underline;
+    @apply text-[var(--vp-c-text)] no-underline font-bold;
+  }
+  .tag-on-page:hover {
+    @apply text-[var(--vp-c-brand)] no-underline;
   }
 </style>

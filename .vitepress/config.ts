@@ -28,7 +28,11 @@ const RSS: RSSOptions = {
 
 // TODO: temp test options here
 const wikilinksOptions = {
-  baseURL: 'http://10.177.73.149:5000'
+  baseURL: 'http://10.177.73.149:5000',
+  htmlAttributes: {
+    class: 'clear-wikilink'
+    // rel: 'nofollow'
+  }
 }
 
 //default options

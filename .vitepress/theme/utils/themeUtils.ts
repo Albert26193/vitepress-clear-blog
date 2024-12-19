@@ -190,6 +190,8 @@ const transformPageD3Data = (
     }
   })
 
+  // Add source nodes from links
+
   // Convert to D3 data structure
   return {
     nodes: Array.from(nodesMap.values()),
