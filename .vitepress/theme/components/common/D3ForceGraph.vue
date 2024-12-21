@@ -1,5 +1,5 @@
 <template>
-  <div class="d3-force-container border border-gray-800 border-solid">
+  <div class="d3-force-container">
     <svg ref="svgRef" :width="width" :height="height">
       <g>
         <line
@@ -35,7 +35,7 @@
     diameter: 10,
     textSize: 5,
     circleColor: '#5040c9',
-    textColor: '#030303'
+    textColor: '#4a4a4a'
   })
 
   console.log('out', props.nodes)
@@ -55,7 +55,8 @@
         d3
           .forceLink<D3Node, D3Link>(links)
           .id((d) => d.id)
-          .distance(80)
+          .distance(90)
+          .strength(0.1)
       )
       .force('charge', d3.forceManyBody().strength(-300))
       .force('center', d3.forceCenter(width / 2, height / 2))
@@ -64,18 +65,17 @@
 
     // Add cluster force function
     function forceCluster() {
-      const strength = 0.15
+      const strength = 0.05
       const centerX = width / 2
       const centerY = height / 2
       const force = (alpha: number) => {
         for (const d of nodes) {
-          if (d.group) {
-            const k = alpha * strength
-            const groupCenterX = centerX + (d.group * 200 - 400)
-            const groupCenterY = centerY
-            d.vx! += (groupCenterX - d.x!) * k
-            d.vy! += (groupCenterY - d.y!) * k
-          }
+          const group = d.group ?? 2
+          const k = alpha * strength
+          const groupCenterX = centerX + (group * 100 - 200)
+          const groupCenterY = centerY
+          d.vx! += (groupCenterX - d.x!) * k
+          d.vy! += (groupCenterY - d.y!) * k
         }
       }
       return force
@@ -88,7 +88,7 @@
     // Create the zoom behavior
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.5, 2])
+      .scaleExtent([0.3, 1.6])
       .translateExtent([
         [0, 0],
         [width, height]
@@ -155,58 +155,82 @@
       .style('font-weight', '500')
       .text((d) => d.name || 'demo')
 
-    // Add hover effects
-    node
-      .on('mouseover', (event, d) => {
-        const connectedNodes = new Set()
-        // Get all connected nodes
-        link.each((l) => {
-          if (l.source === d) connectedNodes.add(l.target)
-          if (l.target === d) connectedNodes.add(l.source)
-        })
-        node.classed(
-          'd3-force-node-highlight',
-          (n) => n === d || connectedNodes.has(n)
-        )
-        node.classed(
-          'd3-force-node-dim',
-          (n) => n !== d && !connectedNodes.has(n)
-        )
-        link.classed(
-          'd3-force-link-highlight',
-          (l) => l.source === d || l.target === d
-        )
-        link.classed(
-          'd3-force-link-dim',
-          (l) => l.source !== d && l.target !== d
-        )
-      })
-      .on('mouseout', () => {
+    // Add drag functionality
+    let isDragging = false
+    let draggedNode: D3Node | null = null
+
+    const updateNodeState = (d: D3Node | null) => {
+      if (!d) {
+        // Reset all states when no node is selected
         node
           .classed('d3-force-node-highlight', false)
           .classed('d3-force-node-dim', false)
         link
           .classed('d3-force-link-highlight', false)
           .classed('d3-force-link-dim', false)
+        return
+      }
+      // Find all connected nodes
+      const connectedNodes = new Set()
+      link.each((l) => {
+        if (l.source === d) connectedNodes.add(l.target)
+        if (l.target === d) connectedNodes.add(l.source)
       })
+      // Update node states
+      node
+        .classed(
+          'd3-force-node-highlight',
+          (n) => n === d || connectedNodes.has(n)
+        )
+        .classed('d3-force-node-dim', (n) => n !== d && !connectedNodes.has(n))
+      // Update link states
+      link
+        .classed(
+          'd3-force-link-highlight',
+          (l) => l.source === d || l.target === d
+        )
+        .classed('d3-force-link-dim', (l) => l.source !== d && l.target !== d)
+    }
 
-    // Add drag functionality
     const dragStarted = (
       event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>
     ) => {
       if (!event.active) simulation.alphaTarget(0.3).restart()
       event.subject.fx = event.subject.x
       event.subject.fy = event.subject.y
+      // Set drag state and update visual states
+      isDragging = true
+      draggedNode = event.subject
+      updateNodeState(draggedNode)
     }
+
     const dragged = (event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>) => {
       event.subject.fx = event.x
       event.subject.fy = event.y
     }
+
     const dragEnded = (event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>) => {
       if (!event.active) simulation.alphaTarget(0)
       event.subject.fx = null
       event.subject.fy = null
+      // Reset drag state and visual states
+      isDragging = false
+      draggedNode = null
+      updateNodeState(null)
     }
+
+    // Add hover effects only when not dragging
+    node
+      .on('mouseover', (event, d) => {
+        if (!isDragging) {
+          updateNodeState(d)
+        }
+      })
+      .on('mouseout', (event) => {
+        if (!isDragging) {
+          updateNodeState(null)
+        }
+      })
 
     // Bind drag functions to nodes
     node.call(
@@ -258,35 +282,34 @@
     transition: all 0.3s ease;
   }
 
-  :deep(.d3-force-node.d3-force-node-highlight) circle {
-    stroke: #ff4444;
-    stroke-width: 1px;
-  }
+  /* :deep(.d3-force-node.d3-force-node-highlight) circle {
+    stroke: #b752ff;
+    stroke-width: 2px;
+    opacity: 0.2;
+  } */
 
   :deep(.d3-force-node.d3-force-node-highlight) text {
-    font-weight: bold;
+    font-weight: semi-bold;
     font-size: 1.2rem;
+    /* opacity: 0.2; */
   }
 
   :deep(.d3-force-node.d3-force-node-dim) circle {
-    opacity: 0.6;
+    opacity: 0.2;
   }
 
   :deep(.d3-force-node.d3-force-node-dim) text {
-    opacity: 0.6;
-  }
-
-  :deep(.d3-force-link) {
-    transition: all 0.3s ease;
+    opacity: 0.1;
+    @apply text-gray-100;
   }
 
   :deep(.d3-force-link.d3-force-link-highlight) {
-    stroke: #000;
-    stroke-opacity: 1;
-    stroke-width: 2px;
+    stroke: #828282;
+    stroke-opacity: 0.8;
+    stroke-width: 1.3px;
   }
 
   :deep(.d3-force-link.d3-force-link-dim) {
-    stroke-opacity: 0.3;
+    stroke-opacity: 0.2;
   }
 </style>

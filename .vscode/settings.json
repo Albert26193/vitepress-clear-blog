@@ -4,5 +4,5 @@
     "@": "${cwd}/.vitepress",
     "~": "${cwd}"
   },
-  "cSpell.words": ["vitepress", "wikilink", "wikilinks"]
+  "cSpell.words": ["linkify", "vitepress", "wikilink", "wikilinks"]
 }

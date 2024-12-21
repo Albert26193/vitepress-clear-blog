@@ -7,7 +7,6 @@
     "dev": "vitepress dev --host 0.0.0.0",
     "build": "vitepress build",
     "preview": "vitepress preview",
-    "trace": "node --trace-warnings ./node_modules/vitepress/bin/vitepress.js dev --host 0.0.0.0",
     "prepare": "husky",
     "lint": "eslint './.vitepress/**/*.{ts,tsx,js,jsx,vue}'",
     "lint:fix": "eslint --fix './.vitepress/**/*.{ts,tsx,js,jsx,vue}'",

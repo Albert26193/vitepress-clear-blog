@@ -2,13 +2,17 @@ import type { PageLink, SiteMetadata } from '@/theme/types.d'
 import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
 import type { Token } from 'markdown-it'
-import path, { relative } from 'path'
+import path from 'path'
 import { Plugin } from 'vitepress'
 
 const VIRTUAL_MODULE_ID = 'virtual:markdown-metadata'
 const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
+// TODO: do we need a global metadata? alternatively, wrap it in a function?
 const globalMdMetadata: SiteMetadata = {}
+
+// TODO: make this configurable
+const dirPrefix = 'blogs'
 
 const md = new MarkdownIt({
   linkify: true,
@@ -45,18 +49,24 @@ const createValidateLink =
 
 md.validateLink = () => false // Initialize with a default value
 
-const getFullUrl = (relativePath: string): string => {
-  const basicUrl = '/blogs'
-  return `${basicUrl}/${relativePath}.html`
+const getFullUrl = (relativePath: string, currentFilePath: string): string => {
+  const absolutePath = resolveFilePath(relativePath, currentFilePath)
+  const projectRelativePath = path.relative(process.cwd(), absolutePath)
+  const urlPath = projectRelativePath.replace(/^docs\//, '')
+  // .replace(new RegExp(`^${dirPrefix}/`), '')
+  return `/${urlPath.replace(/\.md$/, '.html')}`
 }
 
 /**
- * Extract all links from markdown content
+ * Extract outgoing links from markdown content (a -> b relationships)
  *
  * @param {string} content - The markdown content to parse
- * @returns {PageLink[]} An array of extracted links
+ * @returns {PageLink[]} An array of extracted outgoing links
  */
-const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
+const extractToLinks = (
+  content: string,
+  currentFilePath: string
+): PageLink[] => {
   const links: PageLink[] = []
   const tokens = md.parse(content, {})
 
@@ -96,7 +106,7 @@ const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
             (child.type === 'text' &&
               token?.children?.[index - 1]?.type === 'html_inline'))
         ) {
-          currentLink.text = child.content
+          currentLink.text = child.content || ''
           currentLink.raw = `[${child.content}](${currentLink.relativePath})`
           links.push(currentLink as PageLink)
           currentLink = null
@@ -118,7 +128,6 @@ const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
                   raw: match
                 })
               }
-              // console.log(links, 'links')
             })
           }
         }
@@ -141,10 +150,18 @@ const extractLinks = (content: string, currentFilePath: string): PageLink[] => {
     )
     .map((link) => ({
       ...link,
-      fullUrl: getFullUrl(link.relativePath)
+      fullUrl: getFullUrl(link.relativePath, currentFilePath),
+      text: link.text.split('/').pop() || link.text
     }))
 }
 
+/**
+ * Extract heading content for a given heading token
+ *
+ * @param tokens - The tokens of the markdown content
+ * @param index - The index of the heading token, namely the position for the heading
+ * @returns {string} The content of the heading
+ */
 const extractHeadingContent = (tokens: Token[], index: number): string => {
   const contentToken = tokens[index + 1]
   if (contentToken?.type !== 'inline') return ''
@@ -211,19 +228,33 @@ const extractFirstHeading = (content: string): string | null => {
  *
  * @param {string} filePath - Path to the markdown file
  */
+
+// MARK: analyzeMdFile
 const analyzeMdFile = (filePath: string) => {
   const content = fs.readFileSync(filePath, 'utf-8')
   const stats = fs.statSync(filePath)
 
+  // Get relative path from project root
   const relativePath = path
     .relative(process.cwd(), filePath)
     .replace(/^docs\//, '')
     .replace(/\.md$/, '')
 
-  console.log('relative', relativePath)
   // Extract all internal links
-  const innerLinks = extractLinks(content, filePath)
-  console.log(innerLinks, 'inner')
+  const outgoingLinks = extractToLinks(content, filePath)
+
+  // Store the toLinks in global metadata
+  if (!globalMdMetadata[relativePath]) {
+    globalMdMetadata[relativePath] = {
+      outgoingLinks: [],
+      backLinks: [],
+      wordCount: 0,
+      rawContent: '',
+      headings: [],
+      lastUpdated: 0
+    }
+  }
+  globalMdMetadata[relativePath].outgoingLinks = outgoingLinks
 
   // Extract headings and log results
   const firstHead = extractFirstHeading(content)
@@ -233,13 +264,70 @@ const analyzeMdFile = (filePath: string) => {
     .replace(/\s+/g, '')
     .replace(/[\u4e00-\u9fa5]/g, 'm').length
 
-  globalMdMetadata[relativePath] = {
-    wordCount,
-    innerLinks,
-    rawContent: content,
-    headings: [],
-    lastUpdated: stats.mtimeMs
-  }
+  globalMdMetadata[relativePath].wordCount = wordCount
+  globalMdMetadata[relativePath].rawContent = content
+  globalMdMetadata[relativePath].lastUpdated = stats.mtimeMs
+}
+
+/**
+ * Build backLinks for all files in the global metadata
+ * This should be called after all files have been processed
+ * to ensure we have all the to_links information
+ */
+const buildGlobalBackLinks = () => {
+  // clear backLinks
+  Object.values(globalMdMetadata).forEach((metadata) => {
+    metadata.backLinks = []
+  })
+
+  // traverse globalMdMetadata
+  Object.entries(globalMdMetadata).forEach(([sourceFile, metadata]) => {
+    // ensure toLinks
+    if (!metadata.outgoingLinks) {
+      console.warn(`No Links found for ${sourceFile}`)
+      return
+    }
+
+    metadata.outgoingLinks.forEach((link) => {
+      const targetFile = `${dirPrefix}/${link.relativePath}`
+      if (globalMdMetadata[targetFile]) {
+        if (!globalMdMetadata[targetFile].backLinks) {
+          globalMdMetadata[targetFile].backLinks = []
+        }
+
+        const sourceFileWithoutPrefix = sourceFile.startsWith(`${dirPrefix}/`)
+          ? sourceFile.slice(dirPrefix.length + 1)
+          : sourceFile
+
+        globalMdMetadata[targetFile].backLinks.push({
+          text: link.text,
+          relativePath: sourceFileWithoutPrefix,
+          fullUrl: getFullUrl(sourceFileWithoutPrefix, sourceFile),
+          type: link.type,
+          raw: link.raw
+        })
+      }
+    })
+  })
+
+  // debug:
+  // Object.entries(globalMdMetadata).forEach(([file, metadata]) => {
+  //   console.log(`File: ${file}`)
+  //   console.log(`  outgoingLinks: ${metadata.outgoingLinks?.length || 0}`)
+  //   console.log(`  backLinks: ${metadata.backLinks?.length || 0}`)
+  // })
+}
+
+const scanDir = (dir: string) => {
+  const files = fs.readdirSync(dir)
+  files.forEach((file) => {
+    const fullPath = path.join(dir, file)
+    if (fs.statSync(fullPath).isDirectory()) {
+      scanDir(fullPath)
+    } else if (file.endsWith('.md')) {
+      analyzeMdFile(fullPath)
+    }
+  })
 }
 
 /**
@@ -247,44 +335,40 @@ const analyzeMdFile = (filePath: string) => {
  *
  * @returns {Plugin} VitePress plugin instance
  */
-const markdownAnalyzerPlugin = (): Plugin => ({
-  name: 'vitepress-markdown-analyzer',
-  configureServer(server) {
-    server.watcher.add('**/*.md')
-    server.watcher.on('change', (file) => {
-      if (file.endsWith('.md')) {
-        analyzeMdFile(file)
-      }
-    })
-    server.watcher.on('add', (file) => {
-      if (file.endsWith('.md')) {
-        analyzeMdFile(file)
-      }
-    })
-  },
-  buildStart() {
-    const scanDir = (dir: string) => {
-      const files = fs.readdirSync(dir)
-      files.forEach((file) => {
-        const fullPath = path.join(dir, file)
-        if (fs.statSync(fullPath).isDirectory()) {
-          scanDir(fullPath)
-        } else if (file.endsWith('.md')) {
-          analyzeMdFile(fullPath)
+const markdownAnalyzerPlugin = (): Plugin => {
+  return {
+    name: 'vitepress-plugin-markdown-analyzer',
+    enforce: 'pre',
+    buildStart() {
+      scanDir(path.resolve(process.cwd(), `docs/${dirPrefix}`))
+      buildGlobalBackLinks()
+    },
+    configureServer(server) {
+      server.watcher.add('**/docs/**/*.md')
+      server.watcher.on('change', (file) => {
+        if (file.endsWith('.md')) {
+          analyzeMdFile(file)
+          buildGlobalBackLinks()
         }
       })
-    }
-    // TODO: 'docs' should be configurable
-    scanDir(path.resolve(process.cwd(), 'docs'))
-  },
-  resolveId(id) {
-    if (id === VIRTUAL_MODULE_ID) return RESOLVED_VIRTUAL_MODULE_ID
-  },
-  load(id) {
-    if (id === RESOLVED_VIRTUAL_MODULE_ID) {
-      return `export const globalMdMetadata = ${JSON.stringify(globalMdMetadata)}`
+      server.watcher.on('add', (file) => {
+        if (file.endsWith('.md')) {
+          analyzeMdFile(file)
+          buildGlobalBackLinks()
+        }
+      })
+    },
+    resolveId(id) {
+      if (id === VIRTUAL_MODULE_ID) {
+        return RESOLVED_VIRTUAL_MODULE_ID
+      }
+    },
+    load(id) {
+      if (id === RESOLVED_VIRTUAL_MODULE_ID) {
+        return `export const globalMdMetadata = ${JSON.stringify(globalMdMetadata)}`
+      }
     }
   }
-})
+}
 
 export { markdownAnalyzerPlugin }

@@ -30,7 +30,8 @@ export interface PageLink {
 
 export interface MarkdownMetadata {
   wordCount: number // markdown word count
-  innerLinks: PageLink[] // inner links
+  outgoingLinks: PageLink[] // outgoing links
+  backLinks: PageLink[] // incoming links
   rawContent: string // raw content
   headings: Array<{
     // heading structure

@@ -7,6 +7,7 @@ import '@/theme/styles/animated.css'
 import '@/theme/styles/generated.css'
 import '@/theme/styles/main.css'
 import { mediumZoomInit } from '@/theme/utils/themeUtils'
+import OverallD3 from '@theme/components/common/OverallD3.vue'
 import LinkSidebar from '@theme/components/sidebar/LinkSidebar.vue'
 import PageLinkD3 from '@theme/components/sidebar/PageLinkD3.vue'
 import TagSidebar from '@theme/components/sidebar/TagSidebar.vue'
@@ -31,6 +32,7 @@ export default {
     app.component('LinkSidebar', LinkSidebar)
     app.component('ExampleUsage', ExampleUsage)
     app.component('PageLinkD3', PageLinkD3)
+    app.component('OverallD3', OverallD3)
   },
   setup() {
     const route = useRoute()

@@ -3,14 +3,14 @@
     <div class="links-list">
       <div class="link-title">
         <span class="i-carbon-link mr-2" />
-        <span>Inner Links</span>
+        <span>Outgoing Links</span>
       </div>
-      <!-- inner links list -->
-      <div v-if="pageLinks.length" class="page-links">
+      <!-- outgoing links list -->
+      <div v-if="outgoingLinks.length" class="page-links">
         <a
-          v-for="link in pageLinks"
+          v-for="link in outgoingLinks"
           :key="link.relativePath"
-          :href="withBase(link.relativePath)"
+          :href="link.fullUrl"
           class="page-link"
           :title="link.raw"
         >
@@ -24,7 +24,28 @@
         </a>
       </div>
       <!-- if no links -->
-      <div v-else class="no-links">no inner links</div>
+      <!-- <div v-else class="no-links">no outgoing links</div> -->
+      <div class="link-title mt-8">
+        <span class="i-carbon-link mr-2" />
+        <span>Back Links</span>
+      </div>
+      <div class="page-links">
+        <a
+          v-for="link in backLinks"
+          :key="link.relativePath"
+          :href="link.fullUrl"
+          class="page-link"
+          :title="link.raw"
+        >
+          <span class="link-icon" :class="{ 'is-wiki': link.type === 'wiki' }">
+            {{ link.type === 'wiki' ? '[[' : '[' }}
+          </span>
+          {{ link.text }}
+          <span class="link-icon" :class="{ 'is-wiki': link.type === 'wiki' }">
+            {{ link.type === 'wiki' ? ']]' : ']' }}
+          </span>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -33,15 +54,27 @@
   import type { PageLink } from '@/theme/types.d'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute, withBase } from 'vitepress'
-  import { computed } from 'vue'
+  import { computed, ref, watch } from 'vue'
 
   const route = useRoute()
+  const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))
 
-  const pageLinks = computed<PageLink[]>(() => {
-    const currentPath = route.data.relativePath.replace(/\.md$/, '')
-    console.log('Current path changed:', currentPath)
-    return globalMdMetadata[currentPath]?.innerLinks || []
+  const outgoingLinks = computed<PageLink[]>(() => {
+    return globalMdMetadata[currentPath.value]?.outgoingLinks || []
   })
+
+  const backLinks = computed<PageLink[]>(() => {
+    return globalMdMetadata[currentPath.value]?.backLinks || []
+  })
+
+  console.log(backLinks.value, 'backkkkkkkkkkkkkk')
+
+  watch(
+    () => route.path,
+    () => {
+      currentPath.value = route.data.relativePath.replace(/\.md$/, '')
+    }
+  )
 </script>
 
 <style scoped>

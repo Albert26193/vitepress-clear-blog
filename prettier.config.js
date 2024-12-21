@@ -18,7 +18,7 @@ const configPrettier = {
   endOfLine: 'lf', // Ensure to use only (\n) line endings in text files, common on Linux and macOS as well as inside git repos.
   rangeStart: 0, // Format only a segment of a file, starting at the beginning of the file.
   plugins: [
-    '@trivago/prettier-plugin-sort-imports',
+    '@trivago/prettier-plugin-sort-imports'
     // 'prettier-plugin-tailwindcss'
   ],
   importOrder: ['^@core/(.*)$', '^@server/(.*)$', '^@ui/(.*)$', '^[./]'],

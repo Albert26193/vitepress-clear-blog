@@ -35,7 +35,7 @@ export default [
       'no-unused-vars': 'off', // Turn off unused variables warning
       '@typescript-eslint/no-unused-vars': 'off', // Turn off unused variables warning for TypeScript
       'vue/multi-word-component-names': 'off', // Vue component names should be multi-word for better readability and maintainability
-      'prettier/prettier': ['error', { singleQuote: true }],
+      'prettier/prettier': ['error', { singleQuote: true }]
     }
   },
   // Ignored files

@@ -191,13 +191,13 @@ h3 {
   @apply z-[9999];
 }
 
-/* .VPSwitchAppearance {
+.VPSwitchAppearance {
   width: 22px !important;
 }
 
 .VPSwitchAppearance .check {
   transform: none !important;
-} */
+}
 
 /* for vp sidebar hidden button */
 .VPSidebar.hidden {

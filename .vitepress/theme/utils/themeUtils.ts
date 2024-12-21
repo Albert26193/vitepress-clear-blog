@@ -225,12 +225,12 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
         type: 'page',
         group: path.split('/').length - 1,
         inDegree: 0,
-        outDegree: metadata.innerLinks.length
+        outDegree: metadata.outgoingLinks.length
       })
     }
 
     // Add target nodes from page's inner links
-    metadata.innerLinks.forEach((link) => {
+    metadata.outgoingLinks.forEach((link) => {
       if (!nodesMap.has(link.relativePath)) {
         nodesMap.set(link.relativePath, {
           id: link.relativePath,
@@ -252,7 +252,7 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   // Collect all links between pages
   const links: D3Link[] = []
   Object.entries(siteMetadata).forEach(([path, metadata]) => {
-    metadata.innerLinks.forEach((link) => {
+    metadata.outgoingLinks.forEach((link) => {
       links.push({
         source: path,
         target: link.relativePath,
