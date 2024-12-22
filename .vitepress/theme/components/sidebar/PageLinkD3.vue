@@ -40,8 +40,8 @@
       :links="graphData.links"
       :width="960"
       :height="960"
-      :diameter="4"
-      :text-size="14"
+      :diameter="6"
+      :text-size="18"
       :circle-color="'#fc8ca6'"
       :text-color="'#4b4543'"
     />

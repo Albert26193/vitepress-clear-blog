@@ -53,7 +53,7 @@
 <script setup lang="ts">
   import type { PageLink } from '@/theme/types.d'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
-  import { useRoute, withBase } from 'vitepress'
+  import { useRoute } from 'vitepress'
   import { computed, ref, watch } from 'vue'
 
   const route = useRoute()
@@ -66,8 +66,6 @@
   const backLinks = computed<PageLink[]>(() => {
     return globalMdMetadata[currentPath.value]?.backLinks || []
   })
-
-  console.log(backLinks.value, 'backkkkkkkkkkkkkk')
 
   watch(
     () => route.path,
@@ -118,7 +116,7 @@
 
   .link-icon {
     @apply opacity-50 text-xs;
-    font-family: monospace;
+    /* font-family: monospace; */
   }
 
   .link-icon.is-wiki {

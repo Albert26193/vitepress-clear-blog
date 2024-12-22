@@ -141,8 +141,6 @@
       .append('circle')
       .attr('r', props.diameter)
       .attr('fill', (d) => d.color || props.circleColor)
-      .attr('stroke', '#fff')
-      .attr('stroke-width', 1.5)
 
     // add node texts
     node
@@ -158,6 +156,7 @@
     // Add drag functionality
     let isDragging = false
     let draggedNode: D3Node | null = null
+    let dragStartPosition = { x: 0, y: 0 }
 
     const updateNodeState = (d: D3Node | null) => {
       if (!d) {
@@ -192,31 +191,61 @@
         .classed('d3-force-link-dim', (l) => l.source !== d && l.target !== d)
     }
 
+    const handleNodeClick = (node: D3Node) => {
+      if (node.fullUrl) {
+        router.go(node.fullUrl)
+      }
+      updateNodeState(null)
+    }
+
     const dragStarted = (
       event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>
     ) => {
-      if (!event.active) simulation.alphaTarget(0.3).restart()
-      event.subject.fx = event.subject.x
-      event.subject.fy = event.subject.y
-      // Set drag state and update visual states
-      isDragging = true
+      event.sourceEvent.stopPropagation()
+      dragStartPosition = { x: event.x, y: event.y }
+      isDragging = false
       draggedNode = event.subject
       updateNodeState(draggedNode)
+
+      // 开始拖拽时就启动模拟
+      if (!event.active) simulation.alphaTarget(0.3).restart()
     }
 
     const dragged = (event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>) => {
-      event.subject.fx = event.x
-      event.subject.fy = event.y
+      const dx = event.x - dragStartPosition.x
+      const dy = event.y - dragStartPosition.y
+      const dragDistance = Math.sqrt(dx * dx + dy * dy)
+
+      if (!isDragging && dragDistance > 0) {
+        // 第一次判定为拖拽时，从节点当前位置开始
+        isDragging = true
+        event.subject.fx = event.subject.x
+        event.subject.fy = event.subject.y
+      }
+
+      if (isDragging) {
+        // 之后使用相对位移来更新位置
+        event.subject.fx = event.x + dx / 1000
+        event.subject.fy = event.y + dy / 1000
+      }
     }
 
     const dragEnded = (event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>) => {
-      if (!event.active) simulation.alphaTarget(0)
-      event.subject.fx = null
-      event.subject.fy = null
-      // Reset drag state and visual states
+      if (!isDragging) {
+        // 如果没有拖拽，这是一个点击事件
+        handleNodeClick(event.subject)
+      }
+
+      // 重置状态
       isDragging = false
       draggedNode = null
-      updateNodeState(null)
+
+      // 释放节点，让它可以继续移动
+      event.subject.fx = null
+      event.subject.fy = null
+
+      // 逐渐停止模拟
+      simulation.alphaTarget(0)
     }
 
     // Add hover effects only when not dragging
