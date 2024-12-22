@@ -38,8 +38,6 @@
     textColor: '#4a4a4a'
   })
 
-  console.log('out', props.nodes)
-
   // Create a function to initialize or update the graph
   const initializeGraph = () => {
     if (!svgRef.value) return

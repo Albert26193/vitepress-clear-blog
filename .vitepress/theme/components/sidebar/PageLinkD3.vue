@@ -14,14 +14,10 @@
         expand
       </button>
     </div>
-    <div class="d3-force-sidebar-container mt-4" v-if="currentPageLinks.length">
-      <D3ForceGraph
-        :nodes="graphData.nodes"
-        :links="graphData.links"
+    <div class="d3-force-sidebar-container mt-4" v-if="true">
+      <D3PageGraph
         :width="320"
         :height="320"
-        :diameter="6"
-        :text-size="18"
         :circle-color="'#3b3cf6'"
         :text-color="'#4b4543'"
       />
@@ -35,13 +31,9 @@
 
   <!-- Expand popup -->
   <PopupContainer :show="showExpand" @close="closeExpand">
-    <D3ForceGraph
-      :nodes="graphData.nodes"
-      :links="graphData.links"
+    <D3PageGraph
       :width="960"
-      :height="960"
-      :diameter="6"
-      :text-size="18"
+      :height="1060"
       :circle-color="'#fc8ca6'"
       :text-color="'#4b4543'"
     />
@@ -50,6 +42,7 @@
 
 <script setup lang="ts">
   import D3ForceGraph from '@/theme/components/common/D3ForceGraph.vue'
+  import D3PageGraph from '@/theme/components/common/D3PageGraph.vue'
   import OverallD3 from '@/theme/components/common/OverallD3.vue'
   import PopupContainer from '@/theme/components/common/PopupContainer.vue'
   import { transformPageD3Data } from '@/theme/utils/themeUtils'
@@ -61,13 +54,12 @@
   const currentPath = computed(() =>
     route.data.relativePath.replace(/\.md$/, '')
   )
-  const currentPageLinks = computed(
-    () => globalMdMetadata[currentPath.value]?.outgoingLinks || []
-  )
 
   const graphData = computed(() =>
-    transformPageD3Data(currentPageLinks.value, currentPath.value)
+    transformPageD3Data(currentPath.value, globalMdMetadata)
   )
+
+  console.log('nodes for graph', graphData.value)
 
   // Popup state management
   const showOverview = ref(false)

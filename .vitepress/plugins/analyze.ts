@@ -235,7 +235,7 @@ const analyzeMdFile = (filePath: string) => {
   const stats = fs.statSync(filePath)
 
   // Get relative path from project root
-  const relativePath = path
+  const filePathBasedOnProj = path
     .relative(process.cwd(), filePath)
     .replace(/^docs\//, '')
     .replace(/\.md$/, '')
@@ -244,8 +244,8 @@ const analyzeMdFile = (filePath: string) => {
   const outgoingLinks = extractToLinks(content, filePath)
 
   // Store the toLinks in global metadata
-  if (!globalMdMetadata[relativePath]) {
-    globalMdMetadata[relativePath] = {
+  if (!globalMdMetadata[filePathBasedOnProj]) {
+    globalMdMetadata[filePathBasedOnProj] = {
       outgoingLinks: [],
       backLinks: [],
       wordCount: 0,
@@ -254,7 +254,7 @@ const analyzeMdFile = (filePath: string) => {
       lastUpdated: 0
     }
   }
-  globalMdMetadata[relativePath].outgoingLinks = outgoingLinks
+  globalMdMetadata[filePathBasedOnProj].outgoingLinks = outgoingLinks
 
   // Extract headings and log results
   const firstHead = extractFirstHeading(content)
@@ -264,9 +264,9 @@ const analyzeMdFile = (filePath: string) => {
     .replace(/\s+/g, '')
     .replace(/[\u4e00-\u9fa5]/g, 'm').length
 
-  globalMdMetadata[relativePath].wordCount = wordCount
-  globalMdMetadata[relativePath].rawContent = content
-  globalMdMetadata[relativePath].lastUpdated = stats.mtimeMs
+  globalMdMetadata[filePathBasedOnProj].wordCount = wordCount
+  globalMdMetadata[filePathBasedOnProj].rawContent = ''
+  globalMdMetadata[filePathBasedOnProj].lastUpdated = stats.mtimeMs
 }
 
 /**
@@ -299,9 +299,12 @@ const buildGlobalBackLinks = () => {
           ? sourceFile.slice(dirPrefix.length + 1)
           : sourceFile
 
+        // TODO: ugly code here
         globalMdMetadata[targetFile].backLinks.push({
-          text: link.text,
-          relativePath: sourceFileWithoutPrefix,
+          text: getFullUrl(sourceFileWithoutPrefix, sourceFile)
+            .split('/')
+            .pop() as string,
+          relativePath: getFullUrl(sourceFileWithoutPrefix, sourceFile),
           fullUrl: getFullUrl(sourceFileWithoutPrefix, sourceFile),
           type: link.type,
           raw: link.raw

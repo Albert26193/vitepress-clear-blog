@@ -2,7 +2,7 @@ import {
   D3Data,
   D3Link,
   D3Node,
-  PageLink,
+  MarkdownMetadata,
   Post,
   SiteMetadata
 } from '@/theme/types.d'
@@ -140,15 +140,16 @@ const mediumZoomInit = () => {
 /**
  * Transform post links into D3 force graph data structure for current page
  *
- * @param {PageLink[]} postLinks Links from the current page to other pages
  * @param {string} currentPath Path of the current page
+ * @param {Record<string, MarkdownMetadata>} mdMetadata Metadata containing all pages and their links
  * @returns {D3Data} D3 force graph data structure with nodes and links
  */
 const transformPageD3Data = (
-  postLinks: PageLink[],
-  currentPath: string
+  currentPath: string,
+  mdMetadata: Record<string, MarkdownMetadata>
 ): D3Data => {
-  if (!postLinks.length) {
+  const currentPageData = mdMetadata[currentPath]
+  if (!currentPageData) {
     return {
       nodes: [],
       links: []
@@ -159,20 +160,18 @@ const transformPageD3Data = (
   const nodesMap = new Map<string, D3Node>()
 
   // Add current page as source node
-  if (!nodesMap.has(currentPath)) {
-    nodesMap.set(currentPath, {
-      id: currentPath,
-      relativePath: currentPath,
-      fullUrl: currentPath,
-      name: currentPath.split('/').pop() || currentPath,
-      type: 'page',
-      inDegree: 0,
-      outDegree: postLinks.length
-    })
-  }
+  nodesMap.set(currentPath, {
+    id: currentPath,
+    relativePath: currentPath,
+    fullUrl: currentPath,
+    name: currentPath.split('/').pop() || currentPath,
+    type: 'page',
+    inDegree: currentPageData.backLinks?.length || 0,
+    outDegree: currentPageData.outgoingLinks?.length || 0
+  })
 
-  // Add target nodes from links
-  postLinks.forEach((link) => {
+  // Add nodes from outgoing links
+  currentPageData.outgoingLinks?.forEach((link) => {
     if (!nodesMap.has(link.relativePath)) {
       nodesMap.set(link.relativePath, {
         id: link.relativePath,
@@ -180,26 +179,46 @@ const transformPageD3Data = (
         name: link.text.split('/').pop() || link.text,
         fullUrl: link.fullUrl,
         type: link.type,
-        inDegree: 0,
-        outDegree: 0
+        inDegree: 1,
+        outDegree: mdMetadata[link.relativePath]?.outgoingLinks?.length || 0
       })
-    } else {
-      // If node already exists, increment its inDegree
-      const node = nodesMap.get(link.relativePath)!
-      node.inDegree++
     }
   })
 
-  // Add source nodes from links
+  // Add nodes from back links
+  currentPageData.backLinks?.forEach((link) => {
+    if (!nodesMap.has(link.relativePath)) {
+      nodesMap.set(link.relativePath, {
+        id: link.relativePath,
+        relativePath: link.relativePath,
+        name: link.text.split('/').pop() || link.text,
+        fullUrl: link.fullUrl,
+        type: link.type,
+        inDegree: mdMetadata[link.relativePath]?.backLinks?.length || 0,
+        outDegree: 1
+      })
+    }
+  })
 
-  // Convert to D3 data structure
-  return {
-    nodes: Array.from(nodesMap.values()),
-    links: postLinks.map((link) => ({
+  // Create links array
+  const links = [
+    // Outgoing links
+    ...(currentPageData.outgoingLinks?.map((link) => ({
       source: currentPath,
       target: link.relativePath,
       type: link.type
-    }))
+    })) || []),
+    // Back links
+    ...(currentPageData.backLinks?.map((link) => ({
+      source: link.relativePath,
+      target: currentPath,
+      type: link.type
+    })) || [])
+  ]
+
+  return {
+    nodes: Array.from(nodesMap.values()),
+    links
   }
 }
 
@@ -211,6 +230,8 @@ const transformPageD3Data = (
  */
 const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   // Store unique nodes in a map
+  // @key: file path based on project root
+  // @value: node
   const nodesMap = new Map<string, D3Node>()
 
   // First pass: Create all nodes with initial degree values
@@ -229,7 +250,7 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
       })
     }
 
-    // Add target nodes from page's inner links
+    // Add target nodes from page's outgoing links
     metadata.outgoingLinks.forEach((link) => {
       if (!nodesMap.has(link.relativePath)) {
         nodesMap.set(link.relativePath, {
@@ -238,7 +259,7 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
           name: link.text,
           fullUrl: link.fullUrl,
           type: link.type,
-          inDegree: 0,
+          inDegree: 1,
           outDegree: 0
         })
       } else {

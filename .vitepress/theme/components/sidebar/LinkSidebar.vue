@@ -52,6 +52,7 @@
 
 <script setup lang="ts">
   import type { PageLink } from '@/theme/types.d'
+  import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute } from 'vitepress'
   import { computed, ref, watch } from 'vue'
@@ -67,6 +68,7 @@
     return globalMdMetadata[currentPath.value]?.backLinks || []
   })
 
+  console.log('total', JSON.stringify(globalMdMetadata, null, 2))
   watch(
     () => route.path,
     () => {
