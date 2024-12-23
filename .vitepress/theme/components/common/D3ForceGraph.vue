@@ -307,6 +307,7 @@
 
   :deep(.d3-force-node) text {
     transition: all 0.3s ease;
+    fill: #030406;
   }
 
   /* :deep(.d3-force-node.d3-force-node-highlight) circle {
@@ -327,7 +328,7 @@
 
   :deep(.d3-force-node.d3-force-node-dim) text {
     opacity: 0.1;
-    @apply text-gray-100;
+    fill: #c3c4c6;
   }
 
   :deep(.d3-force-link.d3-force-link-highlight) {

@@ -150,6 +150,7 @@ const extractToLinks = (
     )
     .map((link) => ({
       ...link,
+      relativePath: getFullUrl(link.relativePath, currentFilePath),
       fullUrl: getFullUrl(link.relativePath, currentFilePath),
       text: link.text.split('/').pop() || link.text
     }))

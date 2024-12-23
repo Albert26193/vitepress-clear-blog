@@ -18,7 +18,7 @@
   import { transformPageD3Data } from '@/theme/utils/themeUtils'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute } from 'vitepress'
-  import { computed, defineProps, withDefaults } from 'vue'
+  import { computed } from 'vue'
 
   const props = withDefaults(
     defineProps<{

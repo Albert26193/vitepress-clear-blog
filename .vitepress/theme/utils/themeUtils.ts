@@ -222,6 +222,7 @@ const transformPageD3Data = (
   }
 }
 
+// TODO: maybe we need pre calculate
 /**
  * Transform all site links into D3 force graph data structure
  *
@@ -230,53 +231,82 @@ const transformPageD3Data = (
  */
 const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   // Store unique nodes in a map
-  // @key: file path based on project root
+  // @key: normalized node ID (file path based on project root)
   // @value: node
   const nodesMap = new Map<string, D3Node>()
+
+  // Helper function to normalize node ID
+  const normalizeId = (path: string): string => {
+    // Remove trailing slashes and normalize path separators
+    // Also ensure consistent leading slash
+    return '/' + path.replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/')
+  }
+
+  // Helper function to create or update node
+  const getOrCreateNode = (
+    path: string,
+    name: string,
+    fullUrl: string,
+    type: string,
+    inDegreeInc: number,
+    outDegreeInc: number
+  ): D3Node => {
+    const normalizedId = normalizeId(path)
+    const existingNode = nodesMap.get(normalizedId)
+
+    if (existingNode) {
+      existingNode.inDegree += inDegreeInc
+      existingNode.outDegree += outDegreeInc
+      return existingNode
+    }
+
+    const newNode: D3Node = {
+      id: normalizedId,
+      relativePath: path,
+      name: name || path.split('/').pop() || path,
+      fullUrl,
+      type: 'wiki',
+      inDegree: inDegreeInc,
+      outDegree: outDegreeInc
+    }
+    nodesMap.set(normalizedId, newNode)
+    return newNode
+  }
 
   // First pass: Create all nodes with initial degree values
   Object.entries(siteMetadata).forEach(([path, metadata]) => {
     // Add current page as a node
-    if (!nodesMap.has(path)) {
-      nodesMap.set(path, {
-        id: path,
-        relativePath: path,
-        name: path.split('/').pop() || path,
-        fullUrl: path,
-        type: 'page',
-        group: path.split('/').length - 1,
-        inDegree: 0,
-        outDegree: metadata.outgoingLinks.length
-      })
-    }
+    getOrCreateNode(
+      path,
+      path.split('/').pop() || path,
+      path,
+      'page',
+      0,
+      metadata.outgoingLinks.length
+    )
 
     // Add target nodes from page's outgoing links
     metadata.outgoingLinks.forEach((link) => {
-      if (!nodesMap.has(link.relativePath)) {
-        nodesMap.set(link.relativePath, {
-          id: link.relativePath,
-          relativePath: link.relativePath,
-          name: link.text,
-          fullUrl: link.fullUrl,
-          type: link.type,
-          inDegree: 1,
-          outDegree: 0
-        })
-      } else {
-        // If node already exists, increment its inDegree
-        const node = nodesMap.get(link.relativePath)!
-        node.inDegree++
-      }
+      getOrCreateNode(
+        link.relativePath,
+        link.text,
+        link.fullUrl,
+        link.type,
+        1,
+        0
+      )
     })
   })
 
   // Collect all links between pages
   const links: D3Link[] = []
   Object.entries(siteMetadata).forEach(([path, metadata]) => {
+    const sourceId = normalizeId(path)
     metadata.outgoingLinks.forEach((link) => {
+      const targetId = normalizeId(link.relativePath)
       links.push({
-        source: path,
-        target: link.relativePath,
+        source: sourceId,
+        target: targetId,
         type: link.type
       })
     })
