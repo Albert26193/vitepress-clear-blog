@@ -239,7 +239,7 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   const normalizeId = (path: string): string => {
     // Remove trailing slashes and normalize path separators
     // Also ensure consistent leading slash
-    return '/' + path.replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/')
+    return path.replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/')
   }
 
   // Helper function to create or update node

@@ -54,7 +54,7 @@ const getFullUrl = (relativePath: string, currentFilePath: string): string => {
   const projectRelativePath = path.relative(process.cwd(), absolutePath)
   const urlPath = projectRelativePath.replace(/^docs\//, '')
   // .replace(new RegExp(`^${dirPrefix}/`), '')
-  return `/${urlPath.replace(/\.md$/, '.html')}`
+  return `${urlPath.replace(/\.md$/, '.html')}`
 }
 
 /**
@@ -151,7 +151,7 @@ const extractToLinks = (
     .map((link) => ({
       ...link,
       relativePath: getFullUrl(link.relativePath, currentFilePath),
-      fullUrl: getFullUrl(link.relativePath, currentFilePath),
+      fullUrl: `/${getFullUrl(link.relativePath, currentFilePath)}`,
       text: link.text.split('/').pop() || link.text
     }))
 }
@@ -290,7 +290,7 @@ const buildGlobalBackLinks = () => {
     }
 
     metadata.outgoingLinks.forEach((link) => {
-      const targetFile = `${dirPrefix}/${link.relativePath}`
+      const targetFile = `${link.relativePath}`
       if (globalMdMetadata[targetFile]) {
         if (!globalMdMetadata[targetFile].backLinks) {
           globalMdMetadata[targetFile].backLinks = []
@@ -300,16 +300,23 @@ const buildGlobalBackLinks = () => {
           ? sourceFile.slice(dirPrefix.length + 1)
           : sourceFile
 
-        // TODO: ugly code here
-        globalMdMetadata[targetFile].backLinks.push({
+        const newBackLink = {
           text: getFullUrl(sourceFileWithoutPrefix, sourceFile)
             .split('/')
             .pop() as string,
           relativePath: getFullUrl(sourceFileWithoutPrefix, sourceFile),
-          fullUrl: getFullUrl(sourceFileWithoutPrefix, sourceFile),
+          fullUrl: `/${getFullUrl(sourceFileWithoutPrefix, sourceFile)}`,
           type: link.type,
           raw: link.raw
-        })
+        }
+
+        const exists = globalMdMetadata[targetFile].backLinks.some(
+          (bl) => bl.relativePath === newBackLink.relativePath
+        )
+
+        if (!exists) {
+          globalMdMetadata[targetFile].backLinks.push(newBackLink)
+        }
       }
     })
   })

@@ -41,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-  import D3ForceGraph from '@/theme/components/common/D3ForceGraph.vue'
   import D3PageGraph from '@/theme/components/common/D3PageGraph.vue'
   import OverallD3 from '@/theme/components/common/OverallD3.vue'
   import PopupContainer from '@/theme/components/common/PopupContainer.vue'
