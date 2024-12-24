@@ -36,7 +36,7 @@ export default defineConfig({
         custom: '{0%, 100% {opacity:1} 50% {opacity:.5}}'
       },
       durations: {
-        custom: '1s'
+        custom: '0.5s'
       },
       timingFns: {
         custom: 'cubic-bezier(0.4,0,.6,1)'

@@ -72,7 +72,8 @@
 <style scoped>
   .popup-wrapper {
     @apply fixed inset-0 z-9999;
-    @apply transition-opacity duration-300;
+    /* @apply transition-opacity duration-100; */
+    /* @apply animate-fade-in-left-big; */
   }
 
   /* .popup-wrapper:not([style*='display: none']) {

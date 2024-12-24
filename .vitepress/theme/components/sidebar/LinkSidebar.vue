@@ -19,7 +19,7 @@
       </div>
       <!-- if no links -->
       <div v-else class="no-links">No Outgoing Links</div>
-      <div class="link-title mt-2">
+      <div class="link-title mt-4">
         <span class="i-carbon-link mr-2" />
         <span>Back Links</span>
       </div>
@@ -68,7 +68,7 @@
 <style scoped>
   .link-sidebar {
     @apply px-0 py-0;
-    @apply mt-6;
+    @apply mt-12;
   }
 
   .link-title {
@@ -77,11 +77,11 @@
   }
 
   .links-list {
-    @apply flex flex-col gap-[1px] relative;
+    @apply flex flex-col  relative;
   }
 
   .page-links {
-    @apply flex flex-col relative ml-2;
+    @apply flex flex-col relative ml-2 gap-[3px] text-sm;
   }
 
   .page-links::before {

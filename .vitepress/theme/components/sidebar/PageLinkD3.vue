@@ -2,14 +2,16 @@
   <div class="mt-16">
     <div class="flex space-x-2">
       <button
-        class="border border-solid px-3 py-1 rounded hover:bg-gray-100"
+        class="border border-solid px-3 py-1 rounded"
         @click="popupOverview"
+        :disabled="showOverview || showExpand"
       >
         overview
       </button>
       <button
-        class="border border-solid px-3 py-1 rounded hover:bg-gray-100"
+        class="border border-solid px-3 py-1 rounded"
         @click="expandGraph"
+        :disabled="showOverview || showExpand"
       >
         expand
       </button>

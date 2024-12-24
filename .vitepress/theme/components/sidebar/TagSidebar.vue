@@ -114,7 +114,7 @@
   }
 
   .related-posts {
-    @apply flex flex-col gap-[1px] mt-4 relative ml-2;
+    @apply flex flex-col gap-[3px] mt-4 relative ml-2;
   }
 
   .related-posts::before {
@@ -124,7 +124,7 @@
 
   .page-link {
     @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
-    @apply hover:text-[var(--vp-c-brand)];
+    @apply hover:text-[var(--vp-c-brand)] font-normal;
   }
 
   .page-link:hover {
