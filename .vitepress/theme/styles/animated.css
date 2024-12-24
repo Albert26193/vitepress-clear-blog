@@ -192,7 +192,7 @@
 }
 
 /* right aside animate */
-@media (prefers-reduced-motion: no-preference) {
+/* @media (prefers-reduced-motion: no-preference) {
   @keyframes slide-enter-from-right {
     0% {
       opacity: 0;
@@ -223,4 +223,4 @@
   .slide-enter-content > *:nth-child(3) {
     animation-delay: calc(var(--enter-initial) + 13 * var(--enter-step));
   }
-}
+} */

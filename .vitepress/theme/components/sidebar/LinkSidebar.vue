@@ -14,22 +14,16 @@
           class="page-link"
           :title="link.raw"
         >
-          <span class="link-icon" :class="{ 'is-wiki': link.type === 'wiki' }">
-            {{ link.type === 'wiki' ? '[[' : '[' }}
-          </span>
           {{ link.text }}
-          <span class="link-icon" :class="{ 'is-wiki': link.type === 'wiki' }">
-            {{ link.type === 'wiki' ? ']]' : ']' }}
-          </span>
         </a>
       </div>
       <!-- if no links -->
-      <!-- <div v-else class="no-links">no outgoing links</div> -->
-      <div class="link-title mt-8">
+      <div v-else class="no-links">No Outgoing Links</div>
+      <div class="link-title mt-2">
         <span class="i-carbon-link mr-2" />
         <span>Back Links</span>
       </div>
-      <div class="page-links">
+      <div v-if="backLinks.length" class="page-links">
         <a
           v-for="link in backLinks"
           :key="link.relativePath"
@@ -37,15 +31,10 @@
           class="page-link"
           :title="link.raw"
         >
-          <span class="link-icon" :class="{ 'is-wiki': link.type === 'wiki' }">
-            {{ link.type === 'wiki' ? '[[' : '[' }}
-          </span>
           {{ link.text }}
-          <span class="link-icon" :class="{ 'is-wiki': link.type === 'wiki' }">
-            {{ link.type === 'wiki' ? ']]' : ']' }}
-          </span>
         </a>
       </div>
+      <div v-else class="no-links">No Outgoing Links</div>
     </div>
   </div>
 </template>
@@ -79,53 +68,48 @@
 <style scoped>
   .link-sidebar {
     @apply px-0 py-0;
-    @apply mt-12;
+    @apply mt-6;
   }
 
   .link-title {
-    @apply flex items-center text-base font-semibold mb-4;
+    @apply flex items-center text-base font-semibold mb-2;
     color: var(--vp-c-text-1);
   }
 
+  .links-list {
+    @apply flex flex-col gap-[1px] relative;
+  }
+
   .page-links {
-    @apply flex flex-col gap-2;
+    @apply flex flex-col relative ml-2;
+  }
+
+  .page-links::before {
+    content: '';
+    @apply absolute left-0 top-0 h-full w-[1px] bg-gray-200;
   }
 
   .page-link {
-    @apply text-sm py-[1px] px-2 rounded-md font-normal;
-    @apply text-gray-600 dark:text-gray-500;
-    @apply relative no-underline;
-    @apply transition-colors duration-300;
-  }
-
-  .page-link::after {
-    @apply content-[''];
-    @apply absolute left-[50%] bottom-0;
-    @apply w-0 h-[1px];
-    @apply bg-[var(--vp-c-brand)];
-    @apply transition-all duration-300;
-    transform: translateX(-50%);
+    @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
+    @apply hover:text-[var(--vp-c-brand)] font-normal;
   }
 
   .page-link:hover {
-    @apply text-[var(--vp-c-brand)];
+    @apply font-semibold;
   }
 
-  .page-link:hover::after {
-    @apply w-full;
+  .page-link:hover::before {
+    content: '';
+    @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)] transition-colors duration-300;
   }
 
-  .link-icon {
-    @apply opacity-50 text-xs;
-    /* font-family: monospace; */
-  }
-
-  .link-icon.is-wiki {
-    @apply text-[var(--vp-c-brand-light)];
+  .page-link::after {
+    /* content: attr(title); */
+    @apply hidden font-semibold overflow-hidden h-0;
   }
 
   .no-links {
-    @apply text-sm text-gray-500 dark:text-gray-500;
-    @apply mt-2;
+    @apply text-sm text-gray-400 dark:text-gray-500;
+    @apply mt-0 ml-6;
   }
 </style>

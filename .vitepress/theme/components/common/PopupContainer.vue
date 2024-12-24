@@ -88,16 +88,7 @@
     @apply top-[5vh] left-[5vw];
     @apply w-[90vw] h-[90vh];
     @apply bg-white rounded-lg shadow-xl overflow-hidden;
-    @apply flex flex-col;
-  }
-
-  .popup-body {
-    @apply flex-1;
-    /* @apply p-8 pt-12; */
-    @apply relative flex items-center justify-center;
-    @apply overflow-auto mx-auto;
-    max-height: calc(90vh);
-    max-width: 90vw;
+    @apply flex flex-col justify-center items-center;
   }
 
   .popup-content {
@@ -127,10 +118,10 @@
   }
 
   .popup-body {
-    @apply flex-1 p-8 pt-12 overflow-y-auto;
-    @apply relative flex items-center justify-center;
+    @apply my-auto overflow-y-auto;
+    /* @apply relative; */
     @apply transition-opacity duration-300;
-    @apply border border-solid border-red-500;
+    @apply border-2 border-solid border-red-500;
     /* @apply w-[95%] h-[80%]; */
   }
 </style>

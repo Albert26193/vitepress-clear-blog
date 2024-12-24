@@ -36,4 +36,6 @@ console.log('hello world')
 - [[111]]
 - [[bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [[demos/aaa]] - [test](./111.md) <a href="./111111.md">1111test</a>
 
-[[mysql]]
+- new line
+- cite this page [[another|./mysql]]
+- for example, this is a new line and we need to test it[[fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBfffffffffffffffffffffffffffffffffffffCCCCCCCCCCCC]]

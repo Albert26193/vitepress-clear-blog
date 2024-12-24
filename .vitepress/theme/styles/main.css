@@ -24,8 +24,8 @@ h1 {
 }
 
 h2 {
-  @apply text-[1.4rem] font-700;
-  border-top: 0px solid var(--vp-c-divider) !important;
+  @apply text-[1.4rem] font-700 pb-1;
+  /* border-bottom: 1px solid var(--vp-c-brand) !important; */
   margin: 0px 0px 8px -8px !important;
 }
 
@@ -41,10 +41,6 @@ h3 {
 .vp-doc .meta-des ~ * a {
   @apply text-[--vp-c-brand-1] no-underline;
   @apply hover:underline;
-}
-
-.vp-doc p {
-  @apply text-[0.9375rem];
 }
 
 /************** image ************/
@@ -214,16 +210,15 @@ h3 {
 
 /* for wikilinks */
 .VPDoc .main .vp-doc .clear-wikilink {
-  @apply text-[var(--vp-c-brand-1)] relative whitespace-nowrap;
-  @apply inline-block overflow-hidden text-ellipsis max-w-[200px] pl-[13px] pr-[13px];
+  @apply text-[var(--vp-c-brand-1)] whitespace-normal px-[1px] relative;
 }
 
 .VPDoc .main .vp-doc .clear-wikilink::before {
   content: '[[';
-  @apply absolute left-0 top-0;
+  @apply pr-[1px];
 }
 
 .VPDoc .main .vp-doc .clear-wikilink::after {
   content: ']]';
-  @apply absolute right-0 top-0;
+  @apply pl-[1px];
 }

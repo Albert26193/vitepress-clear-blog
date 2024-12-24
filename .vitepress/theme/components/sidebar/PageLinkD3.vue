@@ -33,7 +33,7 @@
   <PopupContainer :show="showExpand" @close="closeExpand">
     <D3PageGraph
       :width="960"
-      :height="1060"
+      :height="960"
       :circle-color="'#fc8ca6'"
       :text-color="'#4b4543'"
     />

@@ -47,7 +47,7 @@
     "prettier-plugin-tailwindcss": "^0.6.8",
     "typescript": "^5.4.2",
     "typescript-eslint": "^8.12.2",
-    "vitepress": "^1.4.5",
+    "vitepress": "^1.5.0",
     "vitepress-plugin-rss": "^0.3.0"
   },
   "dependencies": {

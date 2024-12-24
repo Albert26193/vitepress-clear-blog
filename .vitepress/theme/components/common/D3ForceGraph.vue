@@ -1,6 +1,11 @@
 <template>
   <div class="d3-force-container">
-    <svg ref="svgRef" :width="width" :height="height">
+    <svg
+      ref="svgRef"
+      :width="width"
+      :height="height"
+      class="border border-solid"
+    >
       <g>
         <line
           v-for="(link, i) in links"

@@ -29,7 +29,7 @@
         </a>
       </div>
       <!-- if no related posts -->
-      <div v-else class="no-related"> no related posts </div>
+      <div v-else class="no-related"> No Related Posts </div>
     </div>
   </div>
 </template>
@@ -93,13 +93,19 @@
   }
 
   .current-tags {
-    @apply flex flex-wrap gap-2 pb-4;
-    @apply border-b-1 border-b-solid border-gray-500;
+    @apply flex flex-wrap gap-x-1 gap-y-2 pb-4;
+    @apply border-b-1 border-b-solid border-gray-800;
   }
 
   .sidebar-tag {
-    @apply px-3 py-1;
-    @apply text-gray-600 border-gray-500;
+    @apply px-2 py-1;
+    @apply text-gray-900 border-gray-700;
+    @apply font-normal;
+  }
+
+  .sidebar-tag::after {
+    content: attr(data-text);
+    @apply hidden font-semibold overflow-hidden h-0;
   }
 
   .tag-active {
@@ -108,35 +114,30 @@
   }
 
   .related-posts {
-    @apply flex flex-col gap-2 pt-4;
+    @apply flex flex-col gap-[1px] mt-4 relative ml-2;
+  }
+
+  .related-posts::before {
+    content: '';
+    @apply absolute left-0 top-0 h-full w-[1px] bg-gray-200;
   }
 
   .page-link {
-    @apply text-sm py-[1px] px-2 rounded-md font-normal;
-    @apply text-gray-600 dark:text-gray-500;
-    @apply relative no-underline;
-    @apply transition-colors duration-300;
-  }
-
-  .page-link::after {
-    @apply content-[''];
-    @apply absolute left-[50%] bottom-0;
-    @apply w-0 h-[1px];
-    @apply bg-[var(--vp-c-brand)];
-    @apply transition-all duration-300;
-    transform: translateX(-50%);
+    @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
+    @apply hover:text-[var(--vp-c-brand)];
   }
 
   .page-link:hover {
-    @apply text-[var(--vp-c-brand)];
+    @apply font-semibold;
   }
 
-  .page-link:hover::after {
-    @apply w-full;
+  .page-link:hover::before {
+    content: '';
+    @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)] transition-colors duration-300;
   }
 
   .no-related {
-    @apply text-sm text-gray-500 dark:text-gray-500;
-    @apply mt-2;
+    @apply text-sm text-gray-400 dark:text-gray-500;
+    @apply mt-3 ml-6;
   }
 </style>
