@@ -23,7 +23,7 @@
           v-for="post in filteredRelatedPosts"
           :key="post.regularPath"
           :href="withBase(post.regularPath)"
-          class="page-link"
+          class="page-link slide-enter"
         >
           {{ post.frontMatter.title }}
         </a>
@@ -94,11 +94,11 @@
 
   .current-tags {
     @apply flex flex-wrap gap-x-1 gap-y-2 pb-4;
-    @apply border-b-1 border-b-solid border-gray-800;
+    @apply border-b-1 border-b-dashed border-gray-800;
   }
 
   .sidebar-tag {
-    @apply px-2 py-1;
+    @apply px-2 py-1 inline-block;
     @apply text-gray-900 border-gray-700;
     @apply font-normal;
   }

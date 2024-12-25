@@ -1,71 +1,79 @@
 <template>
-  <div
-    v-for="curYearPostList in dataByYear"
-    :key="getYear(curYearPostList)"
-    class="my-4 custom-page-layout slide-enter"
-  >
-    <div>
-      <!-- year and post count -->
-      <span @click="toggleYear(getYear(curYearPostList))">
-        <span
-          v-if="displayStatus.years[getYear(curYearPostList)]"
-          class="i-carbon-caret-down text-lg"
-        />
-        <span class="i-carbon-caret-right text-lg" v-else />
-        <span class="font-800 text-xl accent-black">
-          {{ getYear(curYearPostList) }}
-        </span>
-        <span
-          class="font-600 dark:text-[var(--vp-c-brand)] ml-3 text-base text-[var(--vp-c-brand)]"
-        >
-          {{ `( ${curYearPostList.length} )` }}
-        </span>
-      </span>
-    </div>
-    <div
-      v-for="monthList in dataByYearMonth[getYear(curYearPostList)]"
-      :key="`${getYear(curYearPostList)}-${getMonth(monthList)}`"
-      v-show="displayStatus.years[getYear(curYearPostList)]"
-    >
+  <div class="my-4 custom-page-layout">
+    <div class="timeline-container">
       <div
-        class="dark:text-[var(--vp-c-brand)] ml-4 pb-1 pt-4 text-[var(--vp-c-brand)]"
+        v-for="curYearPostList in dataByYear"
+        :key="getYear(curYearPostList)"
       >
-        <span @click="toggleMonth(getYear(monthList), getMonth(monthList))">
+        <div>
+          <!-- year and post count -->
           <span
-            v-if="
+            @click="toggleYear(getYear(curYearPostList))"
+            class="flex items-center cursor-pointer max-w-36"
+          >
+            <span
+              v-if="displayStatus.years[getYear(curYearPostList)]"
+              class="i-carbon-chevron-down text-lg mr-2"
+            />
+            <span class="i-carbon-chevron-right text-lg mr-2" v-else />
+            <span class="timeline-year-title">
+              {{ getYear(curYearPostList) }}
+            </span>
+            <span class="timeline-post-count mt-[3px]">
+              {{ `( ${curYearPostList.length} )` }}
+            </span>
+          </span>
+        </div>
+        <div
+          v-for="monthList in dataByYearMonth[getYear(curYearPostList)]"
+          :key="`${getYear(curYearPostList)}-${getMonth(monthList)}`"
+          v-show="displayStatus.years[getYear(curYearPostList)]"
+          class="timeline-year-content"
+        >
+          <div class="timeline-year-line"></div>
+          <div class="timeline-month-title">
+            <span
+              @click="toggleMonth(getYear(monthList), getMonth(monthList))"
+              class="flex items-center cursor-pointer max-w-36"
+            >
+              <span
+                v-if="
+                  displayStatus.months[
+                    `${getYear(curYearPostList)}-${getMonth(monthList)}`
+                  ]
+                "
+                class="i-carbon-chevron-down mr-1"
+              />
+              <span class="i-carbon-chevron-right mr-1" v-else />
+              <span>{{ getYearMonth(monthList) }}</span>
+              <span class="timeline-post-count">
+                {{ `( ${monthList.length} )` }}
+              </span>
+            </span>
+          </div>
+          <div
+            v-show="
               displayStatus.months[
                 `${getYear(curYearPostList)}-${getMonth(monthList)}`
               ]
             "
-            class="i-carbon-caret-down"
-          />
-          <span class="i-carbon-caret-right" v-else />
-          <span class="font-600">{{ getYearMonth(monthList) }}</span>
-          <span class="font-600 ml-2 text-sm">
-            {{ `( ${monthList.length} )` }}
-          </span>
-        </span>
-      </div>
-      <div
-        v-show="
-          displayStatus.months[
-            `${getYear(curYearPostList)}-${getMonth(monthList)}`
-          ]
-        "
-      >
-        <div
-          v-for="(article, index) in monthList"
-          :key="index"
-          class="posts ml-2 slide-enter"
-        >
-          <a
-            class="dark:text-slate-100 font-bold text-slate-800"
-            :href="withBase(article.regularPath)"
+            class="timeline-month-container"
           >
-            {{ article.frontMatter.title ?? 'Untitled' }}
-          </a>
-          <div class="mx-3 flex-1 border-b-dashed border-gray-300"></div>
-          <div class="date">{{ getDay(article) }}</div>
+            <div class="timeline-month-line"></div>
+            <div class="slide-enter-content">
+              <div
+                v-for="(article, index) in monthList"
+                :key="index"
+                class="posts-wrapper"
+              >
+                <a class="post-item" :href="withBase(article.regularPath)">
+                  {{ article.frontMatter.title ?? 'No title' }}
+                </a>
+                <div class="mx-3 flex-1 border-b-dashed border-gray-200"></div>
+                <div class="date">{{ getDay(article) }}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -147,25 +155,54 @@
   }
 </script>
 
-<style>
-  .posts {
-    @apply px-8 py-1 flex justify-between items-center;
+<style scoped>
+  .timeline-container {
+    @apply flex flex-col pt-8;
+    @apply border border-b-solid pb-4 border-gray-200;
   }
 
-  .post-dot {
-    @apply inline-block mr-2.5 mb-0.5 w-1 h-1 rounded-full;
-    background-color: var(--li-dot-color);
+  .timeline-year-content {
+    @apply relative ml-2 mb-1;
   }
 
-  .post-container {
-    @apply text-[var(--vp-c-text-2)] text-[0.9375rem] font-400;
+  .timeline-post-count {
+    @apply text-[var(--vp-c-brand)] ml-2;
+    @apply font-normal;
   }
-  .post-container:hover {
-    @apply text-[var(--vp-c-brand)];
+
+  .timeline-year-title {
+    @apply pb-1 pt-2 text-xl;
+    @apply font-extrabold;
+  }
+
+  .timeline-year-line {
+    @apply absolute top-0 bottom-0 w-[1px] bg-gray-200 dark:bg-gray-700;
+  }
+
+  .timeline-month-title {
+    @apply ml-4 pb-1 pt-2;
+    @apply font-semibold;
+    @apply flex justify-between items-center;
+  }
+
+  .timeline-month-container {
+    @apply relative;
+  }
+
+  .timeline-month-line {
+    @apply absolute left-4 top-0 bottom-0 w-[1px] bg-gray-200 dark:bg-gray-700;
+    @apply ml-2;
+  }
+
+  .posts-wrapper {
+    @apply px-9 py-1 flex justify-between items-center relative ml-2;
+  }
+
+  .post-item {
+    @apply hover:text-[var(--vp-c-brand)] hover:font-semibold;
   }
 
   .date {
-    color: var(--date-color);
-    font-family: var(--date-font-family);
+    @apply text-gray-500 dark:text-gray-400 font-mono;
   }
 </style>

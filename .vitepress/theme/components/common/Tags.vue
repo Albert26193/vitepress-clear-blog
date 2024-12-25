@@ -1,6 +1,6 @@
 <template>
   <div class="custom-page-layout max-w-780px">
-    <div class="tags-container animate-count-8 slide-enter-content">
+    <div class="tags-container slide-enter-content">
       <span
         @click="toggleTag(String(key))"
         v-for="(_, key) in sortTags(tagsList)"
@@ -23,18 +23,20 @@
         </span>
       </span>
     </div>
-    <a
-      :href="withBase(article.regularPath)"
-      v-for="(article, index) in filteredArticles"
-      :key="index"
-      class="posts slide-enter"
-    >
-      <div class="dark:text-slate-200 mt-1 font-bold text-slate-900">
-        <div class="post-dot"></div>
-        {{ article.frontMatter.title }}
-      </div>
-      <div class="date">{{ article.frontMatter.date }}</div>
-    </a>
+    <div class="slide-enter-content">
+      <a
+        :href="withBase(article.regularPath)"
+        v-for="(article, index) in filteredArticles"
+        :key="index"
+        class="tag-post-item"
+      >
+        <div class="dark:text-slate-200 mt-1 font-normal text-slate-900">
+          <div class="post-dot"></div>
+          {{ article.frontMatter.title }}
+        </div>
+        <div class="date">{{ article.frontMatter.date }}</div>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -99,23 +101,23 @@
 
 <style scoped>
   .tags-container {
-    @apply mt-3 flex flex-wrap font-semibold;
+    @apply mt-12 flex flex-wrap;
     @apply p-4 space-x-2;
-    @apply border-b-dashed border-gray-500;
+    @apply border border-dashed border-gray-500;
   }
 
   .count {
-    @apply ml-2 font-semibold color-[var(--vp-c-brand)] hover:color-[var(--vp-c-brand-1)] transition-colors duration-300;
+    @apply ml-2 color-[var(--vp-c-brand)];
   }
 
   .tag-view {
-    @apply inline-block px-3 py-1 m-1 text-sm border rounded-full;
+    @apply inline-block px-3 py-[3px] m-1 text-sm border rounded-full;
     @apply cursor-pointer transition-colors duration-300;
-    @apply hover:font-semibold hover:border-[var(--tag-info-color)];
+    @apply hover:border-[var(--tag-info-color)];
   }
 
   .tag-view.active {
-    @apply box-border font-semibold;
+    @apply box-border;
     @apply border-[var(--vp-c-brand)] color-[var(--vp-c-brand)];
   }
 
@@ -128,7 +130,8 @@
   }
 
   .tag-header {
-    @apply mb-2 mt-6 text-xl font-medium text-left color-[var(--vp-c-brand)];
+    @apply mb-2 mt-6 text-2xl font-medium text-left color-[var(--vp-c-brand)];
+    @apply font-semibold;
   }
 
   .tag-img {
@@ -142,5 +145,9 @@
     .date {
       @apply text-sm;
     }
+  }
+
+  .tag-post-item {
+    @apply px-12 py-1 flex justify-between items-center;
   }
 </style>

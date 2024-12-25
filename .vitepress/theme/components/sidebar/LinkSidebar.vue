@@ -19,7 +19,7 @@
       </div>
       <!-- if no links -->
       <div v-else class="no-links">No Outgoing Links</div>
-      <div class="link-title mt-4">
+      <div class="link-title mt-6">
         <span class="i-carbon-link mr-2" />
         <span>Back Links</span>
       </div>
@@ -81,7 +81,7 @@
   }
 
   .page-links {
-    @apply flex flex-col relative ml-2 gap-[3px] text-sm;
+    @apply flex flex-col relative ml-2 gap-[3px] text-sm mt-1;
   }
 
   .page-links::before {
@@ -100,7 +100,8 @@
 
   .page-link:hover::before {
     content: '';
-    @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)] transition-colors duration-300;
+    @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)]
+    @apply transition-colors duration-300;
   }
 
   .page-link::after {

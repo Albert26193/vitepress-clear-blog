@@ -175,7 +175,8 @@
 
   /* Media content */
   .vp-doc > div > img,
-  .vp-doc > div > video {
+  .vp-doc > div > video,
+  .vp-doc > div > svg {
     animation-delay: calc(var(--enter-initial) + 9 * var(--enter-step));
   }
 

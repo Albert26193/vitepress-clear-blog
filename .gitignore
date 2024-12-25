@@ -24,3 +24,7 @@ origin_theme.css
 
 # local workspace
 local-workspace
+
+# for test docs
+docs/test/*
+docs/blogs/test/*

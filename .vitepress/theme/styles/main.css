@@ -222,3 +222,9 @@ h3 {
   content: ']]';
   @apply pl-[1px];
 }
+
+/* for mermaid */
+.clear-blog-mermaid {
+  @apply mx-auto;
+  @apply flex justify-center items-center;
+}
