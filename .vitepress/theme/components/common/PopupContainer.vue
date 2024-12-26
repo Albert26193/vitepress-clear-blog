@@ -72,36 +72,22 @@
 <style scoped>
   .popup-wrapper {
     @apply fixed inset-0 z-9999;
-    /* @apply transition-opacity duration-100; */
-    /* @apply animate-fade-in-left-big; */
   }
 
-  /* .popup-wrapper:not([style*='display: none']) {
-    opacity: 1;
-  } */
-
   .popup-backdrop {
-    @apply absolute inset-0 bg-gray-900/50 backdrop-blur-sm;
+    @apply absolute inset-0 backdrop-blur-lg;
   }
 
   .popup-content {
     @apply fixed;
-    @apply top-[5vh] left-[5vw];
+    @apply top-1/2 left-1/2;
     @apply w-[90vw] h-[90vh];
+    margin-left: -45vw;
+    margin-top: -45vh;
     @apply bg-white rounded-lg shadow-xl overflow-hidden;
-    @apply flex flex-col justify-center items-center;
-  }
-
-  .popup-content {
-    @apply absolute inset-8 bg-white rounded-lg shadow-xl overflow-hidden;
-    @apply transition-transform duration-300;
     @apply flex flex-col;
-    @apply border border-solid border-green-500;
+    @apply transition-transform duration-300;
   }
-
-  /* .popup-wrapper:not([style*='display: none']) .popup-content {
-    transform: scale(1);
-  } */
 
   .popup-close-wrapper {
     @apply absolute top-4 right-4 z-10;
@@ -120,9 +106,8 @@
 
   .popup-body {
     @apply my-auto overflow-y-auto;
-    /* @apply relative; */
+    @apply animate-bounce-in-left;
     @apply transition-opacity duration-300;
     @apply border-2 border-solid border-red-500;
-    /* @apply w-[95%] h-[80%]; */
   }
 </style>
