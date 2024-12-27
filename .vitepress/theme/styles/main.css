@@ -18,18 +18,17 @@
 }
 
 /* theme reset start */
-h1 {
+.main h1 {
   @apply text-[1.6rem] font-800 -ml-4;
   @apply color-[--vp-c-brand];
 }
 
-h2 {
+.main h2 {
   @apply text-[1.4rem] font-700 pb-1;
   /* border-bottom: 1px solid var(--vp-c-brand) !important; */
   margin: 0px 0px 8px -8px !important;
 }
-
-h3 {
+.main h3 {
   @apply text-[1.2rem] font-600;
   margin: 18px 0px 0px -4px !important;
 }
@@ -44,30 +43,28 @@ h3 {
 }
 
 /************** image ************/
-@screen lg {
-  .main img {
-    @apply max-w-[600px] object-contain my-1.5 mx-auto;
-  }
+.main img {
+  @apply max-w-[600px] object-contain my-1.5 mx-auto;
+}
 
-  .main img[alt*='|xs'] {
-    @apply w-[300px];
-  }
+.main img[alt*='|xs'] {
+  @apply w-[300px];
+}
 
-  .main img[alt*='|s'] {
-    @apply w-[400px];
-  }
+.main img[alt*='|s'] {
+  @apply w-[400px];
+}
 
-  .main img[alt*='|m'] {
-    @apply w-[500px];
-  }
+.main img[alt*='|m'] {
+  @apply w-[500px];
+}
 
-  .main img[alt*='|l'] {
-    @apply w-[600px];
-  }
+.main img[alt*='|l'] {
+  @apply w-[600px];
+}
 
-  .main img[alt*='|xl'] {
-    @apply w-[800px];
-  }
+.main img[alt*='|xl'] {
+  @apply w-[800px];
 }
 
 /* custom */

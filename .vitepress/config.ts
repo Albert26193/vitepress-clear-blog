@@ -5,6 +5,8 @@ import { defineConfig } from 'vitepress'
 // .vitepress/config.js
 import { withMermaid } from 'vitepress-plugin-mermaid'
 import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
+import { generateSidebar } from 'vitepress-sidebar'
+import { withSidebar } from 'vitepress-sidebar'
 
 import { head } from './custom/head'
 import { nav } from './custom/nav'
@@ -36,6 +38,28 @@ const wikilinksOptions = {
     // rel: 'nofollow'
   }
 }
+
+const sidebarGenerated = generateSidebar([
+  {
+    documentRootPath: '/docs',
+    scanStartPath: 'collections/life',
+    resolvePath: '/collections/life/',
+    collapsed: true
+  },
+  {
+    documentRootPath: '/docs',
+    scanStartPath: 'collections/cs',
+    resolvePath: '/collections/cs/',
+    collapsed: true
+  },
+  {
+    documentRootPath: '/docs',
+    scanStartPath: 'collections',
+    resolvePath: '/collections/',
+    collapseDepth: 2,
+    debugPrint: true
+  }
+])
 
 //default options
 // TODO: reorganize the config

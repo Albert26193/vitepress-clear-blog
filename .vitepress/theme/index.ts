@@ -1,3 +1,4 @@
+import Collections from '@/theme/components/Collections.vue'
 import NewLayout from '@/theme/components/NewLayout.vue'
 import Timeline from '@/theme/components/Timeline.vue'
 import Tags from '@/theme/components/common/Tags.vue'
@@ -33,6 +34,7 @@ export default {
     app.component('ExampleUsage', ExampleUsage)
     app.component('PageLinkD3', PageLinkD3)
     app.component('OverallD3', OverallD3)
+    app.component('Collections', Collections)
   },
   setup() {
     const route = useRoute()

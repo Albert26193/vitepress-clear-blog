@@ -28,3 +28,4 @@ local-workspace
 # for test docs
 docs/test/*
 docs/blogs/test/*
+test.log

@@ -173,16 +173,16 @@
     animation-delay: calc(var(--enter-initial) + 8 * var(--enter-step));
   }
 
+  /* divider */
+  .vp-doc > hr {
+    animation-delay: calc(var(--enter-initial) + 9 * var(--enter-step));
+  }
+
   /* Media content */
   .vp-doc > div > img,
   .vp-doc > div > video,
   .vp-doc > div > svg {
-    animation-delay: calc(var(--enter-initial) + 9 * var(--enter-step));
-  }
-
-  /* divider */
-  .vp-doc > hr {
-    animation-delay: calc(var(--enter-initial) + 9 * var(--enter-step));
+    animation-delay: calc(var(--enter-initial) + 10 * var(--enter-step));
   }
 
   /* hidden sidebar */
