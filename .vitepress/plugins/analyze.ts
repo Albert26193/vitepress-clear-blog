@@ -32,30 +32,67 @@ const isExternalLink = (link: string): boolean =>
   link.startsWith('mailto:') ||
   link.startsWith('tel:')
 
+// Constants
+const DOCS_DIR = 'docs'
+
+// Utility functions for path handling
+const getDocsRoot = (): string => path.resolve(process.cwd(), DOCS_DIR)
+
 const normalizeLink = (link: string): string => link.split('#')[0]
 
-const resolveFilePath = (link: string, currentFilePath: string): string =>
-  path.resolve(path.dirname(currentFilePath), normalizeLink(link))
+const resolveDocAbsolutePath = (
+  relativePath: string,
+  currentFilePath: string
+): string => {
+  // Since getDocsRoot() always returns absolute path
+  const currentFileAbsolutePath = path.resolve(getDocsRoot(), currentFilePath)
 
-const fileExists = (filePath: string): boolean =>
-  !path.extname(filePath)
-    ? fs.existsSync(filePath + '.md') || fs.existsSync(filePath + '/index.md')
-    : fs.existsSync(filePath)
+  console.log({
+    currentFilePath,
+    currentFileAbsolutePath,
+    relativePath
+  })
+
+  return path.resolve(
+    path.dirname(currentFileAbsolutePath),
+    normalizeLink(relativePath)
+  )
+}
+
+// Convert a file path to URL path (relative to docs directory)
+const getUrlPath = (absolutePath: string): string => {
+  const relativePath = path
+    .relative(`${process.cwd()}/${DOCS_DIR}`, absolutePath)
+    .replace(/\.md$/, '.html')
+
+  return relativePath
+}
+
+const getFullUrl = (relativePath: string, currentFilePath: string): string => {
+  const absolutePath = resolveDocAbsolutePath(relativePath, currentFilePath)
+  return getUrlPath(absolutePath)
+}
+
+const fileExists = (absolutePath: string): boolean => {
+  const mdPath = absolutePath.endsWith('.md')
+    ? absolutePath
+    : absolutePath + '.md'
+  return fs.existsSync(mdPath)
+}
 
 const createValidateLink =
   (currentFilePath: string) =>
-  (link: string): boolean =>
-    !isExternalLink(link) && fileExists(resolveFilePath(link, currentFilePath))
+  (link: string): boolean => {
+    if (isExternalLink(link)) {
+      return false
+    }
 
-md.validateLink = () => false // Initialize with a default value
+    const absolutePath = resolveDocAbsolutePath(link, currentFilePath)
+    return fileExists(absolutePath)
+  }
 
-const getFullUrl = (relativePath: string, currentFilePath: string): string => {
-  const absolutePath = resolveFilePath(relativePath, currentFilePath)
-  const projectRelativePath = path.relative(process.cwd(), absolutePath)
-  const urlPath = projectRelativePath.replace(/^docs\//, '')
-  // .replace(new RegExp(`^${dirPrefix}/`), '')
-  return `${urlPath.replace(/\.md$/, '.html')}`
-}
+// Initialize markdown-it with a default validateLink
+md.validateLink = () => false
 
 /**
  * Extract outgoing links from markdown content (a -> b relationships)
@@ -291,25 +328,25 @@ const buildGlobalBackLinks = () => {
 
     metadata.outgoingLinks.forEach((link) => {
       const targetFile = `${link.relativePath}`
+      console.log({ targetFile })
+
+      console.log(JSON.stringify(globalMdMetadata))
       if (globalMdMetadata[targetFile]) {
         if (!globalMdMetadata[targetFile].backLinks) {
           globalMdMetadata[targetFile].backLinks = []
         }
 
-        const sourceFileWithoutPrefix = sourceFile.startsWith(`${dirPrefix}/`)
-          ? sourceFile.slice(dirPrefix.length + 1)
-          : sourceFile
-
         const newBackLink = {
-          text: getFullUrl(sourceFileWithoutPrefix, sourceFile)
-            .split('/')
-            .pop() as string,
-          relativePath: getFullUrl(sourceFileWithoutPrefix, sourceFile),
-          fullUrl: `/${getFullUrl(sourceFileWithoutPrefix, sourceFile)}`,
+          text: sourceFile.split('/').pop() || 'no-name',
+          // TODO: relative path is wrong
+          // BUG
+          relativePath: sourceFile,
+          fullUrl: `/${sourceFile}`,
           type: link.type,
           raw: link.raw
         }
 
+        console.log({ newBackLink })
         const exists = globalMdMetadata[targetFile].backLinks.some(
           (bl) => bl.relativePath === newBackLink.relativePath
         )

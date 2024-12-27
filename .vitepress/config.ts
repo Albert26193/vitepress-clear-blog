@@ -56,8 +56,8 @@ const sidebarGenerated = generateSidebar([
     documentRootPath: '/docs',
     scanStartPath: 'collections',
     resolvePath: '/collections/',
-    collapseDepth: 2,
-    debugPrint: true
+    collapseDepth: 2
+    // debugPrint: true
   }
 ])
 
