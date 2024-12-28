@@ -111,7 +111,7 @@
   }
 
   .tag-view {
-    @apply inline-block px-3 py-[3px] m-1 text-sm border rounded-full;
+    @apply inline-block px-3 py-[3px] m-1 text-xs border rounded-full;
     @apply cursor-pointer transition-colors duration-300;
     @apply hover:border-[var(--tag-info-color)];
   }

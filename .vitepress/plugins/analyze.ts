@@ -155,7 +155,7 @@ const extractToLinks = (
           if (wikiMatches && wikiMatches.length > 0) {
             wikiMatches.forEach((match) => {
               const content = match.slice(2, -2)
-              const [text, path] = content.split('|').reverse()
+              const [text, path] = content.split('|')
               if (md.validateLink(text)) {
                 links.push({
                   text: text || path,
