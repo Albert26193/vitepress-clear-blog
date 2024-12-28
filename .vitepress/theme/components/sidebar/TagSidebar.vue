@@ -20,10 +20,15 @@
       <!-- related posts -->
       <div v-if="filteredRelatedPosts.length" class="related-posts">
         <a
+          v-show="showPosts"
           v-for="post in filteredRelatedPosts"
           :key="post.regularPath"
-          :href="withBase(post.regularPath)"
-          class="page-link slide-enter"
+          :href="isCurrentPage(post) ? undefined : withBase(post.regularPath)"
+          :class="[
+            'page-link slide-enter',
+            { 'current-page': isCurrentPage(post) }
+          ]"
+          @click="isCurrentPage(post) && $event.preventDefault()"
         >
           {{ post.frontMatter.title }}
         </a>
@@ -40,8 +45,12 @@
   import { computed, ref } from 'vue'
 
   const { theme, frontmatter } = useData()
+  const route = useRoute()
 
-  const currentPath = useRoute().data.relativePath.replace(/\.md$/, '')
+  // get current path in a reactive way
+  const currentPath = computed(() => {
+    return route.path.replace(/\.html$/, '').replace(/^\//, '')
+  })
 
   // get tags for current article
   const currentTags = computed(() => {
@@ -51,9 +60,22 @@
   // active tag for filtering
   const activeTag = ref<string | null>(null)
 
+  // show posts flag
+  const showPosts = ref(true)
+
   // toggle tag filter
   const toggleTagFilter = (tag: string) => {
+    showPosts.value = false
     activeTag.value = activeTag.value === tag ? null : tag
+    // 添加小延迟以产生视觉刷新效果
+    setTimeout(() => {
+      showPosts.value = true
+    }, 100)
+  }
+
+  // check if post is current page
+  const isCurrentPage = (post: Post) => {
+    return withBase(post.regularPath) === route.path
   }
 
   // get related posts
@@ -65,11 +87,11 @@
     }
     // filter posts
     return posts.filter((post) => {
-      console.log(post.regularPath, currentPath)
+      console.log(post.regularPath, currentPath.value)
       // exclude current article
-      if (withBase(post.regularPath) === `/${currentPath}.html`) {
-        return false
-      }
+      // if (withBase(post.regularPath) === `/${currentPath.value}.html`) {
+      //   return false
+      // }
       // check if post has any of the current article's tags
       const postTags = post.frontMatter.tags || []
       // if no active tag, show all related posts
@@ -115,6 +137,7 @@
 
   .related-posts {
     @apply flex flex-col gap-[3px] mt-4 relative ml-2;
+    @apply min-h-[150px];
   }
 
   .related-posts::before {
@@ -134,6 +157,16 @@
   .page-link:hover::before {
     content: '';
     @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)] transition-colors duration-300;
+  }
+
+  .current-page {
+    @apply text-[var(--vp-c-brand)] font-semibold;
+    cursor: default;
+  }
+
+  .current-page::before {
+    content: '';
+    @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)];
   }
 
   .no-related {
