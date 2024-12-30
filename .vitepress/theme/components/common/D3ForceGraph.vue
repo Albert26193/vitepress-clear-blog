@@ -28,20 +28,37 @@
 <script setup lang="ts">
   import type { D3ForceConfig, D3Link, D3Node } from '@/theme/types.d'
   import * as d3 from 'd3'
+  import { debounce } from 'lodash'
   import { useRouter } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
 
   const router = useRouter()
   const svgRef = ref<SVGSVGElement | null>(null)
 
-  const props = withDefaults(defineProps<D3ForceConfig>(), {
-    width: 320,
-    height: 320,
-    diameter: 10,
-    textSize: 5,
-    circleColor: '#5040c9',
-    textColor: '#4a4a4a'
-  })
+  const props = withDefaults(
+    defineProps<
+      D3ForceConfig & {
+        modelValue?: number
+      }
+    >(),
+    {
+      width: 320,
+      height: 320,
+      diameter: 10,
+      textSize: 5,
+      circleColor: '#5040c9',
+      textColor: '#4a4a4a',
+      modelValue: 1
+    }
+  )
+
+  const emit = defineEmits<{
+    (e: 'update:modelValue', value: number): void
+  }>()
+
+  const debouncedEmit = debounce((value: number) => {
+    emit('update:modelValue', value)
+  }, 100)
 
   // Create a function to initialize or update the graph
   const initializeGraph = () => {
@@ -98,6 +115,7 @@
       ])
       .on('zoom', (event) => {
         g.attr('transform', event.transform)
+        debouncedEmit(event.transform.k)
       })
 
     // Select the SVG element and add zoom behavior
