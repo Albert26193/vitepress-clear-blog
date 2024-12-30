@@ -5,6 +5,8 @@ import type { Token } from 'markdown-it'
 import path from 'path'
 import { Plugin } from 'vitepress'
 
+import { calculateWords } from './wordCount'
+
 const VIRTUAL_MODULE_ID = 'virtual:markdown-metadata'
 const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
@@ -298,10 +300,7 @@ const analyzeMdFile = (filePath: string) => {
   const firstHead = extractFirstHeading(content)
 
   // Calculate word count
-  const wordCount = content
-    .replace(/\s+/g, '')
-    .replace(/[\u4e00-\u9fa5]/g, 'm').length
-
+  const wordCount = calculateWords(content)
   globalMdMetadata[filePathBasedOnProj].wordCount = wordCount
   globalMdMetadata[filePathBasedOnProj].rawContent = ''
   globalMdMetadata[filePathBasedOnProj].lastUpdated = stats.mtimeMs
@@ -322,7 +321,7 @@ const buildGlobalBackLinks = () => {
   Object.entries(globalMdMetadata).forEach(([sourceFile, metadata]) => {
     // ensure toLinks
     if (!metadata.outgoingLinks) {
-      console.warn(`No Links found for ${sourceFile}`)
+      // console.warn(`No Links found for ${sourceFile}`)
       return
     }
 

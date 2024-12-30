@@ -31,10 +31,13 @@
   import { useAuthor } from '@/theme/composables/useMeta'
   import type { PostFrontMatter } from '@/theme/types.d'
   import { calculateWords } from '@/theme/utils/themeUtils'
-  import { useData, withBase } from 'vitepress'
+  import { useData, useRoute, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
 
   const { frontmatter } = useData()
+  const currentRoute = useRoute()
+  console.warn(currentRoute.path, 'route')
+
   const $des = ref<HTMLDivElement>()
 
   const author = useAuthor(frontmatter.value as PostFrontMatter) || 'Blogger'

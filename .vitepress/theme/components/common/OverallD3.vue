@@ -21,8 +21,8 @@
 
   const graphData = computed(() => transformSiteD3Data(globalMdMetadata))
 
-  console.warn('data for overall', JSON.stringify(globalMdMetadata))
-  console.error('nodes for overall', JSON.stringify(graphData.value))
+  // console.warn('data for overall', JSON.stringify(globalMdMetadata))
+  // console.error('nodes for overall', JSON.stringify(graphData.value))
 </script>
 
 <style scoped>
