@@ -1,8 +1,21 @@
 <template>
-  <div class="my-4 custom-page-layout">
+  <div class="custom-page-layout">
+    <div class="flex justify-end -mb-8 mr-12 mt-6">
+      <IconToggleButton
+        v-model="sortDirection"
+        :icons="[
+          { value: 'asc', iconClass: 'i-carbon-arrow-up', tooltip: '升序' },
+          { value: 'desc', iconClass: 'i-carbon-arrow-down', tooltip: '降序' },
+          { value: 'expand', iconClass: 'i-carbon-expand-all', tooltip: '展开全部' },
+          { value: 'collapse', iconClass: 'i-carbon-collapse-all', tooltip: '折叠全部' }
+        ]"
+        size="sm"
+        :maxVisible="3"
+      />
+    </div>
     <div class="timeline-container">
       <div
-        v-for="curYearPostList in dataByYear"
+        v-for="curYearPostList in sortedDataByYear"
         :key="getYear(curYearPostList)"
       >
         <div>
@@ -83,7 +96,8 @@
 <script lang="ts" setup>
   import { useMonthYearSort, useYearSort } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
-  import { computed, reactive } from 'vue'
+  import { computed, reactive, ref } from 'vue'
+  import IconToggleButton from '@/theme/components/common/IconToggleButton.vue'
 
   const { theme } = useData()
 
@@ -117,8 +131,28 @@
   const getDay = (article: { frontMatter: { date: string } }) =>
     article.frontMatter.date.slice(5)
 
+  const sortDirection = ref<'asc' | 'desc' | 'expand' | 'collapse'>('desc')
+
   const dataByYear = computed(() => useYearSort(theme.value.posts))
   const dataByYearMonth = computed(() => useMonthYearSort(theme.value.posts))
+
+  // Add new computed property for sorted data
+  const sortedDataByYear = computed(() => {
+    const data = [...dataByYear.value]
+    switch (sortDirection.value) {
+      case 'asc':
+        return data.reverse()
+      case 'expand':
+        expandAll()
+        return data
+      case 'collapse':
+        collapseAll()
+        return data
+      case 'desc':
+      default:
+        return data
+    }
+  })
 
   // New display status management
   const displayStatus: DisplayStatus = reactive({
@@ -153,11 +187,40 @@
     const key = `${year}-${month}`
     displayStatus.months[key] = !displayStatus.months[key]
   }
+
+  // Add new expand/collapse functions
+  const expandAll = () => {
+    Object.entries(dataByYear.value).forEach(([year, posts]) => {
+      const currentYear = getYear(posts)
+      displayStatus.years[currentYear] = true
+
+      const months = dataByYearMonth.value[currentYear]
+      if (months) {
+        Object.keys(months).forEach((month) => {
+          displayStatus.months[`${currentYear}-${month}`] = true
+        })
+      }
+    })
+  }
+
+  const collapseAll = () => {
+    Object.entries(dataByYear.value).forEach(([year, posts]) => {
+      const currentYear = getYear(posts)
+      displayStatus.years[currentYear] = false
+
+      const months = dataByYearMonth.value[currentYear]
+      if (months) {
+        Object.keys(months).forEach((month) => {
+          displayStatus.months[`${currentYear}-${month}`] = false
+        })
+      }
+    })
+  }
 </script>
 
 <style scoped>
   .timeline-container {
-    @apply flex flex-col pt-8;
+    @apply flex flex-col;
     @apply border border-b-solid pb-4 border-gray-200;
   }
 

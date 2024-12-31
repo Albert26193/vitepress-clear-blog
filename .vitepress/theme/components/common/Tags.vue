@@ -6,7 +6,7 @@
         v-for="(_, key) in sortTags(tagsList)"
         :key="key"
         class="tag-view text-sm tag"
-        :class="{ active: selectedTag === String(key) }"
+        :class="{ 'tag-active': selectedTag === String(key) }"
       >
         {{ key }}
         <span class="count">{{ tagsList[key].length }}</span>

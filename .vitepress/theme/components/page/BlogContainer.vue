@@ -1,23 +1,13 @@
 <template>
   <div class="custom-page-layout page-wrapper">
     <div class="page-content border border-black border-solid">
-      <button class="btn-view mt-12" @click="toggleStatus">
-        <div
-          class="icon-wrapper"
-          :class="{ active: currentPageType === 'ListType' }"
-        >
-          <span class="i-carbon-table-of-contents text-lg" />
-        </div>
-        <div
-          class="icon-wrapper"
-          :class="{ active: currentPageType === 'cardType' }"
-        >
-          <span class="i-carbon-grid text-lg" />
-        </div>
-        <!-- <div class="text-sm w-12 text-black">
-          {{ currentPageType === 'cardType' ? 'Card' : 'List' }}
-        </div> -->
-      </button>
+      <IconToggleButton
+        v-model="currentPageType"
+        :icons="[
+          { value: 'ListType', iconClass: 'i-carbon-table-of-contents', tooltip: '列表' },
+          { value: 'cardType', iconClass: 'i-carbon-grid', tooltip: '卡片' }
+        ]"
+      />
       <div v-if="currentPageType === 'ListType'" :key="'list-view'">
         <div class="list-container slide-enter-content">
           <div v-for="post in props.posts" :key="post.regularPath">
@@ -56,6 +46,7 @@
   import { Post } from '@/theme/types.d'
   import { withBase } from 'vitepress'
   import { type PropType, onMounted, ref } from 'vue'
+  import IconToggleButton from '@/theme/components/common/IconToggleButton.vue'
 
   const props = defineProps({
     posts: {
