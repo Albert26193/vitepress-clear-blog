@@ -9,12 +9,11 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [".vitepress/*"],
-      "~/*": ["./*"]
-    }
+    "verbatimModuleSyntax": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
-  "include": ["**/*.ts", "**/*.d.ts", "**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

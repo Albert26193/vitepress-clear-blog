@@ -1,7 +1,11 @@
 import fs from 'fs-extra'
 import path from 'path'
+import { parse } from 'smol-toml'
+import type { Plugin } from 'vitepress'
 
-import { assignedConfigPath, parseToml } from '../theme/utils/serverUtils'
+import type { ConfigToml } from './types'
+
+const assignedConfigPath = '.vitepress/custom/config.toml'
 
 /**
  * generate the theme custom css
@@ -10,10 +14,15 @@ import { assignedConfigPath, parseToml } from '../theme/utils/serverUtils'
  * @output the custom css file named generated.css
  */
 const generateThemeFile = async (configPath: string = assignedConfigPath) => {
-  const config = await parseToml(configPath)
-  // console.log(config)
+  const content = await fs.readFile(configPath, 'utf-8')
+  const config = parse(content) as unknown as ConfigToml
+
+  if (!config.theme) {
+    throw new Error('Missing theme configuration in config.toml')
+  }
+
   const theme = config.theme
-  const darkTheme = config.theme?.dark
+  const darkTheme = config['theme.dark']
 
   const bgColor = theme?.['vp-c-bg'] || '#fff'
   const brandColor = theme?.['vp-c-brand'] || '#ae1f7c'
@@ -32,8 +41,8 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
   const darkButtonBgColor = darkTheme?.['vp-button-brand-bg'] || '#ae1f7c'
 
   const generatedCssPath = path.resolve(
-    __dirname,
-    '../theme/styles/generated.css'
+    process.cwd(),
+    'packages/theme/src/styles/generated.css'
   )
 
   const generatedCssTemplate = `
@@ -61,7 +70,9 @@ const generateThemeFile = async (configPath: string = assignedConfigPath) => {
   await fs.writeFile(generatedCssPath, generatedCssTemplate)
 }
 
-const generateThemePlugin = (configPath: string = assignedConfigPath) => {
+const generateThemePlugin = (
+  configPath: string = assignedConfigPath
+): Plugin => {
   return {
     name: 'vite-plugin-generated-theme',
     async buildStart() {
@@ -70,4 +81,4 @@ const generateThemePlugin = (configPath: string = assignedConfigPath) => {
   }
 }
 
-export { generateThemePlugin }
+export { generateThemeFile, generateThemePlugin }

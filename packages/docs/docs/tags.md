@@ -1,9 +1,9 @@
 ---
 layout: page
-title: Timeline
-description: Timeline
+title: Tags
+description: Tags
 sidebar: false
 aside: false
 ---
 
-<Timeline/>
+<!-- <Tags/> -->

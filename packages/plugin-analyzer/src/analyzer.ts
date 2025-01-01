@@ -1,10 +1,10 @@
-import type { PageLink, SiteMetadata } from '@/theme/types.d'
 import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
 import type { Token } from 'markdown-it'
 import path from 'path'
-import { Plugin } from 'vitepress'
+import type { Plugin } from 'vitepress'
 
+import type { PageLink, SiteMetadata } from './types'
 import { calculateWords } from './wordCount'
 
 const VIRTUAL_MODULE_ID = 'virtual:markdown-metadata'
@@ -302,7 +302,8 @@ const analyzeMdFile = (filePath: string) => {
   // Calculate word count
   const wordCount = calculateWords(content)
   globalMdMetadata[filePathBasedOnProj].wordCount = wordCount
-  globalMdMetadata[filePathBasedOnProj].rawContent = ''
+  // TODO：temp put it to raw content
+  globalMdMetadata[filePathBasedOnProj].rawContent = firstHead as string
   globalMdMetadata[filePathBasedOnProj].lastUpdated = stats.mtimeMs
 }
 
