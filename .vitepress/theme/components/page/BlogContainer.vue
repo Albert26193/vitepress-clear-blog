@@ -4,7 +4,11 @@
       <IconToggleButton
         v-model="currentPageType"
         :icons="[
-          { value: 'ListType', iconClass: 'i-carbon-table-of-contents', tooltip: '列表' },
+          {
+            value: 'ListType',
+            iconClass: 'i-carbon-table-of-contents',
+            tooltip: '列表'
+          },
           { value: 'cardType', iconClass: 'i-carbon-grid', tooltip: '卡片' }
         ]"
       />
@@ -41,12 +45,12 @@
 </template>
 
 <script lang="ts" setup>
+  import IconToggleButton from '@/theme/components/common/IconToggleButton.vue'
   import BlogCard from '@/theme/components/page/BlogCard.vue'
   import BlogList from '@/theme/components/page/BlogList.vue'
   import { Post } from '@/theme/types.d'
   import { withBase } from 'vitepress'
   import { type PropType, onMounted, ref } from 'vue'
-  import IconToggleButton from '@/theme/components/common/IconToggleButton.vue'
 
   const props = defineProps({
     posts: {

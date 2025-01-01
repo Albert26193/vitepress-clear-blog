@@ -6,8 +6,16 @@
         :icons="[
           { value: 'asc', iconClass: 'i-carbon-arrow-up', tooltip: '升序' },
           { value: 'desc', iconClass: 'i-carbon-arrow-down', tooltip: '降序' },
-          { value: 'expand', iconClass: 'i-carbon-expand-all', tooltip: '展开全部' },
-          { value: 'collapse', iconClass: 'i-carbon-collapse-all', tooltip: '折叠全部' }
+          {
+            value: 'expand',
+            iconClass: 'i-carbon-expand-all',
+            tooltip: '展开全部'
+          },
+          {
+            value: 'collapse',
+            iconClass: 'i-carbon-collapse-all',
+            tooltip: '折叠全部'
+          }
         ]"
         size="sm"
         :maxVisible="3"
@@ -94,10 +102,10 @@
 </template>
 
 <script lang="ts" setup>
+  import IconToggleButton from '@/theme/components/common/IconToggleButton.vue'
   import { useMonthYearSort, useYearSort } from '@/theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { computed, reactive, ref } from 'vue'
-  import IconToggleButton from '@/theme/components/common/IconToggleButton.vue'
 
   const { theme } = useData()
 
