@@ -27,13 +27,13 @@
 </template>
 
 <script setup lang="ts">
-  import DocBanner from '@/theme/components/articles/DocBanner.vue'
-  import Copyright from '@/theme/components/common/Copyright.vue'
-  import HideSidebarButton from '@/theme/components/common/HideSidebarButton.vue'
-  import PageLinkD3 from '@/theme/components/sidebar/PageLinkD3.vue'
-  import { useDarkTransition } from '@/theme/composables/useMeta'
-  import LinkSidebar from '@theme/components/sidebar/LinkSidebar.vue'
-  import TagSidebar from '@theme/components/sidebar/TagSidebar.vue'
+  import DocBanner from '@/components/articles/DocBanner.vue'
+  import Copyright from '@/components/common/Copyright.vue'
+  import HideSidebarButton from '@/components/common/HideSidebarButton.vue'
+  import LinkSidebar from '@/components/sidebar/LinkSidebar.vue'
+  import PageLinkD3 from '@/components/sidebar/PageLinkD3.vue'
+  import TagSidebar from '@/components/sidebar/TagSidebar.vue'
+  import { useDarkTransition } from '@/composables/useMeta'
   import { useData } from 'vitepress'
   import DefaultTheme from 'vitepress/theme'
   import { computed } from 'vue'

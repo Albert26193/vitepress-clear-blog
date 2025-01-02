@@ -41,8 +41,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { Post } from '@/theme/types.d'
-  import { initTags } from '@/theme/utils/themeUtils'
+  import { Post } from '@/types.d'
+  import { initTags } from '@/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
 

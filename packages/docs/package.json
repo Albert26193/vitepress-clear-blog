@@ -4,18 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev --host",
+    "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },
   "dependencies": {
     "@blog/theme": "workspace:*",
-    "@blog/plugin-analyzer": "workspace:*",
-    "@blog/plugin-config": "workspace:*",
+    "vitepress-plugin-analyzer": "workspace:*",
+    "vitepress-plugin-config": "workspace:*",
     "vitepress": "^1.5.0",
     "vitepress-plugin-mermaid": "^2.0.17",
     "vitepress-plugin-rss": "^0.3.0",
-    "vitepress-sidebar": "^1.30.2",
-    "vue": "^3.2.45"
+    "vitepress-sidebar": "^1.30.2"
   }
 }

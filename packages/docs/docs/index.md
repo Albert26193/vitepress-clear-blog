@@ -2,6 +2,6 @@
 layout: home
 ---
 
-<!-- <Homepage /> -->
+<Homepage />
 <!-- <OverallD3 />
 <ExampleUsage /> -->

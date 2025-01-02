@@ -1,8 +1,19 @@
 {
   "name": "@blog/theme",
   "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "build": "vitepress build"
+    "dev": "npm run build:node && npm run dev:docs",
+    "dev:docs": "vitepress dev docs",
+    "dev:node": "npx tsup --watch",
+    "build": "vitepress build docs",
+    "build:docs": "vitepress build docs",
+    "build:node": "npx tsup",
+    "serve": "vitepress serve docs"
   },
   "dependencies": {
     "@iconify-json/carbon": "^1.2.4",
@@ -24,6 +35,8 @@
     "vitepress-sidebar": "^1.30.2"
   },
   "devDependencies": {
+    "vitepress-plugin-analyzer": "workspace:*",
+    "vitepress-plugin-config": "workspace:*",
     "@types/d3": "^7.4.3",
     "@types/lodash": "^4.17.13",
     "d3": "^7.9.0",

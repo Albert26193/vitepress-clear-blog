@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { D3ForceConfig, D3Link, D3Node } from '@/theme/types.d'
+  import type { D3ForceConfig, D3Link, D3Node } from '@/types.d'
   import * as d3 from 'd3'
   import { debounce } from 'lodash'
   import { useRouter } from 'vitepress'
