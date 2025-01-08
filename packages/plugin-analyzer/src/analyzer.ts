@@ -1,7 +1,7 @@
-import fs from 'fs-extra'
 import MarkdownIt from 'markdown-it'
 import type { Token } from 'markdown-it'
-import path from 'path'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import { dirname, relative, resolve } from 'node:path'
 import type { Plugin } from 'vitepress'
 
 import type { PageLink, SiteMetadata } from './types'
@@ -38,7 +38,7 @@ const isExternalLink = (link: string): boolean =>
 const DOCS_DIR = 'docs'
 
 // Utility functions for path handling
-const getDocsRoot = (): string => path.resolve(process.cwd(), DOCS_DIR)
+const getDocsRoot = (): string => resolve(process.cwd(), DOCS_DIR)
 
 const normalizeLink = (link: string): string => link.split('#')[0]
 
@@ -47,7 +47,7 @@ const resolveDocAbsolutePath = (
   currentFilePath: string
 ): string => {
   // Since getDocsRoot() always returns absolute path
-  const currentFileAbsolutePath = path.resolve(getDocsRoot(), currentFilePath)
+  const currentFileAbsolutePath = resolve(getDocsRoot(), currentFilePath)
 
   console.log({
     currentFilePath,
@@ -55,17 +55,15 @@ const resolveDocAbsolutePath = (
     relativePath
   })
 
-  return path.resolve(
-    path.dirname(currentFileAbsolutePath),
-    normalizeLink(relativePath)
-  )
+  return resolve(dirname(currentFileAbsolutePath), normalizeLink(relativePath))
 }
 
 // Convert a file path to URL path (relative to docs directory)
 const getUrlPath = (absolutePath: string): string => {
-  const relativePath = path
-    .relative(`${process.cwd()}/${DOCS_DIR}`, absolutePath)
-    .replace(/\.md$/, '.html')
+  const relativePath = relative(
+    `${process.cwd()}/${DOCS_DIR}`,
+    absolutePath
+  ).replace(/\.md$/, '.html')
 
   return relativePath
 }
@@ -79,7 +77,7 @@ const fileExists = (absolutePath: string): boolean => {
   const mdPath = absolutePath.endsWith('.md')
     ? absolutePath
     : absolutePath + '.md'
-  return fs.existsSync(mdPath)
+  return existsSync(mdPath)
 }
 
 const createValidateLink =
@@ -271,12 +269,11 @@ const extractFirstHeading = (content: string): string | null => {
 
 // MARK: analyzeMdFile
 const analyzeMdFile = (filePath: string) => {
-  const content = fs.readFileSync(filePath, 'utf-8')
-  const stats = fs.statSync(filePath)
+  const content = readFileSync(filePath, 'utf-8')
+  const stats = statSync(filePath)
 
   // Get relative path from project root
-  const filePathBasedOnProj = path
-    .relative(process.cwd(), filePath)
+  const filePathBasedOnProj = relative(process.cwd(), filePath)
     .replace(/^docs\//, '')
     .replace(/\.md$/, '')
 
@@ -367,10 +364,11 @@ const buildGlobalBackLinks = () => {
 }
 
 const scanDir = (dir: string) => {
-  const files = fs.readdirSync(dir)
+  const files = readdirSync(dir)
   files.forEach((file) => {
-    const fullPath = path.join(dir, file)
-    if (fs.statSync(fullPath).isDirectory()) {
+    const fullPath = resolve(dir, file)
+    const stat = statSync(fullPath)
+    if (stat.isDirectory()) {
       scanDir(fullPath)
     } else if (file.endsWith('.md')) {
       analyzeMdFile(fullPath)
@@ -383,40 +381,86 @@ const scanDir = (dir: string) => {
  *
  * @returns {Plugin} VitePress plugin instance
  */
-const markdownAnalyzerPlugin = (): Plugin => {
+export function markdownAnalyzerPlugin(): Plugin {
+  console.log('\n[Analyzer Plugin] Initializing...')
+  const docsRoot = getDocsRoot()
+  const blogDir = resolve(docsRoot, dirPrefix)
+  console.log('[Analyzer Plugin] Docs root:', docsRoot)
+  console.log('[Analyzer Plugin] Blog directory:', blogDir)
+
   return {
-    name: 'vitepress-plugin-markdown-analyzer',
+    name: 'vitepress-plugin-analyzer',
     enforce: 'pre',
-    buildStart() {
-      scanDir(path.resolve(process.cwd(), `docs/${dirPrefix}`))
-      buildGlobalBackLinks()
-    },
-    configureServer(server) {
-      server.watcher.add('**/docs/**/*.md')
-      server.watcher.on('change', (file) => {
-        if (file.endsWith('.md')) {
-          analyzeMdFile(file)
-          buildGlobalBackLinks()
-        }
-      })
-      server.watcher.on('add', (file) => {
-        if (file.endsWith('.md')) {
-          analyzeMdFile(file)
-          buildGlobalBackLinks()
-        }
-      })
-    },
     resolveId(id) {
+      console.log('[Analyzer Plugin] Resolving id:', id)
       if (id === VIRTUAL_MODULE_ID) {
+        console.log(
+          '[Analyzer Plugin] Found virtual module:',
+          VIRTUAL_MODULE_ID
+        )
+        console.log(
+          '[Analyzer Plugin] Resolved to:',
+          RESOLVED_VIRTUAL_MODULE_ID
+        )
         return RESOLVED_VIRTUAL_MODULE_ID
       }
     },
     load(id) {
-      if (id === RESOLVED_VIRTUAL_MODULE_ID) {
-        return `export const globalMdMetadata = ${JSON.stringify(globalMdMetadata)}`
+      console.log('[Analyzer Plugin] Loading virtual module content')
+      console.log(
+        '[Analyzer Plugin] Current metadata size:',
+        Object.keys(globalMdMetadata).length
+      )
+
+      // 确保在 SSR 和客户端都能访问数据
+      if (Object.keys(globalMdMetadata).length === 0) {
+        console.log(
+          '[Analyzer Plugin] Metadata empty, scanning directory:',
+          blogDir
+        )
+        scanDir(blogDir)
+        buildGlobalBackLinks()
+        console.log(
+          '[Analyzer Plugin] After scan metadata size:',
+          Object.keys(globalMdMetadata).length
+        )
+      }
+
+      return `
+        export const globalMdMetadata = ${JSON.stringify(globalMdMetadata, null, 2)}
+      `
+    },
+    configureServer(server) {
+      console.log('[Analyzer Plugin] Configuring dev server')
+      // 扫描文档目录
+      console.log('[Analyzer Plugin] Initial scan of:', blogDir)
+      scanDir(blogDir)
+      buildGlobalBackLinks()
+      console.log(
+        '[Analyzer Plugin] Initial metadata size:',
+        Object.keys(globalMdMetadata).length
+      )
+
+      // 监听文件变化
+      return () => {
+        server.watcher.on('change', (file) => {
+          if (file.endsWith('.md')) {
+            console.log('[Analyzer Plugin] Markdown file changed:', file)
+            analyzeMdFile(file)
+            buildGlobalBackLinks()
+            console.log(
+              '[Analyzer Plugin] Updated metadata size:',
+              Object.keys(globalMdMetadata).length
+            )
+            // 通知客户端更新
+            server.ws.send({
+              type: 'custom',
+              event: 'markdown-metadata-update',
+              data: globalMdMetadata
+            })
+          }
+        })
       }
     }
   }
 }
-
-export { markdownAnalyzerPlugin }

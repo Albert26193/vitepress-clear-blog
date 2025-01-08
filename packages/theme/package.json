@@ -4,6 +4,13 @@
   "type": "module",
   "main": "./src/index.ts",
   "exports": {
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.mjs",
+      "require": "./dist/node.js",
+      "default": "./dist/node.js"
+    },
+    "./package.json": "./package.json",
     ".": "./src/index.ts"
   },
   "scripts": {

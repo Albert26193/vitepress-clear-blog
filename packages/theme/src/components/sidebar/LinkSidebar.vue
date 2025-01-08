@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { PageLink } from '@/types.d'
+  import type { PageLink } from '@theme/types.d'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute } from 'vitepress'
   import { computed, ref, watch } from 'vue'

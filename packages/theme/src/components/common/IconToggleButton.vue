@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-  import type { ButtonLayout, ButtonSize, IconOption } from '@/types'
+  import type { ButtonLayout, ButtonSize, IconOption } from '@theme/types'
   import { computed } from 'vue'
 
   const props = withDefaults(

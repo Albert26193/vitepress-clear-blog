@@ -43,9 +43,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { useListDescription } from '@/composables/useMeta'
-  import { useAuthor } from '@/composables/useMeta'
-  import type { Post } from '@/types.d'
+  import { useListDescription } from '@theme/composables/useMeta'
+  import { useAuthor } from '@theme/composables/useMeta'
+  import type { Post } from '@theme/types.d'
   import { withBase } from 'vitepress'
   import { PropType } from 'vue'
 

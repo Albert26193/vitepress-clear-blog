@@ -1,4 +1,4 @@
-import { Post, PostFrontMatter } from '@/types/types'
+import { Post, PostFrontMatter } from '@theme/types/types'
 import fs from 'fs-extra'
 import { globby } from 'globby'
 import matter from 'gray-matter'

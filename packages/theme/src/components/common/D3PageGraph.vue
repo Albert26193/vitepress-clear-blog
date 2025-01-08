@@ -16,8 +16,8 @@
 </template>
 
 <script lang="ts" setup>
-  import D3ForceGraph from '@/components/common/D3ForceGraph.vue'
-  import { transformPageD3Data } from '@/utils/themeUtils'
+  import D3ForceGraph from '@theme/components/common/D3ForceGraph.vue'
+  import { transformPageD3Data } from '@theme/utils/themeUtils'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute } from 'vitepress'
   import { computed, ref } from 'vue'

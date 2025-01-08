@@ -12,7 +12,8 @@ dist-ssr
 .DS_Store
 .idea
 *.local
-.vitepress/cache
+**/*/cache
+**/*/.cache
 
 # Documentation files
 /*.md
@@ -30,3 +31,6 @@ local-workspace
 docs/test/*
 docs/blogs/test/*
 test.log
+
+# windsurf rules
+.windsurfrules

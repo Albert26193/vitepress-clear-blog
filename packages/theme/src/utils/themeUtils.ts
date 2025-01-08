@@ -5,7 +5,7 @@ import {
   MarkdownMetadata,
   Post,
   SiteMetadata
-} from '@/theme/types.d'
+} from '@theme/types/types.d'
 import mediumZoom from 'medium-zoom'
 
 /**

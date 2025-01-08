@@ -102,8 +102,8 @@
 </template>
 
 <script lang="ts" setup>
-  import IconToggleButton from '@/components/common/IconToggleButton.vue'
-  import { useMonthYearSort, useYearSort } from '@/utils/themeUtils'
+  import IconToggleButton from '@theme/components/common/IconToggleButton.vue'
+  import { useMonthYearSort, useYearSort } from '@theme/utils/themeUtils'
   import { useData, withBase } from 'vitepress'
   import { computed, reactive, ref } from 'vue'
 

@@ -11,10 +11,7 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "~/*": ["./*"]
-      // "@blog/theme": ["../theme/src/index.ts"],
-      // "@blog/*": ["../theme/src/*"]
+      "@theme/*": ["src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.d.ts", "**/*.vue"],

@@ -1,4 +1,8 @@
-// Move analyze plugin code here
-export { markdownAnalyzerPlugin } from './analyzer'
+/// <reference types="./types/vite-env.d.ts" />
+
+// 工具函数可以在客户端使用
 export { calculateWords } from './wordCount'
-export type { PageLink, PageMetadata, SiteMetadata } from './types'
+export * from './types'
+
+// 导出插件
+export { markdownAnalyzerPlugin } from './analyzer'

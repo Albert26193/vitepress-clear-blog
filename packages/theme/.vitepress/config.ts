@@ -3,6 +3,7 @@ import wikilinks from 'markdown-it-wikilinks'
 import * as path from 'path'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
+import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 // .vitepress/config.js
 import { generateSidebar } from 'vitepress-sidebar'
 
@@ -76,6 +77,7 @@ export default defineConfig({
     server: { port: 5000 },
     plugins: [
       UnoCSS(),
+      markdownAnalyzerPlugin(),
       {
         name: 'path-resolver-debug',
         configResolved(config) {
@@ -88,9 +90,14 @@ export default defineConfig({
     ],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '../src'),
-        '~': rootPath
-      }
+        '@theme': path.resolve(__dirname, '../src')
+      },
+      dedupe: ['vue', 'vitepress'],
+      conditions: ['development', 'module']
+    },
+    optimizeDeps: {
+      include: ['vue', 'vitepress'],
+      exclude: ['virtual:markdown-metadata']
     }
   }
 })

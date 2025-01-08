@@ -1,12 +1,3 @@
-import BlogTheme from '@blog/theme'
-import type { EnhanceAppContext } from 'vitepress'
+import theme from '@blog/theme'
 
-const inBrowser = typeof window !== 'undefined'
-
-export default {
-  ...BlogTheme,
-  enhanceApp: (ctx: EnhanceAppContext) => {
-    const { app } = ctx
-    BlogTheme?.enhanceApp?.(ctx)
-  }
-}
+export default theme
