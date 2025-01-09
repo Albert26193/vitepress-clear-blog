@@ -12,14 +12,25 @@ import { parse } from 'smol-toml'
  * @returns List of posts
  */
 const getPosts = async (pageSize: number): Promise<Post[]> => {
-  const paths = await globby([
-    'docs/blogs/**/*.md'
-    // 'docs/collections/**/**.md'
-  ])
+  const rootPath = getRootPath()
+  console.log('Root Path:', rootPath)
+
+  const blogPattern = resolve(rootPath, 'docs/blogs/**/*.md')
+  console.log('Blog Pattern:', blogPattern)
+
+  const paths = await globby([blogPattern])
+  console.log('Found blog files:', paths)
+
+  if (paths.length === 0) {
+    console.warn('No blog posts found!')
+    return []
+  }
+
   await generatePaginationPages(paths.length, pageSize)
 
   const posts = await Promise.all(
     paths.map(async (item) => {
+      console.log('Processing blog file:', item)
       const content = await fs.readFile(item, 'utf-8')
       const parsed = matter(content)
       if (!parsed.data.title || !parsed.data.date) {
@@ -53,9 +64,18 @@ const generatePaginationPages = async (
 ): Promise<void> => {
   const pagesNum =
     total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
-  const basePath = resolve('./docs/pages')
+  const rootPath = getRootPath()
+  const basePath = resolve(rootPath, 'docs/pages')
+
+  console.log('Pagination Path:', basePath)
+  console.log('Total posts:', total)
+  console.log('Page size:', pageSize)
+  console.log('Total pages:', pagesNum)
 
   if (total <= 0) return
+
+  // 确保目录存在
+  await fs.ensureDir(basePath)
 
   const generatePage = (pageNum: number) =>
     `
@@ -76,12 +96,17 @@ const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * p
 
   await Promise.all(
     Array.from({ length: pagesNum }, (_, i) => i + 1).map(async (pageNum) => {
-      const filePath = `${basePath}/page_${pageNum}.md`
+      const filePath = resolve(basePath, `page_${pageNum}.md`)
+      console.log('Creating page file:', filePath)
       await fs.writeFile(filePath, generatePage(pageNum))
     })
   )
 
-  await fs.move(`${basePath}/page_1.md`, `${basePath}/index.md`, {
+  const sourcePath = resolve(basePath, 'page_1.md')
+  const targetPath = resolve(basePath, 'index.md')
+  console.log('Moving first page:', sourcePath, '->', targetPath)
+
+  await fs.move(sourcePath, targetPath, {
     overwrite: true
   })
 }
@@ -110,23 +135,13 @@ function _compareDate(a: Post, b: Post): number {
 }
 
 /**
- * Parse custom config file(.toml)
- *
- * @param configPath the path of the config file
- * @return the parsed config object
- */
-const parseToml = async (configPath: string) => {
-  const configContent = await fs.readFile(configPath, 'utf-8')
-  return parse(configContent)
-}
-const assignedConfigPath = path.resolve(__dirname, '../../custom/config.toml')
-const parsedConfigToml = await parseToml(assignedConfigPath)
-
-/**
  * Get root path for project
  */
 const getRootPath = () => {
-  return path.resolve(process.cwd())
+  const rootPath = path.resolve(process.cwd())
+  console.log('Current working directory:', process.cwd())
+  console.log('Resolved root path:', rootPath)
+  return rootPath
 }
 
 /**
@@ -139,6 +154,19 @@ const getSrcPath = (srcName = 'src') => {
   const rootPath = getRootPath()
   return `${rootPath}/${srcName}`
 }
+
+/**
+ * Parse custom config file(.toml)
+ *
+ * @param configPath the path of the config file
+ * @return the parsed config object
+ */
+const parseToml = async (configPath: string) => {
+  const configContent = await fs.readFile(configPath, 'utf-8')
+  return parse(configContent)
+}
+const assignedConfigPath = path.resolve(__dirname, '../../custom/config.toml')
+const parsedConfigToml = await parseToml(assignedConfigPath)
 
 export {
   getPosts,

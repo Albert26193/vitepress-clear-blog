@@ -40,10 +40,11 @@
 </template>
 
 <script setup lang="ts">
-  import type { PageLink } from '@theme/types.d'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute } from 'vitepress'
   import { computed, ref, watch } from 'vue'
+
+  import type { PageLink } from '../../types/types'
 
   const route = useRoute()
   const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))

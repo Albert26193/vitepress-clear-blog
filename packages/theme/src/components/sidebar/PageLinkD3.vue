@@ -43,13 +43,14 @@
 </template>
 
 <script setup lang="ts">
-  import D3PageGraph from '@theme/components/common/D3PageGraph.vue'
-  import OverallD3 from '@theme/components/common/OverallD3.vue'
-  import PopupContainer from '@theme/components/common/PopupContainer.vue'
-  import { transformPageD3Data } from '@theme/utils/themeUtils'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute } from 'vitepress'
   import { computed, ref, watch } from 'vue'
+
+  import { transformPageD3Data } from '../../utils/themeUtils'
+  import D3PageGraph from '../common/D3PageGraph.vue'
+  import OverallD3 from '../common/OverallD3.vue'
+  import PopupContainer from '../common/PopupContainer.vue'
 
   const route = useRoute()
   const currentPath = computed(() =>

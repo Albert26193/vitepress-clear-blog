@@ -1,0 +1,30 @@
+[meta]
+title = "demo"
+description = "xxx的个人网站，记录生活、技术、随笔等等。"
+author = "Albert"
+keywords = "个人博客 xxxx 静态站点"
+locale = "zh_CN"
+lang = "zh-CN"
+siteUrl = "xxxxxx"
+theme-color = "#42b983"
+
+[page]
+pageSize = 10
+
+[theme]
+vp-c-bg = "#fafafa"
+vp-c-brand = "#4259f3"
+vp-c-brand-1 = "#4269b3"
+vp-button-brand-bg = "#129083"
+c-text-code = "#205faf"
+c-text-strong = "#ff0000"
+c-text-em = "#0000ff"
+
+[theme.dark]
+vp-c-bg = "#020405"
+vp-c-brand = "#42b983"
+vp-c-brand-1 = "#4269b3"
+vp-button-brand-bg = "#f2b983"
+c-text-code = "#00ff00"
+c-text-strong = "#ff0000"
+c-text-em = "#00ffff"

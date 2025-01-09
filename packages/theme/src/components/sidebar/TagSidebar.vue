@@ -40,9 +40,10 @@
 </template>
 
 <script setup lang="ts">
-  import type { Post } from '@theme/types.d'
   import { useData, useRoute, withBase } from 'vitepress'
   import { computed, ref } from 'vue'
+
+  import type { Post } from '../../types/types'
 
   const { theme, frontmatter } = useData()
   const route = useRoute()

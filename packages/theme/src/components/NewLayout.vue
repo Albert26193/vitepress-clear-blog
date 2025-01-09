@@ -5,7 +5,7 @@
       <Copyright />
       <div v-if="true">
         <ClientOnly>
-          <!-- <DocBanner /> -->
+          <DocBanner />
         </ClientOnly>
       </div>
     </template>
@@ -17,7 +17,7 @@
   // import { useData } from 'vitepress'
   import DefaultTheme from 'vitepress/theme'
 
-  // import DocBanner from './articles/DocBanner.vue'
+  import DocBanner from './articles/DocBanner.vue'
   import Copyright from './common/Copyright.vue'
 
   const { Layout } = DefaultTheme

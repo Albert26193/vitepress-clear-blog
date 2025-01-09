@@ -14,10 +14,11 @@
 </template>
 
 <script lang="ts" setup>
-  import D3ForceGraph from '@theme/components/common/D3ForceGraph.vue'
-  import { transformSiteD3Data } from '@theme/utils/themeUtils'
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { computed } from 'vue'
+
+  import { transformSiteD3Data } from '../../utils/themeUtils'
+  import D3ForceGraph from './D3ForceGraph.vue'
 
   const graphData = computed(() => transformSiteD3Data(globalMdMetadata))
 

@@ -1,28 +1,38 @@
 import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
-import * as path from 'path'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+import { generateThemePlugin } from 'vitepress-plugin-config'
 // .vitepress/config.js
+import { withMermaid } from 'vitepress-plugin-mermaid'
+import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 import { generateSidebar } from 'vitepress-sidebar'
+import { withSidebar } from 'vitepress-sidebar'
 
-import { getRootPath, getSrcPath } from '../src/utils/serverUtils'
+import {
+  getPosts,
+  getRootPath,
+  getSrcPath,
+  parsedConfigToml
+} from '../src/utils/serverUtils'
+import { customElements } from './custom/constant'
+import { head } from './custom/head'
+import { nav } from './custom/nav'
 
 // Load TOML config at build time
 
-const rootPath = getRootPath()
-const srcPath = getSrcPath('src')
-
-// Debug path resolution
-console.log('Path Resolution Debug:')
-console.log('__dirname:', __dirname)
-console.log('rootPath:', rootPath)
-console.log('srcPath:', srcPath)
-console.log('@alias:', path.resolve(__dirname, '../src'))
-console.log('~alias:', rootPath)
-
 // TODO: config.toml: [theme] -> brandColor
+const pageSize = 10
+const postArticles = await getPosts(pageSize)
+const rootPath = getRootPath()
+const srcPath = getSrcPath('.vitepress')
+
+const RSS: RSSOptions = {
+  title: parsedConfigToml.meta.title || '222222222',
+  baseUrl: 'http://10.177.73.149:5000',
+  copyright: 'Copyright 111111111'
+}
 
 // TODO: temp test options here
 const wikilinksOptions = {
@@ -33,71 +43,95 @@ const wikilinksOptions = {
   }
 }
 
+const sidebarGenerated = generateSidebar([
+  {
+    documentRootPath: '/docs',
+    scanStartPath: 'collections/life',
+    resolvePath: '/collections/life/',
+    collapsed: true
+  },
+  {
+    documentRootPath: '/docs',
+    scanStartPath: 'collections/cs',
+    resolvePath: '/collections/cs/',
+    collapsed: true
+  },
+  {
+    documentRootPath: '/docs',
+    scanStartPath: 'collections',
+    resolvePath: '/collections/',
+    collapseDepth: 2
+    // debugPrint: true
+  }
+])
+
 //default options
 // TODO: reorganize the config
-export default defineConfig({
-  mermaid: {},
-  mermaidPlugin: {
-    class: 'clear-blog-mermaid'
-  },
-  markdown: {
-    config: (md) => {
-      md.use(mathjax3)
-      md.use(wikilinks(wikilinksOptions))
+export default defineConfig(
+  withMermaid({
+    mermaid: {},
+    mermaidPlugin: {
+      class: 'clear-blog-mermaid'
     },
-    theme: {
-      light: 'github-light',
-      dark: 'ayu-dark'
-    }
-  },
-  vue: {
-    template: {
-      compilerOptions: {
-        // isCustomElement: (tag) => customElements.includes(tag)
+    markdown: {
+      config: (md) => {
+        md.use(mathjax3)
+        md.use(wikilinks(wikilinksOptions))
+      },
+      theme: {
+        light: 'github-light',
+        dark: 'ayu-dark'
       }
-    }
-  },
-  base: '/',
-  srcDir: './docs',
-  cacheDir: './node_modules/vitepress_cache',
-  rewrites: {},
-  description: 'vitepress,blog,blog-theme',
-  ignoreDeadLinks: true,
-  themeConfig: {
-    search: {
-      provider: 'local'
     },
-    outline: [2, 3],
-    outlineTitle: 'On this page',
-    socialLinks: [{ icon: 'github', link: 'https://github.com' }]
-    // TODO: use 'usefunc' to get the meta data and post articles
-  },
-  srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
-  vite: {
-    server: { port: 5000 },
-    plugins: [
-      UnoCSS(),
-      markdownAnalyzerPlugin(),
-      {
-        name: 'path-resolver-debug',
-        configResolved(config) {
-          console.log('\nVite Resolved Config:')
-          console.log('root:', config.root)
-          console.log('base:', config.base)
-          console.log('resolved alias:', config.resolve.alias)
+    head,
+    vue: {
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => customElements.includes(tag)
         }
       }
-    ],
-    resolve: {
-      alias: {
-        '@theme': path.resolve(__dirname, '../src')
-      },
-      dedupe: ['vue', 'vitepress'],
-      conditions: ['development', 'module']
     },
-    optimizeDeps: {
-      include: ['vue', 'vitepress'],
-      exclude: ['virtual:markdown-metadata']
+    title: parsedConfigToml.meta.title,
+    base: '/',
+    srcDir: './docs',
+    cacheDir: './node_modules/vitepress_cache',
+    rewrites: {},
+    description: 'vitepress,blog,blog-theme',
+    ignoreDeadLinks: true,
+    themeConfig: {
+      sidebar: [
+        {
+          text: '',
+          items: []
+        }
+      ],
+      website: '',
+      search: {
+        provider: 'local'
+      },
+      nav,
+      outline: [2, 3],
+      outlineTitle: 'On this page',
+      socialLinks: [{ icon: 'github', link: 'https://github.com' }],
+      // TODO: use 'usefunc' to get the meta data and post articles
+      posts: postArticles,
+      meta: parsedConfigToml.meta
+    } as any,
+    srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
+    vite: {
+      server: { port: 5000 },
+      plugins: [
+        UnoCSS(),
+        generateThemePlugin(),
+        RssPlugin(RSS),
+        markdownAnalyzerPlugin()
+      ],
+      resolve: {
+        alias: {
+          '@': srcPath,
+          '~': rootPath
+        }
+      }
     }
-  }
-})
+  })
+)

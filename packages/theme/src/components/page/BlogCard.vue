@@ -35,10 +35,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { useCardDescription } from '@theme/composables/useMeta'
-  import type { Post } from '@theme/types.d'
   import { withBase } from 'vitepress'
   import { PropType } from 'vue'
+
+  import { useCardDescription } from '../../composables/useMeta'
+  import type { Post } from '../../types/types'
 
   const props = defineProps({
     post: {

@@ -45,12 +45,13 @@
 </template>
 
 <script lang="ts" setup>
-  import IconToggleButton from '@theme/components/common/IconToggleButton.vue'
-  import BlogCard from '@theme/components/page/BlogCard.vue'
-  import BlogList from '@theme/components/page/BlogList.vue'
-  import { Post } from '@theme/types.d'
   import { withBase } from 'vitepress'
   import { type PropType, onMounted, ref } from 'vue'
+
+  import { Post } from '../../types/types'
+  import IconToggleButton from '../common/IconToggleButton.vue'
+  import BlogCard from './BlogCard.vue'
+  import BlogList from './BlogList.vue'
 
   const props = defineProps({
     posts: {

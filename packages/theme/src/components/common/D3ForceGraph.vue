@@ -26,11 +26,12 @@
 </template>
 
 <script setup lang="ts">
-  import type { D3ForceConfig, D3Link, D3Node } from '@theme/types/types.d'
   import * as d3 from 'd3'
   import lodash from 'lodash'
   import { useRouter } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
+
+  import type { D3ForceConfig, D3Link, D3Node } from '../../types/types.d'
 
   const { debounce } = lodash
 

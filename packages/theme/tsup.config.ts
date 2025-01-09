@@ -2,16 +2,13 @@ import path from 'path'
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['src/node.ts'],
-  format: ['cjs', 'esm'],
+  entry: {
+    node: 'src/node.ts'
+  },
+  format: ['esm'],
   outDir: path.resolve(__dirname, './dist'),
   dts: true,
-  external: ['vitepress'],
+  // external: ['vitepress', 'fs', 'path', 'gzip-size', 'node:fs', 'node:path'],
   noExternal: [''],
-  silent: true,
-  outExtension({ format }) {
-    return {
-      js: format === 'cjs' ? '.js' : '.mjs'
-    }
-  }
+  silent: true
 })

@@ -1,44 +1,51 @@
-import * as path from 'path'
-import UnoCSS from 'unocss/vite'
-import { defineConfig as defineVitePressConfig } from 'vitepress'
-import type { UserConfig } from 'vitepress'
-import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
-import { withMermaid } from 'vitepress-plugin-mermaid'
+// import { presetIcons, presetUno } from 'unocss'
+// import UnoCSS from 'unocss/vite'
+// import { defineConfig as defineVitePressConfig } from 'vitepress'
+// import type { UserConfig } from 'vitepress'
+// import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+// import { withMermaid } from 'vitepress-plugin-mermaid'
 
-export { withMermaid }
+// import { getPosts } from './utils/serverUtils'
 
-export function defineConfig(config: UserConfig) {
-  return defineVitePressConfig({
-    ...config,
-    // 这里可以添加默认的主题配置
-    themeConfig: {
-      ...config.themeConfig
-      // 添加默认的主题配置
-      // 例如：默认的导航栏配置、侧边栏配置等
-    },
-    // 添加默认的 Vite 配置
-    vite: {
-      ...config.vite,
-      plugins: [
-        ...(config.vite?.plugins || []),
-        markdownAnalyzerPlugin(),
-        UnoCSS()
-      ],
-      resolve: {
-        ...config.vite?.resolve,
-        alias: [
-          ...(Array.isArray(config.vite?.resolve?.alias)
-            ? config.vite.resolve.alias
-            : []),
-          {
-            find: '@theme',
-            replacement: path.resolve(__dirname)
-          }
-        ]
-      }
-    }
-  })
-}
+// export { withMermaid }
 
-// 为了向后兼容，保留 defineThemeConfig
-export { defineConfig as defineThemeConfig }
+// const pageSize = 10
+
+// export async function defineConfig(config: UserConfig) {
+//   const posts = await getPosts(pageSize)
+
+//   return defineVitePressConfig({
+//     ...config,
+//     themeConfig: {
+//       ...config.themeConfig,
+//       posts
+//     },
+//     vite: {
+//       ...config.vite,
+//       css: {
+//         ...config.vite?.css,
+//         // 确保 CSS 文件能被正确处理
+//         preprocessorOptions: {
+//           css: {
+//             additionalData: '' // 移除 additionalData，让 Vite 直接处理 CSS 导入
+//           }
+//         }
+//       },
+//       plugins: [
+//         UnoCSS({
+//           presets: [
+//             presetUno(),
+//             presetIcons({
+//               scale: 1.2,
+//               warn: true
+//             })
+//           ]
+//         }),
+//         ...(config.vite?.plugins || []),
+//         markdownAnalyzerPlugin()
+//       ]
+//     }
+//   })
+// }
+
+// export { defineConfig as defineThemeConfig }
