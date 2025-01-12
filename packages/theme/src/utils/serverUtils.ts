@@ -1,5 +1,5 @@
 import { Post, PostFrontMatter } from '@theme/types/types'
-import fs from 'fs-extra'
+import fsExtra from 'fs-extra'
 import { globby } from 'globby'
 import matter from 'gray-matter'
 import path, { resolve } from 'path'
@@ -31,7 +31,7 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
   const posts = await Promise.all(
     paths.map(async (item) => {
       console.log('Processing blog file:', item)
-      const content = await fs.readFile(item, 'utf-8')
+      const content = await fsExtra.readFile(item, 'utf-8')
       const parsed = matter(content)
       if (!parsed.data.title || !parsed.data.date) {
         throw new Error(`Invalid frontmatter in ${item}: missing title or date`)
@@ -75,7 +75,7 @@ const generatePaginationPages = async (
   if (total <= 0) return
 
   // 确保目录存在
-  await fs.ensureDir(basePath)
+  await fsExtra.ensureDir(basePath)
 
   const generatePage = (pageNum: number) =>
     `
@@ -86,7 +86,7 @@ sidebar: false
 layout: page
 ---
 <script setup>
-import BlogContainer from "../../.vitepress/theme/components/page/BlogContainer.vue";
+import BlogContainer from "../../src/components/page/BlogContainer.vue";
 import { useData } from "vitepress";
 const { theme } = useData();
 const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * pageNum})
@@ -98,7 +98,7 @@ const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * p
     Array.from({ length: pagesNum }, (_, i) => i + 1).map(async (pageNum) => {
       const filePath = resolve(basePath, `page_${pageNum}.md`)
       console.log('Creating page file:', filePath)
-      await fs.writeFile(filePath, generatePage(pageNum))
+      await fsExtra.writeFile(filePath, generatePage(pageNum))
     })
   )
 
@@ -106,7 +106,7 @@ const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * p
   const targetPath = resolve(basePath, 'index.md')
   console.log('Moving first page:', sourcePath, '->', targetPath)
 
-  await fs.move(sourcePath, targetPath, {
+  await fsExtra.move(sourcePath, targetPath, {
     overwrite: true
   })
 }
@@ -162,7 +162,7 @@ const getSrcPath = (srcName = 'src') => {
  * @return the parsed config object
  */
 const parseToml = async (configPath: string) => {
-  const configContent = await fs.readFile(configPath, 'utf-8')
+  const configContent = await fsExtra.readFile(configPath, 'utf-8')
   return parse(configContent)
 }
 const assignedConfigPath = path.resolve(__dirname, '../../custom/config.toml')

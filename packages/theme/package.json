@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "vitepress dev --host 0.0.0.0",
     "dev:docs": "vitepress dev --host",
-    "build": "pnpm run build",
+    "build": "",
     "build:node": "tsup",
     "build:client": "vite build",
     "build:docs": "vitepress build docs",

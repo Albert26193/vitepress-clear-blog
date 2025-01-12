@@ -6,4 +6,4 @@ sidebar: false
 aside: false
 ---
 
-<!-- <Tags/> -->
+<Tags/>

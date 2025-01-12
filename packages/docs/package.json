@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "pnpm run dev:css & vitepress dev --host",
-    "build": "pnpm run build:css && vitepress build",
+    "build": "",
     "preview": "vitepress preview",
     "build:css": "unocss \"../theme/src/**/*.{vue,ts,js}\" -o .vitepress/theme/styles/uno.css",
     "dev:css": "unocss \"../theme/src/**/*.{vue,ts,js}\" -o .vitepress/theme/styles/uno.css --watch"

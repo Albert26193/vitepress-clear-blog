@@ -1,8 +1,6 @@
 <template>
   <Layout class="clear-layout">
-    <Copyright />
     <template #doc-before>
-      <Copyright />
       <div v-if="true">
         <ClientOnly>
           <DocBanner />

@@ -8,14 +8,8 @@ import { generateThemePlugin } from 'vitepress-plugin-config'
 import { withMermaid } from 'vitepress-plugin-mermaid'
 import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 import { generateSidebar } from 'vitepress-sidebar'
-import { withSidebar } from 'vitepress-sidebar'
 
-import {
-  getPosts,
-  getRootPath,
-  getSrcPath,
-  parsedConfigToml
-} from '../src/utils/serverUtils'
+import { getPosts, getRootPath, getSrcPath } from '../src/utils/serverUtils'
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
@@ -29,7 +23,7 @@ const rootPath = getRootPath()
 const srcPath = getSrcPath('.vitepress')
 
 const RSS: RSSOptions = {
-  title: parsedConfigToml.meta.title || '222222222',
+  title: 'demo',
   baseUrl: 'http://10.177.73.149:5000',
   copyright: 'Copyright 111111111'
 }
@@ -91,7 +85,7 @@ export default defineConfig(
         }
       }
     },
-    title: parsedConfigToml.meta.title,
+    title: 'demo',
     base: '/',
     srcDir: './docs',
     cacheDir: './node_modules/vitepress_cache',
@@ -115,16 +109,16 @@ export default defineConfig(
       socialLinks: [{ icon: 'github', link: 'https://github.com' }],
       // TODO: use 'usefunc' to get the meta data and post articles
       posts: postArticles,
-      meta: parsedConfigToml.meta
+      meta: {}
     } as any,
     srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
     vite: {
       server: { port: 5000 },
       plugins: [
         UnoCSS(),
-        generateThemePlugin(),
-        RssPlugin(RSS),
-        markdownAnalyzerPlugin()
+        // generateThemePlugin(),
+        RssPlugin(RSS)
+        // markdownAnalyzerPlugin()
       ],
       resolve: {
         alias: {

@@ -5,7 +5,7 @@ sidebar: false
 layout: page
 ---
 <script setup>
-import BlogContainer from "../../.vitepress/theme/components/page/BlogContainer.vue";
+import BlogContainer from "../../src/components/page/BlogContainer.vue";
 import { useData } from "vitepress";
 const { theme } = useData();
 const posts = theme.value.posts.slice(0,10)
