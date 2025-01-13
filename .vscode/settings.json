@@ -4,5 +4,11 @@
     "@": "${cwd}/.vitepress",
     "~": "${cwd}"
   },
-  "cSpell.words": ["linkify", "vitepress", "wikilink", "wikilinks"]
+  "cSpell.words": ["linkify", "vitepress", "wikilink", "wikilinks"],
+  "favorites.resources": [
+    {
+      "filePath": "packages/theme/.vitepress",
+      "group": "Default"
+    }
+  ]
 }

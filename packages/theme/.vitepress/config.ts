@@ -2,7 +2,7 @@ import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
-import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+// import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { generateThemePlugin } from 'vitepress-plugin-config'
 // .vitepress/config.js
 import { withMermaid } from 'vitepress-plugin-mermaid'
@@ -117,8 +117,8 @@ export default defineConfig(
       plugins: [
         UnoCSS(),
         // generateThemePlugin(),
-        RssPlugin(RSS)
-        // markdownAnalyzerPlugin()
+        RssPlugin(RSS),
+        markdownAnalyzerPlugin()
       ],
       resolve: {
         alias: {

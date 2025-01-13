@@ -16,19 +16,20 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "npx tsup src/index.ts --dts --watch --format esm,cjs --external vitepress",
-    "build": "npx tsup src/index.ts --dts --format esm,cjs --external vitepress --silent"
+    "dev": "tsup --watch",
+    "build": "tsup"
   },
   "dependencies": {
     "markdown-it": "^14.0.0"
@@ -38,7 +39,10 @@
   },
   "devDependencies": {
     "vite": "^5",
-    "vitepress": "^1.5"
+    "vitepress": "^1.5",
+    "tsup": "^8.0.1",
+    "@types/node": "^20.10.6",
+    "@types/markdown-it": "^13.0.7"
   },
   "engines": {
     "node": ">=16.0.0"

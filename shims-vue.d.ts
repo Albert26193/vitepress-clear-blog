@@ -11,9 +11,9 @@ declare module '*.png' {
   export = value
 }
 
-declare module 'virtual:markdown-metadata' {
-  export const globalMdMetadata: SiteMetadata
-}
+// declare module 'virtual:markdown-metadata' {
+//   export const globalMdMetadata: SiteMetadata
+// }
 
 declare module 'markdown-it-wikilinks' {
   import type MarkdownIt from 'markdown-it'

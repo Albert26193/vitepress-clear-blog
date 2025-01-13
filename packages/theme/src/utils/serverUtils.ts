@@ -13,16 +13,16 @@ import { parse } from 'smol-toml'
  */
 const getPosts = async (pageSize: number): Promise<Post[]> => {
   const rootPath = getRootPath()
-  console.log('Root Path:', rootPath)
+  // console.log('Root Path:', rootPath)
 
   const blogPattern = resolve(rootPath, 'docs/blogs/**/*.md')
-  console.log('Blog Pattern:', blogPattern)
+  // console.log('Blog Pattern:', blogPattern)
 
   const paths = await globby([blogPattern])
-  console.log('Found blog files:', paths)
+  // console.log('Found blog files:', paths)
 
   if (paths.length === 0) {
-    console.warn('No blog posts found!')
+    // console.warn('No blog posts found!')
     return []
   }
 
@@ -30,7 +30,7 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
 
   const posts = await Promise.all(
     paths.map(async (item) => {
-      console.log('Processing blog file:', item)
+      // console.log('Processing blog file:', item)
       const content = await fsExtra.readFile(item, 'utf-8')
       const parsed = matter(content)
       if (!parsed.data.title || !parsed.data.date) {
@@ -67,10 +67,10 @@ const generatePaginationPages = async (
   const rootPath = getRootPath()
   const basePath = resolve(rootPath, 'docs/pages')
 
-  console.log('Pagination Path:', basePath)
-  console.log('Total posts:', total)
-  console.log('Page size:', pageSize)
-  console.log('Total pages:', pagesNum)
+  // console.log('Pagination Path:', basePath)
+  // console.log('Total posts:', total)
+  // console.log('Page size:', pageSize)
+  // console.log('Total pages:', pagesNum)
 
   if (total <= 0) return
 
@@ -97,14 +97,14 @@ const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * p
   await Promise.all(
     Array.from({ length: pagesNum }, (_, i) => i + 1).map(async (pageNum) => {
       const filePath = resolve(basePath, `page_${pageNum}.md`)
-      console.log('Creating page file:', filePath)
+      // console.log('Creating page file:', filePath)
       await fsExtra.writeFile(filePath, generatePage(pageNum))
     })
   )
 
   const sourcePath = resolve(basePath, 'page_1.md')
   const targetPath = resolve(basePath, 'index.md')
-  console.log('Moving first page:', sourcePath, '->', targetPath)
+  // console.log('Moving first page:', sourcePath, '->', targetPath)
 
   await fsExtra.move(sourcePath, targetPath, {
     overwrite: true
@@ -139,8 +139,8 @@ function _compareDate(a: Post, b: Post): number {
  */
 const getRootPath = () => {
   const rootPath = path.resolve(process.cwd())
-  console.log('Current working directory:', process.cwd())
-  console.log('Resolved root path:', rootPath)
+  // console.log('Current working directory:', process.cwd())
+  // console.log('Resolved root path:', rootPath)
   return rootPath
 }
 

@@ -88,15 +88,15 @@ export interface D3ForceConfig {
 }
 
 export interface IconOption {
-  value: string          // 按钮值
-  iconClass: string      // 图标类名
-  tooltip?: string       // 可选的提示文本
-  disabled?: boolean     // 是否禁用
+  value: string // 按钮值
+  iconClass: string // 图标类名
+  tooltip?: string // 可选的提示文本
+  disabled?: boolean // 是否禁用
 }
 
 export type ButtonSize = 'sm' | 'md' | 'lg'
 export type ButtonLayout = 'horizontal' | 'vertical'
 
-declare module 'virtual:markdown-metadata' {
-  export const globalMdMetadata: SiteMetadata
-}
+// declare module 'virtual:markdown-metadata' {
+//   export const globalMdMetadata: SiteMetadata
+// }
