@@ -72,7 +72,7 @@
 <style scoped>
   .link-sidebar {
     @apply px-0 py-0;
-    @apply mt-12;
+    @apply mt-4;
   }
 
   .link-title {
@@ -85,7 +85,7 @@
   }
 
   .page-links {
-    @apply flex flex-col relative ml-2 gap-[3px] text-sm mt-1;
+    @apply flex flex-col relative ml-2 gap-[2px] text-sm;
   }
 
   .page-links::before {

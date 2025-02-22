@@ -26,13 +26,13 @@ export default {
     // register global component
     app.component('Tags', Tags)
     app.component('Timeline', Timeline)
-    // app.component('BlogContainer', BlogContainer)
+    app.component('BlogContainer', BlogContainer)
     app.component('Homepage', Homepage)
     app.component('TagSidebar', TagSidebar)
     app.component('LinkSidebar', LinkSidebar)
     // app.component('ExampleUsage', ExampleUsage)
-    // app.component('PageLinkD3', PageLinkD3)
-    // app.component('OverallD3', OverallD3)
+    app.component('PageLinkD3', PageLinkD3)
+    app.component('OverallD3', OverallD3)
     // app.component('Collections', Collections)
   },
   setup() {

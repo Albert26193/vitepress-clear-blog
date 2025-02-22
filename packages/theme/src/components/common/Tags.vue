@@ -115,6 +115,7 @@
     @apply inline-block px-3 py-[3px] m-1 text-xs border rounded-full;
     @apply cursor-pointer transition-colors duration-300;
     @apply hover:border-[var(--tag-info-color)];
+    @apply font-500;
   }
 
   .tag-view.active {

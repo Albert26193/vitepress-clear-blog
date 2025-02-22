@@ -68,7 +68,6 @@
   const toggleTagFilter = (tag: string) => {
     showPosts.value = false
     activeTag.value = activeTag.value === tag ? null : tag
-    // 添加小延迟以产生视觉刷新效果
     setTimeout(() => {
       showPosts.value = true
     }, 100)
@@ -89,10 +88,6 @@
     // filter posts
     return posts.filter((post) => {
       console.log(post.regularPath, currentPath.value)
-      // exclude current article
-      // if (withBase(post.regularPath) === `/${currentPath.value}.html`) {
-      //   return false
-      // }
       // check if post has any of the current article's tags
       const postTags = post.frontMatter.tags || []
       // if no active tag, show all related posts
@@ -137,8 +132,8 @@
   }
 
   .related-posts {
-    @apply flex flex-col gap-[3px] mt-4 relative ml-2;
-    @apply min-h-[150px];
+    @apply flex flex-col gap-[2px] mt-3 relative ml-2;
+    @apply max-h-[160px] overflow-auto;
   }
 
   .related-posts::before {
