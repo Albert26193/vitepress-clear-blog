@@ -1,5 +1,5 @@
-import fs from 'node:fs'
-import path from 'node:path'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { parse } from 'smol-toml'
 
 import type { ConfigToml } from './types'
@@ -15,7 +15,7 @@ const assignedConfigPath = '.vitepress/custom/config.toml'
 export const generateThemeFile = async (
   configPath: string = assignedConfigPath
 ) => {
-  const content = await fs.promises.readFile(configPath, 'utf-8')
+  const content = readFileSync(configPath, 'utf-8')
   const config = parse(content) as unknown as ConfigToml
 
   if (!config.theme) {
@@ -41,10 +41,7 @@ export const generateThemeFile = async (
   const darkEmColor = darkTheme?.['c-text-em'] || '#000'
   const darkButtonBgColor = darkTheme?.['vp-button-brand-bg'] || '#ae1f7c'
 
-  const generatedCssPath = path.resolve(
-    process.cwd(),
-    'packages/theme/src/styles/generated.css'
-  )
+  const generatedCssPath = resolve(process.cwd(), 'src/styles/generated.css')
 
   const generatedCssTemplate = `
 :root {
@@ -68,5 +65,5 @@ export const generateThemeFile = async (
 }
 `.trim()
 
-  await fs.promises.writeFile(generatedCssPath, generatedCssTemplate)
+  writeFileSync(generatedCssPath, generatedCssTemplate)
 }

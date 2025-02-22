@@ -9,11 +9,11 @@
 }
 
 .dark {
-  --vp-c-bg: #020405 !important;
-  --vp-c-brand: #42b983 !important;
-  --vp-c-brand-1: #4269b3 !important;
-  --vp-button-brand-bg: #f2b983 !important;
-  --c-text-code: #00ff00 !important;
-  --c-text-strong: #ff0000 !important;
-  --c-text-em: #00ffff !important;
+  --vp-c-bg: #000 !important;
+  --vp-c-brand: #ae1f7c !important;
+  --vp-c-brand-1: #ae1f7c !important;
+  --vp-button-brand-bg: #ae1f7c !important;
+  --c-text-code: #333 !important;
+  --c-text-strong: #000 !important;
+  --c-text-em: #000 !important;
 }
