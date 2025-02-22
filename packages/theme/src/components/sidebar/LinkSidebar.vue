@@ -42,7 +42,7 @@
 <script setup lang="ts">
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { useRoute } from 'vitepress'
-  import { computed, ref, watch } from 'vue'
+  import { computed, onMounted, ref, watch } from 'vue'
 
   import type { PageLink } from '../../types/types'
 
@@ -57,7 +57,10 @@
     return globalMdMetadata[currentPath.value]?.backLinks || []
   })
 
-  console.log('total', JSON.stringify(globalMdMetadata, null, 2))
+  onMounted(() => {
+    console.log('total', JSON.stringify(globalMdMetadata, null, 2))
+  })
+
   watch(
     () => route.path,
     () => {
