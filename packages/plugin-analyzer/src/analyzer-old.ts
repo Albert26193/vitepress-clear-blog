@@ -390,21 +390,76 @@ export function markdownAnalyzerPlugin(): Plugin {
 
   return {
     name: 'vitepress-plugin-analyzer',
-    buildStart() {
-      scanDir(blogDir)
-      buildGlobalBackLinks()
-    },
+    enforce: 'pre',
     resolveId(id) {
+      console.log('[Analyzer Plugin] Resolving id:', id)
       if (id === VIRTUAL_MODULE_ID) {
+        console.log(
+          '[Analyzer Plugin] Found virtual module:',
+          VIRTUAL_MODULE_ID
+        )
+        console.log(
+          '[Analyzer Plugin] Resolved to:',
+          RESOLVED_VIRTUAL_MODULE_ID
+        )
         return RESOLVED_VIRTUAL_MODULE_ID
       }
     },
     load(id) {
-      if (id === RESOLVED_VIRTUAL_MODULE_ID) {
-        console.log('[Analyzer Plugin] Global metadata:', globalMdMetadata)
-        return `
-          export const globalMdMetadata = ${JSON.stringify(globalMdMetadata, null, 2)}
-        `
+      console.log('[Analyzer Plugin] Loading virtual module content')
+      console.log(
+        '[Analyzer Plugin] Current metadata size:',
+        Object.keys(globalMdMetadata).length
+      )
+
+      // 确保在 SSR 和客户端都能访问数据
+      if (Object.keys(globalMdMetadata).length === 0) {
+        console.log(
+          '[Analyzer Plugin] Metadata empty, scanning directory:',
+          blogDir
+        )
+        // scanDir(blogDir)
+        // buildGlobalBackLinks()
+        console.log(
+          '[Analyzer Plugin] After scan metadata size:',
+          Object.keys(globalMdMetadata).length
+        )
+      }
+
+      return `
+        export const globalMdMetadata = ${JSON.stringify(globalMdMetadata, null, 2)}
+      `
+    },
+    configureServer(server) {
+      console.log('[Analyzer Plugin] Configuring dev server')
+      // 扫描文档目录
+      console.log('[Analyzer Plugin] Initial scan of:', blogDir)
+      // scanDir(blogDir)
+      // buildGlobalBackLinks()
+      console.log(
+        '[Analyzer Plugin] Initial metadata size:',
+        Object.keys(globalMdMetadata).length
+      )
+
+      // 监听文件变化
+      return () => {
+        server.watcher.on('change', (file) => {
+          if (file.endsWith('.md')) {
+            console.log('[Analyzer Plugin] Markdown file changed:', file)
+            // analyzeMdFile(file)
+            // buildGlobalBackLinks()
+            console.log(
+              '[Analyzer Plugin] Updated metadata size:',
+              Object.keys(globalMdMetadata).length
+            )
+            // 通知客户端更新
+            server.ws.send({
+              type: 'custom',
+              event: 'markdown-metadata-update',
+              data: globalMdMetadata
+            })
+          }
+        })
       }
     }
   }

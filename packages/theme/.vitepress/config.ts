@@ -2,10 +2,10 @@ import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
-// import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { generateThemePlugin } from 'vitepress-plugin-config'
 // .vitepress/config.js
-import { withMermaid } from 'vitepress-plugin-mermaid'
+// import { withMermaid } from 'vitepress-plugin-mermaid'
 import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 import { generateSidebar } from 'vitepress-sidebar'
 
@@ -62,11 +62,12 @@ const sidebarGenerated = generateSidebar([
 //default options
 // TODO: reorganize the config
 export default defineConfig(
-  withMermaid({
-    mermaid: {},
-    mermaidPlugin: {
-      class: 'clear-blog-mermaid'
-    },
+  // withMermaid({
+  //   mermaid: {},
+  //   mermaidPlugin: {
+  //     class: 'clear-blog-mermaid'
+  //   },
+  {
     markdown: {
       config: (md) => {
         md.use(mathjax3)
@@ -115,10 +116,10 @@ export default defineConfig(
     vite: {
       server: { port: 5000 },
       plugins: [
+        markdownAnalyzerPlugin(),
         UnoCSS(),
         // generateThemePlugin(),
-        RssPlugin(RSS),
-        markdownAnalyzerPlugin()
+        RssPlugin(RSS)
       ],
       resolve: {
         alias: {
@@ -127,5 +128,5 @@ export default defineConfig(
         }
       }
     }
-  })
+  }
 )

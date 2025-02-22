@@ -96,6 +96,15 @@ importers:
         specifier: ^14.0.0
         version: 14.1.0
     devDependencies:
+      '@types/markdown-it':
+        specifier: ^13.0.7
+        version: 13.0.9
+      '@types/node':
+        specifier: ^20.10.6
+        version: 20.17.9
+      tsup:
+        specifier: ^8.0.1
+        version: 8.3.5(jiti@2.4.2)(postcss@8.4.49)(typescript@5.7.2)(yaml@2.6.1)
       vite:
         specifier: ^5
         version: 5.4.11(@types/node@20.17.9)

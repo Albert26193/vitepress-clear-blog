@@ -1,6 +1,6 @@
 <template>
   <div class="custom-page-layout max-w-780px">
-    <div class="tags-container slide-enter-content">
+    <div class="tags-container slide-enter">
       <span
         @click="toggleTag(String(key))"
         v-for="(_, key) in sortTags(tagsList)"

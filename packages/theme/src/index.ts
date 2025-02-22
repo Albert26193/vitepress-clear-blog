@@ -24,12 +24,12 @@ export default {
   Layout: NewLayout,
   enhanceApp({ app, router }: EnhanceAppContext) {
     // register global component
-    // app.component('Tags', Tags)
+    app.component('Tags', Tags)
     app.component('Timeline', Timeline)
     // app.component('BlogContainer', BlogContainer)
     app.component('Homepage', Homepage)
-    // app.component('TagSidebar', TagSidebar)
-    // app.component('LinkSidebar', LinkSidebar)
+    app.component('TagSidebar', TagSidebar)
+    app.component('LinkSidebar', LinkSidebar)
     // app.component('ExampleUsage', ExampleUsage)
     // app.component('PageLinkD3', PageLinkD3)
     // app.component('OverallD3', OverallD3)
