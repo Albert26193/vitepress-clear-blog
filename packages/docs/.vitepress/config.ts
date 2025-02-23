@@ -1,4 +1,5 @@
 import mathjax3 from 'markdown-it-mathjax3'
+import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
@@ -11,12 +12,25 @@ import { getPosts } from './theme/utils'
 
 const postArticles = await getPosts(12)
 
+// TODO: temp test options here
+const wikilinksOptions = {
+  baseURL: 'http://10.177.73.149:5000',
+  htmlAttributes: {
+    class: 'clear-wikilink'
+    // rel: 'nofollow'
+  }
+}
+
 export default defineConfig({
   markdown: {
-    config(md) {
+    config: (md) => {
       md.use(mathjax3)
+      md.use(wikilinks(wikilinksOptions))
     },
-    math: true
+    theme: {
+      light: 'github-light',
+      dark: 'ayu-dark'
+    }
   },
   vue: {
     template: {

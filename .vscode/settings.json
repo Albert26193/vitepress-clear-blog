@@ -41,6 +41,10 @@
     {
       "filePath": "packages/docs/.vitepress/config.ts",
       "group": "Default"
+    },
+    {
+      "filePath": "packages/theme/src/index.ts",
+      "group": "Default"
     }
   ],
   "favorites.sortOrder": "ASC",
