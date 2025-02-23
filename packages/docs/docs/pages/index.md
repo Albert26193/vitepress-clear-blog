@@ -1,0 +1,13 @@
+---
+title: home
+aside: false
+sidebar: false
+layout: page
+---
+<script setup>
+import BlogContainer from "../../src/components/page/BlogContainer.vue";
+import { useData } from "vitepress";
+const { theme } = useData();
+const posts = theme.value.posts.slice(0,12)
+</script>
+<BlogContainer :posts="posts" :pageCurrent="1" :pagesNum="2" />

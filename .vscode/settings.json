@@ -9,6 +9,41 @@
     {
       "filePath": "packages/theme/.vitepress",
       "group": "Default"
+    },
+    {
+      "filePath": "local-workspace/sugar-blog/packages",
+      "group": "Default"
+    },
+    {
+      "filePath": "local-workspace/sugar-blog/packages/theme/src/node.ts",
+      "group": "Default"
+    },
+    {
+      "filePath": "local-workspace/sugar-blog/packages/blogpress/.vitepress/config.ts",
+      "group": "Default"
+    },
+    {
+      "filePath": "packages/theme/test.log",
+      "group": "Default"
+    },
+    {
+      "filePath": "packages/docs/node_modules/@blog",
+      "group": "Default"
+    },
+    {
+      "filePath": "packages/docs/.vitepress/theme/index.ts",
+      "group": "Default"
+    },
+    {
+      "filePath": "packages/docs/test.log",
+      "group": "Default"
+    },
+    {
+      "filePath": "packages/docs/.vitepress/config.ts",
+      "group": "Default"
     }
-  ]
+  ],
+  "favorites.sortOrder": "ASC",
+  "favorites.groups": ["Default", "test"],
+  "favorites.currentGroup": "Default"
 }

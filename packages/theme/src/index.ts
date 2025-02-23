@@ -16,10 +16,10 @@ import LinkSidebar from './components/sidebar/LinkSidebar.vue'
 import PageLinkD3 from './components/sidebar/PageLinkD3.vue'
 import TagSidebar from './components/sidebar/TagSidebar.vue'
 import './style.css'
-import './styles/generated.module.css'
+import './styles/generated.css'
 import { mediumZoomInit } from './utils/client/themeUtils'
 
-export default {
+export const BlogTheme: Theme = {
   ...DefaultTheme,
   Layout: NewLayout,
   enhanceApp({ app, router }: EnhanceAppContext) {
@@ -30,10 +30,10 @@ export default {
     app.component('Homepage', Homepage)
     app.component('TagSidebar', TagSidebar)
     app.component('LinkSidebar', LinkSidebar)
-    // app.component('ExampleUsage', ExampleUsage)
+    app.component('ExampleUsage', ExampleUsage)
     app.component('PageLinkD3', PageLinkD3)
     app.component('OverallD3', OverallD3)
-    // app.component('Collections', Collections)
+    app.component('Collections', Collections)
   },
   setup() {
     const route = useRoute()
@@ -47,3 +47,5 @@ export default {
     })
   }
 } satisfies Theme
+
+export default BlogTheme

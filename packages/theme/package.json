@@ -4,16 +4,9 @@
   "type": "module",
   "main": "./dist/index.mjs",
   "exports": {
-    "./node": {
-      "types": "./dist/node.d.ts",
-      "import": "./dist/node.mjs"
-    },
     "./package.json": "./package.json",
-    "./style.css": "./dist/style.css",
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs"
-    }
+    ".": "./src/index.ts",
+    "./src/utils/node/serverUtils": "./src/utils/node/serverUtils.ts"
   },
   "files": [
     "dist",
