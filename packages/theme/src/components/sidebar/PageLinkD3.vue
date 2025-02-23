@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-16">
+  <div class="mt-6">
     <div class="flex space-x-2">
       <button
         class="border border-solid px-3 py-1 rounded"
@@ -47,7 +47,7 @@
   import { useRoute } from 'vitepress'
   import { computed, ref, watch } from 'vue'
 
-  import { transformPageD3Data } from '../../utils/themeUtils'
+  import { transformPageD3Data } from '../../utils/client/themeUtils'
   import D3PageGraph from '../common/D3PageGraph.vue'
   import OverallD3 from '../common/OverallD3.vue'
   import PopupContainer from '../common/PopupContainer.vue'

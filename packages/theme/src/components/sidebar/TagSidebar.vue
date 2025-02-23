@@ -133,7 +133,7 @@
 
   .related-posts {
     @apply flex flex-col gap-[2px] mt-3 relative ml-2;
-    @apply max-h-[160px] overflow-auto;
+    @apply max-h-40 overflow-scroll;
   }
 
   .related-posts::before {

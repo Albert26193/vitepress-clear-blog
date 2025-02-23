@@ -17,7 +17,7 @@ import PageLinkD3 from './components/sidebar/PageLinkD3.vue'
 import TagSidebar from './components/sidebar/TagSidebar.vue'
 import './style.css'
 import './styles/generated.module.css'
-import { mediumZoomInit } from './utils/themeUtils'
+import { mediumZoomInit } from './utils/client/themeUtils'
 
 export default {
   ...DefaultTheme,

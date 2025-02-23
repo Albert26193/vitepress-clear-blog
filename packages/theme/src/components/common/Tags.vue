@@ -45,7 +45,7 @@
   import { computed, onMounted, ref } from 'vue'
 
   import { Post } from '../../types/types'
-  import { initTags } from '../../utils/themeUtils'
+  import { initTags } from '../../utils/client/themeUtils'
 
   const { theme } = useData()
 

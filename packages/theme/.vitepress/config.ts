@@ -9,7 +9,11 @@ import { generateThemePlugin } from 'vitepress-plugin-config'
 import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 import { generateSidebar } from 'vitepress-sidebar'
 
-import { getPosts, getRootPath, getSrcPath } from '../src/utils/serverUtils'
+import {
+  getPosts,
+  getRootPath,
+  getSrcPath
+} from '../src/utils/node/serverUtils'
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'

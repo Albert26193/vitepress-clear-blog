@@ -165,7 +165,10 @@ const parseToml = async (configPath: string) => {
   const configContent = await fsExtra.readFile(configPath, 'utf-8')
   return parse(configContent)
 }
-const assignedConfigPath = path.resolve(__dirname, '../../custom/config.toml')
+const assignedConfigPath = path.resolve(
+  __dirname,
+  '../../../.vitepress/custom/config.toml'
+)
 const parsedConfigToml = await parseToml(assignedConfigPath)
 
 export {

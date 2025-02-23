@@ -1,4 +1,4 @@
-import { defineConfig as defineThemeConfig } from '@blog/theme/node'
+import { defineConfig as defineThemeConfig } from '@blog/theme/src'
 import mathjax3 from 'markdown-it-mathjax3'
 
 import { customElements } from './custom/constant'

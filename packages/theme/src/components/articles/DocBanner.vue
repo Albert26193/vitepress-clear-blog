@@ -33,7 +33,7 @@
 
   import { useAuthor } from '../../composables/useMeta'
   import type { PostFrontMatter } from '../../types/types.d'
-  import { calculateWords } from '../../utils/themeUtils'
+  import { calculateWords } from '../../utils/client/themeUtils'
 
   const { frontmatter } = useData()
   const currentRoute = useRoute()

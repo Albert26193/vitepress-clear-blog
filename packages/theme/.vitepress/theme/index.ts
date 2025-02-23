@@ -18,7 +18,7 @@ import TagSidebar from '../../src/components/sidebar/TagSidebar.vue'
 import '../../src/styles/animated.css'
 import '../../src/styles/generated.css'
 import '../../src/styles/main.css'
-import { mediumZoomInit } from '../../src/utils/themeUtils'
+import { mediumZoomInit } from '../../src/utils/client/themeUtils'
 
 export default {
   ...DefaultTheme,
