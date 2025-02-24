@@ -1,25 +1,24 @@
 {
-  "name": "@blog/theme",
+  "name": "vitepress-clear-blog",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.mjs",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts",
-    "./src/utils/node/serverUtils": "./src/utils/node/serverUtils.ts"
+    ".": "./src/index.ts"
   },
   "files": [
-    "dist",
+    "lib",
     "src"
   ],
   "scripts": {
-    "dev": "vitepress dev --host 0.0.0.0",
-    "dev:docs": "vitepress dev --host",
-    "build": "",
-    "build:node": "tsup",
-    "build:client": "vite build",
-    "build:docs": "vitepress build docs",
-    "serve": "vitepress serve docs"
+    "dev": "pnpm '/(copy|tsup):watch/'",
+    "build": "pnpm run clean && pnpm run copy && pnpm run tsup",
+    "clean": "rimraf --glob ./lib",
+    "copy": "cpx \"src/**/*.{d.ts,vue,css,scss,jpg,png,woff2}\" lib",
+    "copy:watch": "cpx \"src/**/*.{d.ts,vue,css,scss,jpg,png,woff2}\" lib -w",
+    "tsup": "tsup --config tsup.config.ts",
+    "tsup:watch": "tsup --config tsup.config.ts --watch -- -c"
   },
   "dependencies": {
     "@iconify-json/carbon": "^1.2.4",

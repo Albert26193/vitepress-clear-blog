@@ -5,14 +5,12 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "vitepress dev --host",
-    "build": "vitepress build",
-    "preview": "vitepress preview",
-    "build:css": "unocss \"../theme/src/**/*.{vue,ts,js}\" -o .vitepress/theme/styles/uno.css",
-    "dev:css": "unocss \"../theme/src/**/*.{vue,ts,js}\" -o .vitepress/theme/styles/uno.css --watch"
+    "docs:dev": "vitepress dev --host",
+    "docs:build": "vitepress build --clean-cache --clean-temp",
+    "docs:clean": "rimraf .vitepress/cache .vitepress/dist"
   },
   "dependencies": {
-    "@blog/theme": "workspace:*",
+    "vitepress-clear-blog": "workspace:*",
     "vitepress-plugin-analyzer": "workspace:*",
     "vitepress-plugin-config": "workspace:*",
     "vitepress": "^1.5.0",

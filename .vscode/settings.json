@@ -7,43 +7,15 @@
   "cSpell.words": ["linkify", "vitepress", "wikilink", "wikilinks"],
   "favorites.resources": [
     {
-      "filePath": "packages/theme/.vitepress",
+      "filePath": "packages/docs/node_modules/vitepress-clear-blog",
       "group": "Default"
     },
     {
-      "filePath": "local-workspace/sugar-blog/packages",
+      "filePath": "packages/docs/node_modules",
       "group": "Default"
     },
     {
-      "filePath": "local-workspace/sugar-blog/packages/theme/src/node.ts",
-      "group": "Default"
-    },
-    {
-      "filePath": "local-workspace/sugar-blog/packages/blogpress/.vitepress/config.ts",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/theme/test.log",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/docs/node_modules/@blog",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/docs/.vitepress/theme/index.ts",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/docs/test.log",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/docs/.vitepress/config.ts",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/theme/src/index.ts",
+      "filePath": "local-workspace/vuepress-theme-plume/docs",
       "group": "Default"
     }
   ],

@@ -1,3 +1,4 @@
+// register global components
 import 'virtual:uno.css'
 import type { EnhanceAppContext, Theme } from 'vitepress'
 import { useRoute } from 'vitepress'
@@ -24,17 +25,17 @@ export default {
   ...DefaultTheme,
   Layout: NewLayout,
   enhanceApp({ app, router }: EnhanceAppContext) {
-    // register global component
+    // register global components
     app.component('Tags', Tags)
     app.component('Timeline', Timeline)
     app.component('BlogContainer', BlogContainer)
     app.component('Homepage', Homepage)
     app.component('TagSidebar', TagSidebar)
-    // app.component('LinkSidebar', LinkSidebar)
+    app.component('LinkSidebar', LinkSidebar)
     app.component('ExampleUsage', ExampleUsage)
-    // app.component('PageLinkD3', PageLinkD3)
-    // app.component('OverallD3', OverallD3)
-    app.component('Collections', Collections)
+    app.component('PageLinkD3', PageLinkD3)
+    app.component('OverallD3', OverallD3)
+    // app.component('Collections', Collections)
   },
   setup() {
     const route = useRoute()

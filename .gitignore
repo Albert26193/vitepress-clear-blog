@@ -7,6 +7,8 @@ package-lock.json
 dist
 dist-ssr
 **/dist.tar.gz
+lib
+**/*/lib
 
 # IDE and OS files
 .DS_Store
@@ -31,6 +33,4 @@ local-workspace
 docs/test/*
 docs/blogs/test/*
 test.log
-
-# windsurf rules
-.windsurfrules
+**/*/test.log

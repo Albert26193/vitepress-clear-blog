@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it'
-import type { Token } from 'markdown-it'
+import type Token from 'markdown-it/lib/token.mjs'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import type { Plugin } from 'vitepress'
@@ -12,7 +12,6 @@ const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
 // TODO: do we need a global metadata? alternatively, wrap it in a function?
 const globalMdMetadata: SiteMetadata = {}
-
 // TODO: make this configurable
 const dirPrefix = 'blogs'
 
@@ -202,7 +201,7 @@ const extractToLinks = (
  */
 const extractHeadingContent = (tokens: Token[], index: number): string => {
   const contentToken = tokens[index + 1]
-  if (contentToken?.type !== 'inline') return ''
+  if (!contentToken || contentToken.type !== 'inline') return ''
 
   return (
     contentToken.children

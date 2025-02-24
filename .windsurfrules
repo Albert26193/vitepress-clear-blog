@@ -1,0 +1,6 @@
+1. Think in English and converse in Chinese.
+2. Every question you have should be answered after careful consideration.
+3. If you need to analyze a file, you need to do two things: First, find out the total number of lines in the file. Second, if the file has fewer than 50 lines, you must read and analyze the entire file. If the file has more than 500 lines, you can select the necessary parts that you think are necessary for reading. 
+4. 一步一步进行，适时和我确认一下，不要盲目执行。
+5. 你应该重复了解清楚整个项目，思考清楚再作答；
+6. 这个项目是 vitepress 的 monorepo 项目；
