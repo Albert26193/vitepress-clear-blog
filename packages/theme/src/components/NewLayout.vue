@@ -22,14 +22,25 @@
         <PageLinkD3 />
       </div>
     </template>
+
+    <!-- 使用动态组件 -->
+    <template #not-found>
+      <component
+        :is="currentComponent"
+        v-if="currentComponent"
+        :params="routeParams"
+      />
+      <Content v-else />
+    </template>
+
     <Copyright />
   </Layout>
 </template>
 
 <script setup lang="ts">
-  import { useData } from 'vitepress'
+  import { Content, useData, useRoute } from 'vitepress'
   import DefaultTheme from 'vitepress/theme'
-  import { computed } from 'vue'
+  import { computed, defineAsyncComponent } from 'vue'
 
   import { useDarkTransition } from '../composables/useMeta'
   import DocBanner from './articles/DocBanner.vue'
@@ -39,15 +50,37 @@
   import PageLinkD3 from './sidebar/PageLinkD3.vue'
   import TagSidebar from './sidebar/TagSidebar.vue'
 
+  const ROUTE_COMPONENTS = {
+    timeline: defineAsyncComponent(() => import('./Timeline.vue')),
+    tags: defineAsyncComponent(() => import('./common/Tags.vue')),
+    collections: defineAsyncComponent(() => import('./Collections.vue'))
+  } as const
+
   useDarkTransition()
   const { Layout } = DefaultTheme
   const { frontmatter } = useData()
+  const route = useRoute()
+
   const layout = computed(() => frontmatter.value.layout)
+
+  const currentComponent = computed(() => {
+    const path = route.path.replace(/\.html$/, '')
+    const match = path.match(/^\/([^/?]+)/)
+    return match
+      ? ROUTE_COMPONENTS[match[1] as keyof typeof ROUTE_COMPONENTS]
+      : null
+  })
 
   const showSidebarButton = computed(() => {
     return (
       (!layout.value || layout.value == 'doc') &&
       frontmatter.value.sidebar !== false
     )
+  })
+
+  const routeParams = computed(() => {
+    const [, search] = route.path.split('?')
+    if (!search) return {}
+    return Object.fromEntries(new URLSearchParams(search))
   })
 </script>
