@@ -48,8 +48,7 @@
     }
   })
 
-  const partedTags = props.post.frontMatter.tags.slice(0, 2)
-
+  const partedTags = props.post.frontMatter.tags?.slice(0, 2) ?? []
   const navigateToPost = (event: MouseEvent) => {
     window.location.href = props.post.regularPath
   }

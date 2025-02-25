@@ -23,7 +23,7 @@
       </div>
     </template>
 
-    <!-- 使用动态组件 -->
+    <!-- dynamic -->
     <template #not-found>
       <component
         :is="currentComponent"
@@ -40,7 +40,7 @@
 <script setup lang="ts">
   import { Content, useData, useRoute } from 'vitepress'
   import DefaultTheme from 'vitepress/theme'
-  import { computed, defineAsyncComponent } from 'vue'
+  import { computed, defineAsyncComponent, watchEffect } from 'vue'
 
   import { useDarkTransition } from '../composables/useMeta'
   import DocBanner from './articles/DocBanner.vue'
@@ -58,7 +58,7 @@
 
   useDarkTransition()
   const { Layout } = DefaultTheme
-  const { frontmatter } = useData()
+  const { frontmatter, site } = useData()
   const route = useRoute()
 
   const layout = computed(() => frontmatter.value.layout)
@@ -82,5 +82,23 @@
     const [, search] = route.path.split('?')
     if (!search) return {}
     return Object.fromEntries(new URLSearchParams(search))
+  })
+
+  const siteName = computed(() => site.value.title)
+  const ROUTE_TITLES = {
+    timeline: `Timeline | ${siteName.value}`,
+    tags: `Tags | ${siteName.value}`,
+    collections: `Collections | ${siteName.value}`
+  } as const
+
+  watchEffect(() => {
+    const path = route.path.replace(/\.html$/, '')
+    const match = path.match(/^\/([^/?]+)/)
+    if (match) {
+      const key = match[1] as keyof typeof ROUTE_TITLES
+      if (ROUTE_TITLES[key]) {
+        document.title = ROUTE_TITLES[key]
+      }
+    }
   })
 </script>

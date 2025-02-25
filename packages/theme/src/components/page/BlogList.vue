@@ -57,7 +57,7 @@
     }
   })
 
-  const partedTags = props.post.frontMatter.tags.slice(0, 4)
+  const partedTags = props.post.frontMatter.tags?.slice(0, 4) ?? []
 
   const author = useAuthor(props.post.frontMatter) || 'Blogger'
   const navigateToPost = (event: MouseEvent) => {

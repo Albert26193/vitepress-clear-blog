@@ -1,3 +1,4 @@
+import 'heti/umd/heti.min.css'
 import 'virtual:uno.css'
 import type { EnhanceAppContext, Theme } from 'vitepress'
 import { useRoute } from 'vitepress'

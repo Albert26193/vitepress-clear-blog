@@ -22,6 +22,9 @@ const wikilinksOptions = {
 }
 
 export default defineConfig({
+  router: {
+    prefetchLinks: true
+  },
   markdown: {
     config: (md) => {
       md.use(mathjax3)

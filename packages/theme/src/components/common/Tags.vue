@@ -49,7 +49,9 @@
 
   const { theme } = useData()
 
-  const tagsList = computed(() => initTags(theme.value.posts))
+  const tagsList = computed(() =>
+    theme.value.posts ? initTags(theme.value.posts) : {}
+  )
 
   // sort tag according to dict order
   const sortTags = (tags: Record<string, Post[]>) => {
