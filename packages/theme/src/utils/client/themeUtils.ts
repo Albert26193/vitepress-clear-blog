@@ -6,6 +6,7 @@ import {
   Post,
   SiteMetadata
 } from '@theme/types/types.d'
+import 'heti/umd/heti.min.css'
 import mediumZoom from 'medium-zoom'
 
 /**
@@ -319,6 +320,62 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   }
 }
 
+/**
+ * Heti 类型声明
+ */
+interface HetiConstructor {
+  new (selector: string): {
+    autoSpacing: () => void
+  }
+}
+
+// 扩展 Window 接口
+declare global {
+  interface Window {
+    Heti: HetiConstructor
+  }
+}
+
+/**
+ * Init Heti class and scripts
+ */
+const initHeti = () => {
+  const mainContent = document.querySelector(
+    '#VPContent .VPDoc .content-container main.main'
+  )
+
+  if (!mainContent) {
+    return
+  }
+
+  mainContent.classList.add('heti--serif')
+  mainContent.classList.add('heti')
+
+  if (typeof window.Heti === 'undefined') {
+    const script = document.createElement('script')
+    script.src = '//unpkg.com/heti/umd/heti-addon.min.js'
+    script.crossOrigin = 'anonymous'
+    script.onload = () => {
+      if (typeof window.Heti !== 'undefined') {
+        try {
+          const heti = new window.Heti('.heti')
+          heti.autoSpacing()
+        } catch (error) {
+          console.warn('Heti fail', error)
+        }
+      }
+    }
+    document.head.appendChild(script)
+  } else {
+    try {
+      const heti = new window.Heti('.heti')
+      heti.autoSpacing()
+    } catch (error) {
+      console.warn('Heti fail', error)
+    }
+  }
+}
+
 export {
   initTags,
   useYearSort,
@@ -326,5 +383,6 @@ export {
   calculateWords,
   mediumZoomInit,
   transformPageD3Data,
-  transformSiteD3Data
+  transformSiteD3Data,
+  initHeti
 }

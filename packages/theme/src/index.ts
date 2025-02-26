@@ -1,3 +1,4 @@
+import 'heti/umd/heti-addon.min.js'
 import 'heti/umd/heti.min.css'
 import 'virtual:uno.css'
 import type { EnhanceAppContext, Theme } from 'vitepress'
@@ -18,13 +19,13 @@ import PageLinkD3 from './components/sidebar/PageLinkD3.vue'
 import TagSidebar from './components/sidebar/TagSidebar.vue'
 import './style.css'
 import './styles/generated.css'
-import { mediumZoomInit } from './utils/client/themeUtils'
+import { initHeti, mediumZoomInit } from './utils/client/themeUtils'
 
 export const BlogTheme: Theme = {
   ...DefaultTheme,
   Layout: NewLayout,
   enhanceApp({ app, router }: EnhanceAppContext) {
-    // register global component
+    // register global components
     app.component('Tags', Tags)
     app.component('Timeline', Timeline)
     app.component('BlogContainer', BlogContainer)
@@ -41,9 +42,14 @@ export const BlogTheme: Theme = {
 
     onMounted(() => {
       mediumZoomInit()
+      initHeti()
       watch(
         () => route.path,
-        () => nextTick(() => mediumZoomInit())
+        () =>
+          nextTick(() => {
+            mediumZoomInit()
+            initHeti()
+          })
       )
     })
   }

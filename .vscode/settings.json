@@ -4,7 +4,14 @@
     "@": "${cwd}/.vitepress",
     "~": "${cwd}"
   },
-  "cSpell.words": ["linkify", "vitepress", "wikilink", "wikilinks"],
+  "cSpell.words": [
+    "heti",
+    "Heti",
+    "linkify",
+    "vitepress",
+    "wikilink",
+    "wikilinks"
+  ],
   "favorites.resources": [
     {
       "filePath": "packages/docs/node_modules/vitepress-clear-blog",
