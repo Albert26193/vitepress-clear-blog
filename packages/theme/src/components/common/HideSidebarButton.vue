@@ -8,86 +8,44 @@
 </template>
 
 <script lang="ts" setup>
-  import { useData } from 'vitepress'
-  import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
+import { onMounted, watch } from 'vue'
 
-  const { page } = useData()
+const isHidden = useLocalStorage('vp-sidebar-hidden', false)
 
-  const isHidden = ref(false)
-
-  const syncFromUrl = () => {
-    const params = new URLSearchParams(window.location.search)
-    isHidden.value = params.get('sidebar') === 'hidden'
-  }
-
-  const updateUrl = (hidden: boolean) => {
-    const url = new URL(window.location.href)
-    if (hidden) {
-      url.searchParams.set('sidebar', 'hidden')
-    } else {
-      url.searchParams.delete('sidebar')
-    }
-    window.history.replaceState({}, '', url)
-  }
-
-  const updateDOM = (hidden: boolean) => {
-    document.documentElement.style.setProperty(
-      '--vp-sidebar-width',
-      hidden ? '0px' : '272px'
-    )
-
-    const sidebar = document.querySelector('.VPSidebar')
-    const sidebarTitle = document.querySelector('.VPNavBarTitle')
-
-    if (sidebar && sidebarTitle) {
-      if (hidden) {
-        sidebar.classList.add('hidden')
-        sidebarTitle.classList.add('hidden')
-      } else {
-        sidebar.classList.remove('hidden')
-        sidebarTitle.classList.remove('hidden')
-      }
-    }
-  }
-
-  const toggleSidebar = () => {
-    isHidden.value = !isHidden.value
-  }
-
-  watch(
-    isHidden,
-    (newValue) => {
-      updateUrl(newValue)
-      updateDOM(newValue)
-    },
-    { immediate: true }
+const updateDOM = (hidden: boolean) => {
+  document.documentElement.style.setProperty(
+    '--vp-sidebar-width',
+    hidden ? '0px' : '272px'
   )
 
-  watch(() => page.value.relativePath, syncFromUrl)
+  const sidebar = document.querySelector('.VPSidebar')
+  const sidebarTitle = document.querySelector('.VPNavBarTitle')
 
-  const handlePopState = () => {
-    syncFromUrl()
+  if (sidebar && sidebarTitle) {
+    sidebar.classList.toggle('hidden', hidden)
+    sidebarTitle.classList.toggle('hidden', hidden)
   }
+}
 
-  onMounted(() => {
-    syncFromUrl()
-    window.addEventListener('popstate', handlePopState)
-  })
+const toggleSidebar = () => {
+  isHidden.value = !isHidden.value
+}
 
-  onUnmounted(() => {
-    window.removeEventListener('popstate', handlePopState)
-  })
+watch(isHidden, updateDOM, { immediate: true })
+onMounted(() => updateDOM(isHidden.value))
 </script>
 
 <style scoped>
-  .toggle-button {
-    @apply hover:bg-gray-200 border border-gray-200 border-solid;
-    @apply rounded-md shadow-xl transition-all duration-300 ml-4;
-    @apply text-2xl flex items-center justify-center;
-    @apply h-8 w-8;
-  }
+.toggle-button {
+  @apply hover:bg-gray-200 border border-gray-200 border-solid;
+  @apply rounded-md shadow-xl transition-all duration-300 ml-4;
+  @apply text-2xl flex items-center justify-center;
+  @apply h-8 w-8;
+  /* @apply hidden sm:block; */
+}
 
-  :deep(.VPSidebar) {
-    transition: width 0.3s ease;
-  }
+:deep(.VPSidebar) {
+  transition: width 0.3s ease;
+}
 </style>

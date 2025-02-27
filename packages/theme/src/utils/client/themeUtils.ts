@@ -348,7 +348,7 @@ const initHeti = () => {
     return
   }
 
-  mainContent.classList.add('heti--serif')
+  mainContent.classList.add('heti--classic')
   mainContent.classList.add('heti')
 
   if (typeof window.Heti === 'undefined') {

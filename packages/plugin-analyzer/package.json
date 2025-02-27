@@ -44,6 +44,6 @@
   "type": "module",
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^20.10.6"
+    "@types/node": "^22.13.5"
   }
 }
