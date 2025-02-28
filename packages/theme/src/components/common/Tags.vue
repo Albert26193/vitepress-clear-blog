@@ -24,18 +24,20 @@
       </span>
     </div>
     <div class="slide-enter-content">
-      <a
-        :href="withBase(article.regularPath)"
+      <div
         v-for="(article, index) in filteredArticles"
         :key="index"
         class="tag-post-item"
       >
-        <div class="dark:text-slate-200 mt-1 font-normal text-slate-900">
+        <a
+          class="heti heti--serif post-item-title"
+          :href="withBase(article.regularPath)"
+        >
           <div class="post-dot"></div>
           {{ article.frontMatter.title }}
-        </div>
-        <div class="date">{{ article.frontMatter.date }}</div>
-      </a>
+        </a>
+        <div class="date heti heti--serif">{{ article.frontMatter.date }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -153,5 +155,11 @@
 
   .tag-post-item {
     @apply px-12 py-1 flex justify-between items-center;
+    @apply w-9/10 mx-auto;
+  }
+
+  .post-item-title {
+    @apply h-4;
+    @apply hover:text-[var(--vp-c-brand)] hover:underline hover:underline-offset-8;
   }
 </style>

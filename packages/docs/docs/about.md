@@ -12,7 +12,6 @@ aside: false
 
 ## About me
 
----
 
 - 👋 Hi, I'm [ your name ]
 - 🚀️ I'm currently working as [ your position ]

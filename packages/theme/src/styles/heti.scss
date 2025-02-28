@@ -1,0 +1,113 @@
+@import 'heti/lib/heti';
+// @import 'heti/umd/heti.min.css';
+
+.VPDoc {
+  .main {
+    @extend .heti !optional;
+    @extend .heti--classic !optional;
+
+    &.heti .vp-doc {
+      mark {
+        background-color: #fef08a;
+
+        .dark & {
+          background-color: #fde047;
+          color: #060606;
+        }
+      }
+      hr {
+        width: 100%;
+      }
+    }
+
+    &.heti .vp-doc blockquote {
+      margin-block-start: 1rem;
+      margin-block-end: 0.5rem;
+      margin-inline-start: 2rem;
+      margin-inline-end: 0rem;
+      padding-block-start: 0rem;
+      padding-block-end: 0rem;
+      padding-inline-start: 1rem;
+      padding-inline-end: 0rem;
+      border-left: 1px solid var(--vp-c-divider);
+
+      blockquote {
+        margin-top: 0.4rem;
+        margin-left: 1rem;
+      }
+
+      p {
+        margin: 0px;
+        text-indent: 0px;
+        padding: 0px;
+      }
+    }
+  }
+}
+
+.VPDoc {
+  .aside {
+    padding-left: 2px;
+  }
+  .aside-container {
+    .VPDocAside .content {
+      .outline-title {
+        @extend .heti !optional;
+        @extend .heti--serif !optional;
+      }
+      .outline-link {
+        & {
+          @extend .heti !optional;
+          @extend .heti--serif !optional;
+          margin-top: 12px;
+          font-size: 14px;
+        }
+        .VPDocOutlineItem {
+          li::marker {
+            content: '';
+          }
+        }
+      }
+    }
+  }
+}
+
+.VPLocalNav {
+  .VPLocalNavOutlineDropdown {
+    .items {
+      .header .top-link {
+        & {
+          @extend .heti !optional;
+          @extend .heti--serif !optional;
+          margin-top: 8px;
+          margin-bottom: 6px;
+          // font-size: 14px;
+        }
+      }
+      .outline {
+        .VPDocOutlineItem .outline-link {
+          & {
+            @extend .heti !optional;
+            @extend .heti--serif !optional;
+            font-size: 14px;
+            margin-top: 5px;
+          }
+          li::marker {
+            content: '';
+          }
+        }
+      }
+    }
+  }
+}
+.VPSidebar {
+  #VPSidebarNav {
+    .slide-enter-content {
+      .page-link {
+        @extend .heti !optional;
+        @extend .heti--serif !optional;
+        font-size: 14px;
+      }
+    }
+  }
+}

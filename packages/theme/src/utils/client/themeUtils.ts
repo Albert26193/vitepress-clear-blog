@@ -6,7 +6,7 @@ import {
   Post,
   SiteMetadata
 } from '@theme/types/types.d'
-import 'heti/umd/heti.min.css'
+import { useScriptTag } from '@vueuse/core'
 import mediumZoom from 'medium-zoom'
 
 /**
@@ -323,57 +323,57 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
 /**
  * Heti 类型声明
  */
-interface HetiConstructor {
-  new (selector: string): {
-    autoSpacing: () => void
-  }
-}
+// interface HetiConstructor {
+//   new (selector: string): {
+//     autoSpacing: () => void
+//   }
+// }
 
 // 扩展 Window 接口
-declare global {
-  interface Window {
-    Heti: HetiConstructor
-  }
-}
+// declare global {
+//   interface Window {
+//     Heti: HetiConstructor
+//   }
+// }
 
 /**
  * Init Heti class and scripts
  */
-const initHeti = () => {
-  const mainContent = document.querySelector(
-    '#VPContent .VPDoc .content-container main.main'
+// 注册函数
+export async function registerHeti() {
+  // 加载 CSS
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = 'https://unpkg.com/heti/umd/heti.min.css'
+  document.head.appendChild(link)
+
+  // 字体间距优化
+  const { load } = useScriptTag(
+    'https://unpkg.com/heti/umd/heti-addon.min.js',
+    (el: HTMLScriptElement) => {
+      // 确保脚本加载完成
+      setTimeout(() => {
+        if (!(window as any).Heti) {
+          console.warn('Heti is not loaded yet')
+          return
+        }
+        const elements = document.querySelectorAll('.main')
+        console.log('Found Heti elements:', elements.length)
+        try {
+          const heti = new (window as any).Heti('.main')
+          heti.autoSpacing()
+          const heti2 = new (window as any).Heti('.heti')
+          heti2.autoSpacing()
+          console.log('Heti spacing applied')
+        } catch (error) {
+          console.warn('Failed to initialize Heti:', error)
+        }
+      }, 100)
+    },
+    { immediate: true }
   )
 
-  if (!mainContent) {
-    return
-  }
-
-  mainContent.classList.add('heti--classic')
-  mainContent.classList.add('heti')
-
-  if (typeof window.Heti === 'undefined') {
-    const script = document.createElement('script')
-    script.src = '//unpkg.com/heti/umd/heti-addon.min.js'
-    script.crossOrigin = 'anonymous'
-    script.onload = () => {
-      if (typeof window.Heti !== 'undefined') {
-        try {
-          const heti = new window.Heti('.heti')
-          heti.autoSpacing()
-        } catch (error) {
-          console.warn('Heti fail', error)
-        }
-      }
-    }
-    document.head.appendChild(script)
-  } else {
-    try {
-      const heti = new window.Heti('.heti')
-      heti.autoSpacing()
-    } catch (error) {
-      console.warn('Heti fail', error)
-    }
-  }
+  load()
 }
 
 export {
@@ -383,6 +383,5 @@ export {
   calculateWords,
   mediumZoomInit,
   transformPageD3Data,
-  transformSiteD3Data,
-  initHeti
+  transformSiteD3Data
 }

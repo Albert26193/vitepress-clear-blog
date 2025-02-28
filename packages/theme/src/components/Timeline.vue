@@ -26,7 +26,7 @@
         v-for="curYearPostList in sortedDataByYear"
         :key="getYear(curYearPostList)"
       >
-        <div>
+        <div class="font-serif">
           <!-- year and post count -->
           <span
             @click="toggleYear(getYear(curYearPostList))"
@@ -55,7 +55,7 @@
           <div class="timeline-month-title">
             <span
               @click="toggleMonth(getYear(monthList), getMonth(monthList))"
-              class="flex items-center cursor-pointer max-w-36"
+              class="flex items-center cursor-pointer max-w-36 font-serif"
             >
               <span
                 v-if="
@@ -85,7 +85,7 @@
               <div
                 v-for="(article, index) in monthList"
                 :key="index"
-                class="posts-wrapper"
+                class="posts-wrapper heti heti--classic"
               >
                 <a class="post-item" :href="withBase(article.regularPath)">
                   {{ article.frontMatter.title ?? 'No title' }}
@@ -271,10 +271,11 @@
   }
 
   .post-item {
-    @apply hover:text-[var(--vp-c-brand)] hover:font-semibold;
+    @apply hover:text-[var(--vp-c-brand)];
+    @apply hover:no-underline h-6;
   }
 
   .date {
-    @apply text-gray-500 dark:text-gray-400 font-mono;
+    @apply text-gray-500 dark:text-gray-400;
   }
 </style>

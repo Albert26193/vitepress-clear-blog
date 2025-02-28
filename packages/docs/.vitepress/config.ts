@@ -46,7 +46,7 @@ export default defineConfig({
     server: { port: 4000 },
     plugins: [
       markdownAnalyzerPlugin(),
-      //generateThemePlugin()
+      // generateThemePlugin(),
       UnoCSS()
       //RssPlugin(RSS)
     ]
@@ -68,7 +68,7 @@ export default defineConfig({
     },
     nav,
     outline: [2, 3],
-    outlineTitle: 'On this page',
+    outlineTitle: 'Table of Contents',
     socialLinks: [{ icon: 'github', link: 'https://github.com' }],
     // TODO: use 'usefunc' to get the meta data and post articles
     posts: postArticles,

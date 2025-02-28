@@ -1,0 +1,129 @@
+@keyframes slide-enter {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.no-sliding) {
+    [slide-enter],
+    .slide-enter,
+    .slide-enter-content > *:not(:has(.table-of-contents)) {
+      --enter-stage: 0;
+      --enter-step: 90ms;
+      --enter-initial: 0ms;
+      animation: slide-enter 1s both 1;
+      animation-delay: calc(
+        var(--enter-initial) + var(--enter-stage) * var(--enter-step)
+      );
+    }
+  }
+
+  .slide-enter-content {
+    @for $i from 1 through 20 {
+      > *:nth-child(#{$i}) {
+        --enter-stage: #{$i} !important;
+      }
+    }
+  }
+}
+
+/* VitePress specific animations */
+@media (prefers-reduced-motion: no-preference) {
+  .vp-doc {
+    > div {
+      > * {
+        --enter-step: 30ms;
+        --enter-initial: 0ms;
+        opacity: 0;
+        animation: slide-enter 0.6s ease-out both;
+      }
+
+      /* Title and headers */
+      > h1 {
+        animation-delay: calc(var(--enter-initial) + 1 * var(--enter-step));
+      }
+
+      > h2 {
+        animation-delay: calc(var(--enter-initial) + 2 * var(--enter-step));
+      }
+
+      > h3 {
+        animation-delay: calc(var(--enter-initial) + 3 * var(--enter-step));
+      }
+
+      /* Metadata and info */
+      > .meta-des,
+      > .info {
+        animation-delay: calc(var(--enter-initial) + 4 * var(--enter-step));
+      }
+
+      /* main body */
+      > p {
+        animation-delay: calc(var(--enter-initial) + 5 * var(--enter-step));
+      }
+
+      /* Lists and their items */
+      > ul,
+      > ol {
+        animation-delay: calc(var(--enter-initial) + 6 * var(--enter-step));
+
+        > li {
+          opacity: 0;
+          animation: slide-enter 0.3s ease-out both;
+
+          // Apply sequential delays to list items
+          $delay-base: calc(var(--enter-initial) + 6 * var(--enter-step));
+
+          @for $i from 1 through 5 {
+            &:nth-child(#{$i}) {
+              animation-delay: calc(#{$delay-base} + #{$i * 60}ms);
+            }
+          }
+
+          &:nth-child(n + 6) {
+            animation-delay: calc(#{$delay-base} + 360ms);
+          }
+        }
+      }
+
+      /* Code blocks and tables */
+      > pre,
+      > div[class*='language-'],
+      > table {
+        animation-delay: calc(var(--enter-initial) + 9 * var(--enter-step));
+      }
+
+      /* Supplementary content */
+      > blockquote,
+      > .custom-block {
+        animation-delay: calc(var(--enter-initial) + 8 * var(--enter-step));
+      }
+
+      /* Media content */
+      > img,
+      > video,
+      > svg {
+        animation-delay: calc(var(--enter-initial) + 10 * var(--enter-step));
+      }
+
+      /* hidden sidebar */
+      > *:has(.table-of-contents) {
+        animation: none;
+        opacity: 1;
+      }
+    }
+
+    /* divider */
+    > hr {
+      animation: slide-enter 0.8s ease-out both;
+      animation-delay: calc(var(--enter-initial) + 9 * var(--enter-step));
+    }
+  }
+}

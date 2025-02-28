@@ -116,9 +116,9 @@
   }
 
   .sidebar-tag {
-    @apply px-2 py-1 inline-block;
+    @apply px-[0.5rem] py-[0.1rem] inline-block;
     @apply text-gray-900 border-gray-700;
-    @apply font-normal;
+    @apply font-normal text-[11px];
   }
 
   .sidebar-tag::after {
@@ -134,6 +134,7 @@
   .related-posts {
     @apply flex flex-col gap-[2px] mt-3 relative ml-2;
     @apply max-h-40 overflow-scroll;
+    @apply truncate;
   }
 
   .related-posts::before {
