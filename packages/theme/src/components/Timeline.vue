@@ -1,6 +1,6 @@
 <template>
-  <div class="custom-page-layout">
-    <div class="flex justify-end -mb-8 mr-12 mt-6">
+  <div class="custom-page-layout timeline-page">
+    <div class="flex justify-end -mb-8 mr-15 mt-6">
       <IconToggleButton
         v-model="sortDirection"
         :icons="[
@@ -85,9 +85,12 @@
               <div
                 v-for="(article, index) in monthList"
                 :key="index"
-                class="posts-wrapper heti heti--classic"
+                class="posts-wrapper"
               >
-                <a class="post-item" :href="withBase(article.regularPath)">
+                <a
+                  class="post-item heti heti--classic"
+                  :href="withBase(article.regularPath)"
+                >
                   {{ article.frontMatter.title ?? 'No title' }}
                 </a>
                 <div class="mx-3 flex-1 border-b-dashed border-gray-200"></div>
@@ -228,8 +231,12 @@
 </script>
 
 <style scoped>
+  .timeline-page {
+    @apply w-7/10 mx-auto;
+  }
+
   .timeline-container {
-    @apply flex flex-col;
+    @apply flex flex-col w-4/5 mx-auto;
     @apply border border-b-solid pb-4 border-gray-200;
   }
 
@@ -277,5 +284,6 @@
 
   .date {
     @apply text-gray-500 dark:text-gray-400;
+    @apply font-serif;
   }
 </style>

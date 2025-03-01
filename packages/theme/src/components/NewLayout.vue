@@ -50,18 +50,18 @@
   import PageLinkD3 from './sidebar/PageLinkD3.vue'
   import TagSidebar from './sidebar/TagSidebar.vue'
 
-  const ROUTE_COMPONENTS = {
-    timeline: defineAsyncComponent(() => import('./Timeline.vue')),
-    tags: defineAsyncComponent(() => import('./common/Tags.vue')),
-    collections: defineAsyncComponent(() => import('./Collections.vue'))
-  } as const
-
   useDarkTransition()
   const { Layout } = DefaultTheme
   const { frontmatter, site } = useData()
   const route = useRoute()
-
   const layout = computed(() => frontmatter.value.layout)
+
+  const ROUTE_COMPONENTS = {
+    timeline: defineAsyncComponent(() => import('./Timeline.vue')),
+    tags: defineAsyncComponent(() => import('./common/Tags.vue')),
+    collections: defineAsyncComponent(() => import('./Collections.vue')),
+    pages: defineAsyncComponent(() => import('./page/Pagination.vue'))
+  } as const
 
   const currentComponent = computed(() => {
     const path = route.path.replace(/\.html$/, '')
@@ -88,7 +88,8 @@
   const ROUTE_TITLES = {
     timeline: `Timeline | ${siteName.value}`,
     tags: `Tags | ${siteName.value}`,
-    collections: `Collections | ${siteName.value}`
+    collections: `Collections | ${siteName.value}`,
+    pages: `Pagination | ${siteName.value}`
   } as const
 
   watchEffect(() => {

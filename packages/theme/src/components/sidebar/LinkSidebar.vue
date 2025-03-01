@@ -69,7 +69,7 @@
   )
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .link-sidebar {
     @apply px-0 py-0;
     @apply mt-4;

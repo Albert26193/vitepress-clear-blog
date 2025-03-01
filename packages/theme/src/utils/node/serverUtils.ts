@@ -26,7 +26,7 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
     return []
   }
 
-  await generatePaginationPages(paths.length, pageSize)
+  // await generatePaginationPages(paths.length, pageSize)
 
   const posts = await Promise.all(
     paths.map(async (item) => {

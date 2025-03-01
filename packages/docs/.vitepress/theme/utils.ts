@@ -26,7 +26,7 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
     return []
   }
 
-  await generatePaginationPages(paths.length, pageSize)
+  // await generatePaginationPages(paths.length, pageSize)
 
   const posts = await Promise.all(
     paths.map(async (item) => {
@@ -58,58 +58,58 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
  * @param total Total number of posts
  * @param pageSize Number of posts per page
  */
-const generatePaginationPages = async (
-  total: number,
-  pageSize: number
-): Promise<void> => {
-  const pagesNum =
-    total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
-  const rootPath = getRootPath()
-  const basePath = resolve(rootPath, 'docs/pages')
+// const generatePaginationPages = async (
+//   total: number,
+//   pageSize: number
+// ): Promise<void> => {
+//   const pagesNum =
+//     total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
+//   const rootPath = getRootPath()
+//   const basePath = resolve(rootPath, 'docs/pages')
 
-  // console.log('Pagination Path:', basePath)
-  // console.log('Total posts:', total)
-  // console.log('Page size:', pageSize)
-  // console.log('Total pages:', pagesNum)
+//   // console.log('Pagination Path:', basePath)
+//   // console.log('Total posts:', total)
+//   // console.log('Page size:', pageSize)
+//   // console.log('Total pages:', pagesNum)
 
-  if (total <= 0) return
+//   if (total <= 0) return
 
-  // 确保目录存在
-  await fsExtra.ensureDir(basePath)
+//   // 确保目录存在
+//   await fsExtra.ensureDir(basePath)
 
-  const generatePage = (pageNum: number) =>
-    `
----
-title: ${pageNum === 1 ? 'home' : 'page_' + pageNum}
-aside: false
-sidebar: false
-layout: page
----
-<script setup>
-// import BlogContainer from "../../src/components/page/BlogContainer.vue";
-import { useData } from "vitepress";
-const { theme } = useData();
-const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * pageNum})
-</script>
-<BlogContainer :posts="posts" :pageCurrent="${pageNum}" :pagesNum="${pagesNum}" />
-`.trim()
+//   const generatePage = (pageNum: number) =>
+//     `
+// ---
+// title: ${pageNum === 1 ? 'home' : 'page_' + pageNum}
+// aside: false
+// sidebar: false
+// layout: page
+// ---
+// <script setup>
+// // import BlogContainer from "../../src/components/page/BlogContainer.vue";
+// import { useData } from "vitepress";
+// const { theme } = useData();
+// const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * pageNum})
+// </script>
+// <BlogContainer :posts="posts" :pageCurrent="${pageNum}" :pagesNum="${pagesNum}" />
+// `.trim()
 
-  await Promise.all(
-    Array.from({ length: pagesNum }, (_, i) => i + 1).map(async (pageNum) => {
-      const filePath = resolve(basePath, `page_${pageNum}.md`)
-      // console.log('Creating page file:', filePath)
-      await fsExtra.writeFile(filePath, generatePage(pageNum))
-    })
-  )
+//   await Promise.all(
+//     Array.from({ length: pagesNum }, (_, i) => i + 1).map(async (pageNum) => {
+//       const filePath = resolve(basePath, `page_${pageNum}.md`)
+//       // console.log('Creating page file:', filePath)
+//       await fsExtra.writeFile(filePath, generatePage(pageNum))
+//     })
+//   )
 
-  const sourcePath = resolve(basePath, 'page_1.md')
-  const targetPath = resolve(basePath, 'index.md')
-  // console.log('Moving first page:', sourcePath, '->', targetPath)
+//   const sourcePath = resolve(basePath, 'page_1.md')
+//   const targetPath = resolve(basePath, 'index.md')
+//   // console.log('Moving first page:', sourcePath, '->', targetPath)
 
-  await fsExtra.move(sourcePath, targetPath, {
-    overwrite: true
-  })
-}
+//   await fsExtra.move(sourcePath, targetPath, {
+//     overwrite: true
+//   })
+// }
 
 /**
  * Convert date to YYYY-MM-DD format

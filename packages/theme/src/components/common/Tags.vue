@@ -6,7 +6,7 @@
         v-for="(_, key) in sortTags(tagsList)"
         :key="key"
         class="tag-view text-sm tag"
-        :class="{ 'tag-active': selectedTag === String(key) }"
+        :class="{ active: selectedTag === String(key) }"
       >
         {{ key }}
         <span class="count">{{ tagsList[key].length }}</span>
@@ -36,7 +36,7 @@
           <div class="post-dot"></div>
           {{ article.frontMatter.title }}
         </a>
-        <div class="date heti heti--serif">{{ article.frontMatter.date }}</div>
+        <div class="date font-serif">{{ article.frontMatter.date }}</div>
       </div>
     </div>
   </div>
@@ -124,11 +124,12 @@
 
   .tag-view.active {
     @apply box-border;
-    @apply border-[var(--vp-c-brand)] color-[var(--vp-c-brand)];
+    @apply transition-colors duration-300;
+    @apply border-[var(--vp-c-brand)] bg-[var(--vp-c-brand)] text-white;
   }
 
   .tag-view.active .count {
-    @apply transition-colors duration-300 color-[var(--vp-c-brand-1)];
+    @apply transition-colors duration-300 text-white;
   }
 
   .tag-view:hover .count {

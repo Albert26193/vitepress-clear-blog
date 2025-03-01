@@ -74,6 +74,12 @@ importers:
 
   packages/docs:
     dependencies:
+      '@types/markdown-it-footnote':
+        specifier: ^3.0.4
+        version: 3.0.4
+      markdown-it-footnote:
+        specifier: ^4.0.0
+        version: 4.0.0
       vitepress:
         specifier: ^1.6.3
         version: 1.6.3(@algolia/client-search@5.20.3)(@types/node@22.13.5)(markdown-it-mathjax3@4.3.2)(postcss@8.5.3)(sass@1.85.1)(search-insights@2.17.3)(typescript@5.7.3)
@@ -135,6 +141,9 @@ importers:
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
+      '@types/markdown-it-footnote':
+        specifier: ^3.0.4
+        version: 3.0.4
       '@types/node':
         specifier: ^22.13.5
         version: 22.13.5
@@ -159,6 +168,9 @@ importers:
       heti:
         specifier: ^0.9.5
         version: 0.9.5
+      markdown-it-footnote:
+        specifier: ^4.0.0
+        version: 4.0.0
       medium-zoom:
         specifier: ^1.1.0
         version: 1.1.0
@@ -1403,6 +1415,9 @@ packages:
 
   '@types/lodash@4.17.15':
     resolution: {integrity: sha512-w/P33JFeySuhN6JLkysYUK2gEmy9kHHFN7E8ro0tkfmlDOgxBDzWEZ/J8cWA+fHqFevpswDTFZnDx+R9lbL6xw==}
+
+  '@types/markdown-it-footnote@3.0.4':
+    resolution: {integrity: sha512-XJ6n+v+2u+2gmYLSHcxyoNT/YrgrKvHuDJQlykFjuxCQCr86P2/fx1V6/0lcKxv5cSIlCaJ6sUcNS3zDI7I+LA==}
 
   '@types/markdown-it@14.1.2':
     resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
@@ -2998,6 +3013,9 @@ packages:
 
   mark.js@8.11.1:
     resolution: {integrity: sha512-1I+1qpDt4idfgLQG+BNWmrqku+7/2bi5nLf4YwF8y8zXvmfiTBY3PV3ZibfrjBueCByROpuBjLLFCajqkgYoLQ==}
+
+  markdown-it-footnote@4.0.0:
+    resolution: {integrity: sha512-WYJ7urf+khJYl3DqofQpYfEYkZKbmXmwxQV8c8mO/hGIhgZ1wOe7R4HLFNwqx7TjILbnC98fuyeSsin19JdFcQ==}
 
   markdown-it-mathjax3@4.3.2:
     resolution: {integrity: sha512-TX3GW5NjmupgFtMJGRauioMbbkGsOXAAt1DZ/rzzYmTHqzkO1rNAdiMD4NiruurToPApn2kYy76x02QN26qr2w==}
@@ -5340,6 +5358,10 @@ snapshots:
 
   '@types/lodash@4.17.15': {}
 
+  '@types/markdown-it-footnote@3.0.4':
+    dependencies:
+      '@types/markdown-it': 14.1.2
+
   '@types/markdown-it@14.1.2':
     dependencies:
       '@types/linkify-it': 5.0.0
@@ -7186,6 +7208,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   mark.js@8.11.1: {}
+
+  markdown-it-footnote@4.0.0: {}
 
   markdown-it-mathjax3@4.3.2:
     dependencies:

@@ -66,9 +66,12 @@ export default defineConfig({
     ['card-border', 'rounded-md z-50 hover:cursor-default'],
     [
       'tag',
-      'rounded-full px-2 py-1 text-xs border border-solid border-gray-600 dark:border-gray-200 text-gray-900 hover:text-[var(--vp-c-brand)] cursor-pointer'
+      'rounded-full px-2 py-1 text-xs border border-solid border-gray-600 dark:border-gray-200 text-gray-900 hover:text-[var(--vp-c-brand)] hover:border-[var(--vp-c-brand)] cursor-pointer'
     ],
-    ['tag-active', 'tag !border-[var(--vp-c-brand)] !text-[var(--vp-c-brand)]'],
-    ['custom-page-layout', 'w-4/5 h-full mx-auto max-w-1280px']
+    [
+      'tag-active',
+      'tag border-[var(--vp-c-brand)] bg-[var(--vp-c-brand)] text-white'
+    ],
+    ['custom-page-layout', 'w-full h-full mx-auto']
   ]
 })

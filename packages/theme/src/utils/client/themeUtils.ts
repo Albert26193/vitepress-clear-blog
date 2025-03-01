@@ -7,6 +7,7 @@ import {
   SiteMetadata
 } from '@theme/types/types.d'
 import { useScriptTag } from '@vueuse/core'
+import hetiScript from 'heti/umd/heti-addon.min.js?url'
 import mediumZoom from 'medium-zoom'
 
 /**
@@ -342,14 +343,14 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
 // 注册函数
 export async function registerHeti() {
   // 加载 CSS
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = 'https://unpkg.com/heti/umd/heti.min.css'
-  document.head.appendChild(link)
+  // const link = document.createElement('link')
+  // link.rel = 'stylesheet'
+  // link.href = 'https://unpkg.com/heti/umd/heti.min.css'
+  // document.head.appendChild(link)
 
   // 字体间距优化
   const { load } = useScriptTag(
-    'https://unpkg.com/heti/umd/heti-addon.min.js',
+    hetiScript,
     (el: HTMLScriptElement) => {
       // 确保脚本加载完成
       setTimeout(() => {

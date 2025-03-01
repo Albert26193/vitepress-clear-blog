@@ -27,25 +27,10 @@
         </div>
       </div>
     </div>
-    <footer class="page-footer">
-      <div class="pagination">
-        <a
-          v-for="i in props.pagesNum"
-          :key="i"
-          class="link ml-1"
-          :class="{ active: pageCurrent === i }"
-          :href="
-            withBase(i === 1 ? '/pages/index.html' : `/pages/page_${i}.html`)
-          "
-          >{{ i }}</a
-        >
-      </div>
-    </footer>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { withBase } from 'vitepress'
   import { type PropType, onMounted, ref } from 'vue'
 
   import { Post } from '../../types/types'
@@ -78,27 +63,17 @@
       currentPageType.value = viewFromUrl === 'list' ? 'ListType' : 'cardType'
     }
   })
-
-  const toggleStatus = () => {
-    const newType =
-      currentPageType.value === 'cardType' ? 'ListType' : 'cardType'
-    currentPageType.value = newType
-
-    const url = new URL(window.location.href)
-    url.searchParams.set('view', newType === 'ListType' ? 'list' : 'card')
-    history.pushState({}, '', url)
-  }
 </script>
 
 <style scoped>
   .page-wrapper {
     @apply flex flex-col;
-    min-height: calc(100vh - var(--vp-nav-height));
+    min-height: calc(100vh - var(--vp-nav-height) - 64px);
   }
 
   .page-content {
     @apply flex-1 mt-2;
-    min-height: calc(100vh - var(--vp-nav-height) - 30px);
+    min-height: calc(100vh - var(--vp-nav-height) - 64px);
   }
 
   .page-footer {

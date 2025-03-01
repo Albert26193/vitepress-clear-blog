@@ -1,3 +1,4 @@
+import footnotePlugin from 'markdown-it-footnote'
 import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
@@ -10,7 +11,7 @@ import { head } from './custom/head'
 import { nav } from './custom/nav'
 import { getPosts } from './theme/utils'
 
-const postArticles = await getPosts(12)
+const postArticles = await getPosts(10)
 
 // TODO: temp test options here
 const wikilinksOptions = {
@@ -29,6 +30,7 @@ export default defineConfig({
     config: (md) => {
       md.use(mathjax3)
       md.use(wikilinks(wikilinksOptions))
+      md.use(footnotePlugin)
     },
     theme: {
       light: 'github-light',

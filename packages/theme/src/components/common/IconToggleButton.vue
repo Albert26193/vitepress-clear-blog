@@ -1,11 +1,11 @@
 <template>
-  <div class="btn-group" :class="[layout, size]">
+  <div class="btn-group" :class="[props.layout, props.size]">
     <button
-      v-for="(icon, index) in icons"
+      v-for="(icon, index) in props.icons"
       :key="index"
       class="btn-item tooltip-container"
       :class="{
-        active: modelValue === icon.value,
+        active: props.modelValue === icon.value,
         disabled: icon.disabled
       }"
       :disabled="icon.disabled"
@@ -46,7 +46,8 @@
 
 <style scoped>
   .btn-group {
-    @apply inline-flex gap-1 bg-gray-200/80 rounded-lg py-[5px] px-2;
+    @apply inline-flex gap-1 bg-gray-300/90 rounded-md py-[5px] px-2;
+    @apply shadow-inner shadow-gray-500/80;
   }
 
   .btn-group.horizontal {
@@ -59,11 +60,11 @@
 
   .btn-item {
     @apply flex items-center p-1 rounded-md transition-all duration-200;
-    @apply hover:bg-gray-100/80;
+    @apply hover:bg-gray-100/90;
   }
 
   .btn-item.active {
-    @apply bg-gray-100 shadow-xl drop-shadow;
+    @apply bg-white shadow-md drop-shadow shadow-gray-500/90;
   }
 
   .btn-item.disabled {

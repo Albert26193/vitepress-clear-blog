@@ -1,14 +1,17 @@
 <template>
   <div class="meta-des" id="hack-article-des" ref="$des">
     <!-- tags -->
-    <div class="grow space-x-2">
+    <div class="grow space-x-2 mt-2" v-if="frontmatter.tags">
       <span v-for="item in frontmatter.tags" :key="item">
-        <a :href="withBase(`/tags.html?tag=${item}`)" class="tag">
-          {{ item }}</a
+        <span
+          class="tag"
+          @click="router.go(withBase(`/tags.html?tag=${item}`))"
         >
+          {{ item }}
+        </span>
       </span>
     </div>
-    <div class="flex items-center mt-2">
+    <div class="flex items-center mt-1">
       <!-- time -->
       <div class="i-carbon-time" />
       <span class="ml-1 align-middle text-sm">
@@ -19,16 +22,19 @@
       <span class="ml-1 align-middle text-sm"> {{ wordsCount }} words </span>
       <!-- author -->
       <div class="i-carbon-user ml-3" />
-      <a class="ml-1 align-middle text-sm" :href="`/about.html`">
+      <span
+        class="ml-1 align-middle text-sm hover:cursor-pointer hover:text-color-[var(--vp-c-brand)]"
+        @click="router.go('/about.html')"
+      >
         {{ author }}
-      </a>
+      </span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   //TODO: how to calculate layout on mobile? if we have too many tags?
-  import { useData, useRoute, withBase } from 'vitepress'
+  import { useData, useRoute, useRouter, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
 
   import { useAuthor } from '../../composables/useMeta'
@@ -36,6 +42,7 @@
   import { calculateWords } from '../../utils/client/themeUtils'
 
   const { frontmatter } = useData()
+  const router = useRouter()
   const currentRoute = useRoute()
   console.warn(currentRoute.path, 'route')
 
@@ -80,8 +87,8 @@
 
 <style scoped>
   .meta-des {
-    @apply mt-2 px-6 pt-4 pb-3 mb-4;
-    @apply border border-solid border-gray-900 rounded-lg w-full;
+    @apply mt-2 px-6 py-3;
+    @apply border border-solid border-gray-900 rounded-md w-full;
     @apply hover:shadow-lg transition-shadow duration-300 hover:border-solid;
     @apply transition-all duration-300;
     @apply flex-col items-center space-y-4 slide-enter-content;

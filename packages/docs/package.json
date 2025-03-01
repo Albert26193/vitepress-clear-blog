@@ -10,6 +10,8 @@
     "docs:clean": "rimraf .vitepress/cache .vitepress/dist"
   },
   "dependencies": {
+    "@types/markdown-it-footnote": "^3.0.4",
+    "markdown-it-footnote": "^4.0.0",
     "vitepress": "^1.6.3",
     "vitepress-clear-blog": "workspace:*",
     "vitepress-plugin-analyzer": "workspace:*",

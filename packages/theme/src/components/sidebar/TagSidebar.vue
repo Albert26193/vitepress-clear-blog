@@ -11,7 +11,7 @@
         <div
           v-for="tag in currentTags"
           :key="tag"
-          :class="['tag sidebar-tag', { 'tag-active': activeTag === tag }]"
+          :class="['tag sidebar-tag', { 'side-tag-active': activeTag === tag }]"
           @click="toggleTagFilter(tag)"
         >
           {{ tag }}
@@ -111,12 +111,12 @@
   }
 
   .current-tags {
-    @apply flex flex-wrap gap-x-1 gap-y-2 pb-4;
+    @apply flex flex-wrap gap-x-1 gap-y-[6px] pb-4;
     @apply border-b-1 border-b-dashed border-gray-800;
   }
 
   .sidebar-tag {
-    @apply px-[0.5rem] py-[0.1rem] inline-block;
+    @apply px-[0.5rem] py-[3px] inline-block;
     @apply text-gray-900 border-gray-700;
     @apply font-normal text-[11px];
   }
@@ -126,7 +126,7 @@
     @apply hidden font-semibold overflow-hidden h-0;
   }
 
-  .tag-active {
+  .side-tag-active {
     @apply box-border;
     @apply border-[var(--vp-c-brand)] color-[var(--vp-c-brand)];
   }
@@ -145,10 +145,6 @@
   .page-link {
     @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
     @apply hover:text-[var(--vp-c-brand)] font-normal;
-  }
-
-  .page-link:hover {
-    @apply font-semibold;
   }
 
   .page-link:hover::before {

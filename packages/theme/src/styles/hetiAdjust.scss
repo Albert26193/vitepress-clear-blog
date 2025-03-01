@@ -6,17 +6,27 @@
     @extend .heti !optional;
     @extend .heti--classic !optional;
 
+    &.heti .meta-des {
+      a {
+        text-decoration: none;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
     &.heti .vp-doc {
       mark {
         background-color: #fef08a;
-
         .dark & {
           background-color: #fde047;
           color: #060606;
         }
       }
       hr {
+        margin: 16px 10px 16px 10px;
         width: 100%;
+        background-color: var(--vp-c-divider);
       }
     }
 
