@@ -9,7 +9,7 @@ import { generateThemePlugin } from 'vitepress-plugin-config'
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
-import { getPosts } from './theme/utils'
+import { getFooterRefTag, getPosts } from './theme/utils'
 
 const postArticles = await getPosts(10)
 
@@ -31,6 +31,8 @@ export default defineConfig({
       md.use(mathjax3)
       md.use(wikilinks(wikilinksOptions))
       md.use(footnotePlugin)
+
+      getFooterRefTag(md)
     },
     theme: {
       light: 'github-light',

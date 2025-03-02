@@ -71,6 +71,7 @@
 .mt-8{margin-top:2rem;}
 .mt-auto{margin-top:auto;}
 .box-border{box-sizing:border-box;}
+.inline{display:inline;}
 .block{display:block;}
 .inline-block{display:inline-block;}
 .hidden{display:none;}

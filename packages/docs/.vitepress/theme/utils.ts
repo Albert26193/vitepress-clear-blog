@@ -1,9 +1,9 @@
-import { Post, PostFrontMatter } from '@theme/types/types'
 import fsExtra from 'fs-extra'
 import { globby } from 'globby'
 import matter from 'gray-matter'
+import MarkdownIt from 'markdown-it'
 import path, { resolve } from 'path'
-import { parse } from 'smol-toml'
+import { Post, PostFrontMatter } from 'vitepress-clear-blog/types/types'
 
 /**
  * Get all posts and generate pagination pages
@@ -26,8 +26,6 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
     return []
   }
 
-  // await generatePaginationPages(paths.length, pageSize)
-
   const posts = await Promise.all(
     paths.map(async (item) => {
       // console.log('Processing blog file:', item)
@@ -48,68 +46,8 @@ const getPosts = async (pageSize: number): Promise<Post[]> => {
     })
   )
   posts.sort(_compareDate)
-
   return posts
 }
-
-/**
- * Generate pagination pages
- *
- * @param total Total number of posts
- * @param pageSize Number of posts per page
- */
-// const generatePaginationPages = async (
-//   total: number,
-//   pageSize: number
-// ): Promise<void> => {
-//   const pagesNum =
-//     total % pageSize === 0 ? total / pageSize : Math.floor(total / pageSize) + 1
-//   const rootPath = getRootPath()
-//   const basePath = resolve(rootPath, 'docs/pages')
-
-//   // console.log('Pagination Path:', basePath)
-//   // console.log('Total posts:', total)
-//   // console.log('Page size:', pageSize)
-//   // console.log('Total pages:', pagesNum)
-
-//   if (total <= 0) return
-
-//   // 确保目录存在
-//   await fsExtra.ensureDir(basePath)
-
-//   const generatePage = (pageNum: number) =>
-//     `
-// ---
-// title: ${pageNum === 1 ? 'home' : 'page_' + pageNum}
-// aside: false
-// sidebar: false
-// layout: page
-// ---
-// <script setup>
-// // import BlogContainer from "../../src/components/page/BlogContainer.vue";
-// import { useData } from "vitepress";
-// const { theme } = useData();
-// const posts = theme.value.posts.slice(${pageSize * (pageNum - 1)},${pageSize * pageNum})
-// </script>
-// <BlogContainer :posts="posts" :pageCurrent="${pageNum}" :pagesNum="${pagesNum}" />
-// `.trim()
-
-//   await Promise.all(
-//     Array.from({ length: pagesNum }, (_, i) => i + 1).map(async (pageNum) => {
-//       const filePath = resolve(basePath, `page_${pageNum}.md`)
-//       // console.log('Creating page file:', filePath)
-//       await fsExtra.writeFile(filePath, generatePage(pageNum))
-//     })
-//   )
-
-//   const sourcePath = resolve(basePath, 'page_1.md')
-//   const targetPath = resolve(basePath, 'index.md')
-//   // console.log('Moving first page:', sourcePath, '->', targetPath)
-
-//   await fsExtra.move(sourcePath, targetPath, {
-//     overwrite: true
-//   })
-// }
 
 /**
  * Convert date to YYYY-MM-DD format
@@ -155,4 +93,87 @@ const getSrcPath = (srcName = 'src') => {
   return `${rootPath}/${srcName}`
 }
 
-export { getPosts, generatePaginationPages, getRootPath, getSrcPath }
+const getFooterRefTag = (md: MarkdownIt) => {
+  // 用于存储脚注内容的映射
+  const footnoteContents: Record<string, string> = {}
+
+  // 捕获脚注内容
+  const originalFootnoteOpen =
+    md.renderer.rules.footnote_open ||
+    ((tokens, idx, options, env, self) =>
+      self.renderToken(tokens, idx, options))
+  md.renderer.rules.footnote_open = (tokens, idx, options, env, self) => {
+    const id = tokens[idx].meta.id
+
+    // 查找下一个脚注内容标记
+    let contentIndex = idx + 1
+    let contentText = ''
+    let contentTokens = []
+
+    while (
+      contentIndex < tokens.length &&
+      !(
+        tokens[contentIndex].type === 'footnote_close' &&
+        tokens[contentIndex].level === tokens[idx].level
+      )
+    ) {
+      if (tokens[contentIndex].type === 'inline') {
+        contentText += tokens[contentIndex].content
+        contentTokens.push(tokens[contentIndex])
+      }
+      contentIndex++
+    }
+
+    // 渲染脚注内容为 HTML
+    let renderedContent = ''
+    if (contentTokens.length > 0) {
+      // 创建一个临时的 Token 数组用于渲染
+      const tempTokens = [...contentTokens]
+
+      // 使用 markdown-it 渲染内联内容
+      for (const token of tempTokens) {
+        renderedContent += md.renderer.renderInline(
+          token.children || [],
+          options,
+          env
+        )
+      }
+    }
+
+    // 存储脚注内容 (已渲染为 HTML)
+    footnoteContents[id] = renderedContent || contentText
+
+    return originalFootnoteOpen(tokens, idx, options, env, self)
+  }
+
+  // 自定义脚注引用渲染
+  const originalFootnoteRef = md.renderer.rules.footnote_ref
+  md.renderer.rules.footnote_ref = (tokens, idx, options, env, self) => {
+    const id = tokens[idx].meta?.id || idx
+    let refLabel = ''
+
+    if (originalFootnoteRef) {
+      const originalHTML = originalFootnoteRef(tokens, idx, options, env, self)
+      const match = originalHTML.match(/>([^<]+)<\/a>/)
+      refLabel = match ? match[1] : `${id}`
+    } else {
+      refLabel = tokens[idx].meta?.label || `${id}`
+    }
+
+    // 获取脚注内容，如果没有则使用空字符串
+    const content = footnoteContents[id] || ''
+
+    // 清理标签文本中的括号
+    const cleanLabel = refLabel.replace(/\[|\]/g, '')
+
+    return `<FooterRef content="${content}" text="${cleanLabel}" id="${id}" />`
+  }
+
+  // // 自定义脚注区块开始 (添加标题和样式)
+  // md.renderer.rules.footnote_block_open = () =>
+  //   '<section class="footnotes">\n' +
+  //   '<h4 class="footnotes-title">脚注</h4>\n' +
+  //   '<ol class="footnotes-list">\n'
+}
+
+export { getPosts, getRootPath, getSrcPath, getFooterRefTag }

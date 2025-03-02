@@ -1,3 +1,4 @@
+import footnotePlugin from 'markdown-it-footnote'
 import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
@@ -9,11 +10,7 @@ import { generateThemePlugin } from 'vitepress-plugin-config'
 import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 import { generateSidebar } from 'vitepress-sidebar'
 
-import {
-  getPosts,
-  getRootPath,
-  getSrcPath
-} from '../src/utils/node/serverUtils'
+import { getPosts, getRootPath, getSrcPath } from '../src/utils/node'
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
@@ -76,6 +73,11 @@ export default defineConfig(
       config: (md) => {
         md.use(mathjax3)
         md.use(wikilinks(wikilinksOptions))
+        md.use(footnotePlugin)
+        md.renderer.rules.footnote_block_open = () =>
+          '<h1 class="mt-3">Footnotes</h1>\n' +
+          '<section class="footnotes">\n' +
+          '<ol class="footnotes-list">\n'
       },
       theme: {
         light: 'github-light',
@@ -83,13 +85,13 @@ export default defineConfig(
       }
     },
     head,
-    vue: {
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) => customElements.includes(tag)
-        }
-      }
-    },
+    // vue: {
+    //   template: {
+    //     compilerOptions: {
+    //       isCustomElement: (tag) => customElements.includes(tag)
+    //     }
+    //   }
+    // },
     title: 'demo',
     base: '/',
     srcDir: './docs',

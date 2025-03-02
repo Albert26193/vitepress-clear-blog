@@ -37,9 +37,9 @@
   <div ref="utterancesRef"></div>
 </template>
 
-<style>
+<!-- <style>
   /*global  style*/
   .utterances {
     max-width: inherit !important;
   }
-</style>
+</style> -->

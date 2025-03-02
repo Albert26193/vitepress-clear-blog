@@ -25,6 +25,10 @@
     {
       "filePath": "local-workspace/vuepress-theme-plume/docs",
       "group": "Default"
+    },
+    {
+      "filePath": "packages/theme",
+      "group": "Default"
     }
   ],
   "favorites.sortOrder": "ASC",

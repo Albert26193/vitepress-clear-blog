@@ -20,7 +20,7 @@
   const webTitle = site.value.title
 </script>
 
-<style>
+<style scoped>
   .site-footer {
     color: #888;
     text-align: center;
@@ -29,6 +29,7 @@
     padding: 15px 0;
     overflow: auto;
   }
+
   .vitepress {
     color: var(--vp-c-text-1);
     font-weight: 700;
