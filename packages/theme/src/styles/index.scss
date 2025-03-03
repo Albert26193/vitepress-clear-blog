@@ -1,4 +1,10 @@
-@import './main.scss';
-@import './animated.scss';
-@import './hetiAdjust.scss';
-@import './generated.css';
+// for heti
+@import 'heti/umd/heti.min.css';
+@import './_font.scss';
+
+// for heti
+@import './theme.scss'; // main styles for total theme
+@import './animated.scss'; // animate styles
+@import './hetiAdjust.scss'; // adjust styles for heti
+@import './serif.scss'; // serif font style for specific elements
+@import './generated.css'; // generated styles

@@ -1,23 +1,24 @@
 <template>
   <sup class="footnote-ref">
-    <span
+    <a
       :href="`#fn${props.id}`"
       :id="`fnref${props.id}`"
       class="footnote-badge-link"
-      @mouseover="showTooltip = true"
-      @mouseleave="showTooltip = true"
+      ref="footnoteRef"
     >
-      <span class="footnote-badge" :class="props.type">{{ props.text }}</span>
+      <span class="footnote-badge">{{ props.text }}</span>
       <Transition name="tooltip-fade">
-        <div class="footnote-tooltip" v-if="showTooltip && props.content">
+        <div class="footnote-tooltip" v-if="isHovered && props.content">
           <div class="tooltip-content" v-html="props.content"></div>
+          <div class="tooltip-arrow"></div>
         </div>
       </Transition>
-    </span>
+    </a>
   </sup>
 </template>
 
 <script setup lang="ts">
+  import { useElementHover } from '@vueuse/core'
   import { ref } from 'vue'
 
   const props = defineProps({
@@ -35,116 +36,63 @@
     content: {
       type: String,
       default: ''
-    },
-    // style for footnote badge
-    type: {
-      type: String,
-      default: 'info',
-      validator: (value: string) =>
-        ['info', 'tip', 'warning', 'danger'].includes(value)
     }
   })
-  const showTooltip = ref(false)
+
+  const footnoteRef = ref(null)
+  const isHovered = useElementHover(footnoteRef, {
+    delayEnter: 200,
+    delayLeave: 100
+  })
 </script>
 
 <style scoped>
   .footnote-ref {
-    font-size: 1em;
-    vertical-align: super;
-    line-height: 0;
-    position: relative;
+    @apply text-base leading-0 relative;
+    @apply ml-[1px];
+    /* @apply vertical-super; */
   }
 
   .footnote-badge-link {
-    display: inline;
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    position: relative;
+    @apply inline mt-0 p-0 no-underline relative;
+    @apply no-underline hover:no-underline!;
   }
 
   .footnote-badge {
-    display: inline;
-    align-items: center;
-    font-size: 12px;
-    line-height: 18px;
-    font-weight: 500;
-    border-radius: 8px;
-    padding: 0 6px;
-    transform: scale(0.85);
-    transform-origin: center;
-    margin: 0;
-    color: #0c0c0c;
-    background-color: #afaf90;
+    @apply inline items-center text-xs leading-2 font-500 rounded-md;
+    @apply px-[6px] mx-[1px] py-[0.5px];
+    @apply text-slate-900 bg-sky-200/50;
   }
 
-  .footnote-badge.tip {
-    color: var(--vp-badge-tip-text);
-    background-color: var(--vp-badge-tip-bg);
-  }
-
-  .footnote-badge.warning {
-    color: var(--vp-badge-warning-text);
-    background-color: var(--vp-badge-warning-bg);
-  }
-
-  .footnote-badge.danger {
-    color: var(--vp-badge-danger-text);
-    background-color: var(--vp-badge-danger-bg);
-  }
-
+  /**TODO: media query */
   .footnote-tooltip {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 8px;
-    z-index: 10;
-    width: max-content;
-    max-width: 300px;
-    padding: 10px 12px;
-    border-radius: 6px;
-    background-color: var(--vp-c-bg-soft);
-    box-shadow: var(--vp-shadow-3);
-    font-size: 13px;
-    line-height: 1.5;
-    font-weight: normal;
-    text-align: left;
+    @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-10;
+    @apply w-max max-w-64 p-3 rounded-lg;
+    @apply bg-gray-100 border-[1.5px] border-solid border-[var(--vp-c-brand)];
+    @apply text-sm leading-5.5 font-normal text-left;
   }
 
-  .footnote-tooltip::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px 6px 0;
-    border-style: solid;
-    border-color: var(--vp-c-bg-soft) transparent transparent;
+  .tooltip-arrow {
+    @apply absolute bottom--12px left-1/2 -translate-x-1/2;
+    @apply border-6px border-solid;
+    @apply border-t-[var(--vp-c-brand)] border-x-transparent border-b-transparent;
   }
 
   .tooltip-content {
-    color: var(--vp-c-text-1);
-    white-space: normal;
+    @apply text-[var(--vp-c-text-1)] whitespace-normal break-words;
   }
 
   .tooltip-content :deep(p) {
-    margin: 0;
-    padding: 0;
-    text-indent: 0;
+    @apply m-0 p-0 indent-0 break-words;
   }
 
-  /* 动画效果 */
   .tooltip-fade-enter-active,
   .tooltip-fade-leave-active {
-    transition:
-      opacity 0.15s ease,
-      transform 0.15s ease;
+    @apply transition duration-300 ease;
   }
 
   .tooltip-fade-enter-from,
   .tooltip-fade-leave-to {
-    opacity: 0;
-    transform: translateX(-50%) translateY(10px);
+    @apply opacity-0 -translate-x-1/2 translate-y-10px;
   }
 </style>

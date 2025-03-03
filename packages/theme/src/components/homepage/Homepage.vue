@@ -1,11 +1,11 @@
 <template>
   <section class="vcontainer">
     <!-- 标题 -->
-    <h1 class="text"> Albert's Blog Site </h1>
+    <h1 class="text font-serif"> Albert's Blog</h1>
 
     <!-- 描述 -->
     <div class="describe">
-      <p> a clear blog site by vitepress </p>
+      <p class="font-serif">能纵棹，惯乘流，长江白浪不曾忧</p>
     </div>
 
     <!-- 按钮 -->
@@ -137,19 +137,6 @@
     margin: 0 16px;
     border: 2px solid var(--main-page-text);
     border-radius: 0.5rem;
-  }
-
-  .vaction-bg:before {
-    z-index: -2;
-    position: absolute;
-    content: ' ';
-    background-image: linear-gradient(
-      165deg,
-      var(--main-page-from),
-      var(--main-page-to)
-    );
-    /* filter: blur(40px); */
-    inset: 0;
   }
 
   .primary {

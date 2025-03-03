@@ -11,7 +11,10 @@
         <div
           v-for="tag in currentTags"
           :key="tag"
-          :class="['tag sidebar-tag', { 'side-tag-active': activeTag === tag }]"
+          :class="[
+            'tag sidebar-tag heti heti--serif',
+            { 'side-tag-active': activeTag === tag }
+          ]"
           @click="toggleTagFilter(tag)"
         >
           {{ tag }}

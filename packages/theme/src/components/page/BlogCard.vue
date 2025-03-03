@@ -12,7 +12,7 @@
     </div>
     <p
       v-if="post.frontMatter.description"
-      class="describe mb-4 text-gray-700 dark:text-gray-300 indent-2"
+      class="describe mb-4 text-gray-700 dark:text-gray-300 indent-2 heti heti--serif"
     >
       {{ useCardDescription(post.frontMatter.description).value }}
     </p>

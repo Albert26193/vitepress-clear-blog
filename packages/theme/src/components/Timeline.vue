@@ -108,7 +108,7 @@
   import { useData, withBase } from 'vitepress'
   import { computed, reactive, ref } from 'vue'
 
-  import { useMonthYearSort, useYearSort } from '../utils/client/themeUtils'
+  import { useMonthYearSort, useYearSort } from '../utils/client/'
   import IconToggleButton from './common/IconToggleButton.vue'
 
   const { theme } = useData()

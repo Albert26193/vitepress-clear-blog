@@ -17,7 +17,7 @@
   import { globalMdMetadata } from 'virtual:markdown-metadata'
   import { computed } from 'vue'
 
-  import { transformSiteD3Data } from '../../utils/client/themeUtils'
+  import { transformSiteD3Data } from '../../utils/client/'
   import D3ForceGraph from './D3ForceGraph.vue'
 
   const graphData = computed(() => transformSiteD3Data(globalMdMetadata))

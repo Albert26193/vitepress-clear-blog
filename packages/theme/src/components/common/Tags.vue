@@ -1,11 +1,11 @@
 <template>
-  <div class="custom-page-layout max-w-780px">
+  <div class="custom-page-layout max-w-880px">
     <div class="tags-container slide-enter">
       <span
         @click="toggleTag(String(key))"
         v-for="(_, key) in sortTags(tagsList)"
         :key="key"
-        class="tag-view text-sm tag"
+        class="tag-view tag heti"
         :class="{ active: selectedTag === String(key) }"
       >
         {{ key }}
@@ -47,7 +47,7 @@
   import { computed, onMounted, ref } from 'vue'
 
   import { Post } from '../../types/types'
-  import { initTags } from '../../utils/client/themeUtils'
+  import { initTags } from '../../utils/client/'
 
   const { theme } = useData()
 

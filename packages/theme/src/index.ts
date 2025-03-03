@@ -18,8 +18,11 @@ import LinkSidebar from './components/sidebar/LinkSidebar.vue'
 import PageLinkD3 from './components/sidebar/PageLinkD3.vue'
 import TagSidebar from './components/sidebar/TagSidebar.vue'
 import './styles/index.scss'
-
-import { mediumZoomInit, registerHeti } from './utils/client/themeUtils'
+import {
+  addClassForHetiElement,
+  mediumZoomInit,
+  registerHetiScript
+} from './utils/client/'
 
 export const BlogTheme: Theme = {
   ...DefaultTheme,
@@ -44,13 +47,14 @@ export const BlogTheme: Theme = {
     const route = useRoute()
     onMounted(() => {
       mediumZoomInit()
-      registerHeti()
+      addClassForHetiElement()
+      registerHetiScript()
       watch(
         () => route.path,
         () =>
           nextTick(() => {
             mediumZoomInit()
-            registerHeti()
+            addClassForHetiElement()
           })
       )
     })

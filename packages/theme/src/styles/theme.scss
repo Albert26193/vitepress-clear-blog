@@ -16,6 +16,12 @@
   --main-page-appearance: #222222;
 }
 
+/* font  */
+:root {
+  --vp-font-family-base: 'Times New Roman', times, 'Heti Song';
+  --vp-font-family-mono: 'Heti Hei KR';
+  /* code font */
+}
 /* theme reset start */
 .VPDoc {
   .main {
@@ -83,7 +89,18 @@
     }
 
     p {
-      text-indent: 2em;
+      text-indent: 2rem;
+
+      .footnote-ref,
+      sup.footnote-ref,
+      .footnote-badge-link,
+      .footnote-badge {
+        text-indent: 0 !important;
+      }
+    }
+
+    .footnote-badge {
+      text-indent: 0px !important;
     }
 
     strong {
