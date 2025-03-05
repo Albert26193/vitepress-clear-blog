@@ -34,6 +34,9 @@ const initTags = (post: Post[]) => {
  * @returns {Post[][]} Array of arrays, where each inner array contains posts from the same year
  */
 const useYearSort = (posts: Post[]): Post[][] => {
+  if (!posts) {
+    return []
+  }
   const sortedByYear = posts.reduce(
     (acc: Record<string, Post[]>, post: Post) => {
       if (post.frontMatter.date) {
@@ -63,6 +66,9 @@ const useYearSort = (posts: Post[]): Post[][] => {
 const useMonthYearSort = (
   posts: Post[]
 ): Record<string, Record<string, Post[]>> => {
+  if (!posts) {
+    return {}
+  }
   return posts.reduce(
     (acc: Record<string, Record<string, Post[]>>, post: Post) => {
       if (post.frontMatter.date) {

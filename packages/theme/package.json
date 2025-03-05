@@ -5,8 +5,16 @@
   "main": "./dist/index.mjs",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts",
-    "./types": "./src/types/types"
+    ".": {
+      "import": "./src/index.ts"
+    },
+    "./node": {
+      "types": "./lib/node/index.d.ts",
+      "import": "./lib/node/index.mjs",
+      "require": "./lib/node/index.js",
+      "default": "./lib/node/index.js"
+    },
+    "./types": "./src/types/types.d.ts"
   },
   "files": [
     "lib",

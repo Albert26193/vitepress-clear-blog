@@ -1,1 +1,2 @@
-export * from './getPost'
+export * from './posts'
+export * from './configProvider'

@@ -148,6 +148,7 @@
   const dataByYear = computed(() => useYearSort(theme.value.posts))
   const dataByYearMonth = computed(() => useMonthYearSort(theme.value.posts))
 
+  console.warn(JSON.stringify(theme.value.posts, null, 2))
   // Add new computed property for sorted data
   const sortedDataByYear = computed(() => {
     const data = [...dataByYear.value]

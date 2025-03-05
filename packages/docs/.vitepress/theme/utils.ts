@@ -3,7 +3,7 @@ import { globby } from 'globby'
 import matter from 'gray-matter'
 import MarkdownIt from 'markdown-it'
 import path, { resolve } from 'path'
-import { Post, PostFrontMatter } from 'vitepress-clear-blog/types/types'
+import { Post, PostFrontMatter } from 'vitepress-clear-blog/types'
 
 /**
  * Get all posts and generate pagination pages

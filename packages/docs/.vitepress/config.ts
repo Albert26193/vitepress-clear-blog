@@ -3,6 +3,7 @@ import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
+import { getThemeConfig } from 'vitepress-clear-blog/node'
 import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { generateThemePlugin } from 'vitepress-plugin-config'
 
@@ -23,9 +24,7 @@ const wikilinksOptions = {
 }
 
 export default defineConfig({
-  router: {
-    prefetchLinks: true
-  },
+  // extends: blogTheme,
   markdown: {
     config: (md) => {
       md.use(mathjax3)
@@ -66,7 +65,6 @@ export default defineConfig({
         items: []
       }
     ],
-    website: '',
     search: {
       provider: 'local'
     },
@@ -75,9 +73,8 @@ export default defineConfig({
     outlineTitle: 'Table of Contents',
     socialLinks: [{ icon: 'github', link: 'https://github.com' }],
     // TODO: use 'usefunc' to get the meta data and post articles
-    posts: postArticles,
-    meta: {}
-  } as any,
+    posts: postArticles
+  },
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   ignoreDeadLinks: true
 })

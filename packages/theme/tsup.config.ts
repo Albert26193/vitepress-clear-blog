@@ -2,19 +2,14 @@ import path from 'path'
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['src/node.ts', 'src/index.ts'],
-  format: ['esm'],
-  outDir: path.resolve(__dirname, './dist'),
+  entry: ['./src/utils/node/index.ts'],
+  format: ['esm', 'cjs'],
+  outDir: path.resolve(__dirname, './lib/node'),
   dts: true,
-  external: [
-    'vitepress',
-    'vue',
-    /\.vue$/, // Vue 文件作为外部依赖
-    /\.css$/ // CSS 文件作为外部依赖
-  ],
+  external: ['vitepress'],
   silent: true,
   clean: true,
-  outExtension: () => ({
-    js: '.mjs'
+  outExtension: ({ format }) => ({
+    js: format === 'esm' ? '.mjs' : '.js'
   })
 })

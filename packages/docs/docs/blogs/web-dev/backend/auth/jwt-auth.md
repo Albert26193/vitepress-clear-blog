@@ -21,7 +21,7 @@ description: 详细介绍JWT认证的实现方案和最佳实践
 
 ### 后端实现
 
-详见[../../../auth/auth-center|认证中心设计]。
+详见[[../../../auth/auth-center|认证中心设计]]。
 
 ### 前端实现
 
