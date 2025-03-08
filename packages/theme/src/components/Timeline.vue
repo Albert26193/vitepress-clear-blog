@@ -1,11 +1,17 @@
 <template>
   <div class="custom-page-layout timeline-page">
-    <div class="flex justify-end -mb-8 mr-15 mt-6">
+    <div class="flex justify-end -mb-8 mr-18 mt-6 gap-6">
       <IconToggleButton
         v-model="sortDirection"
         :icons="[
           { value: 'asc', iconClass: 'i-carbon-arrow-up', tooltip: '升序' },
-          { value: 'desc', iconClass: 'i-carbon-arrow-down', tooltip: '降序' },
+          { value: 'desc', iconClass: 'i-carbon-arrow-down', tooltip: '降序' }
+        ]"
+        size="sm"
+      />
+      <IconToggleButton
+        v-model="expandStatus"
+        :icons="[
           {
             value: 'expand',
             iconClass: 'i-carbon-expand-all',
@@ -18,7 +24,6 @@
           }
         ]"
         size="sm"
-        :maxVisible="3"
       />
     </div>
     <div class="timeline-container">
@@ -106,7 +111,7 @@
 
 <script lang="ts" setup>
   import { useData, withBase } from 'vitepress'
-  import { computed, reactive, ref } from 'vue'
+  import { computed, reactive, ref, watch } from 'vue'
 
   import { useMonthYearSort, useYearSort } from '../utils/client/'
   import IconToggleButton from './common/IconToggleButton.vue'
@@ -143,7 +148,8 @@
   const getDay = (article: { frontMatter: { date: string } }) =>
     article.frontMatter.date.slice(5)
 
-  const sortDirection = ref<'asc' | 'desc' | 'expand' | 'collapse'>('desc')
+  const sortDirection = ref<'asc' | 'desc'>('desc')
+  const expandStatus = ref<'expand' | 'collapse'>('expand')
 
   const dataByYear = computed(() => useYearSort(theme.value.posts))
   const dataByYearMonth = computed(() => useMonthYearSort(theme.value.posts))
@@ -152,18 +158,15 @@
   // Add new computed property for sorted data
   const sortedDataByYear = computed(() => {
     const data = [...dataByYear.value]
-    switch (sortDirection.value) {
-      case 'asc':
-        return data.reverse()
-      case 'expand':
-        expandAll()
-        return data
-      case 'collapse':
-        collapseAll()
-        return data
-      case 'desc':
-      default:
-        return data
+    return sortDirection.value === 'asc' ? data.reverse() : data
+  })
+
+  // Watch for changes in expandStatus
+  watch(expandStatus, (newValue: 'expand' | 'collapse') => {
+    if (newValue === 'expand') {
+      expandAll()
+    } else if (newValue === 'collapse') {
+      collapseAll()
     }
   })
 

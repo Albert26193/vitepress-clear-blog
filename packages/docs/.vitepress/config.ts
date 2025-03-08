@@ -3,13 +3,13 @@ import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
-import { getThemeConfig } from 'vitepress-clear-blog/node'
 import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { generateThemePlugin } from 'vitepress-plugin-config'
 
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
+import { getThemeConfig } from './theme/utils'
 import { getFooterRefTag, getPosts } from './theme/utils'
 
 const postArticles = await getPosts(10)
@@ -23,8 +23,9 @@ const wikilinksOptions = {
   }
 }
 
+const blogTheme = await getThemeConfig()
 export default defineConfig({
-  // extends: blogTheme,
+  extends: blogTheme.blog,
   markdown: {
     config: (md) => {
       md.use(mathjax3)
@@ -45,8 +46,9 @@ export default defineConfig({
       }
     }
   },
+  // vite: blogTheme.vite,
   vite: {
-    server: { port: 4000 },
+    // server: { port: 4000 },
     plugins: [
       markdownAnalyzerPlugin(),
       // generateThemePlugin(),
@@ -54,7 +56,7 @@ export default defineConfig({
       //RssPlugin(RSS)
     ]
   },
-  title: 'DDDDDDDocs',
+  // title: '55555555',
   base: '/',
   srcDir: './docs',
   head,

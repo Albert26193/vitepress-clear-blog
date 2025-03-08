@@ -3,7 +3,9 @@ import { globby } from 'globby'
 import matter from 'gray-matter'
 import MarkdownIt from 'markdown-it'
 import path, { resolve } from 'path'
+import UnoCSS from 'unocss/vite'
 import { Post, PostFrontMatter } from 'vitepress-clear-blog/types'
+import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 
 /**
  * Get all posts and generate pagination pages
@@ -108,7 +110,7 @@ const getFooterRefTag = (md: MarkdownIt) => {
     // 查找下一个脚注内容标记
     let contentIndex = idx + 1
     let contentText = ''
-    let contentTokens = []
+    const contentTokens: Token[] = []
 
     while (
       contentIndex < tokens.length &&
@@ -177,3 +179,24 @@ const getFooterRefTag = (md: MarkdownIt) => {
 }
 
 export { getPosts, getRootPath, getSrcPath, getFooterRefTag }
+
+//temp
+const getThemeConfig = async (cfg = {}) => {
+  return {
+    blog: {
+      title: 'DDDDDDDocs',
+      vite: {
+        server: { port: 4000 },
+        plugins: [
+          markdownAnalyzerPlugin(),
+          // generateThemePlugin(),
+          UnoCSS()
+          //RssPlugin(RSS)
+        ]
+      },
+      ...cfg
+    }
+  }
+}
+
+export { getThemeConfig }

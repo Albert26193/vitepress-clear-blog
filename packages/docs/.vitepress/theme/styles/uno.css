@@ -63,7 +63,7 @@
 .ml-4{margin-left:1rem;}
 .ml-6{margin-left:1.5rem;}
 .mr-1{margin-right:0.25rem;}
-.mr-15{margin-right:3.75rem;}
+.mr-18{margin-right:4.5rem;}
 .mr-2{margin-right:0.5rem;}
 .mt-\[3px\]{margin-top:3px;}
 .mt-0{margin-top:0;}
@@ -133,6 +133,7 @@
 .gap-\[2px\]{gap:2px;}
 .gap-1{gap:0.25rem;}
 .gap-4{gap:1rem;}
+.gap-6{gap:1.5rem;}
 .gap-x-1{column-gap:0.25rem;}
 .gap-y-\[6px\]{row-gap:6px;}
 .space-x-2>:not([hidden])~:not([hidden]){--un-space-x-reverse:0;margin-left:calc(0.5rem * calc(1 - var(--un-space-x-reverse)));margin-right:calc(0.5rem * var(--un-space-x-reverse));}
