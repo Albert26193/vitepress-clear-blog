@@ -5,6 +5,8 @@
     "~": "${cwd}"
   },
   "cSpell.words": [
+    "backlink",
+    "backlinks",
     "heti",
     "Heti",
     "linkify",
@@ -28,6 +30,10 @@
     },
     {
       "filePath": "packages/theme",
+      "group": "Default"
+    },
+    {
+      "filePath": "packages/plugin-analyzer/src/core/state.ts",
       "group": "Default"
     }
   ],

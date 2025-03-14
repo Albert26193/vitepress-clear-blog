@@ -1,10 +1,10 @@
 import MarkdownIt from 'markdown-it'
-import type { Token } from 'markdown-it'
+import type Token from 'markdown-it/lib/token.mjs'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import type { Plugin } from 'vitepress'
 
-import type { PageLink, SiteMetadata } from './types'
+import type { PageLink, SiteMetadata } from '../src/types'
 import { calculateWords } from './wordCount'
 
 const VIRTUAL_MODULE_ID = 'virtual:markdown-metadata'
@@ -12,7 +12,6 @@ const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
 // TODO: do we need a global metadata? alternatively, wrap it in a function?
 const globalMdMetadata: SiteMetadata = {}
-
 // TODO: make this configurable
 const dirPrefix = 'blogs'
 
@@ -202,7 +201,7 @@ const extractToLinks = (
  */
 const extractHeadingContent = (tokens: Token[], index: number): string => {
   const contentToken = tokens[index + 1]
-  if (contentToken?.type !== 'inline') return ''
+  if (!contentToken || contentToken.type !== 'inline') return ''
 
   return (
     contentToken.children
@@ -390,76 +389,21 @@ export function markdownAnalyzerPlugin(): Plugin {
 
   return {
     name: 'vitepress-plugin-analyzer',
-    enforce: 'pre',
+    buildStart() {
+      scanDir(blogDir)
+      buildGlobalBackLinks()
+    },
     resolveId(id) {
-      console.log('[Analyzer Plugin] Resolving id:', id)
       if (id === VIRTUAL_MODULE_ID) {
-        console.log(
-          '[Analyzer Plugin] Found virtual module:',
-          VIRTUAL_MODULE_ID
-        )
-        console.log(
-          '[Analyzer Plugin] Resolved to:',
-          RESOLVED_VIRTUAL_MODULE_ID
-        )
         return RESOLVED_VIRTUAL_MODULE_ID
       }
     },
     load(id) {
-      console.log('[Analyzer Plugin] Loading virtual module content')
-      console.log(
-        '[Analyzer Plugin] Current metadata size:',
-        Object.keys(globalMdMetadata).length
-      )
-
-      // 确保在 SSR 和客户端都能访问数据
-      if (Object.keys(globalMdMetadata).length === 0) {
-        console.log(
-          '[Analyzer Plugin] Metadata empty, scanning directory:',
-          blogDir
-        )
-        // scanDir(blogDir)
-        // buildGlobalBackLinks()
-        console.log(
-          '[Analyzer Plugin] After scan metadata size:',
-          Object.keys(globalMdMetadata).length
-        )
-      }
-
-      return `
-        export const globalMdMetadata = ${JSON.stringify(globalMdMetadata, null, 2)}
-      `
-    },
-    configureServer(server) {
-      console.log('[Analyzer Plugin] Configuring dev server')
-      // 扫描文档目录
-      console.log('[Analyzer Plugin] Initial scan of:', blogDir)
-      // scanDir(blogDir)
-      // buildGlobalBackLinks()
-      console.log(
-        '[Analyzer Plugin] Initial metadata size:',
-        Object.keys(globalMdMetadata).length
-      )
-
-      // 监听文件变化
-      return () => {
-        server.watcher.on('change', (file) => {
-          if (file.endsWith('.md')) {
-            console.log('[Analyzer Plugin] Markdown file changed:', file)
-            // analyzeMdFile(file)
-            // buildGlobalBackLinks()
-            console.log(
-              '[Analyzer Plugin] Updated metadata size:',
-              Object.keys(globalMdMetadata).length
-            )
-            // 通知客户端更新
-            server.ws.send({
-              type: 'custom',
-              event: 'markdown-metadata-update',
-              data: globalMdMetadata
-            })
-          }
-        })
+      if (id === RESOLVED_VIRTUAL_MODULE_ID) {
+        console.log('[Analyzer Plugin] Global metadata:', globalMdMetadata)
+        return `
+          export const globalMdMetadata = ${JSON.stringify(globalMdMetadata, null, 2)}
+        `
       }
     }
   }

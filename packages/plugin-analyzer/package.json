@@ -30,7 +30,8 @@
   "scripts": {
     "dev": "tsup --config tsup.config.ts --watch",
     "build": "tsup --config tsup.config.ts",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "markdown-it": "^14.1.0"

@@ -126,6 +126,7 @@
 .cursor-pointer{cursor:pointer;}
 .hover\:cursor-pointer:hover{cursor:pointer;}
 .cursor-not-allowed{cursor:not-allowed;}
+.resize{resize:both;}
 .items-center{align-items:center;}
 .justify-end{justify-content:flex-end;}
 .justify-center{justify-content:center;}
