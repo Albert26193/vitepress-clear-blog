@@ -13,25 +13,22 @@ describe('calculateWords', () => {
   it('should count Chinese characters correctly', () => {
     const content = readTestFile('word-count-zh.md')
     const wordCount = calculateWords(content)
-    // Include words from both normal text and code blocks
     console.log(wordCount)
-    expect(wordCount).toBe(104) // Updated based on actual count
+    expect(wordCount).toBe(106)
   })
 
   it('should count English words correctly', () => {
     const content = readTestFile('word-count-en.md')
     const wordCount = calculateWords(content)
-    // Include words from both normal text and code blocks
     console.log(wordCount)
-    expect(wordCount).toBe(95) // Updated based on actual count
+    expect(wordCount).toBe(95)
   })
 
   it('should handle mixed content correctly', () => {
     const content = '这是一个 mixed content 测试。Here are 5 characters.'
     const wordCount = calculateWords(content)
-    // 7 Chinese characters + 4 English words (mixed, content, are, characters)
     console.log(wordCount)
-    expect(wordCount).toBe(11) // Updated based on actual count
+    expect(wordCount).toBe(11)
   })
 
   it('should count code blocks content', () => {

@@ -12,13 +12,16 @@ description: 用于测试中文字数统计
 这里有一些数字 123 456，它们不应该被计入字数。
 
 这里有一些 Markdown 格式的文本：
+
 - **加粗文本**
-- *斜体文本*
+- _斜体文本_
 - `代码文本`
 - [链接文本](https://example.com)
 
 > 这是一段引用文本。
 
 ```js
-const hello = 'world';
+const hello = 'world'
 ```
+
+[[./relative-path.md]]

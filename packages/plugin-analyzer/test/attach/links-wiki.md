@@ -6,7 +6,7 @@ Here is a simple Wiki link: [[Simple Link]]
 
 Here is a Wiki link with a pipe symbol: [[Target Path|Display Text]]
 
-Here are multiple Wiki links: I like [[apples]] and [[bananas]].
+Here are multiple Wiki links: I like [[bananas]].
 
 Here is a Wiki link with spaces: [[This is a link]]
 

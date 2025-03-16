@@ -1,7 +1,9 @@
 import MarkdownIt from 'markdown-it'
 import type Token from 'markdown-it/lib/token.mjs'
-import { dirname, join } from 'node:path'
+import { existsSync } from 'node:fs'
+import { dirname, join, normalize, resolve } from 'node:path'
 
+import type { AnalyzerConfig } from '../core/config'
 import type { PageLink } from '../types'
 
 // Initialize markdown-it instance
@@ -9,6 +11,18 @@ const md = new MarkdownIt({
   linkify: true,
   html: true // Enable HTML tag parsing
 })
+
+/**
+ * Get the absolute path to the docs root directory
+ * This function assumes it's being called in the context of a VitePress site
+ * where config.docsDir is relative to the current working directory
+ *
+ * @param config - The analyzer configuration
+ * @returns The absolute path to the docs root directory
+ */
+const getDocsRoot = (config: AnalyzerConfig): string => {
+  return resolve(process.cwd(), config.docsDir)
+}
 
 /**
  * Check if a link is an external link
@@ -21,6 +35,8 @@ const isExternalLink = (link: string): boolean =>
   link.startsWith('https') ||
   link.startsWith('#') ||
   link.startsWith('mailto:') ||
+  link.startsWith('tel:') ||
+  link.startsWith('mailto:') ||
   link.startsWith('tel:')
 
 /**
@@ -32,37 +48,107 @@ const isExternalLink = (link: string): boolean =>
 const normalizeLink = (link: string): string => link.split('#')[0]
 
 /**
- * Resolve the document path while preserving relative paths
+ * Check if a file exists at the given absolute path
+ * Supports both with and without .md extension
  *
- * @param relativePath - The relative path
- * @param currentFile - The current file path
- * @returns The resolved path, maintaining relative format
+ * @param absolutePath - The absolute path to check
+ * @returns True if the file exists, false otherwise
  */
-const resolveDocPath = (relativePath: string, currentFile: string): string => {
-  // Remove anchor part from the path
-  const pathWithoutAnchor = normalizeLink(relativePath)
-
-  // If it's an absolute path (starts with /), return it directly (remove the leading /)
-  if (pathWithoutAnchor.startsWith('/')) {
-    return pathWithoutAnchor.substring(1)
+const fileExists = (absolutePath: string): boolean => {
+  console.log(absolutePath, existsSync(absolutePath))
+  // Try exact path first
+  if (existsSync(absolutePath)) {
+    return true
   }
 
-  // If it's a relative path, join it with the current directory
+  // If path doesn't end with .md, try with .md extension
+  if (!absolutePath.endsWith('.md')) {
+    return existsSync(absolutePath + '.md')
+  }
+
+  return false
+}
+
+/**
+ * Get the path relative to the project root (docs directory).
+ * This function converts any path (absolute or relative) to a path relative to the project root.
+ * Example:
+ *  - Project root: /path/to/docs
+ *  - Current file: /path/to/docs/posts/post1.md
+ *  - Input link: ../pages/about.md
+ *  - Output: pages/about
+ *
+ * @param relativePath - The input path (can be absolute or relative)
+ * @param currentFile - The current file path relative to project root
+ * @returns The path relative to project root, without extension
+ */
+const getProjectRelativePath = (
+  relativePath: string,
+  currentFile: string
+): string => {
+  // Remove anchor part and normalize the path
+  const pathWithoutAnchor = normalizeLink(relativePath)
+
+  // If it's an absolute path (starts with /), just remove the leading slash
+  if (pathWithoutAnchor.startsWith('/')) {
+    return pathWithoutAnchor.substring(1).replace(/\.md$/, '')
+  }
+
+  // For relative paths, resolve against current file's location
   const currentDir = dirname(currentFile)
-  // Remove .md extension and ensure the path is relative
-  return join(currentDir, pathWithoutAnchor)
-    .replace(/\.md$/, '')
-    .replace(/^\//, '')
+
+  // Join paths to get the full path relative to the current directory
+  let fullPath = join(currentDir, pathWithoutAnchor)
+
+  // Normalize the path to remove .. segments, but keep it relative
+  // We don't want to use path.resolve here as it would create an absolute path
+  fullPath = normalize(fullPath).replace(/\\/g, '/')
+
+  // Make sure the path doesn't start with a slash and remove .md extension
+  return fullPath
+    .replace(/\.md$/, '') // Remove .md extension
+    .replace(/^\//, '') // Remove leading slash if exists
+}
+
+/**
+ * Resolve the absolute path in the file system.
+ * This function converts any path to its absolute location on disk.
+ *
+ * @param config - The analyzer configuration
+ * @param relativePath - The input path (can be absolute or relative)
+ * @param currentFile - The current file path relative to project root
+ * @returns The absolute path in the file system
+ */
+const resolveAbsolutePath = (
+  config: AnalyzerConfig,
+  relativePath: string,
+  currentFile: string
+): string => {
+  const currentFileAbsolutePath = resolve(getDocsRoot(config), currentFile)
+  console.log('currentFileAbsolutePath', currentFileAbsolutePath)
+  // If it's an absolute path (starts with /), resolve from docs root
+  const normalizedPath = normalizeLink(relativePath)
+  if (normalizedPath.startsWith('/')) {
+    return resolve(getDocsRoot(config), normalizedPath.substring(1))
+  }
+
+  // For relative paths, resolve from current file's directory
+  return resolve(dirname(currentFileAbsolutePath), normalizedPath)
 }
 
 /**
  * Create a link validation function
+ * This function checks if:
+ * 1. The link is not external
+ * 2. The link is not empty after normalization
+ * 3. The target file exists in the file system
  *
+ * @param config - The analyzer configuration
  * @param currentFile - The current file path
  * @returns A link validation function
  */
 const createValidateLink =
-  (currentFile: string) =>
+  (config: AnalyzerConfig, currentFile: string) =>
   (link: string): boolean => {
     // If it's an external link, return false
     if (isExternalLink(link)) {
@@ -77,11 +163,18 @@ const createValidateLink =
       return false
     }
 
-    return true
+    // Check if the file exists
+    const absolutePath = resolveAbsolutePath(
+      config,
+      normalizedLink,
+      currentFile
+    )
+    return fileExists(absolutePath)
   }
 
 /**
- * Extract standard Markdown links from tokens
+ * Extract standard Markdown links from tokens, be like:
+ *  [link](./link.md) or [link](./link)
  *
  * @param tokens - The Markdown tokens array
  * @param validateLink - The link validation function
@@ -129,7 +222,8 @@ const extractMarkdownLinks = (
 }
 
 /**
- * Extract HTML links from tokens
+ * Extract HTML links from tokens, be like:
+ * <a href="./link.md">link</a> or <a href="./link">link</a>
  *
  * @param tokens - The Markdown tokens array
  * @param validateLink - The link validation function
@@ -176,7 +270,10 @@ const extractHtmlLinks = (
 }
 
 /**
- * Extract Wiki links from tokens
+ * Extract Wiki links from tokens, be like 3 situations:
+ * 1. [[ as-short-as-possible ]] if not have same name with file name
+ * 2. [[ relative-path-based-on-current-file | display text ]]
+ * 3. [[ absolute-path-based-on-docs-root | display text ]]
  *
  * @param tokens - The Markdown tokens array
  * @param validateLink - The link validation function
@@ -229,51 +326,79 @@ const extractWikiLinks = (
 }
 
 /**
- * Process links, add full URLs
+ * Process links by removing duplicates and adding resolved paths
  *
  * @param links - The partially processed links array
- * @param currentFile - The current file path
- * @returns The fully processed links array
+ * @param config - The analyzer configuration
+ * @param currentFile - The current file path relative to project root
+ * @returns The fully processed links array with duplicates removed
  */
 const processLinks = (
   links: Partial<PageLink>[],
+  config: AnalyzerConfig,
   currentFile: string
 ): PageLink[] => {
-  // Remove duplicates, prioritize Markdown type links
-  return links
+  // First, normalize all paths to make comparison consistent
+  const processedLinks = links.map((link) => {
+    // Calculate normalized path (without .. segments)
+    const normalizedPath = getProjectRelativePath(
+      link.relativePath || '',
+      currentFile
+    )
+    return {
+      ...link,
+      // Store normalized path temporarily for deduplication
+      _normalizedPathForDedup: normalizedPath
+    }
+  })
+
+  // Remove duplicates, prioritizing Markdown type links
+  return processedLinks
     .filter(
       (link, index, self) =>
         index ===
         self.findIndex(
           (l) =>
-            l.relativePath === link.relativePath &&
+            l._normalizedPathForDedup === link._normalizedPathForDedup &&
+            // If several links have the same normalized path, keep markdown type
             (l.type === 'markdown' || link.type === 'markdown'
               ? l.type === link.type
               : true)
         )
     )
-    .map((link) => ({
-      ...link,
-      relativePath: resolveDocPath(link.relativePath || '', currentFile),
-      fullUrl:
-        `/${resolveDocPath(link.relativePath || '', currentFile)}`.replace(
-          /\/+/g,
-          '/'
+    .map((link) => {
+      // Calculate final paths
+      const processedRelativePath = link._normalizedPathForDedup
+
+      // Create the final link object without the temporary field
+      const { _normalizedPathForDedup, ...linkWithoutTemp } = link
+
+      return {
+        ...linkWithoutTemp,
+        absolutePath: resolveAbsolutePath(
+          config,
+          link.relativePath || '',
+          currentFile
         ),
-      text: (link.text || '').split('/').pop() || link.text || '',
-      raw: link.raw || ''
-    })) as PageLink[]
+        relativePath: processedRelativePath, // Use the normalized path
+        fullUrl: `/${processedRelativePath}`.replace(/\/+/g, '/'),
+        text: (link.text || '').split('/').pop() || link.text || '',
+        raw: link.raw || ''
+      }
+    }) as PageLink[]
 }
 
 /**
  * Extract links from Markdown content
  *
  * @param content - The Markdown content
+ * @param config - The analyzer configuration
  * @param currentFile - The current file path
  * @returns The extracted links array
  */
 export const extractInnerLinks = (
   content: string,
+  config: AnalyzerConfig,
   currentFile: string
 ): PageLink[] => {
   // If content is empty, return an empty array
@@ -283,7 +408,7 @@ export const extractInnerLinks = (
   const tokens = md.parse(content, {})
 
   // Create link validation function
-  const validateLink = createValidateLink(currentFile)
+  const validateLink = createValidateLink(config, currentFile)
 
   // Extract various types of links
   const markdownLinks = extractMarkdownLinks(tokens, validateLink)
@@ -294,5 +419,5 @@ export const extractInnerLinks = (
   const allLinks = [...markdownLinks, ...htmlLinks, ...wikiLinks]
 
   // Process links, add full URLs
-  return processLinks(allLinks, currentFile)
+  return processLinks(allLinks, config, currentFile)
 }
