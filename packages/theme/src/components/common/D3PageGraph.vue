@@ -5,18 +5,18 @@
       v-model="zoomLevel"
       :nodes="graphData.nodes"
       :links="graphData.links"
-      :width="width"
-      :height="height"
-      :diameter="diameter"
-      :text-size="textSize"
-      :circle-color="circleColor"
-      :text-color="textColor"
+      :width="props.width"
+      :height="props.height"
+      :diameter="props.diameter"
+      :text-size="props.textSize"
+      :circle-color="props.circleColor"
+      :text-color="props.textColor"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { getAllMetadata, getPageMetadata } from 'virtual:vitepress-analyzer'
+  import { getAllMetadata } from 'virtual:vitepress-analyzer'
   import { useRoute } from 'vitepress'
   import { computed, ref } from 'vue'
 

@@ -18,10 +18,12 @@
     </div>
     <div class="d3-force-sidebar-container mt-4" v-if="true">
       <D3PageGraph
-        :width="320"
-        :height="320"
+        :width="400"
+        :height="400"
         :circle-color="'#3b3cf6'"
         :text-color="'#4b4543'"
+        :diameter="9"
+        :text-size="18"
       />
     </div>
   </div>

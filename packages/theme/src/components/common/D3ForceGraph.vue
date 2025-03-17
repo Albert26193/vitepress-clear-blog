@@ -78,8 +78,8 @@
         d3
           .forceLink<D3Node, D3Link>(links)
           .id((d) => d.id)
-          .distance(60)
-          .strength(0.1)
+          .distance(50)
+          .strength(0.12)
       )
       .force('charge', d3.forceManyBody().strength(-800))
       .force('center', d3.forceCenter(width / 2, height / 2))
@@ -187,7 +187,7 @@
       .attr('y', 0)
 
     // Then add the text
-    const textElements = node
+    node
       .append('text')
       .attr('dy', props.textSize + 10)
       .attr('text-anchor', 'middle')
@@ -209,9 +209,9 @@
         nodeElement
           .select('rect.text-background')
           .attr('width', textWidth + 10) // text width plus some padding
-          .attr('height', textHeight)
-          .attr('x', -textWidth / 2 - 5) // center
-          .attr('y', props.textSize + 2) // below the text
+          .attr('height', textHeight + 4) // add some vertical padding
+          .attr('x', -textWidth / 2 - 5) // center horizontally
+          .attr('y', props.textSize + 2 - textHeight / 2) // center vertically
       }
     })
 
@@ -222,7 +222,9 @@
         .forceCollide()
         .radius((d) => {
           // Find the corresponding node's text element
-          const nodeElement = node.filter((n) => n.id === d.id).node()
+          const nodeElement = node
+            .filter((n) => n.id === (d as D3Node).id)
+            .node()
           if (nodeElement) {
             const textElement = d3
               .select(nodeElement)

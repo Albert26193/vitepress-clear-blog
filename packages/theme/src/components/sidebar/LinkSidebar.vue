@@ -40,9 +40,9 @@
 </template>
 
 <script setup lang="ts">
-  import { getAllMetadata, getPageMetadata } from 'virtual:vitepress-analyzer'
+  import { getPageMetadata } from 'virtual:vitepress-analyzer'
   import { useRoute } from 'vitepress'
-  import { computed, onMounted, ref, watch } from 'vue'
+  import { computed, ref, watch } from 'vue'
 
   import type { PageLink } from '../../types/types'
 
@@ -57,9 +57,9 @@
     return getPageMetadata(currentPath.value)?.backLinks || []
   })
 
-  onMounted(() => {
-    console.log('total', JSON.stringify(getAllMetadata(), null, 2))
-  })
+  // onMounted(() => {
+  //   console.log('total', JSON.stringify(getAllMetadata(), null, 2))
+  // })
 
   watch(
     () => route.path,
