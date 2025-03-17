@@ -5,7 +5,7 @@ import MarkdownIt from 'markdown-it'
 import path, { resolve } from 'path'
 import UnoCSS from 'unocss/vite'
 import { Post, PostFrontMatter } from 'vitepress-clear-blog/types'
-import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 
 /**
  * Get all posts and generate pagination pages
@@ -185,15 +185,15 @@ const getThemeConfig = async (cfg = {}) => {
   return {
     blog: {
       title: 'DDDDDDDocs',
-      vite: {
-        server: { port: 4000 },
-        plugins: [
-          markdownAnalyzerPlugin(),
-          // generateThemePlugin(),
-          UnoCSS()
-          //RssPlugin(RSS)
-        ]
-      },
+      // vite: {
+      //   server: { port: 4000 },
+      //   plugins: [
+      //     vitePressAnalyzerPlugin(),
+      //     // generateThemePlugin(),
+      //     UnoCSS()
+      //     //RssPlugin(RSS)
+      //   ]
+      // },
       ...cfg
     }
   }

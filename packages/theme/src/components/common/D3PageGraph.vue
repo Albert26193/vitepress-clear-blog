@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { globalMdMetadata } from 'virtual:markdown-metadata'
+  import { getAllMetadata, getPageMetadata } from 'virtual:vitepress-analyzer'
   import { useRoute } from 'vitepress'
   import { computed, ref } from 'vue'
 
@@ -48,7 +48,7 @@
   )
 
   const graphData = computed(() =>
-    transformPageD3Data(currentPath.value, globalMdMetadata)
+    transformPageD3Data(currentPath.value, getAllMetadata())
   )
 
   const zoomLevel = ref(1)

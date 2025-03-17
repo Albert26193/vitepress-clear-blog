@@ -97,6 +97,6 @@ export interface IconOption {
 export type ButtonSize = 'sm' | 'md' | 'lg'
 export type ButtonLayout = 'horizontal' | 'vertical'
 
-// declare module 'virtual:markdown-metadata' {
+// declare module 'virtual:vitepress-analyzer' {
 //   export const globalMdMetadata: SiteMetadata
 // }

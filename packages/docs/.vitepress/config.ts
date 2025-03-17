@@ -3,7 +3,7 @@ import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
-import { markdownAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { generateThemePlugin } from 'vitepress-plugin-config'
 
 import { customElements } from './custom/constant'
@@ -50,7 +50,7 @@ export default defineConfig({
   vite: {
     // server: { port: 4000 },
     plugins: [
-      markdownAnalyzerPlugin(),
+      vitePressAnalyzerPlugin(),
       // generateThemePlugin(),
       UnoCSS()
       //RssPlugin(RSS)

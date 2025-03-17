@@ -1,5 +1,5 @@
 import type { SiteMetadata } from './page'
 
-declare module 'virtual:markdown-metadata' {
+declare module 'virtual:vitepress-analyzer' {
   export const globalMdMetadata: SiteMetadata
 }

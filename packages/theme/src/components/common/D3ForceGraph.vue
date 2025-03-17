@@ -16,8 +16,8 @@
           :y2="link.y2"
           :style="{
             stroke: link.color,
-            strokeOpacity: 0.8,
-            strokeWidth: '1.5px'
+            strokeOpacity: 0.5,
+            strokeWidth: '0.5px'
           }"
         ></line>
       </g>
@@ -78,25 +78,31 @@
         d3
           .forceLink<D3Node, D3Link>(links)
           .id((d) => d.id)
-          .distance(90)
+          .distance(60)
           .strength(0.1)
       )
-      .force('charge', d3.forceManyBody().strength(-300))
+      .force('charge', d3.forceManyBody().strength(-800))
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('collision', d3.forceCollide().radius(30))
       .force('cluster', forceCluster())
 
     // Add cluster force function
     function forceCluster() {
-      const strength = 0.05
+      // Significantly increase the clustering strength
+      const strength = 0.07
       const centerX = width / 2
       const centerY = height / 2
+
       const force = (alpha: number) => {
         for (const d of nodes) {
-          const group = d.group ?? 2
+          const group = d.group ?? 0
           const k = alpha * strength
-          const groupCenterX = centerX + (group * 100 - 200)
+
+          // Increase the distance between group centers
+          const groupCenterX = centerX + (group * 300 - 400)
           const groupCenterY = centerY
+
+          // Apply stronger attraction to group centers
           d.vx! += (groupCenterX - d.x!) * k
           d.vy! += (groupCenterY - d.y!) * k
         }
@@ -143,8 +149,8 @@
       .join('line')
       .attr('class', 'd3-force-link')
       .attr('stroke', '#999')
-      .attr('stroke-opacity', 0.6)
-      .attr('stroke-width', 1.5)
+      .attr('stroke-opacity', 0.5)
+      .attr('stroke-width', 0.8)
 
     // crate nodes
     const node = g
@@ -166,16 +172,72 @@
       .attr('r', props.diameter)
       .attr('fill', (d) => d.color || props.circleColor)
 
-    // add node texts
+    // add node texts with background for better readability
+    // First, add the text background rectangle
     node
+      .append('rect')
+      .attr('class', 'text-background')
+      .attr('fill', 'white')
+      .attr('opacity', 0.95)
+      .attr('rx', 3) // rounded rectangle
+      .attr('ry', 3)
+      .attr('width', 0) // initial width is 0, will be updated later
+      .attr('height', 0)
+      .attr('x', 0)
+      .attr('y', 0)
+
+    // Then add the text
+    const textElements = node
       .append('text')
-      .attr('dy', props.textSize + 5)
+      .attr('dy', props.textSize + 10)
       .attr('text-anchor', 'middle')
       .attr('fill', props.textColor)
       .style('font-size', `${props.textSize}px`)
-      .style('opacity', 0.9)
+      .style('opacity', 0.95)
       .style('font-weight', '500')
       .text((d) => d.name || 'demo')
+
+    // Update the background rectangle's size to match the text
+    node.each(function () {
+      const nodeElement = d3.select(this)
+      const textElement = nodeElement.select('text').node() as SVGTextElement
+      if (textElement) {
+        const textWidth = textElement.getComputedTextLength()
+        const textHeight = props.textSize * 1.2
+
+        // Update the background rectangle's size and position
+        nodeElement
+          .select('rect.text-background')
+          .attr('width', textWidth + 10) // text width plus some padding
+          .attr('height', textHeight)
+          .attr('x', -textWidth / 2 - 5) // center
+          .attr('y', props.textSize + 2) // below the text
+      }
+    })
+
+    // Modify the collision detection to consider the text size
+    simulation.force(
+      'collision',
+      d3
+        .forceCollide()
+        .radius((d) => {
+          // Find the corresponding node's text element
+          const nodeElement = node.filter((n) => n.id === d.id).node()
+          if (nodeElement) {
+            const textElement = d3
+              .select(nodeElement)
+              .select('text')
+              .node() as SVGTextElement
+            if (textElement) {
+              const textWidth = textElement.getComputedTextLength()
+              // Return a collision radius based on the text width
+              return Math.max(props.diameter, textWidth / 2) + 22
+            }
+          }
+          return props.diameter + 22
+        })
+        .strength(0.8)
+    )
 
     // Add drag functionality
     let isDragging = false
@@ -231,7 +293,7 @@
       draggedNode = event.subject
       updateNodeState(draggedNode)
 
-      // 开始拖拽时就启动模拟
+      // Start the simulation when dragging starts
       if (!event.active) simulation.alphaTarget(0.3).restart()
     }
 
@@ -241,14 +303,14 @@
       const dragDistance = Math.sqrt(dx * dx + dy * dy)
 
       if (!isDragging && dragDistance > 0) {
-        // 第一次判定为拖拽时，从节点当前位置开始
+        // When dragging starts, start from the node's current position
         isDragging = true
         event.subject.fx = event.subject.x
         event.subject.fy = event.subject.y
       }
 
       if (isDragging) {
-        // 之后使用相对位移来更新位置
+        // After that, use relative displacement to update the position
         event.subject.fx = event.x + dx / 1000
         event.subject.fy = event.y + dy / 1000
       }
@@ -256,19 +318,19 @@
 
     const dragEnded = (event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>) => {
       if (!isDragging) {
-        // 如果没有拖拽，这是一个点击事件
+        // If not dragging, it's a click event
         handleNodeClick(event.subject)
       }
 
-      // 重置状态
+      // Reset states
       isDragging = false
       draggedNode = null
 
-      // 释放节点，让它可以继续移动
+      // Release the node to continue moving
       event.subject.fx = null
       event.subject.fy = null
 
-      // 逐渐停止模拟
+      // Gradually stop the simulation
       simulation.alphaTarget(0)
     }
 

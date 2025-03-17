@@ -1,5 +1,7 @@
 export { calculateWords } from './parsers/wordCount'
-export * from './types'
+
+// Export types
+export type { PageLink, PageMetadata, SiteMetadata } from './types'
 
 export { generateVirtualModuleContent } from './virtual/analysis'
 

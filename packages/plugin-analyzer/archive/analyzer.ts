@@ -7,7 +7,7 @@ import type { Plugin } from 'vitepress'
 import type { PageLink, SiteMetadata } from '../src/types'
 import { calculateWords } from './wordCount'
 
-const VIRTUAL_MODULE_ID = 'virtual:markdown-metadata'
+const VIRTUAL_MODULE_ID = 'virtual:vitepress-analyzer'
 const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
 // TODO: do we need a global metadata? alternatively, wrap it in a function?

@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-  import { globalMdMetadata } from 'virtual:markdown-metadata'
+  import { getAllMetadata, getPageMetadata } from 'virtual:vitepress-analyzer'
   import { useRoute } from 'vitepress'
   import { computed, onMounted, ref, watch } from 'vue'
 
@@ -50,15 +50,15 @@
   const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))
 
   const outgoingLinks = computed<PageLink[]>(() => {
-    return globalMdMetadata[currentPath.value]?.outgoingLinks || []
+    return getPageMetadata(currentPath.value)?.outgoingLinks || []
   })
 
   const backLinks = computed<PageLink[]>(() => {
-    return globalMdMetadata[currentPath.value]?.backLinks || []
+    return getPageMetadata(currentPath.value)?.backLinks || []
   })
 
   onMounted(() => {
-    console.log('total', JSON.stringify(globalMdMetadata, null, 2))
+    console.log('total', JSON.stringify(getAllMetadata(), null, 2))
   })
 
   watch(

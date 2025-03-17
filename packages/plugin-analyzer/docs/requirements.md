@@ -87,7 +87,7 @@ VitePress Plugin Analyzer 是一个用于分析 VitePress 站点中 Markdown 文
 ### 5.1 Virtual Module
 
 ```typescript
-import { globalMdMetadata } from 'virtual:markdown-metadata'
+import { globalMdMetadata } from 'virtual:vitepress-analyzer'
 ```
 
 ### 5.2 工具函数

@@ -181,3 +181,9 @@
     margin-left: 0.125rem;
   }
 </style>
+
+<script setup lang="ts">
+  import { getAllMetadata } from 'virtual:vitepress-analyzer'
+
+  console.log(getAllMetadata())
+</script>

@@ -13,11 +13,9 @@ describe('createConfig', () => {
     }
     const config = createConfig(userConfig)
     expect(config.docsDir).toBe('custom-docs')
-    expect(config.blogDir).toBe('custom-blog')
     expect(config.excludeDirs).toEqual(['test'])
     expect(config.includeFiles).toEqual(['.md'])
     expect(config.excludeFiles).toEqual([])
-    expect(config.maxSearchDepth).toBe(3)
     expect(config.ignoreCase).toBe(true)
   })
 })

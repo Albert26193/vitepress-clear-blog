@@ -11,7 +11,7 @@ declare module '*.png' {
   export = value
 }
 
-// declare module 'virtual:markdown-metadata' {
+// declare module 'virtual:vitepress-analyzer' {
 //   export const globalMdMetadata: SiteMetadata
 // }
 
