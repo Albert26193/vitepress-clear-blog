@@ -7,8 +7,8 @@
       :height="960"
       :diameter="9"
       :text-size="15"
-      circle-color="var(--vp-c-brand)"
-      text-color="#0b0503"
+      :circle-color="`var(--vp-c-brand)`"
+      :text-color="`var(--vp-c-text)`"
     />
   </div>
 </template>

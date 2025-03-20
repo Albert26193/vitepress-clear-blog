@@ -177,7 +177,7 @@
     node
       .append('rect')
       .attr('class', 'text-background')
-      .attr('fill', 'white')
+      .attr('fill', 'red')
       .attr('opacity', 0.95)
       .attr('rx', 3) // rounded rectangle
       .attr('ry', 3)
@@ -185,6 +185,7 @@
       .attr('height', 0)
       .attr('x', 0)
       .attr('y', 0)
+      .attr('border', '1px solid black')
 
     // Then add the text
     node
@@ -203,6 +204,7 @@
       const textElement = nodeElement.select('text').node() as SVGTextElement
       if (textElement) {
         const textWidth = textElement.getComputedTextLength()
+        console.warn(textWidth)
         const textHeight = props.textSize * 1.2
 
         // Update the background rectangle's size and position
@@ -216,6 +218,7 @@
     })
 
     // Modify the collision detection to consider the text size
+    // TODO: 自定义碰撞检测
     simulation.force(
       'collision',
       d3
@@ -233,10 +236,10 @@
             if (textElement) {
               const textWidth = textElement.getComputedTextLength()
               // Return a collision radius based on the text width
-              return Math.max(props.diameter, textWidth / 2) + 22
+              return Math.max(props.diameter, textWidth / 2)
             }
           }
-          return props.diameter + 22
+          return props.diameter
         })
         .strength(0.8)
     )
