@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-  import { getAllMetadata } from 'virtual:vitepress-analyzer'
+  import { metadata } from 'virtual:vitepress-analyzer'
   import { useRoute } from 'vitepress'
   import { computed, ref, watch } from 'vue'
 
@@ -60,7 +60,7 @@
   )
 
   const graphData = computed(() =>
-    transformPageD3Data(currentPath.value, getAllMetadata())
+    transformPageD3Data(currentPath.value, metadata)
   )
 
   console.log('nodes for graph', graphData.value)

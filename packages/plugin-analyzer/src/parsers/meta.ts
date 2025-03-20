@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 
 import type { AnalyzerConfig } from '../core/config'
-import type { PageLink, PageMetadata } from '../types'
+import type { PageMetadata } from '../types'
 import { extractHeading } from './heading'
 import { extractInnerLinks } from './link'
 import { calculateWords } from './wordCount'

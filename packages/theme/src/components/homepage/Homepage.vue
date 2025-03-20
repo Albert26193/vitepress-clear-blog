@@ -183,7 +183,7 @@
 </style>
 
 <script setup lang="ts">
-  import { getAllMetadata } from 'virtual:vitepress-analyzer'
+  // import { metadata } from 'virtual:vitepress-analyzer'
 
-  console.log(getAllMetadata())
+  // console.log(metadata)
 </script>

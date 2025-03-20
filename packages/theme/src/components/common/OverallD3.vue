@@ -14,13 +14,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { getAllMetadata } from 'virtual:vitepress-analyzer'
+  import { metadata } from 'virtual:vitepress-analyzer'
   import { computed } from 'vue'
 
   import { transformSiteD3Data } from '../../utils/client/'
   import D3ForceGraph from './D3ForceGraph.vue'
 
-  const graphData = computed(() => transformSiteD3Data(getAllMetadata()))
+  const graphData = computed(() => transformSiteD3Data(metadata))
 
   // console.warn('data for overall', JSON.stringify(globalMdMetadata))
   // console.error('nodes for overall', JSON.stringify(graphData.value))

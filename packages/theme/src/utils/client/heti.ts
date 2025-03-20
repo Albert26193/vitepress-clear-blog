@@ -49,7 +49,7 @@ const addClassForHetiElement = (): void => {
 /**
  * Init Heti class and scripts
  */
-const registerHetiScript = async () => {
+const registerHetiScript = () => {
   const { load } = useScriptTag(
     hetiScript,
     (el: HTMLScriptElement) => {

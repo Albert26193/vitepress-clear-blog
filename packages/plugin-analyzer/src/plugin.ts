@@ -8,7 +8,7 @@ import {
   RESOLVED_VIRTUAL_MODULE_ID,
   VIRTUAL_MODULE_ID,
   generateVirtualModuleContent
-} from './virtual/analysis'
+} from './virtual'
 
 /**
  * VitePress analyzer plugin

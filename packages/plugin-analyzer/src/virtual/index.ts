@@ -18,48 +18,7 @@ export const generateVirtualModuleContent = (
 /**
  * @type {Record<string, import('../types/types').PageMetadata>}
  */
-const metadata = ${JSON.stringify(metadata, null, 2)}
-
-/**
- * Get metadata for a specific page
- * @param {string} path - Page path
- * @returns {import('../types/types').PageMetadata | undefined}
- */
-export const getPageMetadata = (path) => metadata[path]
-
-/**
- * Get metadata for all pages
- * @returns {Record<string, import('../types/types').PageMetadata>}
- */
-export const getAllMetadata = () => metadata
-
-/**
- * Get word count for a specific page
- * @param {string} path - Page path
- * @returns {number}
- */
-export const getPageWordCount = (path) => metadata[path]?.wordCount ?? 0
-
-/**
- * Get headings for a specific page
- * @param {string} path - Page path
- * @returns {string[]}
- */
-export const getPageHeadings = (path) => metadata[path]?.headings ?? []
-
-/**
- * Get outgoing links for a specific page
- * @param {string} path - Page path
- * @returns {import('../types/types').PageLink[]}
- */
-export const getPageOutgoingLinks = (path) => metadata[path]?.outgoingLinks ?? []
-
-/**
- * Get backlinks for a specific page
- * @param {string} path - Page path
- * @returns {import('../types/types').PageLink[]}
- */
-export const getPageBackLinks = (path) => metadata[path]?.backLinks ?? []
+export const metadata = ${JSON.stringify(metadata, null, 2)}
 `
 }
 

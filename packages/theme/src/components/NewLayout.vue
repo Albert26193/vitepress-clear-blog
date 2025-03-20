@@ -46,10 +46,9 @@
   import DocBanner from './articles/DocBanner.vue'
   import Copyright from './common/Copyright.vue'
   import HideSidebarButton from './common/HideSidebarButton.vue'
-
-  // import LinkSidebar from './sidebar/LinkSidebar.vue'
-  // import PageLinkD3 from './sidebar/PageLinkD3.vue'
-  // import TagSidebar from './sidebar/TagSidebar.vue'
+  import LinkSidebar from './sidebar/LinkSidebar.vue'
+  import PageLinkD3 from './sidebar/PageLinkD3.vue'
+  import TagSidebar from './sidebar/TagSidebar.vue'
 
   useDarkTransition()
   const { Layout } = DefaultTheme
