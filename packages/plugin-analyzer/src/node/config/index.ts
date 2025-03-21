@@ -1,29 +1,5 @@
 // import * as path from 'path'
-
-export interface AnalyzerConfig {
-  /**
-   * Required directories
-   */
-  // Directory containing documentation files, relative to current working directory
-  docsDir: string
-  /**
-   * File and directory filters
-   */
-  // Directories to exclude from analysis
-  excludeDirs: string[]
-  // File extensions to include in analysis
-  includeFiles: string[]
-  // Files to exclude from analysis
-  excludeFiles: string[]
-
-  /**
-   * Search configuration
-   */
-  // Maximum depth for directory traversal
-  // maxSearchDepth: number
-  // Whether to ignore case in file paths
-  ignoreCase: boolean
-}
+import type { AnalyzerConfig } from '../../../types'
 
 const defaultConfig: AnalyzerConfig = {
   docsDir: 'docs',

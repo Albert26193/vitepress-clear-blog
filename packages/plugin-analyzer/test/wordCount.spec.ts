@@ -1,8 +1,8 @@
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-import { calculateWords } from '../src/parsers/wordCount'
+import { calculateWords } from '../src/node/utils/wordCount'
 
 describe('calculateWords', () => {
   const readTestFile = (filename: string): string => {

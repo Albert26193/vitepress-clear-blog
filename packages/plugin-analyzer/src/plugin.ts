@@ -1,14 +1,15 @@
 import { resolve } from 'node:path'
 import type { Plugin } from 'vite'
 
-import { type AnalyzerConfig, createConfig } from './core/config'
-import { analyzeAllDocuments, scanDirectory } from './parsers/meta'
-import type { SiteMetadata } from './types'
+import type { SiteMetadata } from '../types'
+import type { AnalyzerConfig } from '../types'
+import { createConfig } from './node/config'
+import { analyzeAllDocuments } from './node/parsers/analyze'
 import {
   RESOLVED_VIRTUAL_MODULE_ID,
   VIRTUAL_MODULE_ID,
   generateVirtualModuleContent
-} from './virtual'
+} from './node/virtual'
 
 /**
  * VitePress analyzer plugin

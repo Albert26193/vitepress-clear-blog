@@ -1,28 +1,19 @@
 import MarkdownIt from 'markdown-it'
 import type Token from 'markdown-it/lib/token.mjs'
 import { existsSync } from 'node:fs'
-import { dirname, join, normalize, resolve } from 'node:path'
 
-import type { AnalyzerConfig } from '../core/config'
-import type { PageLink } from '../types'
+import type { AnalyzerConfig, PageLink } from '../../../types'
+import {
+  getProjectRelativePath,
+  normalizeLink,
+  resolveAbsolutePath
+} from '../utils/path'
 
 // Initialize markdown-it instance
 const md = new MarkdownIt({
   linkify: true,
   html: true // Enable HTML tag parsing
 })
-
-/**
- * Get the absolute path to the docs root directory
- * This function assumes it's being called in the context of a VitePress site
- * where config.docsDir is relative to the current working directory
- *
- * @param config - The analyzer configuration
- * @returns The absolute path to the docs root directory
- */
-const getDocsRoot = (config: AnalyzerConfig): string => {
-  return resolve(process.cwd(), config.docsDir)
-}
 
 /**
  * Check if a link is an external link
@@ -40,21 +31,13 @@ const isExternalLink = (link: string): boolean =>
   link.startsWith('tel:')
 
 /**
- * Normalize a link by removing the anchor part
- *
- * @param link - The link to normalize
- * @returns The normalized link
- */
-const normalizeLink = (link: string): string => link.split('#')[0]
-
-/**
  * Check if a file exists at the given absolute path
  * Supports both with and without .md extension
  *
  * @param absolutePath - The absolute path to check
  * @returns True if the file exists, false otherwise
  */
-const fileExists = (absolutePath: string): boolean => {
+const linkedFileExists = (absolutePath: string): boolean => {
   console.log(absolutePath, existsSync(absolutePath))
   // Try exact path first
   if (existsSync(absolutePath)) {
@@ -67,73 +50,6 @@ const fileExists = (absolutePath: string): boolean => {
   }
 
   return false
-}
-
-/**
- * Get the path relative to the project root (docs directory).
- * This function converts any path (absolute or relative) to a path relative to the project root.
- * Example:
- *  - Project root: /path/to/docs
- *  - Current file: /path/to/docs/posts/post1.md
- *  - Input link: ../pages/about.md
- *  - Output: pages/about
- *
- * @param relativePath - The input path (can be absolute or relative)
- * @param currentFile - The current file path relative to project root
- * @returns The path relative to project root, without extension
- */
-const getProjectRelativePath = (
-  relativePath: string,
-  currentFile: string
-): string => {
-  // Remove anchor part and normalize the path
-  const pathWithoutAnchor = normalizeLink(relativePath)
-
-  // If it's an absolute path (starts with /), just remove the leading slash
-  if (pathWithoutAnchor.startsWith('/')) {
-    return pathWithoutAnchor.substring(1).replace(/\.md$/, '')
-  }
-
-  // For relative paths, resolve against current file's location
-  const currentDir = dirname(currentFile)
-
-  // Join paths to get the full path relative to the current directory
-  let fullPath = join(currentDir, pathWithoutAnchor)
-
-  // Normalize the path to remove .. segments, but keep it relative
-  // We don't want to use path.resolve here as it would create an absolute path
-  fullPath = normalize(fullPath).replace(/\\/g, '/')
-
-  // Make sure the path doesn't start with a slash and remove .md extension
-  return fullPath
-    .replace(/\.md$/, '') // Remove .md extension
-    .replace(/^\//, '') // Remove leading slash if exists
-}
-
-/**
- * Resolve the absolute path in the file system.
- * This function converts any path to its absolute location on disk.
- *
- * @param config - The analyzer configuration
- * @param relativePath - The input path (can be absolute or relative)
- * @param currentFile - The current file path relative to project root
- * @returns The absolute path in the file system
- */
-const resolveAbsolutePath = (
-  config: AnalyzerConfig,
-  relativePath: string,
-  currentFile: string
-): string => {
-  const currentFileAbsolutePath = resolve(getDocsRoot(config), currentFile)
-  console.log('currentFileAbsolutePath', currentFileAbsolutePath)
-  // If it's an absolute path (starts with /), resolve from docs root
-  const normalizedPath = normalizeLink(relativePath)
-  if (normalizedPath.startsWith('/')) {
-    return resolve(getDocsRoot(config), normalizedPath.substring(1))
-  }
-
-  // For relative paths, resolve from current file's directory
-  return resolve(dirname(currentFileAbsolutePath), normalizedPath)
 }
 
 /**
@@ -169,7 +85,7 @@ const createValidateLink =
       normalizedLink,
       currentFile
     )
-    return fileExists(absolutePath)
+    return linkedFileExists(absolutePath)
   }
 
 /**
@@ -396,7 +312,7 @@ const processLinks = (
  * @param currentFile - The current file path
  * @returns The extracted links array
  */
-export const extractInnerLinks = (
+const extractInnerLinks = (
   content: string,
   config: AnalyzerConfig,
   currentFile: string
@@ -421,3 +337,5 @@ export const extractInnerLinks = (
   // Process links, add full URLs
   return processLinks(allLinks, config, currentFile)
 }
+
+export { extractInnerLinks }

@@ -1,4 +1,4 @@
-import type { PageLink, PageMetadata } from '../types'
+import type { PageLink, PageMetadata } from '../../types'
 
 /**
  * Get metadata for a specific page
@@ -32,11 +32,11 @@ export function getPageWordCount(
 /**
  * Get headings for a specific page
  */
-export function getPageHeadings(
+export function getPageFirstHeading(
   metadata: Record<string, PageMetadata>,
   path: string
-): string[] {
-  return metadata[path]?.firstHeading ? [metadata[path]?.firstHeading] : []
+): string | undefined {
+  return metadata[path]?.firstHeading
 }
 
 /**

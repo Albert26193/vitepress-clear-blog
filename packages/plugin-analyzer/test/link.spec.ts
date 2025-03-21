@@ -2,9 +2,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-import { createConfig } from '../src/core/config'
-import type { AnalyzerConfig } from '../src/core/config'
-import { extractInnerLinks } from '../src/parsers/link'
+import { createConfig } from '../src/node/config'
+import { extractInnerLinks } from '../src/node/parsers/link'
+import type { AnalyzerConfig } from '../types'
 
 // Create a test configuration
 const testConfig: AnalyzerConfig = createConfig({

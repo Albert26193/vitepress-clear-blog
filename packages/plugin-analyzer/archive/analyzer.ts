@@ -4,7 +4,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import type { Plugin } from 'vitepress'
 
-import type { PageLink, SiteMetadata } from '../src/types'
+import type { PageLink, SiteMetadata } from '../types'
 import { calculateWords } from './wordCount'
 
 const VIRTUAL_MODULE_ID = 'virtual:vitepress-analyzer'
@@ -162,7 +162,7 @@ const extractToLinks = (
                   fullUrl: '',
                   type: 'wiki',
                   raw: match
-                })
+                } as PageLink)
               }
             })
           }
@@ -285,8 +285,7 @@ const analyzeMdFile = (filePath: string) => {
       outgoingLinks: [],
       backLinks: [],
       wordCount: 0,
-      rawContent: '',
-      headings: [],
+      firstHeading: '',
       lastUpdated: 0
     }
   }
@@ -299,7 +298,7 @@ const analyzeMdFile = (filePath: string) => {
   const wordCount = calculateWords(content)
   globalMdMetadata[filePathBasedOnProj].wordCount = wordCount
   // TODO：temp put it to raw content
-  globalMdMetadata[filePathBasedOnProj].rawContent = firstHead as string
+  globalMdMetadata[filePathBasedOnProj].firstHeading = firstHead as string
   globalMdMetadata[filePathBasedOnProj].lastUpdated = stats.mtimeMs
 }
 
@@ -348,7 +347,7 @@ const buildGlobalBackLinks = () => {
         )
 
         if (!exists) {
-          globalMdMetadata[targetFile].backLinks.push(newBackLink)
+          globalMdMetadata[targetFile].backLinks.push(newBackLink as PageLink)
         }
       }
     })

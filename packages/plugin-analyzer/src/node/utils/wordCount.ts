@@ -1,4 +1,4 @@
-export const calculateWords = (content: string): number => {
+const calculateWords = (content: string): number => {
   // Store original content for code blocks
   let codeContent = ''
 
@@ -64,3 +64,5 @@ export const calculateWords = (content: string): number => {
   // Return total count of Chinese characters and English words
   return chineseChars + words.length
 }
+
+export { calculateWords }

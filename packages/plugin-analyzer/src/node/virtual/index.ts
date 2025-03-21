@@ -1,4 +1,4 @@
-import type { PageMetadata } from '../types'
+import type { PageMetadata } from '../../../types'
 
 // Virtual module identifiers
 export const VIRTUAL_MODULE_ID = 'virtual:vitepress-analyzer'

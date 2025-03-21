@@ -2,9 +2,12 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-import { createConfig } from '../src/core/config'
-import type { AnalyzerConfig } from '../src/core/config'
-import { analyzeAllDocuments, analyzeDocument } from '../src/parsers/meta'
+import { createConfig } from '../src/node/config'
+import {
+  analyzeAllDocuments,
+  analyzeDocument
+} from '../src/node/parsers/analyze'
+import type { AnalyzerConfig } from '../types'
 
 // Create a test configuration
 const testConfig: AnalyzerConfig = createConfig({

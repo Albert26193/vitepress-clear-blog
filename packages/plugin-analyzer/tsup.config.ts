@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: {
-    index: 'src/index.ts',
+    index: 'src/node/index.ts',
     client: 'src/client/index.ts'
   },
   format: ['esm', 'cjs'],
@@ -13,6 +13,7 @@ export default defineConfig({
   sourcemap: true,
   external: ['vitepress'],
   treeshake: true,
+  outDir: 'lib',
   outExtension({ format }) {
     return {
       js: format === 'cjs' ? '.cjs' : '.js'

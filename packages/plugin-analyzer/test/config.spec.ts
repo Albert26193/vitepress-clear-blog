@@ -1,7 +1,7 @@
 // import { resolve } from 'path'
 import { describe, expect, it } from 'vitest'
 
-import { createConfig } from '../src/core/config'
+import { createConfig } from '../src/node/config'
 
 describe('createConfig', () => {
   it('should merge user config with default config', () => {

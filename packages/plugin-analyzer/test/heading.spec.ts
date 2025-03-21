@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-import { extractFirstHeading } from '../src/parsers/heading'
+import { extractFirstHeading } from '../src/node/parsers/heading'
 
 describe('Heading Extraction Function Test', () => {
   const readMarkdown = (fileName: string): string => {
