@@ -1,4 +1,4 @@
-import type { PageMetadata } from '../../../types'
+import type { PageMetadata, SitePages } from '../../../types'
 
 // Virtual module identifiers
 export const VIRTUAL_MODULE_ID = 'virtual:vitepress-analyzer'
@@ -6,10 +6,11 @@ export const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
 /**
  * Generate virtual module content
- * @param metadata - Page metadata object
+ * @param siteMetaData - Page metadata object
  */
 export const generateVirtualModuleContent = (
-  metadata: Record<string, PageMetadata>
+  siteMetadata: Record<string, PageMetadata>,
+  sitePages: SitePages
 ): string => {
   return `
 // This file is auto-generated, do not edit manually
@@ -18,7 +19,12 @@ export const generateVirtualModuleContent = (
 /**
  * @type {Record<string, import('../types/types').PageMetadata>}
  */
-export const metadata = ${JSON.stringify(metadata, null, 2)}
+export const siteMetadata = ${JSON.stringify(siteMetadata, null, 2)}
+
+/**
+ * @type SitePages
+ */
+export const sitePages = ${JSON.stringify(sitePages, null, 2)}
 `
 }
 

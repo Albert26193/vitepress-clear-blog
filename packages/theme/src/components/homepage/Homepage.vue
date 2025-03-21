@@ -183,7 +183,8 @@
 </style>
 
 <script setup lang="ts">
-  // import { metadata } from 'virtual:vitepress-analyzer'
+  import { siteMetadata } from 'virtual:vitepress-analyzer'
+  import { sitePages } from 'virtual:vitepress-analyzer'
 
-  // console.log(metadata)
+  console.warn('pages', sitePages)
 </script>

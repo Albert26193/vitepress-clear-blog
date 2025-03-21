@@ -8,9 +8,9 @@ export interface PageLink {
 }
 
 export interface Page {
-  absolutePath: string // 文档的绝对路径
-  relativePath: string // 相对于站点根目录的路径
-  metadata: PageMetadata // 页面元数据
+  absolutePath: string
+  relativePath: string
+  metadata: PageMetadata
 }
 
 export interface PageMetadata {

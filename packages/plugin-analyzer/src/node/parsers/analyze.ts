@@ -1,7 +1,12 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 
-import type { AnalyzerConfig, PageMetadata } from '../../../types'
+import type {
+  AnalyzerConfig,
+  Page,
+  PageMetadata,
+  SitePages
+} from '../../../types'
 import { calculateWords } from '../utils/wordCount'
 import { extractHeading } from './heading'
 import { extractInnerLinks } from './link'
@@ -20,7 +25,8 @@ export const analyzeDocument = (
   content: string,
   config: AnalyzerConfig,
   filePath: string,
-  globalMetadata?: Record<string, PageMetadata>
+  globalMetadata: Record<string, PageMetadata>,
+  globalPages: SitePages
 ): PageMetadata => {
   // Extract document structure and relationships
   const headings = extractHeading(content)
@@ -56,6 +62,15 @@ export const analyzeDocument = (
     globalMetadata[filePath] = metadata
   }
 
+  // Add pages info into globalPages map
+  const currentPageInfo: Page = {
+    absolutePath: resolve(config.docsDir, filePath),
+    relativePath: filePath,
+    metadata
+  }
+
+  globalPages[filePath] = currentPageInfo
+
   return metadata
 }
 
@@ -70,7 +85,8 @@ export const analyzeDocument = (
 export const analyzeFile = (
   filePath: string,
   config: AnalyzerConfig,
-  globalMetadata: Record<string, PageMetadata>
+  globalMetadata: Record<string, PageMetadata>,
+  globalPages: SitePages
 ): PageMetadata => {
   // Read the file content
   const content = readFileSync(filePath, 'utf-8')
@@ -80,7 +96,13 @@ export const analyzeFile = (
   const relativePath = relative(docsRoot, filePath).replace(/\.md$/, '')
 
   // Analyze the document and update global metadata
-  return analyzeDocument(content, config, relativePath, globalMetadata)
+  return analyzeDocument(
+    content,
+    config,
+    relativePath,
+    globalMetadata,
+    globalPages
+  )
 }
 
 /**
@@ -89,11 +111,13 @@ export const analyzeFile = (
  * @param dirPath - Path to the directory to scan
  * @param config - The analyzer configuration
  * @param globalMetadata - Global metadata map to update
+ * @param globalPages - Global pages map to update
  */
 export const scanDirectory = (
   dirPath: string,
   config: AnalyzerConfig,
-  globalMetadata: Record<string, PageMetadata>
+  globalMetadata: Record<string, PageMetadata>,
+  globalPages: SitePages
 ): void => {
   // Get the list of files in the directory
   const files = readdirSync(dirPath)
@@ -110,7 +134,7 @@ export const scanDirectory = (
 
     if (stat.isDirectory()) {
       // Recursively scan subdirectories
-      scanDirectory(fullPath, config, globalMetadata)
+      scanDirectory(fullPath, config, globalMetadata, globalPages)
     } else if (file.endsWith('.md')) {
       // Skip excluded files
       if (config.excludeFiles.some((pattern) => file.includes(pattern))) {
@@ -118,7 +142,7 @@ export const scanDirectory = (
       }
 
       // Analyze markdown files
-      analyzeFile(fullPath, config, globalMetadata)
+      analyzeFile(fullPath, config, globalMetadata, globalPages)
     }
   })
 }
@@ -161,18 +185,19 @@ export const buildDocumentRelationships = (
  */
 export const analyzeAllDocuments = (
   config: AnalyzerConfig
-): Record<string, PageMetadata> => {
+): { globalMetadata: Record<string, PageMetadata>; globalPages: SitePages } => {
   // Initialize global metadata map
   const globalMetadata: Record<string, PageMetadata> = {}
+  const globalPages: SitePages = {}
 
   // Get the docs root directory
   const docsRoot = resolve(process.cwd(), config.docsDir)
 
   // Scan the docs directory and analyze all markdown files
-  scanDirectory(docsRoot, config, globalMetadata)
+  scanDirectory(docsRoot, config, globalMetadata, globalPages)
 
   // Build document relationships
   buildDocumentRelationships(globalMetadata)
 
-  return globalMetadata
+  return { globalMetadata, globalPages }
 }

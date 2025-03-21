@@ -1,7 +1,7 @@
 import { resolve } from 'node:path'
 import type { Plugin } from 'vite'
 
-import type { SiteMetadata } from '../types'
+import type { SiteMetadata, SitePages } from '../types'
 import type { AnalyzerConfig } from '../types'
 import { createConfig } from './node/config'
 import { analyzeAllDocuments } from './node/parsers/analyze'
@@ -26,7 +26,7 @@ export function vitePressAnalyzerPlugin(
 
   // Store analysis results
   const siteMetadata: SiteMetadata = {}
-
+  const sitePages: SitePages = {}
   return {
     name: 'vitepress-analyzer',
 
@@ -38,10 +38,11 @@ export function vitePressAnalyzerPlugin(
       console.log('[Analyzer Plugin] Docs root:', docsRoot)
 
       // Initial scan of all documents
-      const metadata = analyzeAllDocuments(config)
+      const { globalMetadata, globalPages } = analyzeAllDocuments(config)
 
       // Store metadata
-      Object.assign(siteMetadata, metadata)
+      Object.assign(siteMetadata, globalMetadata)
+      Object.assign(sitePages, globalPages)
     },
 
     resolveId(id) {
@@ -52,7 +53,7 @@ export function vitePressAnalyzerPlugin(
 
     load(id) {
       if (id === RESOLVED_VIRTUAL_MODULE_ID) {
-        return generateVirtualModuleContent(siteMetadata)
+        return generateVirtualModuleContent(siteMetadata, sitePages)
       }
     }
   }

@@ -1,5 +1,6 @@
 import { DefaultTheme } from 'vitepress'
-import type { PageData } from 'vitepress'
+
+// import type { PageData } from 'vitepress'
 
 export interface PostFrontMatter {
   author?: string
