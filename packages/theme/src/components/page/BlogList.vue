@@ -1,42 +1,68 @@
 <template>
   <div class="blog-list" @click="navigateToPost">
-    <div class="list-header">
-      <h2 class="list-title mb-1 text-xl font-semibold">
-        <a
-          :href="withBase(post.regularPath)"
-          class="text-color-[var(--vp-c-brand)] hover:underline"
-        >
-          {{ post.frontMatter.title }}
-        </a>
-      </h2>
-    </div>
-    <p
-      v-if="post.frontMatter.description"
-      class="describe mb-4 text-gray-700 dark:text-gray-300 indent-2"
-    >
-      {{ useListDescription(post.frontMatter.description).value }}
-    </p>
-    <div v-else class="mt-4"></div>
-    <div class="list-banner">
-      <div class="flex items-center mt-2">
-        <!-- time -->
-        <div class="i-carbon-time" />
-        <span class="ml-1 align-middle text-sm">
-          {{ post.frontMatter.date?.substring(0, 10) }}
-        </span>
-        <!-- author -->
-        <div class="i-carbon-user ml-3" />
-        <a class="ml-1 align-middle text-sm" :href="`/about.html`">
-          {{ author }}
-        </a>
+    <div class="blog-list-container">
+      <!-- Left section: Title and tags -->
+      <div class="left-section">
+        <div class="left-content">
+          <!-- left-header -->
+          <div class="list-header">
+            <h2 class="list-title">
+              <a :href="withBase(post.regularPath)" class="title-link">
+                {{ post.frontMatter.title }}
+              </a>
+            </h2>
+          </div>
+
+          <!-- Metadata information -->
+          <div class="meta-info">
+            <!-- Time -->
+            <div class="meta-item">
+              <div class="i-carbon-time" />
+              <span class="meta-text">
+                {{ post.frontMatter.date?.substring(0, 10) }}
+              </span>
+            </div>
+            <!-- Author -->
+            <div class="meta-item">
+              <div class="i-carbon-user" />
+              <a class="meta-text" :href="`/about.html`">
+                {{ author }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="tags-container">
+          <span
+            v-for="item in partedTags"
+            :key="item + 'key'"
+            class="tag-wrapper"
+          >
+            <a
+              @click.stop
+              :href="withBase(`/tags.html?tag=${item}`)"
+              class="tag"
+            >
+              {{ item }}
+            </a>
+          </span>
+        </div>
       </div>
-      <!-- tags -->
-      <div class="flex space-x-2 flex-wrap">
-        <span v-for="item in partedTags" :key="item + 'key'">
-          <a @click.stop :href="withBase(`/tags.html?tag=${item}`)" class="tag"
-            >{{ item }}
-          </a>
-        </span>
+
+      <!-- Divider -->
+      <div class="divider"></div>
+
+      <!-- Right section: Description and metadata -->
+      <div class="right-section">
+        <!-- Description content -->
+        <p
+          v-if="post.frontMatter.description"
+          class="describe heti heti--serif"
+        >
+          {{ useListDescription(post.frontMatter.description).value }}
+        </p>
+        <div v-else class="empty-description"></div>
       </div>
     </div>
   </div>
@@ -65,68 +91,100 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .blog-list {
-    @apply flex h-full flex-col justify-between overflow-hidden relative;
-    @apply rounded-xl bg-white py-6 px-8 shadow-sm dark:bg-gray-800;
-    @apply min-w-220px w-2/3 mx-auto;
-    @apply cursor-pointer;
+    @apply w-full mx-auto cursor-pointer relative;
+    @apply transition-colors duration-200;
+
+    &:hover {
+      @apply bg-gray-200/20;
+
+      // .title-link {
+      //   @apply underline underline-offset-6;
+      // }
+    }
+
+    &::before {
+      @apply content-[''] absolute inset-0 pointer-events-none;
+      @apply border-gray-400 border-solid border-y-[0.5px] border-x-0;
+    }
   }
 
-  .blog-list::before {
-    @apply content-[''] absolute inset-0 rounded-xl border-1 border-solid;
-    @apply border-gray-800 pointer-events-none;
+  .blog-list-container {
+    @apply flex py-0 px-6 min-h-44;
   }
 
-  .blog-list:hover::before {
-    @apply border-2 border-[var(--vp-c-brand)];
+  /* Left section styles */
+  .left-section {
+    @apply w-3/10 pr-4 flex flex-col py-4;
+    @apply justify-between;
   }
 
-  .list-banner {
-    @apply flex justify-between items-center text-sm text-gray-500 mt-2;
+  .list-header {
+    @apply mt-2;
   }
 
   .list-title {
-    @apply text-lg my-1 cursor-pointer;
+    @apply text-xl font-semibold;
   }
 
-  .describe {
-    @apply text-sm text-gray-700 dark:text-gray-300 my-2;
+  .title-link {
+    @apply text-color-[var(--vp-c-brand)];
+    @apply transition-all duration-200;
+    @apply hover:(underline underline-offset-6);
   }
 
-  .link {
-    @apply inline-block w-6 text-center;
-    @apply border border-solid border-gray-300 border-r-0;
-    @apply font-normal rounded-md;
+  .tags-container {
+    @apply flex flex-wrap gap-1 mt-auto mb-0;
   }
 
-  .link.active {
-    @apply bg-gray-800 text-white;
-  }
-
-  .dark .link.active {
-    @apply text-white font-bold;
+  .tag-wrapper {
+    @apply inline-block;
   }
 
   .tag {
     @apply cursor-pointer hover:text-[var(--vp-c-brand)];
   }
 
-  .tag a {
-    @apply cursor-pointer hover:text-[var(--vp-c-brand)];
+  /* Divider styles */
+  .divider {
+    @apply w-[1px] bg-gray-400 dark:bg-gray-700 mx-2;
+    @apply relative;
+
+    &::after {
+      @apply content-[''] absolute w-2 h-2 rounded-full;
+      @apply bg-gray-400;
+      @apply transform -translate-x-[45%];
+      @apply bottom-[-2%];
+    }
   }
 
-  @media screen and (max-width: 768px) {
-    .list-header {
-      @apply flex items-center justify-between;
-    }
+  /* Right section styles */
+  .right-section {
+    @apply flex-1 flex flex-col;
+    @apply my-4 mx-8;
+  }
 
-    .list-title {
-      @apply text-base font-normal truncate w-44;
-    }
+  .describe {
+    @apply text-md text-gray-700 dark:text-gray-300;
+    @apply mt-3 indent-2 line-clamp-3;
+  }
 
-    .describe {
-      @apply text-sm truncate my-2;
-    }
+  .empty-description {
+    @apply h-4;
+  }
+
+  .meta-info {
+    @apply flex flex-wrap;
+    @apply mt-auto text-sm text-gray-600;
+    @apply mt-2;
+  }
+
+  .meta-item {
+    @apply flex items-center mr-5;
+  }
+
+  .meta-text {
+    @apply ml-1;
   }
 </style>

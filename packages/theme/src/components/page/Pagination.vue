@@ -25,7 +25,7 @@
 
   import BlogContainer from './BlogContainer.vue'
 
-  const pageSize = 9
+  const pageSize = 5
   const pageCurrent = ref(1)
   const posts = ref([])
   const pagesNum = ref(1)
@@ -60,7 +60,9 @@
     @apply w-8/10;
   }
   .page-footer {
-    @apply mt-auto  bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700;
+    @apply mt-auto  bg-white;
+    /* @apply mt-2 mb-2; */
+    @apply dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700;
   }
 
   .pagination {

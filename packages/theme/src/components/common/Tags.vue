@@ -5,7 +5,7 @@
         @click="toggleTag(String(key))"
         v-for="(_, key) in sortTags(tagsList)"
         :key="key"
-        class="tag-view tag heti"
+        class="tag-view tag font-bold heti heti--serif"
         :class="{ active: selectedTag === String(key) }"
       >
         {{ key }}
@@ -116,7 +116,7 @@
   }
 
   .tag-view {
-    @apply inline-block px-3 py-[3px] m-1 text-xs border rounded-full;
+    @apply inline-block px-3 py-[2px] m-1 text-[13px] border rounded-full;
     @apply cursor-pointer transition-colors duration-300;
     @apply hover:border-[var(--tag-info-color)];
     @apply font-500;
