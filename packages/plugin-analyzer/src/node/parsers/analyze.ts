@@ -4,6 +4,7 @@ import { relative, resolve } from 'node:path'
 import type {
   AnalyzerConfig,
   Page,
+  PageLink,
   PageMetadata,
   SitePages
 } from '../../../types'
@@ -170,7 +171,7 @@ export const buildDocumentRelationships = (
         globalMetadata[targetPath].backLinks.push({
           ...link,
           relativePath: sourcePath,
-          fullUrl: `/${sourcePath}`
+          fullUrl: `/${sourcePath}`.replace(/\/+/g, '/')
         })
       }
     })

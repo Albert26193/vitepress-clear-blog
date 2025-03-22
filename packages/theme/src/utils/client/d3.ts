@@ -45,7 +45,7 @@ const transformPageD3Data = (
       nodesMap.set(link.relativePath, {
         id: link.relativePath,
         relativePath: link.relativePath,
-        name: link.text.split('/').pop() || link.text,
+        name: link.relativePath.split('/').pop() || link.text,
         fullUrl: link.fullUrl,
         type: link.type,
         inDegree: 1,
@@ -60,7 +60,7 @@ const transformPageD3Data = (
       nodesMap.set(link.relativePath, {
         id: link.relativePath,
         relativePath: link.relativePath,
-        name: link.text.split('/').pop() || link.text,
+        name: link.relativePath.split('/').pop() || link.text,
         fullUrl: link.fullUrl,
         type: link.type,
         inDegree: mdMetadata[link.relativePath]?.backLinks?.length || 0,

@@ -23,6 +23,14 @@ const wikilinksOptions = {
   }
 }
 
+const analyzerOptions = {
+  docsDir: './docs',
+  excludeDirs: ['node_modules', '.git', 'dist'],
+  includeFiles: ['.md'],
+  excludeFiles: ['README.md'],
+  ignoreCase: true
+}
+
 const blogTheme = await getThemeConfig()
 export default defineConfig({
   extends: blogTheme.blog,
@@ -50,7 +58,7 @@ export default defineConfig({
   vite: {
     // server: { port: 4000 },
     plugins: [
-      vitePressAnalyzerPlugin(),
+      vitePressAnalyzerPlugin(analyzerOptions),
       // generateThemePlugin(),
       UnoCSS()
       //RssPlugin(RSS)

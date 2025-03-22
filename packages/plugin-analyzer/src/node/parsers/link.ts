@@ -268,18 +268,18 @@ const processLinks = (
     }
   })
 
-  // Remove duplicates, prioritizing Markdown type links
+  // Remove duplicates
   return processedLinks
     .filter(
       (link, index, self) =>
         index ===
         self.findIndex(
-          (l) =>
-            l._normalizedPathForDedup === link._normalizedPathForDedup &&
-            // If several links have the same normalized path, keep markdown type
-            (l.type === 'markdown' || link.type === 'markdown'
-              ? l.type === link.type
-              : true)
+          (l) => l._normalizedPathForDedup === link._normalizedPathForDedup
+          // &&
+          // If several links have the same normalized path, keep markdown type
+          // (l.type === 'markdown' || link.type === 'markdown'
+          //   ? l.type === link.type
+          //   : true)
         )
     )
     .map((link) => {

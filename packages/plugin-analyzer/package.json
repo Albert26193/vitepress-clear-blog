@@ -24,6 +24,9 @@
       "types": "./lib/client.d.ts",
       "import": "./lib/client.js",
       "require": "./lib/client.cjs"
+    },
+    "./types": {
+      "types": "./types/index.d.ts"
     }
   },
   "main": "lib/index.cjs",

@@ -14,7 +14,7 @@
           class="page-link"
           :title="link.raw"
         >
-          {{ link.text }}
+          {{ getLinkTitle(sitePages, link) }}
         </a>
       </div>
       <!-- if no links -->
@@ -31,7 +31,7 @@
           class="page-link"
           :title="link.fullUrl"
         >
-          {{ getBackLinkTitle(link) }}
+          {{ getLinkTitle(sitePages, link) }}
         </a>
       </div>
       <div v-else class="no-links">No Back Links</div>
@@ -47,9 +47,10 @@
     // getPageMetadata,
     getPageOutgoingLinks
   } from 'vitepress-plugin-analyzer/client'
+  import type { PageLink } from 'vitepress-plugin-analyzer/types'
   import { computed, ref, watch } from 'vue'
 
-  import type { PageLink } from '../../types/types'
+  import { getLinkTitle } from '../../utils/client/title'
 
   const route = useRoute()
   const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))
@@ -62,18 +63,19 @@
     return getPageBackLinks(siteMetadata, currentPath.value) || []
   })
 
-  const getBackLinkTitle = (backLink: PageLink): string => {
-    return sitePages[backLink.relativePath]?.metadata?.firstHeading ==
-      'no-heading'
-      ? backLink.fullUrl.split('/').pop() || backLink.text
-      : sitePages[backLink.relativePath]?.metadata?.firstHeading ||
-          backLink.text
-  }
-
   // onMounted(() => {
   //   console.log(
   //     'total',
-  //     JSON.stringify(getPageBackLinks(siteMetadata, currentPath.value), null, 2)
+  //     JSON.stringify(
+  //       getPageBackLinks(siteMetadata, currentPath.value),
+  //       null,
+  //       2
+  //     ),
+  //     JSON.stringify(
+  //       getPageOutgoingLinks(siteMetadata, currentPath.value),
+  //       null,
+  //       2
+  //     )
   //   )
   // })
 
