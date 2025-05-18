@@ -56,7 +56,14 @@ export default defineConfig({
   },
   // vite: blogTheme.vite,
   vite: {
-    // server: { port: 4000 },
+    server: { port: 4000 },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler' // or "modern"
+        }
+      }
+    },
     plugins: [
       vitePressAnalyzerPlugin(analyzerOptions),
       // generateThemePlugin(),

@@ -4,7 +4,7 @@
       <h2 class="card-title mb-1 text-xl font-semibold">
         <a
           :href="withBase(post.regularPath)"
-          class="text-color-[var(--vp-c-brand)] hover:underline"
+          class="text-color-[var(--vp-c-brand)] hover:underline hover:underline-offset-6"
         >
           {{ post.frontMatter.title }}
         </a>
@@ -69,6 +69,7 @@
 
   .blog-card:hover::before {
     @apply border-2 border-[var(--vp-c-brand)];
+    /* @apply shadow-inner shadow-slate-500; */
   }
 
   .card-banner {
