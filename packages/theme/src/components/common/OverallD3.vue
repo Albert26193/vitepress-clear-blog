@@ -28,6 +28,6 @@
 
 <style scoped>
   .d3-overall-container {
-    @apply w-full h-full;
+    @apply h-full w-full;
   }
 </style>

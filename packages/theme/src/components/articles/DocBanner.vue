@@ -1,7 +1,7 @@
 <template>
   <div class="meta-des" id="hack-article-des" ref="$des">
     <!-- tags -->
-    <div class="grow space-x-2 mt-2" v-if="frontmatter.tags">
+    <div class="mt-2 grow space-x-2" v-if="frontmatter.tags">
       <span v-for="item in frontmatter.tags" :key="item">
         <span
           class="tag"
@@ -11,7 +11,7 @@
         </span>
       </span>
     </div>
-    <div class="flex items-center mt-1">
+    <div class="mt-1 flex items-center">
       <!-- time -->
       <div class="i-carbon-time" />
       <span class="ml-1 align-middle text-sm">
@@ -23,7 +23,7 @@
       <!-- author -->
       <div class="i-carbon-user ml-3" />
       <span
-        class="ml-1 align-middle text-sm hover:cursor-pointer hover:text-color-[var(--vp-c-brand)]"
+        class="hover:text-color-[var(--vp-c-brand)] ml-1 align-middle text-sm hover:cursor-pointer"
         @click="router.go('/about.html')"
       >
         {{ author }}
@@ -88,17 +88,17 @@
 <style scoped>
   .meta-des {
     @apply mt-2 px-6 py-3;
-    @apply border border-solid border-gray-900 rounded-md w-full;
-    @apply hover:shadow-lg transition-shadow duration-300 hover:border-solid;
+    @apply w-full rounded-md border border-solid border-gray-900;
+    @apply transition-shadow duration-300 hover:border-solid hover:shadow-lg;
     @apply transition-all duration-300;
-    @apply flex-col items-center space-y-4 slide-enter-content;
+    @apply slide-enter-content flex-col items-center space-y-4;
   }
 
   .tag-on-page {
     @apply cursor-pointer;
   }
   .tag-on-page a {
-    @apply text-[var(--vp-c-text)] no-underline font-bold;
+    @apply font-bold text-[var(--vp-c-text)] no-underline;
   }
   .tag-on-page:hover {
     @apply text-[var(--vp-c-brand)] no-underline;

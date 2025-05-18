@@ -67,9 +67,9 @@
 
 <style scoped>
   .toggle-button {
-    @apply hover:bg-gray-100 border-[1.5px] border-gray-600 border-solid;
-    @apply rounded-full shadow-lg transition-all duration-300 ml-4 shadow-gray-400/80;
-    @apply text-xl flex items-center justify-center font-bold;
+    @apply border-[1.5px] border-solid border-gray-600 hover:bg-gray-100;
+    @apply ml-4 rounded-full shadow-lg shadow-gray-400/80 transition-all duration-300;
+    @apply flex items-center justify-center text-xl font-bold;
     @apply h-7 w-7;
     @apply hover:shadow-inner;
     /* @apply hidden sm:block; */

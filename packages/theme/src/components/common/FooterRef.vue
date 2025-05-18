@@ -48,51 +48,51 @@
 
 <style scoped>
   .footnote-ref {
-    @apply text-base leading-0 relative;
+    @apply leading-0 relative text-base;
     @apply ml-[1px];
     /* @apply vertical-super; */
   }
 
   .footnote-badge-link {
-    @apply inline mt-0 p-0 no-underline relative;
-    @apply no-underline hover:no-underline!;
+    @apply relative mt-0 inline p-0 no-underline;
+    @apply hover:no-underline! no-underline;
   }
 
   .footnote-badge {
-    @apply inline items-center text-xs leading-2 font-500 rounded-md;
-    @apply px-[6px] mx-[1px] py-[0.5px];
-    @apply text-slate-900 bg-sky-200/50;
+    @apply leading-2 font-500 inline items-center rounded-md text-xs;
+    @apply mx-[1px] px-[6px] py-[0.5px];
+    @apply bg-sky-200/50 text-slate-900;
   }
 
   /**TODO: media query */
   .footnote-tooltip {
-    @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-10;
-    @apply w-max max-w-64 p-3 rounded-lg;
-    @apply bg-gray-100 border-[1.5px] border-solid border-[var(--vp-c-brand)];
-    @apply text-sm leading-5.5 font-normal text-left;
+    @apply absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2;
+    @apply w-max max-w-64 rounded-lg p-3;
+    @apply border-[1.5px] border-solid border-[var(--vp-c-brand)] bg-gray-100;
+    @apply leading-5.5 text-left text-sm font-normal;
   }
 
   .tooltip-arrow {
-    @apply absolute bottom--12px left-1/2 -translate-x-1/2;
+    @apply bottom--12px absolute left-1/2 -translate-x-1/2;
     @apply border-6px border-solid;
-    @apply border-t-[var(--vp-c-brand)] border-x-transparent border-b-transparent;
+    @apply border-x-transparent border-b-transparent border-t-[var(--vp-c-brand)];
   }
 
   .tooltip-content {
-    @apply text-[var(--vp-c-text-1)] whitespace-normal break-words;
+    @apply whitespace-normal break-words text-[var(--vp-c-text-1)];
   }
 
   .tooltip-content :deep(p) {
-    @apply m-0 p-0 indent-0 break-words;
+    @apply m-0 break-words p-0 indent-0;
   }
 
   .tooltip-fade-enter-active,
   .tooltip-fade-leave-active {
-    @apply transition duration-300 ease;
+    @apply ease transition duration-300;
   }
 
   .tooltip-fade-enter-from,
   .tooltip-fade-leave-to {
-    @apply opacity-0 -translate-x-1/2 translate-y-10px;
+    @apply translate-y-10px -translate-x-1/2 opacity-0;
   }
 </style>

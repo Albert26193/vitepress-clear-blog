@@ -109,7 +109,7 @@
   }
 
   .tag-title {
-    @apply flex items-center text-base font-semibold mb-4;
+    @apply mb-4 flex items-center text-base font-semibold;
     color: var(--vp-c-text-1);
   }
 
@@ -119,23 +119,23 @@
   }
 
   .sidebar-tag {
-    @apply px-[0.5rem] py-[3px] inline-block;
-    @apply text-gray-900 border-gray-700;
-    @apply font-normal text-[11px];
+    @apply inline-block px-[0.5rem] py-[3px];
+    @apply border-gray-700 text-gray-900;
+    @apply text-[11px] font-normal;
   }
 
   .sidebar-tag::after {
     content: attr(data-text);
-    @apply hidden font-semibold overflow-hidden h-0;
+    @apply hidden h-0 overflow-hidden font-semibold;
   }
 
   .side-tag-active {
     @apply box-border;
-    @apply border-[var(--vp-c-brand)] color-[var(--vp-c-brand)];
+    @apply color-[var(--vp-c-brand)] border-[var(--vp-c-brand)];
   }
 
   .related-posts {
-    @apply flex flex-col gap-[2px] mt-3 relative ml-2;
+    @apply relative ml-2 mt-3 flex flex-col gap-[2px];
     @apply max-h-40 overflow-scroll;
     @apply truncate;
   }
@@ -147,7 +147,7 @@
 
   .page-link {
     @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
-    @apply hover:text-[var(--vp-c-brand)] font-normal;
+    @apply font-normal hover:text-[var(--vp-c-brand)];
   }
 
   .page-link:hover::before {
@@ -156,7 +156,7 @@
   }
 
   .current-page {
-    @apply text-[var(--vp-c-brand)] font-semibold;
+    @apply font-semibold text-[var(--vp-c-brand)];
     cursor: default;
   }
 
@@ -167,6 +167,6 @@
 
   .no-related {
     @apply text-sm text-gray-400 dark:text-gray-500;
-    @apply mt-3 ml-6;
+    @apply ml-6 mt-3;
   }
 </style>

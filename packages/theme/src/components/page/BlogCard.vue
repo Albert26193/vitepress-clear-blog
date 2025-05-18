@@ -4,7 +4,7 @@
       <h2 class="card-title mb-1 text-xl font-semibold">
         <a
           :href="withBase(post.regularPath)"
-          class="text-color-[var(--vp-c-brand)] hover:underline hover:underline-offset-6"
+          class="text-color-[var(--vp-c-brand)] hover:underline-offset-6 hover:underline"
         >
           {{ post.frontMatter.title }}
         </a>
@@ -12,18 +12,18 @@
     </div>
     <p
       v-if="post.frontMatter.description"
-      class="describe mb-4 text-gray-700 dark:text-gray-300 indent-2 heti heti--serif"
+      class="describe heti heti--serif mb-4 indent-2 text-gray-700 dark:text-gray-300"
     >
       {{ useCardDescription(post.frontMatter.description).value }}
     </p>
     <div v-else class="mt-4"></div>
     <div class="card-banner">
-      <div class="flex items-center flex-wrap">
+      <div class="flex flex-wrap items-center">
         <div class="i-carbon-time mr-1" />
         <span>{{ post.frontMatter.date }}</span>
       </div>
       <!-- tags -->
-      <div class="flex gap-1 flex-wrap">
+      <div class="flex flex-wrap gap-1">
         <span v-for="item in partedTags" :key="item + 'key'">
           <a @click.stop :href="withBase(`/tags.html?tag=${item}`)" class="tag"
             >{{ item }}
@@ -56,15 +56,15 @@
 
 <style scoped>
   .blog-card {
-    @apply flex h-full flex-col justify-between overflow-hidden relative;
+    @apply relative flex h-full flex-col justify-between overflow-hidden;
     @apply rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800;
     @apply min-w-220px;
     @apply cursor-pointer;
   }
 
   .blog-card::before {
-    @apply content-[''] absolute inset-0 rounded-xl border-1 border-solid;
-    @apply border-gray-800 pointer-events-none;
+    @apply border-1 absolute inset-0 rounded-xl border-solid content-[''];
+    @apply pointer-events-none border-gray-800;
   }
 
   .blog-card:hover::before {
@@ -73,21 +73,21 @@
   }
 
   .card-banner {
-    @apply flex justify-between items-center text-sm text-gray-500 mt-2;
+    @apply mt-2 flex items-center justify-between text-sm text-gray-500;
   }
 
   .card-title {
-    @apply text-lg my-1;
+    @apply my-1 text-lg;
   }
 
   .describe {
-    @apply text-sm text-gray-700 dark:text-gray-300 my-2;
+    @apply my-2 text-sm text-gray-700 dark:text-gray-300;
   }
 
   .link {
     @apply inline-block w-6 text-center;
-    @apply border border-solid border-gray-300 border-r-0;
-    @apply font-normal rounded-md;
+    @apply border border-r-0 border-solid border-gray-300;
+    @apply rounded-md font-normal;
   }
 
   .link.active {
@@ -95,7 +95,7 @@
   }
 
   .dark .link.active {
-    @apply text-white font-bold;
+    @apply font-bold text-white;
   }
 
   .tag-view a {
@@ -108,11 +108,11 @@
     }
 
     .card-title {
-      @apply text-base font-normal truncate w-44;
+      @apply w-44 truncate text-base font-normal;
     }
 
     .describe {
-      @apply text-sm truncate my-2;
+      @apply my-2 truncate text-sm;
     }
   }
 </style>

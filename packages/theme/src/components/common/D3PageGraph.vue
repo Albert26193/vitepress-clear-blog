@@ -56,13 +56,13 @@
 
 <style scoped>
   .d3-page-container {
-    @apply w-full h-full relative;
+    @apply relative h-full w-full;
   }
 
   .zoom-display {
-    @apply absolute top-2 right-2 px-2 py-1 text-xs;
+    @apply absolute right-2 top-2 px-2 py-1 text-xs;
     @apply text-gray-600/50;
-    @apply bg-white rounded;
+    @apply rounded bg-white;
     @apply backdrop-blur-md;
   }
 </style>

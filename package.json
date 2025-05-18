@@ -18,7 +18,7 @@
     "prepare": "husky",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "format": "prettier --write .",
-    "lint:fix": "eslint --fix './.vitepress/**/*.{ts,tsx,js,jsx,vue}'",
+    "lint:fix": "eslint --fix './packages/**/*.{ts,tsx,js,jsx,vue}'",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "devDependencies": {

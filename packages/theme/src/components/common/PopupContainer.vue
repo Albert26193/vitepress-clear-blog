@@ -71,7 +71,7 @@
 
 <style scoped>
   .popup-wrapper {
-    @apply fixed inset-0 z-9999;
+    @apply z-9999 fixed inset-0;
   }
 
   .popup-backdrop {
@@ -80,28 +80,28 @@
 
   .popup-content {
     @apply fixed;
-    @apply top-1/2 left-1/2;
-    @apply w-[90vw] h-[90vh];
+    @apply left-1/2 top-1/2;
+    @apply h-[90vh] w-[90vw];
     margin-left: -45vw;
     margin-top: -45vh;
-    @apply bg-white rounded-lg shadow-xl overflow-hidden;
+    @apply overflow-hidden rounded-lg bg-white shadow-xl;
     @apply flex flex-col;
     @apply transition-transform duration-300;
   }
 
   .popup-close-wrapper {
-    @apply absolute top-4 right-4 z-10;
+    @apply absolute right-4 top-4 z-10;
   }
 
   .popup-close-button {
-    @apply h-8 w-8 rounded-full text-gray-600 bg-gray-200;
+    @apply h-8 w-8 rounded-full bg-gray-200 text-gray-600;
     @apply hover:bg-gray-300 hover:text-gray-900;
     @apply transition-colors duration-200;
     @apply flex items-center justify-center;
   }
 
   .popup-close-icon {
-    @apply w-6 h-6;
+    @apply h-6 w-6;
   }
 
   .popup-body {

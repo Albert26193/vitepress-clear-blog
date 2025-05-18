@@ -5,7 +5,7 @@
         @click="toggleTag(String(key))"
         v-for="(_, key) in sortTags(tagsList)"
         :key="key"
-        class="tag-view tag font-bold heti heti--serif"
+        class="tag-view tag heti heti--serif font-bold"
         :class="{ active: selectedTag === String(key) }"
       >
         {{ key }}
@@ -107,16 +107,16 @@
 <style scoped>
   .tags-container {
     @apply mt-12 flex flex-wrap;
-    @apply p-4 space-x-2;
+    @apply space-x-2 p-4;
     @apply border border-dashed border-gray-500;
   }
 
   .count {
-    @apply ml-2 color-[var(--vp-c-brand)];
+    @apply color-[var(--vp-c-brand)] ml-2;
   }
 
   .tag-view {
-    @apply inline-block px-3 py-[2px] m-1 text-[13px] border rounded-full;
+    @apply m-1 inline-block rounded-full border px-3 py-[2px] text-[13px];
     @apply cursor-pointer transition-colors duration-300;
     @apply hover:border-[var(--tag-info-color)];
     @apply font-500;
@@ -129,7 +129,7 @@
   }
 
   .tag-view.active .count {
-    @apply transition-colors duration-300 text-white;
+    @apply text-white transition-colors duration-300;
   }
 
   .tag-view:hover .count {
@@ -137,7 +137,7 @@
   }
 
   .tag-header {
-    @apply mb-2 mt-6 text-2xl font-medium text-left color-[var(--vp-c-brand)];
+    @apply color-[var(--vp-c-brand)] mb-2 mt-6 text-left text-2xl font-medium;
     @apply font-semibold;
   }
 
@@ -155,7 +155,7 @@
   }
 
   .tag-post-item {
-    @apply px-12 py-1 flex justify-between items-center;
+    @apply flex items-center justify-between px-12 py-1;
     @apply w-9/10 mx-auto;
   }
 

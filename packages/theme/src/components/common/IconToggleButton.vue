@@ -46,7 +46,7 @@
 
 <style scoped>
   .btn-group {
-    @apply inline-flex gap-1 bg-gray-300/90 rounded-md py-[5px] px-2;
+    @apply inline-flex gap-1 rounded-md bg-gray-300/90 px-2 py-[5px];
     @apply shadow-inner shadow-gray-500/80;
   }
 
@@ -59,16 +59,16 @@
   }
 
   .btn-item {
-    @apply flex items-center p-1 rounded-md transition-all duration-200;
+    @apply flex items-center rounded-md p-1 transition-all duration-200;
     @apply hover:bg-gray-100/90;
   }
 
   .btn-item.active {
-    @apply bg-white shadow-md drop-shadow shadow-gray-500/90;
+    @apply bg-white shadow-md shadow-gray-500/90 drop-shadow;
   }
 
   .btn-item.disabled {
-    @apply opacity-50 cursor-not-allowed;
+    @apply cursor-not-allowed opacity-50;
   }
 
   /* Size variants */
@@ -86,7 +86,7 @@
 
   .tooltip {
     @apply invisible absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs;
-    @apply bg-gray-200 text-gray-800 rounded whitespace-nowrap opacity-0;
+    @apply whitespace-nowrap rounded bg-gray-200 text-gray-800 opacity-0;
     @apply transition-all duration-200;
   }
 

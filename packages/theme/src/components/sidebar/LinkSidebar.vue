@@ -94,16 +94,16 @@
   }
 
   .link-title {
-    @apply flex items-center text-base font-semibold mb-2;
+    @apply mb-2 flex items-center text-base font-semibold;
     color: var(--vp-c-text-1);
   }
 
   .links-list {
-    @apply flex flex-col  relative;
+    @apply relative flex flex-col;
   }
 
   .page-links {
-    @apply flex flex-col relative ml-2 gap-[2px] text-sm;
+    @apply relative ml-2 flex flex-col gap-[2px] text-sm;
   }
 
   .page-links::before {
@@ -113,7 +113,7 @@
 
   .page-link {
     @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
-    @apply hover:text-[var(--vp-c-brand)] font-normal;
+    @apply font-normal hover:text-[var(--vp-c-brand)];
   }
 
   .page-link:hover {
@@ -122,17 +122,16 @@
 
   .page-link:hover::before {
     content: '';
-    @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)]
-    @apply transition-colors duration-300;
+    @apply @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)] transition-colors duration-300;
   }
 
   .page-link::after {
     /* content: attr(title); */
-    @apply hidden font-semibold overflow-hidden h-0;
+    @apply hidden h-0 overflow-hidden font-semibold;
   }
 
   .no-links {
     @apply text-sm text-gray-400 dark:text-gray-500;
-    @apply mt-0 ml-6;
+    @apply ml-6 mt-0;
   }
 </style>

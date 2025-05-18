@@ -2,14 +2,14 @@
   <div class="mt-6">
     <div class="flex space-x-2">
       <button
-        class="border border-solid px-3 py-1 rounded"
+        class="rounded border border-solid px-3 py-1"
         @click="popupOverview"
         :disabled="showOverview || showExpand"
       >
         overview
       </button>
       <button
-        class="border border-solid px-3 py-1 rounded"
+        class="rounded border border-solid px-3 py-1"
         @click="expandGraph"
         :disabled="showOverview || showExpand"
       >
@@ -97,7 +97,7 @@
 
 <style scoped>
   .d3-force-sidebar-container {
-    @apply w-full h-full border border-solid border-gray-500;
-    @apply hover:shadow-lg transition-shadow duration-300;
+    @apply h-full w-full border border-solid border-gray-500;
+    @apply transition-shadow duration-300 hover:shadow-lg;
   }
 </style>

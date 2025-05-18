@@ -41,24 +41,24 @@ export default [
   // Ignored files
   {
     ignores: [
-      '**/dist',
-      './src/main.ts',
-      '.vscode',
-      '.idea',
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/packages/**/lib/**',
+      '**/packages/docs/.vitepress/cache/**',
+      '.vscode/',
+      '.idea/',
       '*.sh',
-      '**/node_modules',
       '*.md',
-      '*.woff',
       '*.woff',
       '*.ttf',
       'yarn.lock',
       'package-lock.json',
-      '/public',
+      'public/',
       '/docs',
-      '**/output',
-      '.husky',
-      '.local',
-      '/bin',
+      '**/output/**',
+      '.husky/',
+      '.local/',
+      'bin/',
       'Dockerfile'
     ]
   }

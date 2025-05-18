@@ -1,6 +1,6 @@
 <template>
   <div class="custom-page-layout timeline-page">
-    <div class="flex justify-end -mb-8 mr-18 mt-6 gap-6">
+    <div class="mr-18 -mb-8 mt-6 flex justify-end gap-6">
       <IconToggleButton
         v-model="sortDirection"
         :icons="[
@@ -35,13 +35,13 @@
           <!-- year and post count -->
           <span
             @click="toggleYear(getYear(curYearPostList))"
-            class="flex items-center cursor-pointer max-w-36"
+            class="flex max-w-36 cursor-pointer items-center"
           >
             <span
               v-if="displayStatus.years[getYear(curYearPostList)]"
-              class="i-carbon-chevron-down text-lg mr-2"
+              class="i-carbon-chevron-down mr-2 text-lg"
             />
-            <span class="i-carbon-chevron-right text-lg mr-2" v-else />
+            <span class="i-carbon-chevron-right mr-2 text-lg" v-else />
             <span class="timeline-year-title">
               {{ getYear(curYearPostList) }}
             </span>
@@ -60,7 +60,7 @@
           <div class="timeline-month-title">
             <span
               @click="toggleMonth(getYear(monthList), getMonth(monthList))"
-              class="flex items-center cursor-pointer max-w-36 font-serif"
+              class="flex max-w-36 cursor-pointer items-center font-serif"
             >
               <span
                 v-if="
@@ -98,7 +98,7 @@
                 >
                   {{ article.frontMatter.title ?? 'No title' }}
                 </a>
-                <div class="mx-3 flex-1 border-b-dashed border-gray-200"></div>
+                <div class="border-b-dashed mx-3 flex-1 border-gray-200"></div>
                 <div class="date">{{ getDay(article) }}</div>
               </div>
             </div>
@@ -240,16 +240,16 @@
   }
 
   .timeline-container {
-    @apply flex flex-col w-4/5 mx-auto;
-    @apply border border-b-solid pb-4 border-gray-200;
+    @apply mx-auto flex w-4/5 flex-col;
+    @apply border-b-solid border border-gray-200 pb-4;
   }
 
   .timeline-year-content {
-    @apply relative ml-2 mb-1;
+    @apply relative mb-1 ml-2;
   }
 
   .timeline-post-count {
-    @apply text-[var(--vp-c-brand)] ml-2;
+    @apply ml-2 text-[var(--vp-c-brand)];
     @apply font-normal;
   }
 
@@ -259,13 +259,13 @@
   }
 
   .timeline-year-line {
-    @apply absolute top-0 bottom-0 w-[1px] bg-gray-200 dark:bg-gray-700;
+    @apply absolute bottom-0 top-0 w-[1px] bg-gray-200 dark:bg-gray-700;
   }
 
   .timeline-month-title {
     @apply ml-4 pb-1 pt-2;
     @apply font-semibold;
-    @apply flex justify-between items-center;
+    @apply flex items-center justify-between;
   }
 
   .timeline-month-container {
@@ -273,17 +273,17 @@
   }
 
   .timeline-month-line {
-    @apply absolute left-4 top-0 bottom-0 w-[1px] bg-gray-200 dark:bg-gray-700;
+    @apply absolute bottom-0 left-4 top-0 w-[1px] bg-gray-200 dark:bg-gray-700;
     @apply ml-2;
   }
 
   .posts-wrapper {
-    @apply px-9 py-1 flex justify-between items-center relative ml-2;
+    @apply relative ml-2 flex items-center justify-between px-9 py-1;
   }
 
   .post-item {
     @apply hover:text-[var(--vp-c-brand)];
-    @apply hover:no-underline h-6;
+    @apply h-6 hover:no-underline;
   }
 
   .date {
