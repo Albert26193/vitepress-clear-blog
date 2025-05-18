@@ -59,10 +59,11 @@
   .blog-page {
     @apply w-8/10;
   }
+
   .page-footer {
-    @apply mt-auto  bg-white;
+    @apply mb-4 mt-8;
     /* @apply mt-2 mb-2; */
-    @apply dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700;
+    @apply border-t border-gray-200 dark:border-gray-700 dark:bg-gray-800;
   }
 
   .pagination {
@@ -70,11 +71,11 @@
   }
 
   .pagination .link {
-    @apply w-6 h-6 flex items-center justify-center rounded-md cursor-pointer;
+    @apply flex h-6 w-6 cursor-pointer items-center justify-center rounded-md;
     @apply text-gray-600 dark:text-gray-400;
   }
 
   .pagination .link.active {
-    @apply text-gray-100 bg-[var(--vp-c-brand)] shadow-xl;
+    @apply bg-[var(--vp-c-brand)] text-gray-100 shadow-xl;
   }
 </style>

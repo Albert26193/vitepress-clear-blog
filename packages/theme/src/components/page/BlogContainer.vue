@@ -14,8 +14,12 @@
       />
       <div v-if="currentPageType === 'ListType'" :key="'list-view'">
         <div class="list-container slide-enter-content">
-          <div v-for="post in props.posts" :key="post.regularPath">
-            <BlogList :post="post"></BlogList>
+          <div v-for="(post, index) in props.posts" :key="post.regularPath">
+            <BlogList
+              :post="post"
+              :is-first="index === 0"
+              :is-last="index === posts.length - 1"
+            ></BlogList>
           </div>
         </div>
       </div>
@@ -78,39 +82,23 @@
   }
 
   .page-content {
-    @apply flex-1 mt-2 rounded-lg;
-    /* @apply border border-gray-200 dark:border-gray-700; */
-    /* @apply bg-white dark:bg-gray-800; */
-    /* @apply shadow-md hover:shadow-lg transition-shadow duration-300; */
+    @apply mt-2 flex-1 rounded-lg;
     min-height: calc(100vh - var(--vp-nav-height) - 64px);
     position: relative;
-    overflow: hidden;
   }
 
-  /* .page-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(
-      90deg,
-      var(--vp-c-brand),
-      var(--vp-c-brand-light)
-    );
-  } */
-
   .page-footer {
-    @apply mt-auto bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700;
+    @apply mt-auto border-t border-gray-200 bg-white;
+    @apply dark:border-gray-700 dark:bg-gray-800;
   }
 
   .list-container {
-    @apply space-y-0 mx-auto mt-8;
+    @apply mx-auto mt-16 space-y-0;
+    @apply min-h-190;
   }
 
   .card-container {
-    @apply mx-auto mt-8 grid grid-cols-1 gap-6 w-full;
+    @apply mx-auto mt-8 grid w-full grid-cols-1 gap-6;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
   }
 
@@ -119,21 +107,21 @@
   }
 
   .pagination .link {
-    @apply w-6 h-6 flex items-center justify-center rounded-md;
+    @apply flex h-6 w-6 items-center justify-center rounded-md;
     @apply text-gray-600 dark:text-gray-400;
   }
 
   .pagination .link.active {
-    @apply text-gray-100 bg-[var(--vp-c-brand)] shadow-xl;
+    @apply bg-[var(--vp-c-brand)] text-gray-100 shadow-xl;
   }
 
   .btn-view {
-    @apply inline-flex gap-1 bg-gray-200/80 rounded-lg py-[5px] px-2 justify-center;
-    @apply text-gray-900 text-lg shadow-inner;
+    @apply inline-flex justify-center gap-1 rounded-lg bg-gray-200/80 px-2 py-[5px];
+    @apply text-lg text-gray-900 shadow-inner;
   }
 
   .btn-view .icon-wrapper {
-    @apply flex items-center p-1 rounded-md;
+    @apply flex items-center rounded-md p-1;
   }
 
   .btn-view .icon-wrapper.active {
