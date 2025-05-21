@@ -1,7 +1,7 @@
 import { useData } from 'vitepress'
 import { computed, nextTick, provide } from 'vue'
 
-import { type PostFrontMatter } from '../types.d'
+import { type PostFrontMatter } from '../types/types.d'
 
 /**
  * @abstract: use description for page cards, if the length of words
@@ -12,6 +12,9 @@ import { type PostFrontMatter } from '../types.d'
  * @return truncated description
  */
 const useCardDescription = (description: string) => {
+  if (!description) {
+    return ''
+  }
   const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
   return computed(() => {
     // for Chinese: if the length of words is more than 42 words, show the first 42 words followed by an ellipsis.
@@ -39,6 +42,9 @@ const useCardDescription = (description: string) => {
  * @returns truncated description
  */
 const useListDescription = (description: string) => {
+  if (!description) {
+    return ''
+  }
   const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
   return computed(() => {
     // for Chinese: if the length of words is more than 42 words, show the first 42 words followed by an ellipsis.

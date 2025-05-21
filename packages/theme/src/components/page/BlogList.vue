@@ -38,7 +38,7 @@
           v-if="post.frontMatter.description"
           class="describe heti heti--serif"
         >
-          {{ useListDescription(post.frontMatter.description).value }}
+          {{ useListDescription(post.rawContent).value }}
         </p>
         <div v-else class="empty-description"></div>
       </div>

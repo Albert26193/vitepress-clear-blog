@@ -1,6 +1,6 @@
 <template>
   <div class="custom-page-layout page-wrapper">
-    <div class="page-content">
+    <div class="page-content-container">
       <IconToggleButton
         v-model="currentPageType"
         :icons="[
@@ -81,10 +81,9 @@
     min-height: calc(100vh - var(--vp-nav-height) - 64px);
   }
 
-  .page-content {
+  .page-content-container {
     @apply mt-2 flex-1 rounded-lg;
-    min-height: calc(100vh - var(--vp-nav-height) - 64px);
-    position: relative;
+    @apply position-relative mx-auto max-w-[1280px];
   }
 
   .page-footer {

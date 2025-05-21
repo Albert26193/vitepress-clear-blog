@@ -39,6 +39,7 @@
       pageCurrent.value * pageSize
     )
     pagesNum.value = Math.ceil(allPosts.length / pageSize)
+    console.log('post', JSON.stringify(allPosts, 2, null))
   }
 
   const handlePageChange = (page: number) => {

@@ -8,12 +8,12 @@ export interface PostFrontMatter {
   title: string
   tags: string[]
   description: string
-  // Include any other frontmatter fields you need
 }
 
 export interface Post {
   frontMatter: PostFrontMatter
   regularPath: string
+  rawContent?: string
 }
 
 export interface BlogConfig extends DefaultTheme.Config {
