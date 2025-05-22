@@ -10,11 +10,8 @@ import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
 import { getThemeConfig } from './theme/utils'
-import { getFooterRefTag, getPosts } from './theme/utils'
+import { getFooterRefTag } from './theme/utils'
 
-const postArticles = await getPosts(10)
-
-// TODO: temp test options here
 const wikilinksOptions = {
   baseURL: 'http://10.177.73.149:5000',
   htmlAttributes: {
@@ -56,7 +53,6 @@ export default defineConfig({
   },
   // vite: blogTheme.vite,
   vite: {
-    server: { port: 4000 },
     css: {
       preprocessorOptions: {
         scss: {
@@ -88,9 +84,7 @@ export default defineConfig({
     nav,
     outline: [2, 3],
     outlineTitle: 'Table of Contents',
-    socialLinks: [{ icon: 'github', link: 'https://github.com' }],
-    // TODO: use 'usefunc' to get the meta data and post articles
-    posts: postArticles
+    socialLinks: [{ icon: 'github', link: 'https://github.com' }]
   },
   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
   ignoreDeadLinks: true

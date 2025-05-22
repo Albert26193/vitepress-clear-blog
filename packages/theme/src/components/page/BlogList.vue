@@ -38,7 +38,7 @@
           v-if="post.frontMatter.description"
           class="describe heti heti--serif"
         >
-          {{ useListDescription(post.rawContent).value }}
+          {{ useListDescription(post.rawContent as string) }}
         </p>
         <div v-else class="empty-description"></div>
       </div>
@@ -96,13 +96,6 @@
   const partedTags = props.post.frontMatter.tags?.slice(0, 4) ?? []
 
   const author = useAuthor(props.post.frontMatter) || 'Blogger'
-  // const navigateToPost = (event: MouseEvent) => {
-  //   // Prevent navigation if a tag link was clicked
-  //   if ((event.target as HTMLElement)?.closest('.tag')) {
-  //     return
-  //   }
-  //   window.location.href = withBase(props.post.regularPath)
-  // }
 </script>
 
 <style scoped lang="scss">
@@ -171,9 +164,6 @@
   .date-item {
     @apply mt-2;
   }
-  .author-item {
-  }
-
   .list-header {
     @apply mt-0;
   }

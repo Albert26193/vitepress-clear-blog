@@ -10,6 +10,12 @@ export interface PostFrontMatter {
   description: string
 }
 
+export interface PostData {
+  url: string
+  frontmatter: PostFrontMatter
+  // You might want to add other properties like excerpt, src, html if you enable them in createContentLoader
+}
+
 export interface Post {
   frontMatter: PostFrontMatter
   regularPath: string

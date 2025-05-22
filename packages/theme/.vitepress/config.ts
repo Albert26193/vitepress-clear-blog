@@ -10,7 +10,7 @@ import { generateThemePlugin } from 'vitepress-plugin-config'
 import { RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 import { generateSidebar } from 'vitepress-sidebar'
 
-import { getPosts, getRootPath, getSrcPath } from '../src/utils/node'
+import { getRootPath, getSrcPath } from '../src/utils/node'
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
@@ -18,8 +18,7 @@ import { nav } from './custom/nav'
 // Load TOML config at build time
 
 // TODO: config.toml: [theme] -> brandColor
-const pageSize = 10
-const postArticles = await getPosts(pageSize)
+// const pageSize = 10
 const rootPath = getRootPath()
 const srcPath = getSrcPath('.vitepress')
 
@@ -106,18 +105,16 @@ export default defineConfig(
           items: []
         }
       ],
-      website: '',
       search: {
         provider: 'local'
       },
       nav,
       outline: [2, 3],
       outlineTitle: 'On this page',
-      socialLinks: [{ icon: 'github', link: 'https://github.com' }],
+      socialLinks: [{ icon: 'github', link: 'https://github.com' }]
       // TODO: use 'usefunc' to get the meta data and post articles
-      posts: postArticles,
-      meta: {}
-    } as any,
+      // meta: {}
+    },
     srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
     vite: {
       server: { port: 5000 },
