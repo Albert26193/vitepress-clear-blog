@@ -30,7 +30,6 @@
         v-if="currentComponent"
         :params="routeParams"
       />
-      <Content v-else />
     </template>
 
     <Copyright />
@@ -38,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-  import { Content, useData, useRoute } from 'vitepress'
+  import { useData, useRoute } from 'vitepress'
   import DefaultTheme from 'vitepress/theme'
   import { computed, defineAsyncComponent, watchEffect } from 'vue'
 
