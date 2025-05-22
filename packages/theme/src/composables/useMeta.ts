@@ -46,20 +46,39 @@ const useListDescription = (description: string) => {
     return ''
   }
   const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
+
+  // TODO: more situations
+  // 1. filter yaml frontmatter
+  // 2. filter code blocks
+  // 3. filter inline code
+  // 4. filter html tags
+  // 5. filter markdown title and multiple heads
+  // 6. filter multiple spaces and new lines
+  // 7. filter cite
+  const filteredContent = description
+    .replace(/^---[\s\S]*?---/, '') // Remove YAML frontmatter
+    .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+    .replace(/`[\s\S]*?`/g, '') // Remove inline code
+    .replace(/<[^>]*>/g, '') // Remove HTML tags
+    .replace(/#{1,6}\s+[^\n]+/g, '') // Remove markdown headings
+    .replace(/\s+/g, ' ') // Replace multiple spaces/newlines with single space
+    .replace(/^>[\s\S]*?$/gm, '') // Remove cite
+    .trim() // Trim whitespace
+
   return computed(() => {
     // for Chinese: if the length of words is more than 42 words, show the first 42 words followed by an ellipsis.
-    if (isChinese(description)) {
-      if (description.length > 90) {
-        return description.slice(0, 90) + '...'
+    if (isChinese(filteredContent)) {
+      if (filteredContent.length > 90) {
+        return filteredContent.slice(0, 90) + '...'
       }
     } else {
       // for English: if the length of words is more than 30 words, show the first 30 words followed by an ellipsis.
-      const words = description.split(' ')
+      const words = filteredContent.split(' ')
       if (words.length > 50) {
         return words.slice(0, 50).join(' ') + '...'
       }
     }
-    return description
+    return filteredContent
   })
 }
 

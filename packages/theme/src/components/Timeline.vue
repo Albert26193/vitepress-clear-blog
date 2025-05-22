@@ -110,35 +110,30 @@
 </template>
 
 <script lang="ts" setup>
-  import { useData, withBase } from 'vitepress'
+  import { withBase } from 'vitepress'
   import { computed, reactive, ref, watch } from 'vue'
 
+  import type { Post } from '../types/types.d'
   import { useMonthYearSort, useYearSort } from '../utils/client/'
+  import { data as allPostsData } from '../utils/node/posts.data.js'
   import IconToggleButton from './common/IconToggleButton.vue'
-
-  const { theme } = useData()
 
   interface DisplayStatus {
     years: { [year: string]: boolean }
     months: { [yearMonth: string]: boolean }
   }
 
-  // interface PostList {
-  //   title: string
-  //   date: string
-  // }
+  const sortDirection = ref<'asc' | 'desc'>('desc')
+  const expandStatus = ref<'expand' | 'collapse'>('expand')
 
-  // interface DataByYear {
-  //   [year: string]: PostList[]
-  // }
+  const dataByYear = computed(() => useYearSort(allPostsData || []))
+  const dataByYearMonth = computed(() => useMonthYearSort(allPostsData || []))
 
-  // interface DataByYearMonth {
-  //   [year: string]: {
-  //     [month: string]: PostList[]
-  //   }
-  // }
+  console.warn(
+    '[Timeline.vue] All Posts Data received:',
+    JSON.stringify(allPostsData, null, 2)
+  )
 
-  // Helper functions to extract year, month, and day
   const getYear = (yearList: { frontMatter: { date: string } }[]) =>
     yearList[0].frontMatter.date.split('-')[0]
   const getMonth = (monthList: { frontMatter: { date: string } }[]) =>
@@ -148,20 +143,11 @@
   const getDay = (article: { frontMatter: { date: string } }) =>
     article.frontMatter.date.slice(5)
 
-  const sortDirection = ref<'asc' | 'desc'>('desc')
-  const expandStatus = ref<'expand' | 'collapse'>('expand')
-
-  const dataByYear = computed(() => useYearSort(theme.value.posts))
-  const dataByYearMonth = computed(() => useMonthYearSort(theme.value.posts))
-
-  console.warn(JSON.stringify(theme.value.posts, null, 2))
-  // Add new computed property for sorted data
   const sortedDataByYear = computed(() => {
     const data = [...dataByYear.value]
     return sortDirection.value === 'asc' ? data.reverse() : data
   })
 
-  // Watch for changes in expandStatus
   watch(expandStatus, (newValue: 'expand' | 'collapse') => {
     if (newValue === 'expand') {
       expandAll()
@@ -170,16 +156,14 @@
     }
   })
 
-  // New display status management
   const displayStatus: DisplayStatus = reactive({
     years: {},
     months: {}
   })
 
-  // Initialize display status for each year and month
   const initDisplayStatus = () => {
     Object.entries(dataByYear.value).forEach(([year, posts]) => {
-      const currentYear = getYear(posts)
+      const currentYear = getYear(posts as Post[])
       displayStatus.years[currentYear] = true
 
       const months = dataByYearMonth.value[currentYear]
@@ -193,21 +177,18 @@
 
   initDisplayStatus()
 
-  // Toggle year expansion
   const toggleYear = (year: string | number) => {
     displayStatus.years[year] = !displayStatus.years[year]
   }
 
-  // Toggle month expansion
   const toggleMonth = (year: string, month: string) => {
     const key = `${year}-${month}`
     displayStatus.months[key] = !displayStatus.months[key]
   }
 
-  // Add new expand/collapse functions
   const expandAll = () => {
     Object.entries(dataByYear.value).forEach(([year, posts]) => {
-      const currentYear = getYear(posts)
+      const currentYear = getYear(posts as Post[])
       displayStatus.years[currentYear] = true
 
       const months = dataByYearMonth.value[currentYear]
@@ -221,7 +202,7 @@
 
   const collapseAll = () => {
     Object.entries(dataByYear.value).forEach(([year, posts]) => {
-      const currentYear = getYear(posts)
+      const currentYear = getYear(posts as Post[])
       displayStatus.years[currentYear] = false
 
       const months = dataByYearMonth.value[currentYear]

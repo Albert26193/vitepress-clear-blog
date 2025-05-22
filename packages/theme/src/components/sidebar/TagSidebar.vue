@@ -47,8 +47,9 @@
   import { computed, ref } from 'vue'
 
   import type { Post } from '../../types/types'
+  import { data as allPostsData } from '../../utils/node/posts.data.js'
 
-  const { theme, frontmatter } = useData()
+  const { frontmatter } = useData()
   const route = useRoute()
 
   // get current path in a reactive way
@@ -83,14 +84,14 @@
 
   // get related posts
   const filteredRelatedPosts = computed(() => {
-    const posts = theme.value.posts as Post[]
+    const posts = allPostsData || ([] as Post[])
     // if no tags, return empty
-    if (!currentTags.value.length) {
+    if (!currentTags.value.length || !posts) {
       return []
     }
     // filter posts
     return posts.filter((post) => {
-      console.log(post.regularPath, currentPath.value)
+      // console.log(post.regularPath, currentPath.value)
       // check if post has any of the current article's tags
       const postTags = post.frontMatter.tags || []
       // if no active tag, show all related posts

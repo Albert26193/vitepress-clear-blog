@@ -38,9 +38,11 @@
           v-if="post.frontMatter.description"
           class="describe heti heti--serif"
         >
+          {{ useListDescription(post.frontMatter.description as string) }}
+        </p>
+        <p v-else class="describe heti heti--serif">
           {{ useListDescription(post.rawContent as string) }}
         </p>
-        <div v-else class="empty-description"></div>
       </div>
 
       <!-- Divider 2 -->

@@ -24,7 +24,7 @@
   import { computed, ref } from 'vue'
 
   // import type { PostData } from '../../types/types.d' // No longer needed
-  import { data as allPostsData } from '../../utils/node/posts.js'
+  import { data as allPostsData } from '../../utils/node/posts.data'
   // Import Post if needed for explicit typing, otherwise inferred
 
   // Added computed

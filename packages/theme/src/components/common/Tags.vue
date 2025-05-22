@@ -43,17 +43,14 @@
 </template>
 
 <script lang="ts" setup>
-  import { useData, withBase } from 'vitepress'
+  import { withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
 
   import { Post } from '../../types/types'
   import { initTags } from '../../utils/client/'
+  import { data as allPostsData } from '../../utils/node/posts.data.js'
 
-  const { theme } = useData()
-
-  const tagsList = computed(() =>
-    theme.value.posts ? initTags(theme.value.posts) : {}
-  )
+  const tagsList = computed(() => (allPostsData ? initTags(allPostsData) : {}))
 
   // sort tag according to dict order
   const sortTags = (tags: Record<string, Post[]>) => {
@@ -97,7 +94,7 @@
   const filteredArticles = computed(() => {
     // If no tag is selected, return all articles
     if (!selectedTag.value) {
-      return theme.value.posts
+      return allPostsData || []
     }
     // Use the pre-computed tagsList instead of filtering again
     return tagsList.value[selectedTag.value] || []
