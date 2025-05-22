@@ -20,25 +20,13 @@
 </template>
 
 <script setup lang="ts">
-  // import { useData } from 'vitepress' // No longer needed for posts
   import { computed, ref } from 'vue'
 
-  // import type { PostData } from '../../types/types.d' // No longer needed
   import { data as allPostsData } from '../../utils/node/posts.data'
-  // Import Post if needed for explicit typing, otherwise inferred
-
-  // Added computed
-  // Import posts data
   import BlogContainer from './BlogContainer.vue'
 
   const pageSize = 5
   const pageCurrent = ref(1)
-  // const posts = ref([]) // Will be a computed property
-  // const pagesNum = ref(1) // Will be a computed property
-
-  // const { theme } = useData() // No longer needed for posts
-
-  // Computed property for the posts to display on the current page
   const posts = computed(() => {
     if (!allPostsData) return []
     return allPostsData.slice(
@@ -54,28 +42,10 @@
     return Math.ceil(allPostsData.length / pageSize)
   })
 
-  // const updatePosts = () => { // No longer needed, computed properties handle this
-  //   const allPosts = theme.value.posts || []
-  //   posts.value = allPosts.slice(
-  //     (pageCurrent.value - 1) * pageSize,
-  //     pageCurrent.value * pageSize
-  //   )
-  //   pagesNum.value = Math.ceil(allPosts.length / pageSize)
-  //   // console.log('post', JSON.stringify(allPosts, null, 2))
-  // }
-
   const handlePageChange = (page: number) => {
     if (page === pageCurrent.value) return
     pageCurrent.value = page
   }
-
-  // watch(pageCurrent, () => { // No longer needed, computed properties update automatically
-  //   updatePosts()
-  // })
-
-  // onMounted(() => { // No longer needed if computed properties derive from imported data
-  //   updatePosts()
-  // })
 </script>
 
 <style scoped>

@@ -88,17 +88,28 @@
       text-decoration: none;
     }
 
-    p {
+    p:not(:where(pre *, ol *, ul *, .describe *) p) {
       text-indent: 2rem;
+      :not(pre, div) > code {
+        text-indent: 0;
+      }
+    }
 
-      .footnote-ref,
-      sup.footnote-ref,
-      .footnote-badge-link,
-      .footnote-badge {
+    pre,
+    ol,
+    ul,
+    .describe {
+      p {
         text-indent: 0 !important;
       }
     }
 
+    .footnote-ref,
+    sup.footnote-ref,
+    .footnote-badge-link,
+    .footnote-badge {
+      text-indent: 0 !important;
+    }
     .footnote-badge {
       text-indent: 0px !important;
     }

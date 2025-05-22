@@ -40,9 +40,9 @@
         >
           {{ useListDescription(post.frontMatter.description as string) }}
         </p>
-        <p v-else class="describe heti heti--serif">
-          {{ useListDescription(post.rawContent as string) }}
-        </p>
+        <div v-else class="describe">
+          <div v-html="preview" class="heti heti--serif" />
+        </div>
       </div>
 
       <!-- Divider 2 -->
@@ -76,7 +76,7 @@
   import { withBase } from 'vitepress'
   import { PropType } from 'vue'
 
-  import { useAuthor } from '../../composables/useMeta'
+  import { useAuthor, useHtmlPreview } from '../../composables/useMeta'
   import { useListDescription } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
 
@@ -98,6 +98,11 @@
   const partedTags = props.post.frontMatter.tags?.slice(0, 4) ?? []
 
   const author = useAuthor(props.post.frontMatter) || 'Blogger'
+
+  const preview = useHtmlPreview(props.post.html || '', {
+    maxChineseLength: 120,
+    maxEnglishWords: 60
+  })
 </script>
 
 <style scoped lang="scss">

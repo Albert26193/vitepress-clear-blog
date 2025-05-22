@@ -54,28 +54,29 @@
   }
 
   .footnote-badge-link {
-    @apply relative mt-0 inline p-0 no-underline;
-    @apply hover:no-underline! no-underline;
+    @apply relative mt-0 inline p-0;
+    @apply no-underline! hover:no-underline!;
   }
 
   .footnote-badge {
     @apply leading-2 font-500 inline items-center rounded-md text-xs;
     @apply mx-[1px] px-[6px] py-[0.5px];
-    @apply bg-sky-200/50 text-slate-900;
+    @apply bg-gray-200 text-slate-900;
+    @apply no-underline! hover:no-underline!;
   }
 
   /**TODO: media query */
   .footnote-tooltip {
-    @apply absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2;
+    @apply absolute bottom-full left-1/2 z-10 mb-[1px] -translate-x-1/2;
     @apply w-max max-w-64 rounded-lg p-3;
-    @apply border-[1.5px] border-solid border-[var(--vp-c-brand)] bg-gray-100;
+    @apply border-[1.5px] border-solid border-gray-600 bg-gray-100;
     @apply leading-5.5 text-left text-sm font-normal;
   }
 
   .tooltip-arrow {
     @apply bottom--12px absolute left-1/2 -translate-x-1/2;
     @apply border-6px border-solid;
-    @apply border-x-transparent border-b-transparent border-t-[var(--vp-c-brand)];
+    @apply border-gray-600 border-x-transparent border-b-transparent;
   }
 
   .tooltip-content {

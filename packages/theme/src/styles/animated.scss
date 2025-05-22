@@ -125,5 +125,23 @@
       animation: slide-enter 0.8s ease-out both;
       animation-delay: calc(var(--enter-initial) + 9 * var(--enter-step));
     }
+
+    /* footnote */
+    > .footnote-ref,
+    > .footnote-badge-link,
+    > .footnote-badge,
+    > *:has(.footnote-ref) {
+      animation: slide-enter 1s ease-out both;
+      animation-delay: calc(var(--enter-initial) + 7 * var(--enter-step));
+    }
+
+    > div > p sup.footnote-ref,
+    > div > p .footnote-ref,
+    > div > p a.footnote-badge-link,
+    > div > p .footnote-badge {
+      animation: slide-enter 0.6s ease-out both;
+      animation-delay: calc(var(--enter-initial) + 7 * var(--enter-step));
+      opacity: 1;
+    }
   }
 }

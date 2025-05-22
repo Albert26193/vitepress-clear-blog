@@ -118,4 +118,5 @@ WWW-Authenticate: Basic realm="Restricted Area"
 <details class='details open'>
 <summary>点击查看更多</summary>
 </details>
+
 - `server side event`

@@ -9,6 +9,7 @@ export { data }
 
 export default createContentLoader<Post[]>('blogs/**/*.md', {
   includeSrc: true,
+  render: true,
   transform(rawData) {
     console.log(
       '[posts.data.ts] Raw data loaded by createContentLoader:',
@@ -28,7 +29,8 @@ export default createContentLoader<Post[]>('blogs/**/*.md', {
         const post = {
           frontMatter: page.frontmatter as PostFrontMatter,
           regularPath: page.url,
-          rawContent: page.src
+          rawContent: page.src,
+          html: page.html
         } as Post
         return post
       })

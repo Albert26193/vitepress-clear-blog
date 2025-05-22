@@ -20,6 +20,7 @@ export interface Post {
   frontMatter: PostFrontMatter
   regularPath: string
   rawContent?: string
+  html?: string
 }
 
 export interface BlogConfig extends DefaultTheme.Config {
