@@ -6,7 +6,7 @@
           :href="withBase(post.regularPath)"
           class="text-color-[var(--vp-c-brand)] hover:underline-offset-6 hover:underline"
         >
-          {{ post.frontMatter.title }}
+          {{ useTitle(post.frontMatter, post.html || '') }}
         </a>
       </h2>
     </div>
@@ -14,9 +14,16 @@
       v-if="post.frontMatter.description"
       class="describe heti heti--serif mb-4 indent-2 text-gray-700 dark:text-gray-300"
     >
-      {{ useCardDescription(post.frontMatter.description).value }}
+      {{
+        useTruncatedDescription(post.frontMatter.description, {
+          maxChineseChars: 20,
+          maxEnglishWords: 15
+        }).value
+      }}
     </p>
-    <div v-else class="mt-4"></div>
+    <div v-else class="mt-4">
+      <div v-html="preview" class="heti heti--serif" />
+    </div>
     <div class="card-banner">
       <div class="flex flex-wrap items-center">
         <div class="i-carbon-time mr-1" />
@@ -38,7 +45,11 @@
   import { withBase } from 'vitepress'
   import { PropType } from 'vue'
 
-  import { useCardDescription } from '../../composables/useMeta'
+  import {
+    useHtmlPreview,
+    useTitle,
+    useTruncatedDescription
+  } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
 
   const props = defineProps({
@@ -52,6 +63,11 @@
   const navigateToPost = (event: MouseEvent) => {
     window.location.href = props.post.regularPath
   }
+
+  const preview = useHtmlPreview(props.post.html || '', {
+    maxChineseLength: 120,
+    maxEnglishWords: 60
+  })
 </script>
 
 <style scoped>

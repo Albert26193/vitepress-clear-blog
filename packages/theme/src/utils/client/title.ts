@@ -1,27 +1,54 @@
-import type { PageLink, SitePages } from 'vitepress-plugin-analyzer/types'
+import type { PageLink } from 'vitepress-plugin-analyzer/types'
 
+import { useTitle } from '../../composables/useMeta'
 import type { Post } from '../../types/types'
 
 /**
- * Get the title of a link based on the first heading of the page or the text of the link:
- * 1. first use first heading of the page
- * 2. if no heading, use the last word of the relative path of the link
- * 3. if no relative path, use the text of the link
+ * Get title from corresponding post using useTitle logic
+ * 1. Find the post by matching relativePath with regularPath
+ * 2. Use useTitle with the found post's frontMatter and html
+ * 3. Fallback to link text or path if no post found
  *
- * @param sitePages - The site pages metadata
- * @param currentLink - The link to get the title for
- * @returns The title of the link
+ * @param link - The PageLink to get title for
+ * @param allPosts - Array of all posts data
+ * @returns The title string
  */
-const getLinkTitle = (sitePages: SitePages, currentLink: PageLink): string => {
-  return sitePages[currentLink.relativePath]?.metadata?.firstHeading ==
-    'no-heading'
-    ? currentLink.fullUrl.split('/').pop() || currentLink.text
-    : sitePages[currentLink.relativePath]?.metadata?.firstHeading ||
-        currentLink.text
+const getTitleFromPost = (link: PageLink, allPosts: Post[]): string => {
+  if (!allPosts) {
+    return link.text || link.fullUrl.split('/').pop() || ''
+  }
+
+  // Convert link.relativePath to match post.regularPath format
+  // link.relativePath might be "blogs/tech/something.md" OR "blogs/tech/something" (without extension)
+  // post.regularPath is like "/blogs/tech/something.html"
+  let linkPath: string
+  if (link.relativePath.endsWith('.md')) {
+    // If it has .md extension, replace with .html
+    linkPath = '/' + link.relativePath.replace(/\.md$/, '.html')
+  } else {
+    // If it doesn't have extension, add .html
+    linkPath = '/' + link.relativePath + '.html'
+  }
+
+  // Find the corresponding post
+  const matchedPost = allPosts.find((post: Post) => {
+    return post.regularPath === linkPath
+  })
+
+  if (matchedPost) {
+    const title = useTitle(matchedPost.frontMatter, matchedPost.html || '')
+    return (
+      title ||
+      matchedPost.regularPath
+        .split('/')
+        .pop()
+        ?.replace(/\.html$/, '') ||
+      ''
+    )
+  }
+
+  // Fallback: use link text or extract filename from path
+  return link.text || link.fullUrl.split('/').pop() || ''
 }
 
-const getPostTitle = (post: Post): string => {
-  return post.frontMatter.title || post.regularPath.split('/').pop() || ''
-}
-
-export { getLinkTitle, getPostTitle }
+export { getTitleFromPost }

@@ -2,22 +2,24 @@ import {
   D3Data,
   D3Link,
   D3Node,
-  MarkdownMetadata,
+  // MarkdownMetadata,
   SiteMetadata
 } from '../../types/types.d'
+import { data as allPostsData } from '../node/posts.data'
+import { getTitleFromPost } from './title'
 
 /**
  * Transform post links into D3 force graph data structure for current page
  *
  * @param {string} currentPath Path of the current page
- * @param {Record<string, MarkdownMetadata>} mdMetadata Metadata containing all pages and their links
+ * @param {SiteMetadata} siteMetadata Metadata containing all pages and their links
  * @returns {D3Data} D3 force graph data structure with nodes and links
  */
 const transformPageD3Data = (
   currentPath: string,
-  mdMetadata: Record<string, MarkdownMetadata>
+  siteMetadata: SiteMetadata
 ): D3Data => {
-  const currentPageData = mdMetadata[currentPath]
+  const currentPageData = siteMetadata[currentPath]
   if (!currentPageData) {
     return {
       nodes: [],
@@ -33,7 +35,17 @@ const transformPageD3Data = (
     id: currentPath,
     relativePath: currentPath,
     fullUrl: currentPath,
-    name: currentPath.split('/').pop() || currentPath,
+    name: getTitleFromPost(
+      {
+        relativePath: currentPath,
+        fullUrl: currentPath,
+        text: currentPath.split('/').pop() || currentPath,
+        absolutePath: currentPath,
+        type: 'markdown',
+        raw: currentPath
+      },
+      allPostsData || []
+    ),
     type: 'page',
     inDegree: currentPageData.backLinks?.length || 0,
     outDegree: currentPageData.outgoingLinks?.length || 0
@@ -45,11 +57,14 @@ const transformPageD3Data = (
       nodesMap.set(link.relativePath, {
         id: link.relativePath,
         relativePath: link.relativePath,
-        name: link.relativePath.split('/').pop() || link.text,
+        name: getTitleFromPost(
+          { ...link, absolutePath: link.relativePath },
+          allPostsData || []
+        ),
         fullUrl: link.fullUrl,
         type: link.type,
         inDegree: 1,
-        outDegree: mdMetadata[link.relativePath]?.outgoingLinks?.length || 0
+        outDegree: siteMetadata[link.relativePath]?.outgoingLinks?.length || 0
       })
     }
   })
@@ -60,10 +75,13 @@ const transformPageD3Data = (
       nodesMap.set(link.relativePath, {
         id: link.relativePath,
         relativePath: link.relativePath,
-        name: link.relativePath.split('/').pop() || link.text,
+        name: getTitleFromPost(
+          { ...link, absolutePath: link.relativePath },
+          allPostsData || []
+        ),
         fullUrl: link.fullUrl,
         type: link.type,
-        inDegree: mdMetadata[link.relativePath]?.backLinks?.length || 0,
+        inDegree: siteMetadata[link.relativePath]?.backLinks?.length || 0,
         outDegree: 1
       })
     }

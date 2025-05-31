@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-6">
+  <div class="mx-auto mt-6">
     <div class="flex space-x-2">
       <button
         class="rounded border border-solid px-3 py-1"
@@ -45,25 +45,14 @@
 </template>
 
 <script setup lang="ts">
-  import { siteMetadata } from 'virtual:vitepress-analyzer'
   import { useRoute } from 'vitepress'
-  import { computed, ref, watch } from 'vue'
+  import { ref, watch } from 'vue'
 
-  import { transformPageD3Data } from '../../utils/client/'
   import D3PageGraph from '../common/D3PageGraph.vue'
   import OverallD3 from '../common/OverallD3.vue'
   import PopupContainer from '../common/PopupContainer.vue'
 
   const route = useRoute()
-  const currentPath = computed(() =>
-    route.data.relativePath.replace(/\.md$/, '')
-  )
-
-  const graphData = computed(() =>
-    transformPageD3Data(currentPath.value, siteMetadata)
-  )
-
-  console.log('nodes for graph', graphData.value)
 
   // Popup state management
   const showOverview = ref(false)

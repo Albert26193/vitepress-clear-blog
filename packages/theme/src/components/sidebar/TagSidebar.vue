@@ -33,7 +33,7 @@
           ]"
           @click="isCurrentPage(post) && $event.preventDefault()"
         >
-          {{ post.frontMatter.title }}
+          {{ useTitle(post.frontMatter, post.html || '') }}
         </a>
       </div>
       <!-- if no related posts -->
@@ -46,6 +46,7 @@
   import { useData, useRoute, withBase } from 'vitepress'
   import { computed, ref } from 'vue'
 
+  import { useTitle } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
   import { data as allPostsData } from '../../utils/node/posts.data.js'
 
@@ -53,9 +54,9 @@
   const route = useRoute()
 
   // get current path in a reactive way
-  const currentPath = computed(() => {
-    return route.path.replace(/\.html$/, '').replace(/^\//, '')
-  })
+  // const currentPath = computed(() => {
+  //   return route.path.replace(/\.html$/, '').replace(/^\//, '')
+  // })
 
   // get tags for current article
   const currentTags = computed(() => {

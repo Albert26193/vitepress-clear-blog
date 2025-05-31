@@ -9,7 +9,7 @@
         <div class="list-header">
           <h2 class="list-title">
             <a :href="withBase(post.regularPath)" class="title-link">
-              {{ post.frontMatter.title }}
+              {{ useTitle(post.frontMatter, post.html || '') }}
             </a>
           </h2>
         </div>
@@ -38,7 +38,12 @@
           v-if="post.frontMatter.description"
           class="describe heti heti--serif"
         >
-          {{ useListDescription(post.frontMatter.description as string) }}
+          {{
+            useTruncatedDescription(post.frontMatter.description as string, {
+              maxChineseChars: 90,
+              maxEnglishWords: 50
+            }).value
+          }}
         </p>
         <div v-else class="describe">
           <div v-html="preview" class="heti heti--serif" />
@@ -76,8 +81,12 @@
   import { withBase } from 'vitepress'
   import { PropType } from 'vue'
 
-  import { useAuthor, useHtmlPreview } from '../../composables/useMeta'
-  import { useListDescription } from '../../composables/useMeta'
+  import {
+    useAuthor,
+    useHtmlPreview,
+    useTitle,
+    useTruncatedDescription
+  } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
 
   const props = defineProps({

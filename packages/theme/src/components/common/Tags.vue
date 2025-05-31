@@ -34,7 +34,7 @@
           :href="withBase(article.regularPath)"
         >
           <div class="post-dot"></div>
-          {{ article.frontMatter.title }}
+          {{ useTitle(article.frontMatter, article.html || '') }}
         </a>
         <div class="date font-serif">{{ article.frontMatter.date }}</div>
       </div>
@@ -46,6 +46,7 @@
   import { withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
 
+  import { useTitle } from '../../composables/useMeta'
   import { Post } from '../../types/types'
   import { initTags } from '../../utils/client/'
   import { data as allPostsData } from '../../utils/node/posts.data.js'

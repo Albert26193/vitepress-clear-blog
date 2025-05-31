@@ -96,7 +96,7 @@
                   class="post-item heti heti--classic"
                   :href="withBase(article.regularPath)"
                 >
-                  {{ article.frontMatter.title ?? 'No title' }}
+                  {{ useTitle(article.frontMatter, article.html || '') }}
                 </a>
                 <div class="border-b-dashed mx-3 flex-1 border-gray-200"></div>
                 <div class="date">{{ getDay(article) }}</div>
@@ -113,6 +113,7 @@
   import { withBase } from 'vitepress'
   import { computed, reactive, ref, watch } from 'vue'
 
+  import { useTitle } from '../composables/useMeta'
   import type { Post } from '../types/types.d'
   import { useMonthYearSort, useYearSort } from '../utils/client/'
   import { data as allPostsData } from '../utils/node/posts.data.js'

@@ -34,3 +34,7 @@ docs/test/*
 docs/blogs/test/*
 test.log
 **/*/test.log
+
+# cache
+cache
+./cache

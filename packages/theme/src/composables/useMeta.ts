@@ -4,83 +4,63 @@ import { type ComputedRef, computed, nextTick, provide } from 'vue'
 import { type PostFrontMatter } from '../types/types.d'
 
 /**
- * @abstract: use description for page cards, if the length of words
- * is more than 30 words, show the first 30 words followed by an ellipsis.
- * if the description is Chinese, the length of words is more than 42 words.
+ * Truncates description text based on content type and display context
  *
- * @param description: string
- * @return truncated description
+ * @param description Text to be truncated
+ * @param options Configuration options
+ * @param options.maxChineseChars Maximum number of Chinese characters before truncation
+ * @param options.maxEnglishWords Maximum number of English words before truncation
+ * @param options.applyFilters Whether to apply content filters (currently not implemented)
+ * @returns Computed ref with the truncated description
  */
-const useCardDescription = (description: string) => {
+const useTruncatedDescription = (
+  description: string,
+  options: {
+    maxChineseChars?: number
+    maxEnglishWords?: number
+    applyFilters?: boolean
+  } = {}
+): ComputedRef<string> => {
   if (!description) {
-    return ''
+    return computed(() => '')
   }
+
+  const {
+    maxChineseChars = 42, // Default from previous useCardDescription
+    maxEnglishWords = 30, // Default from previous useCardDescription
+    applyFilters = false
+  } = options
+
   const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
+
+  // TODO: Apply these filters when applyFilters is true
+  // - filter yaml frontmatter
+  // - filter code blocks
+  // - filter inline code
+  // - filter html tags
+  // - filter markdown title and multiple heads
+  // - filter multiple spaces and new lines
+  // - filter cite
+  const processedContent = description
+
+  if (applyFilters) {
+    // Currently not implemented, would contain the filtering logic
+    // that was commented out in previous useListDescription
+  }
+
   return computed(() => {
-    // for Chinese: if the length of words is more than 42 words, show the first 42 words followed by an ellipsis.
-    if (isChinese(description)) {
-      if (description.length > 42) {
-        return description.slice(0, 42) + '...'
+    if (isChinese(processedContent)) {
+      if (processedContent.length > maxChineseChars) {
+        return processedContent.slice(0, maxChineseChars) + '...'
       }
     } else {
-      // for English: if the length of words is more than 30 words, show the first 30 words followed by an ellipsis.
-      const words = description.split(' ')
-      if (words.length > 30) {
-        return words.slice(0, 30).join(' ') + '...'
+      const words = processedContent.split(' ')
+      if (words.length > maxEnglishWords) {
+        return words.slice(0, maxEnglishWords).join(' ') + '...'
       }
     }
-    return description
+    return processedContent
   })
-}
-
-/**
- * @abstract: use description for page list, if the length of words
- * is more than 50 words, show the first 50 words followed by an ellipsis.
- * if the description is Chinese, the length of words is more than 90 words.
- *
- * @param description: string
- * @returns truncated description
- */
-const useListDescription = (description: string) => {
-  if (!description) {
-    return ''
-  }
-  const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
-
-  // TODO: more situations
-  // 1. filter yaml frontmatter
-  // 2. filter code blocks
-  // 3. filter inline code
-  // 4. filter html tags
-  // 5. filter markdown title and multiple heads
-  // 6. filter multiple spaces and new lines
-  // 7. filter cite
-  const filteredContent = description
-  // .replace(/^---[\s\S]*?---/, '') // Remove YAML frontmatter
-  // .replace(/```[\s\S]*?```/g, '') // Remove code blocks
-  // .replace(/`[\s\S]*?`/g, '') // Remove inline code
-  // .replace(/<[^>]*>/g, '') // Remove HTML tags
-  // .replace(/#{1,6}\s+[^\n]+/g, '') // Remove markdown headings
-  // .replace(/\s+/g, ' ') // Replace multiple spaces/newlines with single space
-  // .replace(/^>[\s\S]*?$/gm, '') // Remove cite
-  // .trim() // Trim whitespace
-
-  // return computed(() => {
-  //   // for Chinese: if the length of words is more than 42 words, show the first 42 words followed by an ellipsis.
-  //   if (isChinese(filteredContent)) {
-  //     if (filteredContent.length > 90) {
-  //       return filteredContent.slice(0, 90) + '...'
-  //     }
-  //   } else {
-  //     // for English: if the length of words is more than 30 words, show the first 30 words followed by an ellipsis.
-  //     const words = filteredContent.split(' ')
-  //     if (words.length > 50) {
-  //       return words.slice(0, 50).join(' ') + '...'
-  //     }
-  //   }
-  //   return filteredContent
-  // })
-  return filteredContent
 }
 
 /**
@@ -149,7 +129,7 @@ const useDarkTransition = () => {
  * Process HTML content and return a preview
  * This will:
  * 1. Extract meaningful content from HTML (not just the first paragraph)
- * 2. Skip blockquotes, citation blocks and other non-content elements when possible
+ * 2. Skip block quotes, citation blocks and other non-content elements when possible
  * 3. Truncate content while keeping HTML structure intact
  * 4. Handle both Chinese and English content differently
  *
@@ -283,10 +263,34 @@ const useHtmlPreview = (
   })
 }
 
+/**
+ * @abstract: use title for page cards,
+ * candidate titles:
+ * 1. title from frontmatter
+ * 2. first heading of the page
+ *
+ * @param frontMatter
+ * @returns title
+ */
+const useTitle = (frontMatter: PostFrontMatter, html: string) => {
+  // 1. first use title from frontmatter
+  if (frontMatter.title) {
+    return frontMatter.title
+  }
+  // 2. otherwise use first heading of the page
+  const div = document.createElement('div')
+  div.innerHTML = html
+  const headings = div.querySelectorAll('h1, h2, h3, h4, h5, h6')
+  if (headings.length > 0) {
+    return headings[0].textContent || ''
+  }
+  return ''
+}
+
 export {
-  useCardDescription,
-  useListDescription,
+  useTruncatedDescription,
   useAuthor,
   useDarkTransition,
-  useHtmlPreview
+  useHtmlPreview,
+  useTitle
 }

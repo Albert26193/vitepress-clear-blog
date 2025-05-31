@@ -36,22 +36,16 @@ export interface PageLink {
   raw: string
 }
 
-export interface MarkdownMetadata {
-  wordCount: number // markdown word count
-  outgoingLinks: PageLink[] // outgoing links
-  backLinks: PageLink[] // incoming links
-  rawContent: string // raw content
-  headings: Array<{
-    // heading structure
-    level: number
-    text: string
-    slug: string
-  }>
-  lastUpdated: number // last updated time
+export interface PageMetadata {
+  outgoingLinks: PageLink[]
+  backLinks: PageLink[]
+  wordCount: number
+  firstHeading: string
+  lastUpdated: number
 }
 
 export interface SiteMetadata {
-  [key: string]: MarkdownMetadata
+  [key: string]: PageMetadata
 }
 
 export interface D3Node extends d3.SimulationNodeDatum {
