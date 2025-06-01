@@ -12,10 +12,14 @@
         <span class="count">{{ tagsList[key].length }}</span>
       </span>
     </div>
-    <div class="tag-header mx-4">
+    <div class="tag-header">
       <span class="i-carbon-tag-group text-xl" />
       <span class="ml-2">
-        <span v-if="selectedTag" :key="'selected-' + selectedTag">
+        <span
+          v-if="selectedTag"
+          :key="'selected-' + selectedTag"
+          class="animate-bounce-in delay-300 duration-300"
+        >
           {{ selectedTag }}</span
         >
         <span v-else :key="'default'" class="text-gray-400 dark:text-gray-200">
@@ -114,20 +118,20 @@
   }
 
   .tag-view {
-    @apply m-1 inline-block rounded-full border px-3 py-[2px] text-[13px];
-    @apply cursor-pointer transition-colors duration-300;
-    @apply hover:border-[var(--tag-info-color)];
+    @apply m-1 inline-block rounded-full px-3 py-[2px] text-[13px];
+    @apply cursor-pointer transition-all duration-300;
     @apply font-500;
   }
 
   .tag-view.active {
-    @apply box-border;
-    @apply transition-colors duration-300;
-    @apply border-[var(--vp-c-brand)] bg-[var(--vp-c-brand)] text-white;
+    @apply box-border border-[var(--vp-c-brand)];
+    @apply text-[var(--vp-c-brand)];
+    @apply transition-all duration-300;
+    @apply ring-0.5px ring-[var(--vp-c-brand)];
   }
 
   .tag-view.active .count {
-    @apply text-white transition-colors duration-300;
+    @apply transition-colors duration-300;
   }
 
   .tag-view:hover .count {
@@ -135,7 +139,7 @@
   }
 
   .tag-header {
-    @apply color-[var(--vp-c-brand)] mb-2 mt-6 text-left text-2xl font-medium;
+    @apply color-[var(--vp-c-brand)] mx-4 mt-6 text-left text-2xl font-medium;
     @apply font-semibold;
   }
 

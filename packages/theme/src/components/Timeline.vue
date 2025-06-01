@@ -35,7 +35,7 @@
           <!-- year and post count -->
           <span
             @click="toggleYear(getYear(curYearPostList))"
-            class="flex max-w-36 cursor-pointer items-center"
+            class="timeline-year-title-span"
           >
             <span
               v-if="displayStatus.years[getYear(curYearPostList)]"
@@ -60,7 +60,7 @@
           <div class="timeline-month-title">
             <span
               @click="toggleMonth(getYear(monthList), getMonth(monthList))"
-              class="flex max-w-36 cursor-pointer items-center font-serif"
+              class="timeline-month-title-span"
             >
               <span
                 v-if="
@@ -244,6 +244,11 @@
     @apply absolute bottom-0 top-0 w-[1px] bg-gray-200 dark:bg-gray-700;
   }
 
+  .timeline-year-title-span {
+    @apply flex max-w-36 cursor-pointer items-center font-serif;
+    @apply animate-fade-in delay-100 duration-200;
+  }
+
   .timeline-month-title {
     @apply ml-4 pb-1 pt-2;
     @apply font-semibold;
@@ -252,6 +257,11 @@
 
   .timeline-month-container {
     @apply relative;
+  }
+
+  .timeline-month-title-span {
+    @apply flex max-w-36 cursor-pointer items-center font-serif;
+    @apply animate-fade-in delay-200 duration-200;
   }
 
   .timeline-month-line {

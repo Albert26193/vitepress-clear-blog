@@ -134,6 +134,7 @@
   .side-tag-active {
     @apply box-border;
     @apply color-[var(--vp-c-brand)] border-[var(--vp-c-brand)];
+    @apply ring-0.5px ring-[var(--vp-c-brand)];
   }
 
   .related-posts {
