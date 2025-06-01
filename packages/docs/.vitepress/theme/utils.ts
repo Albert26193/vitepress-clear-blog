@@ -90,7 +90,21 @@ const getFooterRefTag = (md: MarkdownIt) => {
   }
 }
 
-export { getRootPath, getSrcPath, getFooterRefTag }
+const getHashtag = (md: MarkdownIt) => {
+  md.renderer.rules.hashtag_text = function (tokens, idx) {
+    return `#${tokens[idx].content}`
+  }
+
+  md.renderer.rules.hashtag_open = function (tokens, idx) {
+    const tagName = tokens[idx].content.toLowerCase()
+    return `<a href='/tags?tag=${tagName}' class='blog-tag'>`
+  }
+
+  md.renderer.rules.hashtag_close = function () {
+    return '</a>'
+  }
+}
+export { getRootPath, getSrcPath, getFooterRefTag, getHashtag }
 
 //temp
 const getThemeConfig = async (cfg = {}) => {

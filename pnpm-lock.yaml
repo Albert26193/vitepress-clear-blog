@@ -214,6 +214,9 @@ importers:
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
+      markdown-it-hashtag:
+        specifier: ^0.4.0
+        version: 0.4.0
       markdown-it-mathjax3:
         specifier: ^4.3.2
         version: 4.3.2
@@ -3156,6 +3159,9 @@ packages:
 
   markdown-it-footnote@4.0.0:
     resolution: {integrity: sha512-WYJ7urf+khJYl3DqofQpYfEYkZKbmXmwxQV8c8mO/hGIhgZ1wOe7R4HLFNwqx7TjILbnC98fuyeSsin19JdFcQ==}
+
+  markdown-it-hashtag@0.4.0:
+    resolution: {integrity: sha512-+VCMH+f4/Ud5wPEtcAMrlLbUrrGViwR9JvjPy//X3Z7ZG1j5nQuHtDLTGZfMhkqYTMY+cTZgZkVNBsXMfU93Yg==}
 
   markdown-it-mathjax3@4.3.2:
     resolution: {integrity: sha512-TX3GW5NjmupgFtMJGRauioMbbkGsOXAAt1DZ/rzzYmTHqzkO1rNAdiMD4NiruurToPApn2kYy76x02QN26qr2w==}
@@ -7587,6 +7593,8 @@ snapshots:
   mark.js@8.11.1: {}
 
   markdown-it-footnote@4.0.0: {}
+
+  markdown-it-hashtag@0.4.0: {}
 
   markdown-it-mathjax3@4.3.2:
     dependencies:

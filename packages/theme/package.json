@@ -57,6 +57,7 @@
     "d3": "^7.9.0",
     "lodash": "^4.17.21",
     "markdown-it": "^14.1.0",
+    "markdown-it-hashtag": "^0.4.0",
     "markdown-it-mathjax3": "^4.3.2",
     "markdown-it-wikilinks": "^1.4.0",
     "markdown-link-extractor": "^4.0.2",

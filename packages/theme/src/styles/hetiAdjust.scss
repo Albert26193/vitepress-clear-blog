@@ -33,6 +33,13 @@
         width: 100%;
         background-color: var(--vp-c-divider);
       }
+
+      a.blog-tag {
+        text-decoration: none;
+        &:hover {
+          text-decoration: none;
+        }
+      }
     }
 
     &.heti .vp-doc blockquote {
