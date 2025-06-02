@@ -162,7 +162,7 @@
       .on('click', (event, d) => {
         if (d.fullUrl) {
           router.go(d.fullUrl)
-          console.log(d.fullUrl)
+          // console.log(d.fullUrl)
         }
       })
 

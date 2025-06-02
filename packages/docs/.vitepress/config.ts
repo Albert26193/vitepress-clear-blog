@@ -2,15 +2,17 @@ import footnotePlugin from 'markdown-it-footnote'
 import markdownItHashtag from 'markdown-it-hashtag'
 import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
-import UnoCSS from 'unocss/vite'
+// import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
+import { getThemeConfig } from 'vitepress-clear-blog/node'
 import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
-import { generateThemePlugin } from 'vitepress-plugin-config'
+
+// import { generateThemePlugin } from 'vitepress-plugin-config'
 
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
-import { getFooterRefTag, getHashtag, getThemeConfig } from './theme/utils'
+import { getFooterRefTag, getHashtag } from './theme/utils'
 
 const wikilinksOptions = {
   baseURL: 'http://10.177.73.149:5000',
@@ -29,8 +31,9 @@ const analyzerOptions = {
 }
 
 const blogTheme = await getThemeConfig()
+
 export default defineConfig({
-  extends: blogTheme.blog,
+  extends: blogTheme.clearBlogConfig,
   markdown: {
     config: (md) => {
       md.use(mathjax3)
@@ -53,22 +56,25 @@ export default defineConfig({
       }
     }
   },
-  // vite: blogTheme.vite,
-  vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          api: 'modern-compiler' // or "modern"
-        }
-      }
-    },
-    plugins: [
-      vitePressAnalyzerPlugin(analyzerOptions),
-      // generateThemePlugin(),
-      UnoCSS()
-      //RssPlugin(RSS)
-    ]
-  },
+  vite: blogTheme.vite,
+  // vite: {
+  //   server: {
+  //     port: 4000
+  //   },
+  //   css: {
+  //     preprocessorOptions: {
+  //       scss: {
+  //         api: 'modern-compiler' // or "modern"
+  //       }
+  //     }
+  //   },
+  //   plugins: [
+  //     vitePressAnalyzerPlugin(analyzerOptions),
+  //     // generateThemePlugin(),
+  //     UnoCSS()
+  //     //RssPlugin(RSS)
+  //   ]
+  // },
   // title: '55555555',
   base: '/',
   srcDir: './docs',

@@ -2,8 +2,6 @@ import { createContentLoader } from 'vitepress'
 
 import type { Post, PostFrontMatter } from '../../types/types.d'
 
-// console.log('[posts.data.ts] Current Working Directory:', process.cwd()); // Keep this for now if helpful
-
 declare const data: Post[]
 export { data }
 
@@ -11,15 +9,11 @@ export default createContentLoader<Post[]>('blogs/**/*.md', {
   includeSrc: true,
   render: true,
   transform(rawData) {
-    console.log(
-      '[posts.data.ts] Raw data loaded by createContentLoader:',
-      JSON.stringify(rawData, null, 2)
-    )
-    if (!rawData || rawData.length === 0) {
-      // console.warn(
-      //   '[posts.data.ts] No raw data loaded. Check your glob pattern and srcDir in VitePress config.'
-      // );
-    }
+    // console.log(
+    //   '[posts.data.ts] Raw data loaded by createContentLoader:',
+    //   JSON.stringify(rawData, null, 2)
+    // )
+
     return rawData
       .map((page) => {
         if (page.frontmatter.date) {

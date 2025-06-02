@@ -78,7 +78,7 @@ const resolveAbsolutePath = (
   currentFile: string
 ): string => {
   const currentFileAbsolutePath = resolve(getDocsRoot(config), currentFile)
-  console.log('currentFileAbsolutePath', currentFileAbsolutePath)
+  // console.log('currentFileAbsolutePath', currentFileAbsolutePath)
   // If it's an absolute path (starts with /), resolve from docs root
   const normalizedPath = normalizeLink(relativePath)
   if (normalizedPath.startsWith('/')) {

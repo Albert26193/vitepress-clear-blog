@@ -5,9 +5,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "docs:dev": "vitepress dev --host",
-    "docs:build": "vitepress build --clean-cache --clean-temp",
-    "docs:clean": "rimraf .vitepress/cache .vitepress/dist"
+    "dev:docs": "vitepress dev --host",
+    "build:docs": "vitepress build --clean-cache --clean-temp",
+    "clean:docs": "rimraf .vitepress/cache .vitepress/dist"
   },
   "dependencies": {
     "@types/markdown-it-footnote": "^3.0.4",

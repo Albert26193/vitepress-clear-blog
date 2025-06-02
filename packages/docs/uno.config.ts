@@ -68,6 +68,10 @@ export default defineConfig({
       'tag',
       'rounded-full px-2 py-1 text-xs border border-solid border-gray-600 dark:border-gray-200 text-gray-900 hover:text-[var(--vp-c-brand)] hover:border-[var(--vp-c-brand)] cursor-pointer'
     ],
+    [
+      'tag-active',
+      'tag border-[var(--vp-c-brand)] bg-[var(--vp-c-brand)] text-white'
+    ],
     ['custom-page-layout', 'w-full h-full mx-auto']
   ]
 })

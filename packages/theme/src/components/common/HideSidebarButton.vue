@@ -20,11 +20,11 @@
   // TODO: fix error here
   const checkSidebarExists = () => {
     currentWidthHasSidebar.value = window.innerWidth > MOBILE_BREAKPOINT
-    console.log(
-      'currentWidthHasSidebar',
-      currentWidthHasSidebar.value,
-      `窗口宽度：${window.innerWidth}px，断点：${MOBILE_BREAKPOINT}px`
-    )
+    // console.log(
+    //   'currentWidthHasSidebar',
+    //   currentWidthHasSidebar.value,
+    //   `窗口宽度：${window.innerWidth}px，断点：${MOBILE_BREAKPOINT}px`
+    // )
   }
 
   const updateDOM = (hidden: boolean) => {

@@ -38,7 +38,7 @@ const isExternalLink = (link: string): boolean =>
  * @returns True if the file exists, false otherwise
  */
 const linkedFileExists = (absolutePath: string): boolean => {
-  console.log(absolutePath, existsSync(absolutePath))
+  // console.log(absolutePath, existsSync(absolutePath))
   // Try exact path first
   if (existsSync(absolutePath)) {
     return true

@@ -5,6 +5,7 @@
   "main": "./dist/index.mjs",
   "exports": {
     "./package.json": "./package.json",
+    "./styles": "./lib/styles/index.scss",
     ".": {
       "import": "./src/index.ts"
     },

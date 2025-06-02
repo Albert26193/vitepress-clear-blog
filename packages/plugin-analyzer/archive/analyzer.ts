@@ -48,11 +48,11 @@ const resolveDocAbsolutePath = (
   // Since getDocsRoot() always returns absolute path
   const currentFileAbsolutePath = resolve(getDocsRoot(), currentFilePath)
 
-  console.log({
-    currentFilePath,
-    currentFileAbsolutePath,
-    relativePath
-  })
+  // console.log({
+  //   currentFilePath,
+  //   currentFileAbsolutePath,
+  //   relativePath
+  // })
 
   return resolve(dirname(currentFileAbsolutePath), normalizeLink(relativePath))
 }
@@ -323,9 +323,9 @@ const buildGlobalBackLinks = () => {
 
     metadata.outgoingLinks.forEach((link) => {
       const targetFile = `${link.relativePath}`
-      console.log({ targetFile })
+      // console.log({ targetFile })
 
-      console.log(JSON.stringify(globalMdMetadata))
+      // console.log(JSON.stringify(globalMdMetadata))
       if (globalMdMetadata[targetFile]) {
         if (!globalMdMetadata[targetFile].backLinks) {
           globalMdMetadata[targetFile].backLinks = []
@@ -341,7 +341,7 @@ const buildGlobalBackLinks = () => {
           raw: link.raw
         }
 
-        console.log({ newBackLink })
+        // console.log({ newBackLink })
         const exists = globalMdMetadata[targetFile].backLinks.some(
           (bl) => bl.relativePath === newBackLink.relativePath
         )
@@ -380,11 +380,11 @@ const scanDir = (dir: string) => {
  * @returns {Plugin} VitePress plugin instance
  */
 export function markdownAnalyzerPlugin(): Plugin {
-  console.log('\n[Analyzer Plugin] Initializing...')
+  // console.log('\n[Analyzer Plugin] Initializing...')
   const docsRoot = getDocsRoot()
   const blogDir = resolve(docsRoot, dirPrefix)
-  console.log('[Analyzer Plugin] Docs root:', docsRoot)
-  console.log('[Analyzer Plugin] Blog directory:', blogDir)
+  // console.log('[Analyzer Plugin] Docs root:', docsRoot)
+  // console.log('[Analyzer Plugin] Blog directory:', blogDir)
 
   return {
     name: 'vitepress-plugin-analyzer',
@@ -399,7 +399,7 @@ export function markdownAnalyzerPlugin(): Plugin {
     },
     load(id) {
       if (id === RESOLVED_VIRTUAL_MODULE_ID) {
-        console.log('[Analyzer Plugin] Global metadata:', globalMdMetadata)
+        // console.log('[Analyzer Plugin] Global metadata:', globalMdMetadata)
         return `
           export const globalMdMetadata = ${JSON.stringify(globalMdMetadata, null, 2)}
         `

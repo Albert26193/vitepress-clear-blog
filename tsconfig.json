@@ -16,6 +16,6 @@
       "vitepress-clear-blog/*": ["./packages/theme/src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.d.ts", "**/*.vue"],
+  "include": ["packages/**/*.ts", "packages/**/*.d.ts", "packages/**/*.vue"],
   "exclude": ["node_modules", "dist"]
 }

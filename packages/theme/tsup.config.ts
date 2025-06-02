@@ -6,7 +6,15 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   outDir: path.resolve(__dirname, './lib/node'),
   dts: true,
-  external: ['vitepress'],
+  external: [
+    'vitepress',
+    'gzip-size',
+    'fs',
+    'path',
+    'fdir',
+    'node:os',
+    'unocss'
+  ],
   silent: true,
   clean: true,
   outExtension: ({ format }) => ({

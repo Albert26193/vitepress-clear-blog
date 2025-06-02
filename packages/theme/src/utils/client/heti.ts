@@ -43,7 +43,7 @@ const addClassForHetiElement = (): void => {
     element.classList.add('heti--serif')
   })
 
-  console.log(elements, window.Heti)
+  // console.log(elements, window.Heti)
 }
 
 /**

@@ -156,6 +156,19 @@ const useHtmlPreview = (
       const div = document.createElement('div')
       div.innerHTML = html
 
+      // Filter out elements with specified classes like blog-tags, tags, etc.
+      const classesToFilter = [
+        'blog-tags',
+        'tags',
+        'clear-blog-tags',
+        'tag',
+        'vp-tag'
+      ] // Added a few common variations
+      classesToFilter.forEach((cls) => {
+        const elementsToRemove = div.querySelectorAll(`.${cls}`)
+        elementsToRemove.forEach((el) => el.remove())
+      })
+
       // 1. Try to find the main content paragraph
       // Priority: regular paragraphs > lists > other content
       const paragraphs = Array.from(div.getElementsByTagName('p'))

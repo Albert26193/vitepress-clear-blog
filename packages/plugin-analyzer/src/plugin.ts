@@ -31,11 +31,11 @@ export function vitePressAnalyzerPlugin(
     name: 'vitepress-analyzer',
 
     configureServer(server) {
-      console.log('[Analyzer Plugin] Initializing...')
+      // console.log('[Analyzer Plugin] Initializing...')
 
       // Get the docs root directory
       const docsRoot = resolve(process.cwd(), config.docsDir)
-      console.log('[Analyzer Plugin] Docs root:', docsRoot)
+      // console.log('[Analyzer Plugin] Docs root:', docsRoot)
 
       // Initial scan of all documents
       const { globalMetadata, globalPages } = analyzeAllDocuments(config)
