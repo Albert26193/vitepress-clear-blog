@@ -1,7 +1,7 @@
 {
   "name": "blog-monorepo",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A VitePress blog monorepo",
   "type": "module",
   "scripts": {

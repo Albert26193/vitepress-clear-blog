@@ -18,10 +18,10 @@ lib
 **/*/.cache
 
 # Documentation files
-/*.md
-smartmontools.md
-zsh_history.md
-**/pages/page*.md
+# /*.md
+# smartmontools.md
+# zsh_history.md
+# **/pages/page*.md
 
 # Theme files
 origin_theme.css
