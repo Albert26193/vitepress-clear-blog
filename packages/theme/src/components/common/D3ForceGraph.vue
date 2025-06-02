@@ -83,7 +83,8 @@
       )
       .force('charge', d3.forceManyBody().strength(-800))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(30))
+      // remove fixed collision force
+      // .force('collision', d3.forceCollide().radius(30))
       .force('cluster', forceCluster())
 
     // Add cluster force function

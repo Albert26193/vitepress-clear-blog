@@ -4,7 +4,7 @@ import {
   D3Node,
   // MarkdownMetadata,
   SiteMetadata
-} from '../../types/types.d'
+} from '../../types/types'
 import { data as allPostsData } from '../node/posts.data'
 import { getTitleFromPost } from './title'
 
