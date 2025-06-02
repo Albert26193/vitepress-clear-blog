@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div v-show="show" class="popup-wrapper">
+    <div v-if="show" class="popup-wrapper">
       <!-- Backdrop -->
       <div class="popup-backdrop" @click="handleClose"></div>
       <!-- Content -->

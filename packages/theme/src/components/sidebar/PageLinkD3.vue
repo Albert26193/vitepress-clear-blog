@@ -40,6 +40,7 @@
       :height="960"
       :circle-color="'#fc8ca6'"
       :text-color="'#4b4543'"
+      :text-size="18"
     />
   </PopupContainer>
 </template>

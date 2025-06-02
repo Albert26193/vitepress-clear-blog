@@ -218,7 +218,7 @@
     })
 
     // Modify the collision detection to consider the text size
-    // TODO: 自定义碰撞检测
+    // TODO: custom collision detection
     simulation.force(
       'collision',
       d3
@@ -236,12 +236,12 @@
             if (textElement) {
               const textWidth = textElement.getComputedTextLength()
               // Return a collision radius based on the text width
-              return Math.max(props.diameter, textWidth / 2)
+              return Math.max(props.diameter, textWidth / 2 + 5) // add some padding to text width
             }
           }
           return props.diameter
         })
-        .strength(0.8)
+        .strength(1)
     )
 
     // Add drag functionality
