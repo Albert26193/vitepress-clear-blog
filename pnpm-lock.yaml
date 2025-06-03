@@ -100,28 +100,13 @@ importers:
         version: link:../vitepress-plugin-analyzer
       vitepress-plugin-config:
         specifier: workspace:*
-        version: link:../plugin-config
-      vitepress-plugin-mermaid:
-        specifier: ^2.0.17
-        version: 2.0.17(mermaid@11.6.0)(vitepress@1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3))
+        version: link:../vitepress-plugin-config
       vitepress-plugin-rss:
         specifier: ^0.3.1
         version: 0.3.1(vitepress@1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3))
       vitepress-sidebar:
         specifier: ^1.31.0
         version: 1.31.1
-
-  packages/plugin-config:
-    dependencies:
-      fs-extra:
-        specifier: ^11.3.0
-        version: 11.3.0
-      smol-toml:
-        specifier: ^1.3.1
-        version: 1.3.4
-      vitepress:
-        specifier: ^1.5.0
-        version: 1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3)
 
   packages/theme:
     dependencies:
@@ -176,9 +161,6 @@ importers:
       vitepress:
         specifier: ^1.6.3
         version: 1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3)
-      vitepress-plugin-mermaid:
-        specifier: ^2.0.17
-        version: 2.0.17(mermaid@11.6.0)(vitepress@1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3))
       vitepress-plugin-rss:
         specifier: ^0.3.1
         version: 0.3.1(vitepress@1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3))
@@ -224,7 +206,7 @@ importers:
         version: link:../vitepress-plugin-analyzer
       vitepress-plugin-config:
         specifier: workspace:*
-        version: link:../plugin-config
+        version: link:../vitepress-plugin-config
       vitepress-plugin-llms:
         specifier: ^1.3.4
         version: 1.3.4
@@ -244,6 +226,18 @@ importers:
       '@types/node':
         specifier: ^22.13.5
         version: 22.15.29
+
+  packages/vitepress-plugin-config:
+    dependencies:
+      fs-extra:
+        specifier: ^11.3.0
+        version: 11.3.0
+      smol-toml:
+        specifier: ^1.3.1
+        version: 1.3.4
+      vitepress:
+        specifier: ^1.5.0
+        version: 1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3)
 
 packages:
 
@@ -365,9 +359,6 @@ packages:
   '@bcoe/v8-coverage@1.0.2':
     resolution: {integrity: sha512-6zABk/ECA/QYSCQ1NGiVwwbQerUCZ+TQbp64Q3AgmfNvurHH0j8TtXa1qbShXA6qqkpAj4V5W8pP6mLe1mcMqA==}
     engines: {node: '>=18'}
-
-  '@braintree/sanitize-url@6.0.4':
-    resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
 
   '@braintree/sanitize-url@7.1.1':
     resolution: {integrity: sha512-i1L7noDNxtFyL5DmZafWy1wRVhGehQmzZaz1HiN5e7iylJMSZR7ekOV7NsIqa5qBldlLrsKv4HbgFUVlQrz8Mw==}
@@ -878,9 +869,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
-
-  '@mermaid-js/mermaid-mindmap@9.3.0':
-    resolution: {integrity: sha512-IhtYSVBBRYviH1Ehu8gk69pMDF8DSRqXBRDMWrEfHoaMruHeaP2DXA3PBnuwsMaCdPQhlUUcy/7DBLAEIXvCAw==}
 
   '@mermaid-js/parser@0.4.0':
     resolution: {integrity: sha512-wla8XOWvQAwuqy+gxiZqY+c7FokraOTHRWMsbB4AgRx9Sy7zKslNyejy7E+a77qHfey5GXw/ik3IXv/NHMJgaA==}
@@ -3232,9 +3220,6 @@ packages:
       encoding:
         optional: true
 
-  non-layered-tidy-tree-layout@2.0.2:
-    resolution: {integrity: sha512-gkXMxRzUH+PB0ax9dUN0yYF0S25BqeAYqhgMaLUFmpXLEk7Fcu8f4emJuOAY0V8kjDICxROIKsTAKsV/v355xw==}
-
   normalize-package-data@6.0.2:
     resolution: {integrity: sha512-V6gygoYb/5EmNI+MEGrWkC+e6+Rr7mTmfHrxDbLzxQogBkgzo76rkok0Am6thgSF7Mv2nLOajAJj5vDJZEFn7g==}
     engines: {node: ^16.14.0 || >=18.0.0}
@@ -3581,8 +3566,8 @@ packages:
     resolution: {integrity: sha512-oMA2dcrw6u0YfxJQXm342bFKX/E4sG9rbTzO9ptUcR/e8A33cHuvStiYOwH7fszkZlZ1z/ta9AAoPk2F4qIOHA==}
     engines: {node: '>=18'}
 
-  reurl@git+https://git@github.com:jsepia/reurl.git#a3210117636c115fb139517fcfb2ea929025cded:
-    resolution: {commit: a3210117636c115fb139517fcfb2ea929025cded, repo: git@github.com:jsepia/reurl.git, type: git}
+  reurl@https://codeload.github.com/jsepia/reurl/tar.gz/a3210117636c115fb139517fcfb2ea929025cded:
+    resolution: {tarball: https://codeload.github.com/jsepia/reurl/tar.gz/a3210117636c115fb139517fcfb2ea929025cded}
     version: 1.0.0-rc.2
 
   reusify@1.1.0:
@@ -4126,12 +4111,6 @@ packages:
   vitepress-plugin-llms@1.3.4:
     resolution: {integrity: sha512-owEPumKy5syjRRG0OSA2635NoeR/U+eiLIjurLTUMXxdmtJ0h6OrTLqvIFPYTV0gSQfaWY/owKdTxjZxv2n2bQ==}
 
-  vitepress-plugin-mermaid@2.0.17:
-    resolution: {integrity: sha512-IUzYpwf61GC6k0XzfmAmNrLvMi9TRrVRMsUyCA8KNXhg/mQ1VqWnO0/tBVPiX5UoKF1mDUwqn5QV4qAJl6JnUg==}
-    peerDependencies:
-      mermaid: 10 || 11
-      vitepress: ^1.0.0 || ^1.0.0-alpha
-
   vitepress-plugin-rss@0.3.1:
     resolution: {integrity: sha512-Q0tJ/j6D0c0WXG/VEF1FNyR8Kv72GPwytUipwKEx+3zL4/AllCgYkY/Hom38zY7t7bcDk5qXeudbhoIWT+1Q+A==}
     peerDependencies:
@@ -4477,9 +4456,6 @@ snapshots:
       '@babel/helper-validator-identifier': 7.27.1
 
   '@bcoe/v8-coverage@1.0.2': {}
-
-  '@braintree/sanitize-url@6.0.4':
-    optional: true
 
   '@braintree/sanitize-url@7.1.1': {}
 
@@ -4895,17 +4871,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
-
-  '@mermaid-js/mermaid-mindmap@9.3.0':
-    dependencies:
-      '@braintree/sanitize-url': 6.0.4
-      cytoscape: 3.32.0
-      cytoscape-cose-bilkent: 4.1.0(cytoscape@3.32.0)
-      cytoscape-fcose: 2.2.0(cytoscape@3.32.0)
-      d3: 7.9.0
-      khroma: 2.1.0
-      non-layered-tidy-tree-layout: 2.0.2
-    optional: true
 
   '@mermaid-js/parser@0.4.0':
     dependencies:
@@ -7275,7 +7240,7 @@ snapshots:
     dependencies:
       extend: 3.0.2
       markdown-it-regexp: 0.4.0
-      reurl: git+https://git@github.com:jsepia/reurl.git#a3210117636c115fb139517fcfb2ea929025cded
+      reurl: https://codeload.github.com/jsepia/reurl/tar.gz/a3210117636c115fb139517fcfb2ea929025cded
       sanitize-filename: 1.6.3
 
   markdown-it@14.1.0:
@@ -7618,9 +7583,6 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  non-layered-tidy-tree-layout@2.0.2:
-    optional: true
-
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
@@ -7914,7 +7876,7 @@ snapshots:
       onetime: 7.0.0
       signal-exit: 4.1.0
 
-  reurl@git+https://git@github.com:jsepia/reurl.git#a3210117636c115fb139517fcfb2ea929025cded:
+  reurl@https://codeload.github.com/jsepia/reurl/tar.gz/a3210117636c115fb139517fcfb2ea929025cded:
     dependencies:
       spec-url: 2.0.0-dev.1
 
@@ -8469,13 +8431,6 @@ snapshots:
     transitivePeerDependencies:
       - '@75lb/nature'
       - supports-color
-
-  vitepress-plugin-mermaid@2.0.17(mermaid@11.6.0)(vitepress@1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3)):
-    dependencies:
-      mermaid: 11.6.0
-      vitepress: 1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3)
-    optionalDependencies:
-      '@mermaid-js/mermaid-mindmap': 9.3.0
 
   vitepress-plugin-rss@0.3.1(vitepress@1.6.3(@algolia/client-search@5.25.0)(@types/node@22.15.29)(markdown-it-mathjax3@4.3.2)(postcss@8.5.4)(sass@1.89.1)(search-insights@2.17.3)(typescript@5.8.3)):
     dependencies:

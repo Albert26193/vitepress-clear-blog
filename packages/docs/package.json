@@ -17,7 +17,6 @@
     "vitepress-clear-blog": "workspace:*",
     "vitepress-plugin-analyzer": "workspace:*",
     "vitepress-plugin-config": "workspace:*",
-    "vitepress-plugin-mermaid": "^2.0.17",
     "vitepress-plugin-rss": "^0.3.1",
     "vitepress-sidebar": "^1.31.0"
   }

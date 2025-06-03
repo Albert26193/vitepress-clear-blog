@@ -1,28 +1,15 @@
 import MarkdownIt from 'markdown-it'
 import type Token from 'markdown-it/lib/token.mjs'
-import path, { resolve } from 'path'
 
 /**
- * Get root path for project
- */
-const getRootPath = () => {
-  const rootPath = path.resolve(process.cwd())
-  // console.log('Current working directory:', process.cwd())
-  // console.log('Resolved root path:', rootPath)
-  return rootPath
-}
-
-/**
- * Get src path for project
+ * Get footer ref tag
+ * 
+ * render footnote to <FooterRef/> vue component
+ * side effect: add footer ref tag to the markdown-it instance,
+ * and transform it to vue component
  *
- * @param srcName - src name
- * @returns src path
+ * @param md - markdown-it instance
  */
-const getSrcPath = (srcName = 'src') => {
-  const rootPath = getRootPath()
-  return `${rootPath}/${srcName}`
-}
-
 const getFooterRefTag = (md: MarkdownIt) => {
   const footnoteContents: Record<string, string> = {}
 
@@ -90,6 +77,13 @@ const getFooterRefTag = (md: MarkdownIt) => {
   }
 }
 
+/**
+ * Get hashtag tag
+ * 
+ * render #hashtag to <a href='/tags?tag=hashtag' class='blog-tag'>hashtag</a>
+ *
+ * @param md - markdown-it instance
+ */
 const getHashtag = (md: MarkdownIt) => {
   md.renderer.rules.hashtag_text = function (tokens, idx) {
     return `#${tokens[idx].content}`
@@ -104,25 +98,25 @@ const getHashtag = (md: MarkdownIt) => {
     return '</a>'
   }
 }
-export { getRootPath, getSrcPath, getFooterRefTag, getHashtag }
 
-//temp
-const getThemeConfig = async (cfg = {}) => {
-  return {
-    blog: {
-      title: 'DDDDDDDocs',
-      vite: {
-        server: { port: 4000 }
-        // plugins: [
-        //   vitePressAnalyzerPlugin(),
-        //   // generateThemePlugin(),
-        //   UnoCSS()
-        //   //RssPlugin(RSS)
-        // ]
-      },
-      ...cfg
+/**
+ * Get mermaid plugin
+ *
+ * render mermaid code block to <PostMermaid/> vue component
+ *
+ * @param md - markdown-it instance
+ */
+const mermaidPlugin = (md: MarkdownIt): void => {
+  const fence = md.renderer.rules.fence?.bind(md.renderer.rules)
+  md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+    const token = tokens[idx]
+    const language = token.info.trim()
+
+    if (language.startsWith('mermaid')) {
+      return `<PostMermaid id="mermaid-${idx}" code="${encodeURIComponent(token.content)}"></PostMermaid>`
     }
+    return fence?.(tokens, idx, options, env, self) || ''
   }
 }
 
-export { getThemeConfig }
+export { getFooterRefTag, getHashtag, mermaidPlugin }

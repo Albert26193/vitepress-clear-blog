@@ -4,8 +4,9 @@ import { useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { VPBadge } from 'vitepress/theme'
 import { nextTick, onMounted, watch } from 'vue'
+import { mediumZoomInit } from './utils/client'
 
-// import ExampleUsage from './components/ExampleUsage.vue'
+import PostMermaid from './components/articles/PostMermaid.vue'
 import Collections from './components/Collections.vue'
 import NewLayout from './components/NewLayout.vue'
 import Timeline from './components/Timeline.vue'
@@ -17,11 +18,13 @@ import BlogContainer from './components/page/BlogContainer.vue'
 import LinkSidebar from './components/sidebar/LinkSidebar.vue'
 import PageLinkD3 from './components/sidebar/PageLinkD3.vue'
 import TagSidebar from './components/sidebar/TagSidebar.vue'
+
+// styles
 import './styles/index.scss'
+
 import {
   addClassForHetiElement,
-  mediumZoomInit,
-  registerHetiScript
+  registerHetiScript,
 } from './utils/client/'
 
 export const BlogTheme: Theme = {
@@ -40,20 +43,20 @@ export const BlogTheme: Theme = {
     app.component('OverallD3', OverallD3)
     app.component('Collections', Collections)
     app.component('FooterRef', FooterRef)
+    app.component('PostMermaid', PostMermaid)
     // vitepress original
     app.component('Badge', VPBadge)
   },
   setup() {
     const route = useRoute()
     onMounted(() => {
-      mediumZoomInit()
       addClassForHetiElement()
       registerHetiScript()
+      mediumZoomInit()
       watch(
         () => route.path,
         () =>
           nextTick(() => {
-            mediumZoomInit()
             addClassForHetiElement()
             // registerHetiScript()
           })

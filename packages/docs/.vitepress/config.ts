@@ -5,14 +5,14 @@ import wikilinks from 'markdown-it-wikilinks'
 // import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import { getThemeConfig } from 'vitepress-clear-blog/node'
-import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+// import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 
 // import { generateThemePlugin } from 'vitepress-plugin-config'
 
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
-import { getFooterRefTag, getHashtag } from './theme/utils'
+import { getFooterRefTag, getHashtag, mermaidPlugin } from 'vitepress-clear-blog/node'
 
 const wikilinksOptions = {
   baseURL: 'http://10.177.73.149:5000',
@@ -40,6 +40,7 @@ export default defineConfig({
       md.use(wikilinks(wikilinksOptions))
       md.use(footnotePlugin)
       md.use(markdownItHashtag)
+      md.use(mermaidPlugin)
 
       getFooterRefTag(md)
       getHashtag(md)
@@ -94,6 +95,6 @@ export default defineConfig({
     outlineTitle: 'Table of Contents',
     socialLinks: [{ icon: 'github', link: 'https://github.com' }]
   },
-  srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
-  ignoreDeadLinks: true
-})
+   srcExclude: ['README.md'], // exclude the README.md , needn't to compiler
+   ignoreDeadLinks: true
+  })

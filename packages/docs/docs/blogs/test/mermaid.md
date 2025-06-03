@@ -10,11 +10,15 @@ description: for test
 
 # mermaid
 
+![](https://img-20221128.oss-cn-shanghai.aliyuncs.com/img-2023-05/202506031629132.png)
+
 - this is the file for mermaid test
 
 ```mmd
 graph TD A-->B A-->C B-->D C-->D
 ```
+
+![](https://img-20221128.oss-cn-shanghai.aliyuncs.com/img-2023-05/202506031630504.png)
 
 ```mermaid
 flowchart TD
