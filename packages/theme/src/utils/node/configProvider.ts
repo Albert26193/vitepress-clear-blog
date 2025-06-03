@@ -1,5 +1,6 @@
 import UnoCSS from 'unocss/vite'
 import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+import llmstxt from 'vitepress-plugin-llms'
 
 const getThemeConfig = async (cfg = {}) => {
   return {
@@ -21,6 +22,7 @@ const getThemeConfig = async (cfg = {}) => {
       },
       plugins: [
         vitePressAnalyzerPlugin(),
+        llmstxt(),
         // generateThemePlugin(),
         UnoCSS()
         //RssPlugin(RSS)

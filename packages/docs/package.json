@@ -7,7 +7,8 @@
   "scripts": {
     "dev:docs": "vitepress dev --host",
     "build:docs": "vitepress build --clean-cache --clean-temp",
-    "clean:docs": "rimraf .vitepress/cache .vitepress/dist"
+    "clean:docs": "rimraf .vitepress/cache .vitepress/dist",
+    "preview:docs": "vitepress preview"
   },
   "dependencies": {
     "@types/markdown-it-footnote": "^3.0.4",

@@ -10,6 +10,7 @@ export default defineConfig({
   sourcemap: true,
   external: ['vitepress'],
   treeshake: true,
+  outDir: 'lib',
   outExtension({ format }) {
     return {
       js: format === 'cjs' ? '.cjs' : '.js'

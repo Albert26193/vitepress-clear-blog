@@ -27,22 +27,31 @@ export function vitePressAnalyzerPlugin(
   // Store analysis results
   const siteMetadata: SiteMetadata = {}
   const sitePages: SitePages = {}
+
+  // Run analyzeAllDocuments
+  const runAnalysis = () => {
+    // Get the docs root directory
+    // console.log('[Analyzer Plugin] Initializing...')
+    // const docsRoot = resolve(process.cwd(), config.docsDir)
+    // console.log('[Analyzer Plugin] Docs root:', docsRoot)
+
+    // Initial scan of all documents
+    const { globalMetadata, globalPages } = analyzeAllDocuments(config)
+
+    // Store metadata
+    Object.assign(siteMetadata, globalMetadata)
+    Object.assign(sitePages, globalPages)
+  }
+
   return {
     name: 'vitepress-analyzer',
 
     configureServer(server) {
-      // console.log('[Analyzer Plugin] Initializing...')
+      runAnalysis()
+    },
 
-      // Get the docs root directory
-      const docsRoot = resolve(process.cwd(), config.docsDir)
-      // console.log('[Analyzer Plugin] Docs root:', docsRoot)
-
-      // Initial scan of all documents
-      const { globalMetadata, globalPages } = analyzeAllDocuments(config)
-
-      // Store metadata
-      Object.assign(siteMetadata, globalMetadata)
-      Object.assign(sitePages, globalPages)
+    buildStart() {
+      runAnalysis()
     },
 
     resolveId(id) {
