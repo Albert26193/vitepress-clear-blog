@@ -158,7 +158,9 @@ const useHtmlPreview = (
 
       // Filter out elements with specified classes like blog-tags, tags, etc.
       const classesToFilter = [
+        'blog-tag',
         'blog-tags',
+        'tag',
         'tags',
         'clear-blog-tags',
         'tag',

@@ -1,12 +1,12 @@
 {
-  "css.customData": [".vscode/unocss.json"],
-  "pathAlias.aliasMap": {
-    "@": "${cwd}/.vitepress",
-    "~": "${cwd}"
+  "[markdown]": {
+    "editor.formatOnSave": false,
   },
+  "css.customData": [".vscode/unocss.json"],
   "cSpell.words": [
     "backlink",
     "backlinks",
+    "blockquotes",
     "fdir",
     "heti",
     "Heti",
@@ -17,29 +17,4 @@
     "wikilink",
     "wikilinks"
   ],
-  "favorites.resources": [
-    {
-      "filePath": "packages/docs/node_modules/vitepress-clear-blog",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/docs/node_modules",
-      "group": "Default"
-    },
-    {
-      "filePath": "local-workspace/vuepress-theme-plume/docs",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/theme",
-      "group": "Default"
-    },
-    {
-      "filePath": "packages/plugin-analyzer/src/core/state.ts",
-      "group": "Default"
-    }
-  ],
-  "favorites.sortOrder": "ASC",
-  "favorites.groups": ["Default", "test"],
-  "favorites.currentGroup": "Default"
 }

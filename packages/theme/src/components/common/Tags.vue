@@ -27,7 +27,7 @@
         </span>
       </span>
     </div>
-    <div class="slide-enter-content">
+    <div class="slide-enter-content mt-2">
       <div
         v-for="(article, index) in filteredArticles"
         :key="index"
