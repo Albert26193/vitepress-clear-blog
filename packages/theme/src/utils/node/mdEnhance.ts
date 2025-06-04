@@ -3,7 +3,7 @@ import type Token from 'markdown-it/lib/token.mjs'
 
 /**
  * Get footer ref tag
- * 
+ *
  * render footnote to <FooterRef/> vue component
  * side effect: add footer ref tag to the markdown-it instance,
  * and transform it to vue component
@@ -79,7 +79,7 @@ const getFooterRefTag = (md: MarkdownIt) => {
 
 /**
  * Get hashtag tag
- * 
+ *
  * render #hashtag to <a href='/tags?tag=hashtag' class='blog-tag'>hashtag</a>
  *
  * @param md - markdown-it instance

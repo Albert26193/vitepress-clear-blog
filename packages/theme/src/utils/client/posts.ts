@@ -116,10 +116,10 @@ const mediumZoomInit = () => {
   // Select images from both main content and mermaid diagrams
   const zoom = mediumZoom('.main img, .mermaid-diagram', {
     background: 'var(--vp-c-bg)',
-    margin: 20,
+    margin: 18,
     scrollOffset: 80
   })
-  
+
   zoom.on('open', () => {
     // Hide code language labels when zoom is open
     document.querySelectorAll('.shiki [data-language]').forEach((el) => {
@@ -127,11 +127,11 @@ const mediumZoomInit = () => {
         el.style.display = 'none'
       }
     })
-    
+
     // Add a class to body to prevent scrolling
     document.body.style.overflow = 'hidden'
   })
-  
+
   zoom.on('close', () => {
     // Restore code language labels when zoom is closed
     document.querySelectorAll('.shiki [data-language]').forEach((el) => {
@@ -139,7 +139,7 @@ const mediumZoomInit = () => {
         el.style.display = ''
       }
     })
-    
+
     // Restore body scrolling
     document.body.style.overflow = ''
   })

@@ -4,12 +4,11 @@ import { useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import { VPBadge } from 'vitepress/theme'
 import { nextTick, onMounted, watch } from 'vue'
-import { mediumZoomInit } from './utils/client'
 
-import PostMermaid from './components/articles/PostMermaid.vue'
 import Collections from './components/Collections.vue'
 import NewLayout from './components/NewLayout.vue'
 import Timeline from './components/Timeline.vue'
+import PostMermaid from './components/articles/PostMermaid.vue'
 import FooterRef from './components/common/FooterRef.vue'
 import OverallD3 from './components/common/OverallD3.vue'
 import Tags from './components/common/Tags.vue'
@@ -18,14 +17,10 @@ import BlogContainer from './components/page/BlogContainer.vue'
 import LinkSidebar from './components/sidebar/LinkSidebar.vue'
 import PageLinkD3 from './components/sidebar/PageLinkD3.vue'
 import TagSidebar from './components/sidebar/TagSidebar.vue'
-
 // styles
 import './styles/index.scss'
-
-import {
-  addClassForHetiElement,
-  registerHetiScript,
-} from './utils/client/'
+import { mediumZoomInit } from './utils/client'
+import { addClassForHetiElement, registerHetiScript } from './utils/client/'
 
 export const BlogTheme: Theme = {
   ...DefaultTheme,

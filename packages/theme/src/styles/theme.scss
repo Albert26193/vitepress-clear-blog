@@ -77,9 +77,8 @@
     }
   }
 
-
   .vp-doc {
-    &>div>p {
+    & > div > p {
       text-indent: 2rem;
     }
 
@@ -108,7 +107,8 @@
     pre,
     ol,
     ul,
-    .describe, .custom-block {
+    .describe,
+    .custom-block {
       p {
         text-indent: 0 !important;
       }
