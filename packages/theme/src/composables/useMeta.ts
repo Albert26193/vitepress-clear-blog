@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { useData } from 'vitepress'
 import { type ComputedRef, computed, nextTick, provide } from 'vue'
 
@@ -302,10 +303,44 @@ const useTitle = (frontMatter: PostFrontMatter, html: string) => {
   return ''
 }
 
+/**
+ * @abstract: check if the date is in YYYY-MM-DD format
+ * @param date YYYY-MM-DD
+ * @returns true if the date is in YYYY-MM-DD format, false otherwise
+ */
+const _checkTimeFormat = (date: string) => {
+  if (!date) {
+    return false
+  }
+  if (date.length != 10) {
+    return false
+  }
+  if (date.split('-').length != 3) {
+    return false
+  }
+  if (moment(date).isValid()) {
+    return true
+  }
+  return false
+}
+
+/**
+ * format date from YYYY-MM-DD to Jun 5, 2025
+ * @param date YYYY-MM-DD
+ * @returns Formatted date string, e.g. Jun 5, 2025
+ */
+const useTimeFormat = (date: string) => {
+  if (!date || !_checkTimeFormat(date)) {
+    return ''
+  }
+  return moment(date).format('MMM D, YYYY')
+}
+
 export {
   useTruncatedDescription,
   useAuthor,
   useDarkTransition,
   useHtmlPreview,
-  useTitle
+  useTitle,
+  useTimeFormat
 }

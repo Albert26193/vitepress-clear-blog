@@ -50,7 +50,7 @@
 
 <style scoped>
   .blog-page {
-    @apply w-9/10 mx-auto;
+    @apply w-9/10 mx-auto max-w-6xl;
   }
 
   .page-footer {

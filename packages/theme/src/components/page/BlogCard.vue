@@ -27,7 +27,7 @@
     <div class="card-banner">
       <div class="flex flex-wrap items-center">
         <div class="i-carbon-time mr-1" />
-        <span>{{ post.frontMatter.date }}</span>
+        <span>{{ useTimeFormat(post.frontMatter.date) }}</span>
       </div>
       <!-- tags -->
       <div class="flex flex-wrap gap-1">
@@ -48,7 +48,8 @@
   import {
     useHtmlPreview,
     useTitle,
-    useTruncatedDescription
+    useTruncatedDescription,
+    useTimeFormat
   } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
 

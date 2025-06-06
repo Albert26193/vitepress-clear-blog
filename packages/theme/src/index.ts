@@ -53,7 +53,7 @@ export const BlogTheme: Theme = {
         () =>
           nextTick(() => {
             addClassForHetiElement()
-            // registerHetiScript()
+            registerHetiScript()
           })
       )
     })

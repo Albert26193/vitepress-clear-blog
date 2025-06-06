@@ -40,7 +40,9 @@
           <div class="post-dot"></div>
           {{ useTitle(article.frontMatter, article.html || '') }}
         </a>
-        <div class="date font-serif">{{ article.frontMatter.date }}</div>
+        <div class="date font-serif">
+          {{ useTimeFormat(article.frontMatter.date) }}
+        </div>
       </div>
     </div>
   </div>
@@ -50,7 +52,7 @@
   import { withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
 
-  import { useTitle } from '../../composables/useMeta'
+  import { useTitle, useTimeFormat } from '../../composables/useMeta'
   import { Post } from '../../types/types'
   import { initTags } from '../../utils/client/'
   import { data as allPostsData } from '../../utils/node/posts.data.js'

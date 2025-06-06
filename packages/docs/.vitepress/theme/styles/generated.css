@@ -1,0 +1,19 @@
+:root {
+  --vp-c-bg: #fafafa !important;
+  --vp-c-brand: #4259f3 !important;
+  --vp-c-brand-1: #8269b3 !important;
+  --vp-button-brand-bg: #129083 !important;
+  --c-text-code: #305fef !important;
+  --c-text-strong: #ff0000 !important;
+  --c-text-em: #0000ff !important;
+}
+
+.dark {
+  --vp-c-bg: #000 !important;
+  --vp-c-brand: #ae1f7c !important;
+  --vp-c-brand-1: #ae1f7c !important;
+  --vp-button-brand-bg: #ae1f7c !important;
+  --c-text-code: #333 !important;
+  --c-text-strong: #000 !important;
+  --c-text-em: #000 !important;
+}

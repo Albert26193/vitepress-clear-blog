@@ -15,7 +15,7 @@
       <!-- time -->
       <div class="i-carbon-time" />
       <span class="ml-1 align-middle text-sm">
-        {{ frontmatter.date?.substring(0, 10) }}
+        {{ useTimeFormat(frontmatter.date?.substring(0, 10)) }}
       </span>
       <!-- word count -->
       <div class="i-carbon-document ml-3" />
@@ -37,7 +37,7 @@
   import { useData, useRoute, useRouter, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
 
-  import { useAuthor } from '../../composables/useMeta'
+  import { useAuthor, useTimeFormat } from '../../composables/useMeta'
   import type { PostFrontMatter } from '../../types/types.d'
   import { calculateWords } from '../../utils/client/'
 

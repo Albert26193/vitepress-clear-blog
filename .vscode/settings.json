@@ -1,6 +1,6 @@
 {
   "[markdown]": {
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": false
   },
   "css.customData": [".vscode/unocss.json"],
   "cSpell.words": [
@@ -8,13 +8,16 @@
     "backlinks",
     "blockquotes",
     "fdir",
+    "Heit",
     "heti",
     "Heti",
     "linkify",
+    "llms",
+    "llmstxt",
     "unocss",
     "vitepress",
     "vueuse",
     "wikilink",
     "wikilinks"
-  ],
+  ]
 }

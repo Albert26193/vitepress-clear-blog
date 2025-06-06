@@ -19,8 +19,9 @@
 /* font  */
 :root {
   --vp-font-family-base: 'Times New Roman', times, 'Heti Song';
-  --vp-font-family-mono: 'Heti Hei KR';
-  /* code font */
+  --vp-font-family-mono:
+    'Fira Code', 'JetBrains Mono', 'Menlo', 'Consolas', 'Monaco', 'Andale Mono',
+    'Ubuntu Mono', 'Courier New', monospace;
 }
 /* theme reset start */
 .VPDoc {
@@ -137,6 +138,8 @@
     :not(pre, div) > code {
       color: var(--c-text-code);
       margin: 0 0.5px;
+      padding: 1px 5px 1px 5px;
+      font-size: 0.85rem;
     }
 
     .clear-wikilink {

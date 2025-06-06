@@ -41,7 +41,10 @@ export const generateThemeFile = async (
   const darkEmColor = darkTheme?.['c-text-em'] || '#000'
   const darkButtonBgColor = darkTheme?.['vp-button-brand-bg'] || '#ae1f7c'
 
-  const generatedCssPath = resolve(process.cwd(), 'src/styles/generated.css')
+  const generatedCssPath = resolve(
+    process.cwd(),
+    '.vitepress/theme/styles/generated.css'
+  )
 
   const generatedCssTemplate = `
 :root {

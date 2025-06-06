@@ -6,6 +6,19 @@
     <div class="blog-list-container">
       <!-- Column 1: Title, Date, Author -->
       <div class="column-meta">
+        <div class="meta-item date-item">
+          <div class="i-carbon-calendar" />
+          <span class="meta-text">
+            {{ useTimeFormat(post.frontMatter.date) }}
+          </span>
+          <div class="i-carbon-user ml-4" />
+          <a
+            class="meta-text hover:underline hover:underline-offset-4"
+            :href="withBase('/about.html')"
+          >
+            {{ author }}
+          </a>
+        </div>
         <div class="list-header">
           <h2 class="list-title">
             <a :href="withBase(post.regularPath)" class="title-link">
@@ -13,17 +26,20 @@
             </a>
           </h2>
         </div>
-        <div class="meta-item date-item">
-          <div class="i-carbon-calendar" />
-          <span class="meta-text">
-            {{ post.frontMatter.date?.substring(0, 10) }}
+        <div class="tags-container">
+          <span
+            v-for="item in partedTags"
+            :key="item + 'key'"
+            class="tag-wrapper"
+          >
+            <a
+              @click.stop
+              :href="withBase(`/tags.html?tag=${item}`)"
+              class="tag"
+            >
+              {{ item }}
+            </a>
           </span>
-        </div>
-        <div class="meta-item author-item">
-          <div class="i-carbon-user" />
-          <a class="meta-text" :href="withBase('/about.html')">
-            {{ author }}
-          </a>
         </div>
       </div>
 
@@ -51,28 +67,9 @@
       </div>
 
       <!-- Divider 2 -->
-      <div class="custom-divider">
+      <!-- <div class="custom-divider">
         <span class="divider-extensions"></span>
-      </div>
-
-      <!-- Column 3: Tags -->
-      <div class="column-tags">
-        <div class="tags-container">
-          <span
-            v-for="item in partedTags"
-            :key="item + 'key'"
-            class="tag-wrapper"
-          >
-            <a
-              @click.stop
-              :href="withBase(`/tags.html?tag=${item}`)"
-              class="tag"
-            >
-              {{ item }}
-            </a>
-          </span>
-        </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -84,6 +81,7 @@
   import {
     useAuthor,
     useHtmlPreview,
+    useTimeFormat,
     useTitle,
     useTruncatedDescription
   } from '../../composables/useMeta'
@@ -158,18 +156,13 @@
   .column-meta {
     // Title, Date, Author
     @apply mt-2 flex flex-col justify-start py-4 pl-8 pr-4;
-    @apply w-1/3;
+    @apply w-1/3 min-w-[300px];
   }
 
   .column-content {
     // Description
     @apply flex flex-1 flex-col justify-center px-4 py-4;
-  }
-
-  .column-tags {
-    // Tags
-    @apply flex flex-col py-4 pl-4;
-    @apply w-1/5;
+    @apply pr-12;
   }
 
   /* Meta Item Adjustments */
@@ -195,8 +188,8 @@
   }
 
   .tags-container {
-    @apply mr-4 mt-2 flex flex-wrap gap-x-2 gap-y-[6px];
-    @apply align-content-start;
+    @apply mb-4 mr-4 mt-2 flex flex-wrap gap-x-2 gap-y-[6px];
+    @apply justify-start;
   }
 
   .tag-wrapper {

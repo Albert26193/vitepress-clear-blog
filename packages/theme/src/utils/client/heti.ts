@@ -53,15 +53,12 @@ const registerHetiScript = () => {
   const { load } = useScriptTag(
     hetiScript,
     (el: HTMLScriptElement) => {
-      // // 确保脚本加载完成
-      // if (!window.Heti) {
-      //   console.warn('Heti is not loaded yet')
-      //   return
-      // }
-      // 为所有有 heti 类的元素应用自动间距
+      if (!window.Heti) {
+        console.warn('Heti is not loaded yet')
+        return
+      }
       const hetiElements = new window.Heti('.heti')
       hetiElements.autoSpacing()
-      console.log('Heti spacing applied successfully')
     },
     { immediate: true }
   )
