@@ -12,7 +12,7 @@
           :key="link.relativePath"
           :href="link.fullUrl"
           class="page-link"
-          :title="link.raw"
+          :title="getTitleFromPost(link, allPostsData || [])"
         >
           {{ getTitleFromPost(link, allPostsData || []) }}
         </a>
@@ -29,7 +29,7 @@
           :key="link.relativePath"
           :href="link.fullUrl"
           class="page-link"
-          :title="link.fullUrl"
+          :title="getTitleFromPost(link, allPostsData || [])"
         >
           {{ getTitleFromPost(link, allPostsData || []) }}
         </a>
@@ -99,6 +99,7 @@
   .page-link {
     @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
     @apply font-normal hover:text-[var(--vp-c-brand)];
+    @apply truncate;
   }
 
   .page-link:hover {

@@ -27,6 +27,7 @@
           v-for="post in filteredRelatedPosts"
           :key="post.regularPath"
           :href="isCurrentPage(post) ? undefined : withBase(post.regularPath)"
+          :title="useTitle(post.frontMatter, post.html || '')"
           :class="[
             'page-link slide-enter',
             { 'current-page': isCurrentPage(post) }
@@ -156,6 +157,7 @@
   .page-link {
     @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
     @apply font-normal hover:text-[var(--vp-c-brand)];
+    @apply truncate;
   }
 
   .page-link:hover::before {
