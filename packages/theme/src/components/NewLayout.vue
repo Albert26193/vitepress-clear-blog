@@ -59,7 +59,7 @@
     timeline: defineAsyncComponent(() => import('./Timeline.vue')),
     tags: defineAsyncComponent(() => import('./common/Tags.vue')),
     collections: defineAsyncComponent(() => import('./Collections.vue')),
-    pages: defineAsyncComponent(() => import('./page/Pagination.vue'))
+    pages: defineAsyncComponent(() => import('./page/BlogMain.vue'))
   } as const
 
   const currentComponent = computed(() => {

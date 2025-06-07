@@ -2,12 +2,9 @@
   <div class="blog-card" @click="navigateToPost">
     <div class="card-header">
       <h2 class="card-title mb-1 text-xl font-semibold">
-        <a
-          :href="withBase(post.regularPath)"
-          class="text-color-[var(--vp-c-brand)] hover:underline-offset-6 hover:underline"
-        >
+        <span class="text-color-[var(--vp-c-brand)]">
           {{ useTitle(post.frontMatter, post.html || '') }}
-        </a>
+        </span>
       </h2>
     </div>
     <p
