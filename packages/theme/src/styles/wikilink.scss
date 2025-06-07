@@ -9,12 +9,12 @@
 
         &::before {
           content: '[[';
-          padding-right: 1px;
+          padding-right: 2px;
         }
 
         &::after {
           content: ']]';
-          padding-left: 1px;
+          padding-left: 2px;
         }
         padding-inline-start: 3px;
         padding-inline-end: 3px;
