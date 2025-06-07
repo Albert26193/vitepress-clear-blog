@@ -3,8 +3,8 @@
     <D3ForceGraph
       :nodes="graphData.nodes"
       :links="graphData.links"
-      :width="960"
-      :height="960"
+      :width="props.width"
+      :height="props.height"
       :diameter="9"
       :text-size="15"
       :circle-color="`var(--vp-c-brand)`"
@@ -20,10 +20,18 @@
   import { transformSiteD3Data } from '../../utils/client/'
   import D3ForceGraph from './D3ForceGraph.vue'
 
-  const graphData = computed(() => transformSiteD3Data(siteMetadata))
+  const props = withDefaults(
+    defineProps<{
+      width?: number
+      height?: number
+    }>(),
+    {
+      width: 960,
+      height: 960
+    }
+  )
 
-  // console.warn('data for overall', JSON.stringify(globalMdMetadata))
-  // console.error('nodes for overall', JSON.stringify(graphData.value))
+  const graphData = computed(() => transformSiteD3Data(siteMetadata))
 </script>
 
 <style scoped>
