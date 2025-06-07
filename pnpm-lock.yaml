@@ -98,6 +98,9 @@ importers:
       vitepress-plugin-analyzer:
         specifier: workspace:*
         version: link:../vitepress-plugin-analyzer
+      vitepress-plugin-callout:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-callout
       vitepress-plugin-config:
         specifier: workspace:*
         version: link:../vitepress-plugin-config
@@ -207,6 +210,9 @@ importers:
       vitepress-plugin-analyzer:
         specifier: workspace:*
         version: link:../vitepress-plugin-analyzer
+      vitepress-plugin-callout:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-callout
       vitepress-plugin-config:
         specifier: workspace:*
         version: link:../vitepress-plugin-config
@@ -229,6 +235,16 @@ importers:
       '@types/node':
         specifier: ^22.13.5
         version: 22.15.29
+
+  packages/vitepress-plugin-callout:
+    dependencies:
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.1.0
+    devDependencies:
+      '@types/markdown-it':
+        specifier: ^14.1.2
+        version: 14.1.2
 
   packages/vitepress-plugin-config:
     dependencies:

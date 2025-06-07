@@ -1,0 +1,29 @@
+.VPDoc {
+  .main {
+    .vp-doc {
+      .custom-block {
+        background-color: var(--vp-c-bg);
+        border: 1px solid var(--vp-c-text-1);
+        padding: 0;
+        transition: box-shadow 0.2s ease-in-out;
+        p {
+          padding: 4px 16px 4px 16px;
+        }
+      }
+
+      .custom-block-title {
+        border-bottom: 1px solid var(--vp-c-text-1);
+        padding: 6px 6px 4px 16px;
+        transition: box-shadow 0.2s ease-in-out;
+      }
+
+      .custom-block:hover {
+        box-shadow: 0 0 0 0.5px var(--vp-c-text-1);
+      }
+
+      .custom-block:hover .custom-block-title {
+        box-shadow: 0 0.5px 0 0 var(--vp-c-text-1);
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "vitepress-plugin-callout",
+  "version": "0.1.0",
+  "description": "plugin for vitepress callout",
+  "author": "Albert26193",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "vitepress",
+    "plugin"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/node/index.d.ts",
+      "import": "./lib/node/index.js",
+      "require": "./lib/node/index.cjs"
+    },
+    "./styles": "./lib/styles/index.css"
+  },
+  "main": "lib/node/index.cjs",
+  "module": "lib/node/index.js",
+  "types": "lib/node/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "dev": "pnpm '/(tsup|copy):watch/'",
+    "copy": "cpx -v \"src/**/*.{d.ts,vue,css,scss,jpg,png,woff2}\" lib",
+    "copy:watch": "cpx -v \"src/**/*.{d.ts,vue,css,scss,jpg,png,woff2}\" lib -w",
+    "tsup": "tsup --config tsup.config.ts",
+    "tsup:watch": "tsup --config tsup.config.ts --watch -- -c",
+    "clean": "rimraf lib",
+    "build": "pnpm run clean && pnpm run tsup && pnpm run copy"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2"
+  }
+}

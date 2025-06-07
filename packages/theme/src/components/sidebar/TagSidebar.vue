@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
   import { useData, useRoute, withBase } from 'vitepress'
-  import { computed, ref } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
 
   import { useTitle } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
@@ -52,11 +52,6 @@
 
   const { frontmatter } = useData()
   const route = useRoute()
-
-  // get current path in a reactive way
-  // const currentPath = computed(() => {
-  //   return route.path.replace(/\.html$/, '').replace(/^\//, '')
-  // })
 
   // get tags for current article
   const currentTags = computed(() => {
@@ -102,6 +97,16 @@
       // if active tag is set, only show posts with that tag
       return postTags.includes(activeTag.value)
     })
+  })
+
+  const chooseFirstTag = () => {
+    if (currentTags && currentTags.value.length > 0) {
+      activeTag.value = currentTags.value[0]
+    }
+  }
+
+  onMounted(() => {
+    chooseFirstTag()
   })
 </script>
 

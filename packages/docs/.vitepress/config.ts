@@ -10,6 +10,7 @@ import {
   getHashtag,
   mermaidPlugin
 } from 'vitepress-clear-blog/node'
+import { calloutPlugin } from 'vitepress-plugin-callout'
 
 // import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 
@@ -46,6 +47,7 @@ export default defineConfig({
       md.use(footnotePlugin)
       md.use(markdownItHashtag)
       md.use(mermaidPlugin)
+      md.use(calloutPlugin)
 
       getFooterRefTag(md)
       getHashtag(md)

@@ -49,21 +49,25 @@ const addClassForHetiElement = (): void => {
 /**
  * Init Heti class and scripts
  */
-const registerHetiScript = () => {
-  const { load } = useScriptTag(
-    hetiScript,
-    (el: HTMLScriptElement) => {
-      if (!window.Heti) {
-        console.warn('Heti is not loaded yet')
-        return
-      }
-      const hetiElements = new window.Heti('.heti')
-      hetiElements.autoSpacing()
-    },
-    { immediate: true }
-  )
+const registerHetiScript = async () => {
+  const { load } = useScriptTag(hetiScript, () => {}, { immediate: false })
+  await load()
 
-  load()
+  if (!window.Heti) {
+    console.warn('Heti is not loaded yet')
+    return
+  }
+
+  await new Promise<void>((resolve) => {
+    const poll = () => {
+      if (document.querySelectorAll('.heti').length > 0) resolve()
+      else setTimeout(poll, 100)
+    }
+    poll()
+  })
+
+  const heti = new window.Heti('.heti')
+  heti.autoSpacing()
 }
 
 export { addClassForHetiElement, registerHetiScript }

@@ -18,6 +18,7 @@
     "vitepress-plugin-analyzer": "workspace:*",
     "vitepress-plugin-config": "workspace:*",
     "vitepress-plugin-rss": "^0.3.1",
-    "vitepress-sidebar": "^1.31.0"
+    "vitepress-sidebar": "^1.31.0",
+    "vitepress-plugin-callout": "workspace:*"
   }
 }

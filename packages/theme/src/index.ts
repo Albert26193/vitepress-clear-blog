@@ -45,8 +45,10 @@ export const BlogTheme: Theme = {
   setup() {
     const route = useRoute()
     onMounted(() => {
-      addClassForHetiElement()
-      registerHetiScript()
+      nextTick(() => {
+        addClassForHetiElement()
+        registerHetiScript()
+      }).catch()
       mediumZoomInit()
       watch(
         () => route.path,
@@ -54,7 +56,7 @@ export const BlogTheme: Theme = {
           nextTick(() => {
             addClassForHetiElement()
             registerHetiScript()
-          })
+          }).catch()
       )
     })
   }

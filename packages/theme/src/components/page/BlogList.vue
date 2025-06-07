@@ -211,7 +211,7 @@
     &::before,
     &::after {
       @apply absolute left-1/2 h-[6px] w-[6px] rounded-full content-[''];
-      @apply bg-gray-500 dark:bg-gray-400;
+      @apply bg-gray-400 dark:bg-gray-400;
       @apply -translate-x-1/2 transform;
     }
 

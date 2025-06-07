@@ -1,0 +1,28 @@
+.VPDoc {
+  .main {
+    .vp-doc {
+      .clear-wikilink {
+        color: var(--vp-c-brand-1);
+        white-space: normal;
+        padding: 0 2px;
+        // position: relative;
+
+        &::before {
+          content: '[[';
+          padding-right: 1px;
+        }
+
+        &::after {
+          content: ']]';
+          padding-left: 1px;
+        }
+        padding-inline-start: 3px;
+        padding-inline-end: 3px;
+
+        &:hover {
+          padding-block-end: 3px;
+        }
+      }
+    }
+  }
+}

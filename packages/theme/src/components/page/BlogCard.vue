@@ -47,9 +47,9 @@
 
   import {
     useHtmlPreview,
+    useTimeFormat,
     useTitle,
-    useTruncatedDescription,
-    useTimeFormat
+    useTruncatedDescription
   } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
 

@@ -23,6 +23,7 @@
     'Fira Code', 'JetBrains Mono', 'Menlo', 'Consolas', 'Monaco', 'Andale Mono',
     'Ubuntu Mono', 'Courier New', monospace;
 }
+
 /* theme reset start */
 .VPDoc {
   .main {
@@ -137,26 +138,13 @@
 
     :not(pre, div) > code {
       color: var(--c-text-code);
+    }
+
+    :not(pre, div, h1, h2, h3, h4, h5, h6) > code {
+      color: var(--c-text-code);
       margin: 0 0.5px;
       padding: 1px 5px 1px 5px;
       font-size: 0.85rem;
-    }
-
-    .clear-wikilink {
-      color: var(--vp-c-brand-1);
-      white-space: normal;
-      padding: 0 1px;
-      position: relative;
-
-      &::before {
-        content: '[[';
-        padding-right: 1px;
-      }
-
-      &::after {
-        content: ']]';
-        padding-left: 1px;
-      }
     }
   }
 }

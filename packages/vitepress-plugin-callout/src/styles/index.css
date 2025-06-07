@@ -1,0 +1,10 @@
+.main .vp-doc .custom-callout {
+  /* border: 1px solid var(--vp-c-text-1); */
+  color: var(--vp-c-text);
+  background-color: #efefef;
+}
+
+/* .main .vp-doc .custom-callout:hover {
+  border: 1px solid var(--vp-c-brand);
+  color: var(--vp-c-text);
+} */

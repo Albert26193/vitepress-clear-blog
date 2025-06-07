@@ -1,11 +1,11 @@
 // uno.config.tsc
-import { presetIcons, presetUno, transformerDirectives } from 'unocss'
+import { presetWind3, presetIcons, transformerDirectives } from 'unocss'
 import { defineConfig } from 'unocss'
 
 export default defineConfig({
   transformers: [transformerDirectives()],
   presets: [
-    presetUno(),
+    presetWind3(),
     presetIcons({
       warn: true,
       prefix: ['i-'],

@@ -33,13 +33,13 @@
         :key="index"
         class="tag-post-item"
       >
-        <a
+        <div
           class="heti heti--serif post-item-title"
-          :href="withBase(article.regularPath)"
+          @click="router.go(withBase(article.regularPath))"
         >
           <div class="post-dot"></div>
           {{ useTitle(article.frontMatter, article.html || '') }}
-        </a>
+        </div>
         <div class="date font-serif">
           {{ useTimeFormat(article.frontMatter.date) }}
         </div>
@@ -49,14 +49,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { withBase } from 'vitepress'
+  import { useRouter, withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
 
-  import { useTitle, useTimeFormat } from '../../composables/useMeta'
+  import { useTimeFormat, useTitle } from '../../composables/useMeta'
   import { Post } from '../../types/types'
   import { initTags } from '../../utils/client/'
   import { data as allPostsData } from '../../utils/node/posts.data.js'
 
+  const router = useRouter()
   const tagsList = computed(() => (allPostsData ? initTags(allPostsData) : {}))
 
   // sort tag according to dict order
@@ -165,6 +166,6 @@
 
   .post-item-title {
     @apply h-4;
-    @apply hover:text-[var(--vp-c-brand)] hover:underline hover:underline-offset-8;
+    @apply hover:text-[var(--vp-c-brand)] cursor-pointer;
   }
 </style>

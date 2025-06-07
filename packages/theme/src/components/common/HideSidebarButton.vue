@@ -46,7 +46,6 @@
     isHidden.value = !isHidden.value
   }
 
-  // 监听窗口大小变化
   const handleResize = () => {
     checkSidebarExists()
   }
@@ -56,7 +55,6 @@
   onMounted(() => {
     updateDOM(isHidden.value)
     window.addEventListener('resize', handleResize)
-    // 初始检查
     checkSidebarExists()
   })
 
@@ -70,7 +68,7 @@
     @apply border-[1.5px] border-solid border-gray-500 hover:bg-gray-100;
     @apply ml-4 rounded-full;
     @apply flex items-center justify-center text-xl font-bold;
-    @apply h-7 w-7;
+    @apply font-800 h-6 w-6 text-[17px];
     @apply hover:border-gray-800 hover:shadow-inner;
     /* @apply hidden sm:block; */
   }
