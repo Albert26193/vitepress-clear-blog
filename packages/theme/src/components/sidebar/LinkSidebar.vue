@@ -11,7 +11,7 @@
           v-for="link in outgoingLinks"
           :key="link.relativePath"
           :href="link.fullUrl"
-          class="page-link"
+          class="page-link slide-enter"
           :title="getTitleFromPost(link, allPostsData || [])"
         >
           {{ getTitleFromPost(link, allPostsData || []) }}
@@ -19,7 +19,7 @@
       </div>
       <!-- if no links -->
       <div v-else class="no-links">No Outgoing Links</div>
-      <div class="link-title mt-6">
+      <div class="link-title mt-4">
         <span class="i-carbon-link mr-2" />
         <span>Back Links</span>
       </div>
@@ -28,7 +28,7 @@
           v-for="link in backLinks"
           :key="link.relativePath"
           :href="link.fullUrl"
-          class="page-link"
+          class="page-link slide-enter"
           :title="getTitleFromPost(link, allPostsData || [])"
         >
           {{ getTitleFromPost(link, allPostsData || []) }}
@@ -97,7 +97,7 @@
   }
 
   .page-link {
-    @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
+    @apply relative block px-4 py-[3px] text-sm transition-colors duration-300;
     @apply font-normal hover:text-[var(--vp-c-brand)];
     @apply truncate;
   }

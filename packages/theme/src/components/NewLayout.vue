@@ -16,10 +16,17 @@
 
     <template #sidebar-nav-before> </template>
     <template #sidebar-nav-after>
-      <div class="slide-enter-content">
-        <TagSidebar />
-        <LinkSidebar />
-        <PageLinkD3 />
+      <div
+        class="slide-enter-content flex flex-col h-[80vh]"
+      >
+        <div>
+          <PageLinkD3 />
+          <LinkSidebar />
+        </div>
+        <div class="flex-grow" />
+        <div class="h-[30%]">
+          <TagSidebar />
+        </div>
       </div>
     </template>
 

@@ -38,22 +38,23 @@
   const router = useRouter()
   const svgRef = ref<SVGSVGElement | null>(null)
 
-  const props = withDefaults(
-    defineProps<
-      D3ForceConfig & {
-        modelValue?: number
-      }
-    >(),
-    {
-      width: 320,
-      height: 320,
-      diameter: 10,
-      textSize: 5,
-      circleColor: '#5040c9',
-      textColor: '#4a4a4a',
-      modelValue: 1
-    }
-  )
+  interface Props extends D3ForceConfig {
+    modelValue?: number
+  }
+
+  const props = withDefaults(defineProps<Props>(), {
+    width: 320,
+    height: 320,
+    diameter: 10,
+    textSize: 5,
+    circleColor: '#5040c9',
+    textColor: '#4a4a4a',
+    modelValue: 1,
+    linkDistance: 40,
+    linkStrength: 0.12,
+    linkColor: '#0e0e0e',
+    chargeStrength: -600
+  })
 
   const emit = defineEmits<{
     (e: 'update:modelValue', value: number): void
@@ -78,13 +79,14 @@
         d3
           .forceLink<D3Node, D3Link>(links)
           .id((d) => d.id)
-          .distance(50)
-          .strength(0.12)
+          .distance(props.linkDistance)
+          .strength(props.linkStrength)
       )
-      .force('charge', d3.forceManyBody().strength(-800))
+      .force(
+        'charge',
+        d3.forceManyBody().strength(props.chargeStrength)
+      )
       .force('center', d3.forceCenter(width / 2, height / 2))
-      // remove fixed collision force
-      // .force('collision', d3.forceCollide().radius(30))
       .force('cluster', forceCluster())
 
     // Add cluster force function
@@ -118,7 +120,7 @@
     // Create the zoom behavior
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.3, 1.6])
+      .scaleExtent([0.1, 2.0])
       .translateExtent([
         [0, 0],
         [width, height]
@@ -131,7 +133,6 @@
     // Select the SVG element and add zoom behavior
     const svg = d3
       .select(svgRef.value)
-      .call(zoom)
       .attr('width', width)
       .attr('height', height)
       .attr(
@@ -140,8 +141,21 @@
       )
       .attr('viewBox', [0, 0, width, height])
 
-    // Create a fixed root group element
+    // Create a fixed root group element (must create before calling zoom)
     const g = svg.append('g')
+
+    // Apply zoom behavior after g is created
+    svg.call(zoom)
+
+    // Set initial zoom scale from modelValue with center positioning
+    // Calculate the translation to keep content centered when scaled
+    const scale = props.modelValue
+    const translateX = (width * (1 - scale)) / 2
+    const translateY = (height * (1 - scale)) / 2
+    svg.call(
+      zoom.transform,
+      d3.zoomIdentity.translate(translateX, translateY).scale(scale)
+    )
 
     // create links
     const link = g
@@ -149,7 +163,7 @@
       .data(links)
       .join('line')
       .attr('class', 'd3-force-link')
-      .attr('stroke', '#999')
+      .attr('stroke', props.linkColor)
       .attr('stroke-opacity', 0.5)
       .attr('stroke-width', 0.8)
 
@@ -163,7 +177,6 @@
       .on('click', (event, d) => {
         if (d.fullUrl) {
           router.go(d.fullUrl)
-          // console.log(d.fullUrl)
         }
       })
 
@@ -178,7 +191,7 @@
     node
       .append('rect')
       .attr('class', 'text-background')
-      .attr('fill', 'red')
+      .attr('fill', '#dfdfdf')
       .attr('opacity', 0.95)
       .attr('rx', 3) // rounded rectangle
       .attr('ry', 3)
@@ -403,12 +416,6 @@
     transition: all 0.3s ease;
     fill: #030406;
   }
-
-  /* :deep(.d3-force-node.d3-force-node-highlight) circle {
-    stroke: #b752ff;
-    stroke-width: 2px;
-    opacity: 0.2;
-  } */
 
   :deep(.d3-force-node.d3-force-node-highlight) text {
     font-weight: semi-bold;

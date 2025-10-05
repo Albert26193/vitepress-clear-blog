@@ -1,22 +1,28 @@
 <template>
-  <div class="mx-auto mt-6">
-    <div class="flex space-x-2">
+  <div class="mx-auto">
+    <div class="flex justify-around space-x-2">
       <button
-        class="rounded border border-solid px-3 py-1"
+        class="flex items-center px-2 py-1"
         @click="popupOverview"
         :disabled="showOverview || showExpand"
       >
-        overview
+        <span
+          class="i-carbon-ibm-datastage text-size-[15px] color-[var(--vp-c-brand)] mr-1"
+        />
+        Overview
       </button>
       <button
-        class="rounded border border-solid px-3 py-1"
+        class="flex items-center px-2 py-1"
         @click="expandGraph"
         :disabled="showOverview || showExpand"
       >
-        expand
+        <span
+          class="i-carbon-scale text-size-[18px] color-[var(--vp-c-brand)] mr-1"
+        />
+        Expand
       </button>
     </div>
-    <div class="d3-force-sidebar-container mt-4" v-if="true">
+    <div class="d3-force-sidebar-container mt-2" v-if="true">
       <D3PageGraph
         :width="400"
         :height="400"

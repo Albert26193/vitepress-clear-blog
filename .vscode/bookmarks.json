@@ -1,0 +1,24 @@
+{
+	"files": [
+		{
+			"path": "packages/theme/src/components/sidebar/TagSidebar.vue",
+			"bookmarks": [
+				{
+					"line": 6,
+					"column": 25,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "packages/theme/src/components/common/D3PageGraph.vue",
+			"bookmarks": [
+				{
+					"line": 54,
+					"column": 11,
+					"label": ""
+				}
+			]
+		}
+	]
+}

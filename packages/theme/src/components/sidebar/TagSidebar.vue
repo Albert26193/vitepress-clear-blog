@@ -155,7 +155,7 @@
   }
 
   .page-link {
-    @apply relative block px-4 py-[2px] text-sm transition-colors duration-300;
+    @apply relative block px-4 py-[3px] text-sm transition-colors duration-300;
     @apply font-normal hover:text-[var(--vp-c-brand)];
     @apply truncate;
   }

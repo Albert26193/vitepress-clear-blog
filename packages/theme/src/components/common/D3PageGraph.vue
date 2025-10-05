@@ -11,6 +11,7 @@
       :text-size="props.textSize"
       :circle-color="props.circleColor"
       :text-color="props.textColor"
+      :link-distance=20
     />
   </div>
 </template>

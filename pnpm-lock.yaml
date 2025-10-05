@@ -128,9 +128,6 @@ importers:
       '@types/node':
         specifier: ^22.13.5
         version: 22.15.29
-      '@vue/compiler-sfc':
-        specifier: ^3.5.13
-        version: 3.5.16
       '@vueuse/core':
         specifier: ^12.8.2
         version: 12.8.2(typescript@5.8.3)
@@ -177,6 +174,9 @@ importers:
       '@types/lodash':
         specifier: ^4.17.15
         version: 4.17.17
+      '@vue/compiler-sfc':
+        specifier: ^3.5.13
+        version: 3.5.16
       d3:
         specifier: ^7.9.0
         version: 7.9.0

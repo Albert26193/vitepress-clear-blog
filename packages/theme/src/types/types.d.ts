@@ -87,13 +87,17 @@ export interface D3ForceConfig {
   textSize?: number
   circleColor?: string
   textColor?: string
+  linkDistance?: number
+  linkStrength?: number
+  linkColor?: string
+  chargeStrength?: number
 }
 
 export interface IconOption {
-  value: string // 按钮值
-  iconClass: string // 图标类名
-  tooltip?: string // 可选的提示文本
-  disabled?: boolean // 是否禁用
+  value: string
+  iconClass: string
+  tooltip?: string
+  disabled?: boolean
 }
 
 export type ButtonSize = 'sm' | 'md' | 'lg'
