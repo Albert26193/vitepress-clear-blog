@@ -1,31 +1,31 @@
 <template>
-  <div class="mx-auto">
-    <div class="flex justify-around space-x-2">
+  <div class="mx-auto -mt-5 border-solid">
+    <div class="flex justify-end">
       <button
-        class="flex items-center px-2 py-1"
+        class="items-center mr-2 -mb-2 mt-1"
         @click="popupOverview"
         :disabled="showOverview || showExpand"
+        title="Overview"
       >
         <span
-          class="i-carbon-ibm-datastage text-size-[15px] color-[var(--vp-c-brand)] mr-1"
+          class="i-carbon-flow text-size-[15px] color-[var(--vp-c-brand)]"
         />
-        Overview
       </button>
       <button
-        class="flex items-center px-2 py-1"
+        class="items-center mr-1 -mb-2 mt-1 mt-1 mt-1 mt-1"
         @click="expandGraph"
         :disabled="showOverview || showExpand"
+        title="Expand"
       >
         <span
-          class="i-carbon-scale text-size-[18px] color-[var(--vp-c-brand)] mr-1"
+          class="i-carbon-arrow-up-right text-size-[15px] color-[var(--vp-c-brand)] mr-1"
         />
-        Expand
       </button>
     </div>
-    <div class="d3-force-sidebar-container mt-2" v-if="true">
+    <div class="d3-force-sidebar-container" v-if="true">
       <D3PageGraph
-        :width="400"
-        :height="400"
+        :width="520"
+        :height="500"
         :circle-color="'#3b3cf6'"
         :text-color="'#4b4543'"
         :diameter="9"
@@ -93,7 +93,7 @@
 
 <style scoped>
   .d3-force-sidebar-container {
-    @apply h-full w-full border border-solid border-gray-500;
+    @apply h-full w-full border-gray-500;
     @apply transition-shadow duration-300 hover:shadow-lg;
   }
 </style>

@@ -1,11 +1,6 @@
 <template>
   <div class="d3-force-container">
-    <svg
-      ref="svgRef"
-      :width="width"
-      :height="height"
-      class="border border-solid"
-    >
+    <svg ref="svgRef" :width="width" :height="height">
       <g>
         <line
           v-for="(link, i) in links"
@@ -32,6 +27,7 @@
   import { onMounted, ref, watch } from 'vue'
 
   import type { D3ForceConfig, D3Link, D3Node } from '../../types/types.d'
+  import { calculateNodeRatios } from '../../utils/client/d3Utils'
 
   const { debounce } = lodash
 
@@ -72,6 +68,10 @@
     d3.select(svgRef.value).selectAll('*').remove()
 
     const { nodes, links, width, height } = props
+    const ratioMap = calculateNodeRatios(nodes, links, {
+      minRatio: 1,
+      maxRatio: 2
+    })
     const simulation = d3
       .forceSimulation(nodes)
       .force(
@@ -82,10 +82,7 @@
           .distance(props.linkDistance)
           .strength(props.linkStrength)
       )
-      .force(
-        'charge',
-        d3.forceManyBody().strength(props.chargeStrength)
-      )
+      .force('charge', d3.forceManyBody().strength(props.chargeStrength))
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('cluster', forceCluster())
 
@@ -183,7 +180,7 @@
     // add node circles
     node
       .append('circle')
-      .attr('r', props.diameter)
+      .attr('r', (d) => (ratioMap.get(d.id) || 1) * props.diameter)
       .attr('fill', (d) => d.color || props.circleColor)
 
     // add node texts with background for better readability
@@ -191,7 +188,7 @@
     node
       .append('rect')
       .attr('class', 'text-background')
-      .attr('fill', '#dfdfdf')
+      .attr('fill', 'rgba(240, 240, 240, 0.95)')
       .attr('opacity', 0.95)
       .attr('rx', 3) // rounded rectangle
       .attr('ry', 3)
@@ -204,7 +201,7 @@
     // Then add the text
     node
       .append('text')
-      .attr('dy', props.textSize + 10)
+      .attr('dy', (d) => (ratioMap.get(d.id) || 1) * props.diameter + 19)
       .attr('text-anchor', 'middle')
       .attr('fill', props.textColor)
       .style('font-size', `${props.textSize}px`)
@@ -213,7 +210,7 @@
       .text((d) => d.name || 'demo')
 
     // Update the background rectangle's size to match the text
-    node.each(function () {
+    node.each(function (d: D3Node) {
       const nodeElement = d3.select(this)
       const textElement = nodeElement.select('text').node() as SVGTextElement
       if (textElement) {
@@ -227,7 +224,10 @@
           .attr('width', textWidth + 10) // text width plus some padding
           .attr('height', textHeight + 4) // add some vertical padding
           .attr('x', -textWidth / 2 - 5) // center horizontally
-          .attr('y', props.textSize + 2 - textHeight / 2) // center vertically
+          .attr(
+            'y',
+            (ratioMap.get(d.id) || 1) * props.diameter + 15 - textHeight / 2 - 2
+          ) // center vertically
       }
     })
 
@@ -269,6 +269,12 @@
         node
           .classed('d3-force-node-highlight', false)
           .classed('d3-force-node-dim', false)
+          .classed('d3-force-node-active', false)
+          .each(function () {
+            d3.select(this)
+              .select('text')
+              .style('font-size', `${props.textSize}px`)
+          })
         link
           .classed('d3-force-link-highlight', false)
           .classed('d3-force-link-dim', false)
@@ -286,7 +292,16 @@
           'd3-force-node-highlight',
           (n) => n === d || connectedNodes.has(n)
         )
+        .classed('d3-force-node-active', (n) => n === d)
         .classed('d3-force-node-dim', (n) => n !== d && !connectedNodes.has(n))
+        .each(function (n) {
+          const textElement = d3.select(this).select('text')
+          if (n === d) {
+            textElement.style('font-size', '1.4rem')
+          } else {
+            textElement.style('font-size', `${props.textSize}px`)
+          }
+        })
       // Update link states
       link
         .classed(
@@ -419,8 +434,10 @@
 
   :deep(.d3-force-node.d3-force-node-highlight) text {
     font-weight: semi-bold;
-    font-size: 1.2rem;
-    /* opacity: 0.2; */
+  }
+
+  :deep(.d3-force-node.d3-force-node-active) .text-background {
+    fill: rgba(255, 255, 255, 1);
   }
 
   :deep(.d3-force-node.d3-force-node-dim) circle {

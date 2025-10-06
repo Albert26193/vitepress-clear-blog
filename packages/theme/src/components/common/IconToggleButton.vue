@@ -91,6 +91,6 @@
   }
 
   .tooltip-container:hover .tooltip {
-    @apply visible opacity-100;
+    @apply hidden opacity-100;
   }
 </style>

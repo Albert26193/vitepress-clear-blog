@@ -94,20 +94,19 @@
   }
 
   .popup-close-button {
-    @apply h-8 w-8 rounded-full bg-gray-200 text-gray-600;
+    @apply h-5 w-5 rounded-full bg-gray-200 text-gray-600;
     @apply hover:bg-gray-300 hover:text-gray-900;
     @apply transition-colors duration-200;
     @apply flex items-center justify-center;
   }
 
   .popup-close-icon {
-    @apply h-6 w-6;
+    @apply h-4 w-4;
   }
 
   .popup-body {
     @apply my-auto overflow-y-auto;
     @apply animate-bounce-in-left;
     @apply transition-opacity duration-300;
-    @apply border-2 border-solid border-red-500;
   }
 </style>

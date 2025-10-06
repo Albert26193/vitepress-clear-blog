@@ -16,14 +16,12 @@
 
     <template #sidebar-nav-before> </template>
     <template #sidebar-nav-after>
-      <div
-        class="slide-enter-content flex flex-col h-[80vh]"
-      >
+      <div class="slide-enter-content flex h-[80vh] flex-col">
         <div>
           <PageLinkD3 />
           <LinkSidebar />
         </div>
-        <div class="flex-grow" />
+        <div class="flex-grow border-b border-gray-300 border-b-solid mb-4" />
         <div class="h-[30%]">
           <TagSidebar />
         </div>
@@ -55,6 +53,7 @@
   import LinkSidebar from './sidebar/LinkSidebar.vue'
   import PageLinkD3 from './sidebar/PageLinkD3.vue'
   import TagSidebar from './sidebar/TagSidebar.vue'
+import { divide } from 'lodash'
 
   useDarkTransition()
   const { Layout } = DefaultTheme
