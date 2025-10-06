@@ -19,11 +19,11 @@
       <div class="slide-enter-content flex h-[80vh] flex-col">
         <div>
           <D3PageSidebar />
-          <LinkSidebar />
+          <SidebarLink />
         </div>
         <div class="flex-grow border-b border-gray-300 border-b-solid mb-4" />
         <div class="h-[30%]">
-          <TagSidebar />
+          <SidebarTag />
         </div>
       </div>
     </template>
@@ -50,9 +50,9 @@
   import DocBanner from './articles/DocBanner.vue'
   import Copyright from './common/Copyright.vue'
   import HideSidebarButton from './common/HideSidebarButton.vue'
-  import LinkSidebar from './sidebar/LinkSidebar.vue'
+  import SidebarLink from './sidebar/SidebarLink.vue'
   import D3PageSidebar from './d3/D3PageSidebar.vue'
-  import TagSidebar from './sidebar/TagSidebar.vue'
+  import SidebarTag from './sidebar/SidebarTag.vue'
 
   useDarkTransition()
   const { Layout } = DefaultTheme
@@ -64,7 +64,7 @@
     timeline: defineAsyncComponent(() => import('./Timeline.vue')),
     tags: defineAsyncComponent(() => import('./common/Tags.vue')),
     collections: defineAsyncComponent(() => import('./Collections.vue')),
-    pages: defineAsyncComponent(() => import('./page/BlogMain.vue'))
+    pages: defineAsyncComponent(() => import('./blog/BlogMain.vue'))
   } as const
 
   const currentComponent = computed(() => {

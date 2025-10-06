@@ -1,7 +1,7 @@
 {
 	"files": [
 		{
-			"path": "packages/theme/src/components/sidebar/TagSidebar.vue",
+			"path": "packages/theme/src/components/sidebar/SidebarTag.vue",
 			"bookmarks": [
 				{
 					"line": 6,
