@@ -7,7 +7,7 @@ aside: false
 
 ## About this site
 
-- 本站点基于 `` 搭建，用以记录一些学习笔记和技术分享。
+- 本站点基于 `vitepress-graph-blog` 搭建，用以记录一些学习笔记和技术分享。
 - 欢迎 `star` 和 `fork` 本项目，也欢迎提出 `issue` 和 `pr`。
 
 ## About me
@@ -20,7 +20,7 @@ aside: false
 
 ---
 
-> [!tip] 在以下内容当中，挑选您熟悉的 `icon` 进行展示
+- 在以下内容当中，挑选您熟悉的 `icon` 进行展示
 
 ### 后端
 

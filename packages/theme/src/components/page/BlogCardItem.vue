@@ -70,7 +70,7 @@
 
 <style scoped>
   .blog-card {
-    @apply relative flex h-full flex-col justify-between overflow-hidden;
+    @apply relative flex h-64 flex-col justify-between overflow-hidden;
     @apply rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800;
     @apply min-w-220px;
     @apply cursor-pointer;

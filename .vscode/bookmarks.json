@@ -11,7 +11,7 @@
 			]
 		},
 		{
-			"path": "packages/theme/src/components/common/D3PageGraph.vue",
+			"path": "packages/theme/src/components/d3/D3PageGraph.vue",
 			"bookmarks": [
 				{
 					"line": 54,

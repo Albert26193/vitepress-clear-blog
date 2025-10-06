@@ -60,7 +60,7 @@
   }
 
   .card-container {
-    @apply mx-auto mt-4 grid w-full grid-cols-1 gap-6;
+    @apply mx-auto mt-8 grid w-full grid-cols-1 gap-8;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
     @apply max-w-[1280px] flex-1;
     @apply min-h-190;

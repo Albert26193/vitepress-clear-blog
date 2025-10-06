@@ -1,8 +1,8 @@
 <template>
-  <div class="mx-auto -mt-5 border-solid">
+  <div class="border-1 mx-auto border-solid">
     <div class="flex justify-end">
       <button
-        class="items-center mr-2 -mb-2 mt-1"
+        class="-mb-2 mr-2 mt-1 items-center"
         @click="popupOverview"
         :disabled="showOverview || showExpand"
         title="Overview"
@@ -12,7 +12,7 @@
         />
       </button>
       <button
-        class="items-center mr-1 -mb-2 mt-1 mt-1 mt-1 mt-1"
+        class="-mb-2 mr-1 mt-1 items-center"
         @click="expandGraph"
         :disabled="showOverview || showExpand"
         title="Expand"
@@ -36,7 +36,7 @@
 
   <!-- Overview popup -->
   <PopupContainer :show="showOverview" @close="closeOverview">
-    <OverallD3 />
+    <D3FullScreen :width="width" :height="height" />
   </PopupContainer>
 
   <!-- Expand popup -->
@@ -52,14 +52,16 @@
 </template>
 
 <script setup lang="ts">
+  import { useWindowSize } from '@vueuse/core'
   import { useRoute } from 'vitepress'
   import { ref, watch } from 'vue'
 
-  import D3PageGraph from '../common/D3PageGraph.vue'
-  import OverallD3 from '../common/OverallD3.vue'
   import PopupContainer from '../common/PopupContainer.vue'
+  import D3FullScreen from '../d3/D3FullScreen.vue'
+  import D3PageGraph from '../d3/D3PageGraph.vue'
 
   const route = useRoute()
+  const { width, height } = useWindowSize()
 
   // Popup state management
   const showOverview = ref(false)

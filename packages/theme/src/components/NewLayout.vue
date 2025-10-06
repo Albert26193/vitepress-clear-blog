@@ -18,7 +18,7 @@
     <template #sidebar-nav-after>
       <div class="slide-enter-content flex h-[80vh] flex-col">
         <div>
-          <PageLinkD3 />
+          <D3PageSidebar />
           <LinkSidebar />
         </div>
         <div class="flex-grow border-b border-gray-300 border-b-solid mb-4" />
@@ -51,9 +51,8 @@
   import Copyright from './common/Copyright.vue'
   import HideSidebarButton from './common/HideSidebarButton.vue'
   import LinkSidebar from './sidebar/LinkSidebar.vue'
-  import PageLinkD3 from './sidebar/PageLinkD3.vue'
+  import D3PageSidebar from './d3/D3PageSidebar.vue'
   import TagSidebar from './sidebar/TagSidebar.vue'
-import { divide } from 'lodash'
 
   useDarkTransition()
   const { Layout } = DefaultTheme

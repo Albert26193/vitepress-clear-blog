@@ -21,7 +21,7 @@
   import { useRoute } from 'vitepress'
   import { computed, ref } from 'vue'
 
-  import { transformPageD3Data } from '../../utils/client/'
+  import { transformPageD3Data } from '../../utils/client'
   import D3ForceGraph from './D3ForceGraph.vue'
 
   const props = withDefaults(

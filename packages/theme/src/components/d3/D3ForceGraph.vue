@@ -26,7 +26,7 @@
   import { useRouter } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
 
-  import type { D3ForceConfig, D3Link, D3Node } from '../../types/types.d'
+  import type { D3ForceConfig, D3Link, D3Node } from '../../types/types'
   import { calculateNodeRatios } from '../../utils/client/d3Utils'
 
   const { debounce } = lodash
@@ -437,7 +437,7 @@
   }
 
   :deep(.d3-force-node.d3-force-node-active) .text-background {
-    fill: rgba(255, 255, 255, 1);
+    fill: rgba(250, 250, 250, 1);
   }
 
   :deep(.d3-force-node.d3-force-node-dim) circle {

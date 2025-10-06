@@ -10,12 +10,12 @@ import NewLayout from './components/NewLayout.vue'
 import Timeline from './components/Timeline.vue'
 import PostMermaid from './components/articles/PostMermaid.vue'
 import FooterRef from './components/common/FooterRef.vue'
-import OverallD3 from './components/common/OverallD3.vue'
 import Tags from './components/common/Tags.vue'
+import D3FullScreen from './components/d3/D3FullScreen.vue'
+import D3PageSidebar from './components/d3/D3PageSidebar.vue'
 import Homepage from './components/homepage/Homepage.vue'
 import BlogMain from './components/page/BlogMain.vue'
 import LinkSidebar from './components/sidebar/LinkSidebar.vue'
-import PageLinkD3 from './components/sidebar/PageLinkD3.vue'
 import TagSidebar from './components/sidebar/TagSidebar.vue'
 // styles
 import './styles/index.scss'
@@ -34,8 +34,8 @@ export const BlogTheme: Theme = {
     app.component('Homepage', Homepage)
     app.component('TagSidebar', TagSidebar)
     app.component('LinkSidebar', LinkSidebar)
-    app.component('PageLinkD3', PageLinkD3)
-    app.component('OverallD3', OverallD3)
+    app.component('D3PageSidebar', D3PageSidebar)
+    app.component('D3FullScreen', D3FullScreen)
     app.component('Collections', Collections)
     app.component('FooterRef', FooterRef)
     app.component('PostMermaid', PostMermaid)
