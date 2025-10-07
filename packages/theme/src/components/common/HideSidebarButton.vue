@@ -20,11 +20,6 @@
   // TODO: fix error here
   const checkSidebarExists = () => {
     currentWidthHasSidebar.value = window.innerWidth > MOBILE_BREAKPOINT
-    // console.log(
-    //   'currentWidthHasSidebar',
-    //   currentWidthHasSidebar.value,
-    //   `窗口宽度：${window.innerWidth}px，断点：${MOBILE_BREAKPOINT}px`
-    // )
   }
 
   const updateDOM = (hidden: boolean) => {
@@ -70,7 +65,7 @@
     @apply flex items-center justify-center text-xl font-bold;
     @apply font-800 h-6 w-6 text-[17px];
     @apply hover:border-gray-800 hover:shadow-inner;
-    /* @apply hidden sm:block; */
+    @apply dark:border-gray-400 dark:hover:bg-[var(--vp-c-bg)] dark:hover:border-gray-300;
   }
 
   :deep(.VPSidebar) {

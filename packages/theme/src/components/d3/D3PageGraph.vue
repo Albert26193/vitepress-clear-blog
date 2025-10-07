@@ -1,5 +1,5 @@
 <template>
-  <div class="d3-page-container">
+  <div class="d3-page-graph-container">
     <div class="zoom-display"> zoom: {{ (zoomLevel * 100).toFixed(0) }}% </div>
     <D3ForceGraph
       v-model="zoomLevel"
@@ -12,18 +12,20 @@
       :circle-color="props.circleColor"
       :text-color="props.textColor"
       :link-distance=20
+      :link-color="linkColor"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
   import { siteMetadata } from 'virtual:vitepress-analyzer'
-  import { useRoute } from 'vitepress'
+  import { useData, useRoute } from 'vitepress'
   import { computed, ref } from 'vue'
 
   import { transformPageD3Data } from '../../utils/client'
   import D3ForceGraph from './D3ForceGraph.vue'
 
+  const { isDark } = useData()
   const props = withDefaults(
     defineProps<{
       width?: number
@@ -53,10 +55,13 @@
   )
 
   const zoomLevel = ref(1)
+  const linkColor = computed(() => {
+    return isDark.value ? '#cfcfcf' : '#0e0e0e'
+  })
 </script>
 
 <style scoped>
-  .d3-page-container {
+  .d3-page-graph-container {
     @apply relative h-full w-full;
   }
 

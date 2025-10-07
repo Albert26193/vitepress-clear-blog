@@ -21,7 +21,7 @@
           <D3PageSidebar />
           <SidebarLink />
         </div>
-        <div class="flex-grow border-b border-gray-300 border-b-solid mb-4" />
+        <div class="flex-grow" />
         <div class="h-[30%]">
           <SidebarTag />
         </div>

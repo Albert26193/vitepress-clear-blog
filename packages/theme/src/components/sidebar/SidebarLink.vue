@@ -93,7 +93,8 @@
 
   .page-links::before {
     content: '';
-    @apply absolute left-0 top-0 h-full w-[1px] bg-gray-200;
+    @apply absolute left-0 top-1 h-full w-[1px] bg-gray-200;
+    @apply dark:bg-gray-600;
   }
 
   .page-link {
@@ -108,11 +109,11 @@
 
   .page-link:hover::before {
     content: '';
-    @apply @apply absolute left-0 top-1 h-5 w-[2px] bg-[var(--vp-c-brand)] transition-colors duration-300;
+    @apply @apply absolute left-0 top-1 h-5 w-[2px];
+    @apply bg-[var(--vp-c-brand)] transition-colors duration-300;
   }
 
   .page-link::after {
-    /* content: attr(title); */
     @apply hidden h-0 overflow-hidden font-semibold;
   }
 

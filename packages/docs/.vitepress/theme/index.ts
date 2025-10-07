@@ -5,6 +5,4 @@ import 'vitepress-plugin-callout/styles'
 
 import './styles/generated.css'
 
-// import './styles/uno.css'
-
 export default BlogTheme

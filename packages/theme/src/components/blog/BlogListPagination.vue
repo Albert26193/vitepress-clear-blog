@@ -71,7 +71,7 @@
 
   .page-footer {
     @apply mb-4 mt-8;
-    @apply border-t border-gray-200 dark:border-gray-700 dark:bg-gray-800;
+    @apply border-t border-gray-200;
   }
 
   .pagination {

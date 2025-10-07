@@ -409,6 +409,18 @@
     { deep: true }
   )
 
+  // Watch for changes in linkColor prop to update link colors
+  watch(
+    () => props.linkColor,
+    (newColor) => {
+      if (svgRef.value) {
+        d3.select(svgRef.value)
+          .selectAll('.d3-force-link')
+          .attr('stroke', newColor)
+      }
+    }
+  )
+
   onMounted(() => {
     initializeGraph()
   })

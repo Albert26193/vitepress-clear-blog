@@ -48,7 +48,7 @@
   .btn-group {
     @apply inline-flex gap-1 rounded-md bg-gray-300/90 px-2 py-[5px];
     @apply shadow-inner shadow-gray-500/80;
-    @apply dark:bg-gray-700/90 dark:shadow-gray-900/80;
+    @apply dark:bg-gray-700/90 dark:shadow-gray-900/80 dark:text-white;
   }
 
   .btn-group.horizontal {
@@ -67,7 +67,7 @@
 
   .btn-item.active {
     @apply bg-white shadow-md shadow-gray-500/90 drop-shadow;
-    @apply dark:bg-gray-500 dark:shadow-gray-900/90;
+    @apply dark:bg-gray-500/90 dark:shadow-gray-900/90;
   }
 
   .btn-item.disabled {

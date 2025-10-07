@@ -86,10 +86,12 @@
 <style scoped>
   .meta-des {
     @apply mt-2 px-6 py-3;
-    @apply w-full rounded-md border border-solid border-gray-900;
+    @apply w-full rounded-md;
     @apply hover:(ring-1px ring-gray) transition-shadow duration-300;
     @apply transition-all duration-300;
     @apply slide-enter-content flex-col items-center space-y-4;
+    @apply border-1 border-solid border-gray-500;
+    @apply dark:border-gray-500;
   }
 
   .tag-on-page {

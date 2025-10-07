@@ -101,8 +101,9 @@
   }
 
   .describe {
-    @apply my-2 text-sm text-gray-700 dark:text-gray-300;
+    @apply my-2 text-sm text-gray-700;
     @apply mb-4 indent-2;
+    @apply dark:text-gray-300/90;
   }
 
   .link {

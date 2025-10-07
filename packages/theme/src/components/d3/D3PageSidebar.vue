@@ -1,5 +1,5 @@
 <template>
-  <div class="border-1 mx-auto border-solid">
+  <div class="d3-page-container">
     <div class="flex justify-end">
       <button
         class="-mb-2 mr-2 mt-1 items-center"
@@ -22,12 +22,12 @@
         />
       </button>
     </div>
-    <div class="d3-force-sidebar-container" v-if="true">
+    <div class="d3-force-sidebar-container">
       <D3PageGraph
         :width="520"
         :height="500"
-        :circle-color="'#3b3cf6'"
-        :text-color="'#4b4543'"
+        :circle-color="'var(--vp-c-brand)'"
+        :text-color="'var(--vp-c-text-1)'"
         :diameter="9"
         :text-size="18"
       />
@@ -42,10 +42,10 @@
   <!-- Expand popup -->
   <PopupContainer :show="showExpand" @close="closeExpand">
     <D3PageGraph
-      :width="960"
-      :height="960"
-      :circle-color="'#fc8ca6'"
-      :text-color="'#4b4543'"
+      :width="width"
+      :height="height"
+      :circle-color="'var(--vp-c-brand)'"
+      :text-color="'var(--vp-c-text-1)'"
       :text-size="18"
     />
   </PopupContainer>
@@ -94,8 +94,12 @@
 </script>
 
 <style scoped>
+  .d3-page-container {
+    @apply border-gray-500 border-1 border-solid;
+  }
+
   .d3-force-sidebar-container {
-    @apply h-full w-full border-gray-500;
-    @apply transition-shadow duration-300 hover:shadow-lg;
+    @apply h-full w-full;
+    @apply transition-shadow duration-300 hover:shadow-md;
   }
 </style>

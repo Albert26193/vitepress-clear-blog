@@ -98,7 +98,9 @@
                 >
                   {{ useTitle(article.frontMatter, article.html || '') }}
                 </a>
-                <div class="border-b-dashed mx-3 flex-1 border-gray-200"></div>
+                <div
+                  class="border-b-dashed mx-3 flex-1 border-gray-200 dark:border-gray-600"
+                ></div>
                 <div class="date">{{ getDay(article) }}</div>
               </div>
             </div>
@@ -217,8 +219,9 @@
   }
 
   .timeline-container {
-    @apply mx-auto flex w-4/5 flex-col;
-    @apply border-b-solid border border-gray-200 pb-4;
+    @apply mx-auto flex w-4/5 flex-col pb-4;
+    @apply border-b-solid border border-gray-200;
+    @apply dark:border-gray-900/20;
   }
 
   .timeline-year-content {
@@ -236,18 +239,21 @@
   }
 
   .timeline-year-line {
-    @apply absolute bottom-0 top-0 w-[1px] bg-gray-200 dark:bg-gray-700;
+    @apply absolute bottom-0 top-0 w-[1px] bg-gray-200;
+    @apply dark:bg-gray-700;
   }
 
   .timeline-year-title-span {
     @apply flex max-w-36 cursor-pointer items-center font-serif;
     @apply animate-fade-in delay-100 duration-200;
+    @apply dark:text-gray-500;
   }
 
   .timeline-month-title {
     @apply ml-4 pb-1 pt-2;
     @apply font-semibold;
     @apply flex items-center justify-between;
+    @apply dark:text-gray-400;
   }
 
   .timeline-month-container {
@@ -260,8 +266,9 @@
   }
 
   .timeline-month-line {
-    @apply absolute bottom-0 left-4 top-0 w-[1px] bg-gray-200 dark:bg-gray-700;
+    @apply absolute bottom-0 left-4 top-0 w-[1px] bg-gray-200;
     @apply ml-2;
+    @apply dark:bg-gray-700;
   }
 
   .posts-wrapper {
