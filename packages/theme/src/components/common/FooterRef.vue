@@ -71,12 +71,14 @@
     @apply w-max max-w-64 rounded-lg p-3;
     @apply border-[1.5px] border-solid border-gray-600 bg-gray-100;
     @apply leading-5.5 text-left text-sm font-normal;
+    @apply dark:bg-[var(--vp-c-bg)] dark:border-gray-300/90;
   }
 
   .tooltip-arrow {
-    @apply bottom--12px absolute left-1/2 -translate-x-1/2;
+    @apply absolute left-1/2 -translate-x-1/2;
     @apply border-6px border-solid;
     @apply border-gray-600 border-x-transparent border-b-transparent;
+    @apply border-[var(--vp-c-bg)];
   }
 
   .tooltip-content {

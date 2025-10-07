@@ -2,7 +2,7 @@
   <div class="link-sidebar">
     <div class="links-list">
       <div class="link-title">
-        <span class="i-carbon-link mr-2" />
+        <span class="i-carbon-direction-loop-left mr-2" />
         <span>Outgoing Links</span>
       </div>
       <!-- outgoing links list -->
@@ -20,7 +20,7 @@
       <!-- if no links -->
       <div v-else class="no-links">No Outgoing Links</div>
       <div class="link-title mt-4">
-        <span class="i-carbon-link mr-2" />
+        <span class="i-carbon-direction-loop-right mr-2" />
         <span>Back Links</span>
       </div>
       <div v-if="backLinks.length" class="page-links">
