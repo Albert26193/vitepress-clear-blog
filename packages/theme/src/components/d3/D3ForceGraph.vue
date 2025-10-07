@@ -215,7 +215,6 @@
       const textElement = nodeElement.select('text').node() as SVGTextElement
       if (textElement) {
         const textWidth = textElement.getComputedTextLength()
-        console.warn(textWidth)
         const textHeight = props.textSize * 1.2
 
         // Update the background rectangle's size and position

@@ -48,7 +48,6 @@ export default defineConfig({
       md.use(markdownItHashtag)
       md.use(mermaidPlugin)
       md.use(calloutPlugin)
-
       getFooterRefTag(md)
       getHashtag(md)
     },

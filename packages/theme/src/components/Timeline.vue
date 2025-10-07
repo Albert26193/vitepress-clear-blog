@@ -130,11 +130,6 @@
   const dataByYear = computed(() => useYearSort(allPostsData || []))
   const dataByYearMonth = computed(() => useMonthYearSort(allPostsData || []))
 
-  console.warn(
-    '[Timeline.vue] All Posts Data received:',
-    JSON.stringify(allPostsData, null, 2)
-  )
-
   const getYear = (yearList: { frontMatter: { date: string } }[]) =>
     yearList[0].frontMatter.date.split('-')[0]
   const getMonth = (monthList: { frontMatter: { date: string } }[]) =>

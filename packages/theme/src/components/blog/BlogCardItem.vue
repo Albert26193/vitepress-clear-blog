@@ -7,22 +7,19 @@
         </span>
       </h2>
     </div>
-    <p
-      v-if="post.frontMatter.description"
-      class="describe heti heti--serif mb-4 indent-2 text-gray-700 dark:text-gray-300"
-    >
+    <div v-if="post.frontMatter.description" class="describe heti heti--serif">
       {{
         useTruncatedDescription(post.frontMatter.description, {
-          maxChineseChars: 20,
-          maxEnglishWords: 15
+          maxChineseChars: 60,
+          maxEnglishWords: 60,
         }).value
       }}
-    </p>
-    <div v-else class="mt-4">
-      <div v-html="preview" class="heti heti--serif" />
+    </div>
+    <div v-else class="describe heti heti--serif">
+      <div v-html="preview"/>
     </div>
     <div class="card-banner">
-      <div class="flex flex-wrap items-center">
+      <div class="card-time">
         <div class="i-carbon-time mr-1" />
         <span>{{ useTimeFormat(post.frontMatter.date) }}</span>
       </div>
@@ -63,31 +60,40 @@
   }
 
   const preview = useHtmlPreview(props.post.html || '', {
-    maxChineseLength: 120,
+    maxChineseLength: 60,
     maxEnglishWords: 60
   })
 </script>
 
 <style scoped>
   .blog-card {
-    @apply relative flex h-64 flex-col justify-between overflow-hidden;
-    @apply rounded-xl bg-white p-6 shadow-sm dark:bg-gray-800;
-    @apply min-w-220px;
+    @apply relative flex flex-col;
+    @apply justify-between overflow-hidden
+    @apply rounded-xl bg-white p-6 shadow-sm;
+    @apply max-w-90 h-55;
     @apply cursor-pointer;
+    @apply dark:bg-[var(--vp-c-bg)];
   }
 
   .blog-card::before {
-    @apply border-1 absolute inset-0 rounded-xl border-solid content-[''];
+    @apply border-1 border-solid; 
+    @apply absolute inset-0 rounded-xl content-[''];
     @apply pointer-events-none border-gray-800;
+    @apply dark:border-gray-400;
   }
 
   .blog-card:hover::before {
     @apply border-2 border-[var(--vp-c-brand)];
-    /* @apply shadow-inner shadow-slate-500; */
   }
 
   .card-banner {
-    @apply mt-2 flex items-center justify-between text-sm text-gray-500;
+    @apply mt-2 flex items-center justify-between;
+    @apply text-sm text-gray-500;
+  }
+
+  .card-time {
+    @apply flex items-center flex-wrap;
+    @apply dark:text-gray-300;
   }
 
   .card-title {
@@ -96,6 +102,7 @@
 
   .describe {
     @apply my-2 text-sm text-gray-700 dark:text-gray-300;
+    @apply mb-4 indent-2;
   }
 
   .link {

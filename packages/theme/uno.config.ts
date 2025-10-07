@@ -1,6 +1,10 @@
 // uno.config.tsc
-import { presetIcons, presetUno, transformerDirectives } from 'unocss'
-import { defineConfig } from 'unocss'
+import { presetIcons, presetUno, transformerDirectives } from 'unocss';
+import { defineConfig } from 'unocss';
+
+
+
+
 
 export default defineConfig({
   transformers: [transformerDirectives()],
@@ -66,7 +70,12 @@ export default defineConfig({
     ['card-border', 'rounded-md z-50 hover:cursor-default'],
     [
       'tag',
-      'rounded-full px-2 py-1 text-xs border border-solid border-gray-600 dark:border-gray-200 text-gray-900 hover:text-[var(--vp-c-brand)] hover:border-[var(--vp-c-brand)] cursor-pointer'
+      [
+        'rounded-full px-2 py-1 text-xs border border-solid border-gray-600',
+        'text-gray-900 cursor-pointer',
+        'hover:border-[var(--vp-c-brand)] hover:text-[var(--vp-c-brand)]',
+        'dark:border-gray-200 dark:text-gray-200',
+      ]
     ],
     [
       'tag-active',

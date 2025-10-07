@@ -17,7 +17,7 @@ const getThemeConfig = async (cfg = {}) => {
           }
         }
       },
-      server: { port: 4000 },
+      server: { port: 4000, watch: { usePolling: true } },
       optimizeDeps: {
         exclude: ['gzip-size']
       },

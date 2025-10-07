@@ -19,6 +19,26 @@
 					"label": ""
 				}
 			]
+		},
+		{
+			"path": "packages/theme/src/components/blog/BlogCardPagination.vue",
+			"bookmarks": [
+				{
+					"line": 3,
+					"column": 26,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "packages/theme/src/components/blog/BlogCardItem.vue",
+			"bookmarks": [
+				{
+					"line": 18,
+					"column": 20,
+					"label": ""
+				}
+			]
 		}
 	]
 }

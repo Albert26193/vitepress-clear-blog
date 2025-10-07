@@ -6,13 +6,13 @@
         <p class="font-700 font-serif">能纵棹，惯乘流，长江白浪不曾忧</p>
       </div>
       <div class="homepage-go" @click="router.go(withBase('/pages/'))">
-        <span class="i-carbon-arrow-right"></span>
+        <span class="i-carbon-arrow-right dark:bg-gray-900"></span>
       </div>
     </div>
 
     <D3HomePage
-      :width="1200"
-      :height="800"
+      :width="width"
+      :height="height*0.9"
       class="border-1 border-solid mt-6"
     ></D3HomePage>
   </section>
@@ -48,10 +48,11 @@
   .homepage-container .homepage-go {
     @apply relative cursor-pointer overflow-hidden;
     @apply flex items-center;
-    @apply bg-[var(--main-page-text)] text-white;
-    @apply ml-4;
-    @apply mt-1 rounded-xl px-4 py-1 text-sm font-bold;
-    transition: all 0.3s ease;
+    @apply bg-[var(--main-page-text)] text-white; 
+    @apply ml-4 ml-3;
+    @apply rounded-xl px-4 py-1 text-sm font-bold;
+    @apply transition-all duration-300;
+    @apply dark:bg-gray-400 dark:text-gray-200;
   }
 
   .homepage-go:hover {
@@ -59,7 +60,7 @@
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
   }
 
-  .homepage-go::after {
+  .homepage-go:after {
     content: '';
     @apply absolute top-0;
     width: 50%;
@@ -80,9 +81,11 @@
 </style>
 
 <script setup lang="ts">
+  import { useWindowSize } from '@vueuse/core'
   import { useRouter, withBase } from 'vitepress'
 
   import D3HomePage from '../d3/D3HomePage.vue'
 
   const router = useRouter()
+  const { width, height } = useWindowSize()
 </script>

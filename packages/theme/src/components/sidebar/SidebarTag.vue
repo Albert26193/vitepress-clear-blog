@@ -128,7 +128,6 @@
 
   .sidebar-tag {
     @apply inline-block px-[0.5rem] py-[3px];
-    @apply border-gray-700 text-gray-900;
     @apply text-[11px] font-normal;
   }
 

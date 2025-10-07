@@ -48,6 +48,7 @@
   .btn-group {
     @apply inline-flex gap-1 rounded-md bg-gray-300/90 px-2 py-[5px];
     @apply shadow-inner shadow-gray-500/80;
+    @apply dark:bg-gray-700/90 dark:shadow-gray-900/80;
   }
 
   .btn-group.horizontal {
@@ -60,11 +61,13 @@
 
   .btn-item {
     @apply flex items-center rounded-md p-1 transition-all duration-200;
-    @apply hover:bg-gray-100/90;
+    @apply hover:bg-gray-100/90
+    @apply dark:hover:bg-gray-600/90;
   }
 
   .btn-item.active {
     @apply bg-white shadow-md shadow-gray-500/90 drop-shadow;
+    @apply dark:bg-gray-500 dark:shadow-gray-900/90;
   }
 
   .btn-item.disabled {
@@ -88,6 +91,7 @@
     @apply invisible absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs;
     @apply whitespace-nowrap rounded bg-gray-200 text-gray-800 opacity-0;
     @apply transition-all duration-200;
+    @apply dark:bg-gray-600 dark:text-gray-200;
   }
 
   .tooltip-container:hover .tooltip {

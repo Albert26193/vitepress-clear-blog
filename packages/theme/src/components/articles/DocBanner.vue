@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
   //TODO: how to calculate layout on mobile? if we have too many tags?
-  import { useData, useRoute, useRouter, withBase } from 'vitepress'
+  import { useData, useRouter, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
 
   import { useAuthor, useTimeFormat } from '../../composables/useMeta'
@@ -43,8 +43,6 @@
 
   const { frontmatter } = useData()
   const router = useRouter()
-  const currentRoute = useRoute()
-  console.warn(currentRoute.path, 'route')
 
   const $des = ref<HTMLDivElement>()
 

@@ -50,6 +50,6 @@
 
   .pagination-header {
     @apply position-relative mx-auto max-w-[1280px];
-    @apply ml-4 mt-4 flex;
+    @apply ml-3 mt-8 flex;
   }
 </style>

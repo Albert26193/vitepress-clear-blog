@@ -2,10 +2,13 @@ export interface ThemeConfig {
   'vp-c-bg'?: string
   'vp-c-brand'?: string
   'vp-c-brand-1'?: string
+  'vp-c-text-1'?: string
   'vp-button-brand-bg'?: string
   'c-text-code'?: string
   'c-text-strong'?: string
   'c-text-em'?: string
+  'vp-sidebar-bg-color'?: string
+  dark?: ThemeConfig
 }
 
 export interface ConfigToml {
@@ -23,5 +26,4 @@ export interface ConfigToml {
     pageSize?: number
   }
   theme: ThemeConfig
-  'theme.dark'?: ThemeConfig
 }

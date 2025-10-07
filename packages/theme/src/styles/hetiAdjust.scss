@@ -5,6 +5,7 @@
     &.heti .meta-des {
       a {
         text-decoration: none;
+
         &:hover {
           text-decoration: none;
         }
@@ -14,6 +15,7 @@
     &.heti .footnote-ref {
       a {
         text-decoration: none;
+
         &:hover {
           text-decoration: none;
         }
@@ -23,11 +25,13 @@
     &.heti .vp-doc {
       mark {
         background-color: #fef08a;
+
         .dark & {
           background-color: #fde047;
           color: #060606;
         }
       }
+
       hr {
         margin: 16px 10px 16px 10px;
         width: 100%;
@@ -36,6 +40,7 @@
 
       a.blog-tag {
         text-decoration: none;
+
         &:hover {
           text-decoration: none;
         }
@@ -75,5 +80,15 @@
         text-indent: 0.5rem;
       }
     }
+  }
+
+  .heti code,
+  .heti pre {
+    margin-inline-start: 0.25em;
+    margin-inline-end: 0.25em;
+    font-family:
+      'Iosevka', consolas, 'Liberation Mono', menlo, courier, monospace,
+      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-size: 0.875em;
   }
 }
