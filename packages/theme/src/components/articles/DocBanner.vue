@@ -1,8 +1,8 @@
 <template>
   <div class="meta-des" id="hack-article-des" ref="$des">
     <!-- tags -->
-    <div class="mt-2 grow space-x-2" v-if="frontmatter.tags">
-      <span v-for="item in frontmatter.tags" :key="item">
+    <div class="tags-container" v-if="frontmatter.tags">
+      <span v-for="item in frontmatter.tags" :key="item" class="tag-wrapper">
         <span
           class="tag"
           @click="router.go(withBase(`/tags.html?tag=${item}`))"
@@ -84,22 +84,42 @@
 </script>
 
 <style scoped>
+  /* Meta Description Container */
   .meta-des {
-    @apply mt-2 px-6 py-3;
-    @apply w-full rounded-md;
-    @apply hover:(ring-1px ring-gray) transition-shadow duration-300;
-    @apply transition-all duration-300;
+    @apply mt-2 w-full rounded-md transition-all duration-300;
     @apply slide-enter-content flex-col items-center space-y-4;
     @apply border-1 border-solid border-gray-500;
-    @apply dark:border-gray-500;
+    @apply hover:ring-1px hover:ring-gray transition-shadow duration-300;
+    @apply px-4 py-3;
+    @apply md:px-6;
   }
 
+  /* Tags Container */
+  .tags-container {
+    @apply mt-2 grow flex flex-wrap gap-x-2 gap-y-2;
+  }
+
+  /* Tag Wrapper */
+  .tag-wrapper {
+    @apply inline-block;
+  }
+
+  /* Tag */
+  .tag {
+    @apply cursor-pointer inline-block text-xs;
+    @apply hover:text-[var(--vp-c-brand)];
+    @apply md:text-sm;
+  }
+
+  /* Tag On Page */
   .tag-on-page {
     @apply cursor-pointer;
   }
+  
   .tag-on-page a {
     @apply font-bold text-[var(--vp-c-text)] no-underline;
   }
+  
   .tag-on-page:hover {
     @apply text-[var(--vp-c-brand)] no-underline;
   }

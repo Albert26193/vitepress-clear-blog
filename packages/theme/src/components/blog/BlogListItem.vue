@@ -11,11 +11,8 @@
           <span class="meta-text">
             {{ useTimeFormat(post.frontMatter.date) }}
           </span>
-          <div class="i-carbon-user ml-4" />
-          <a
-            class="meta-text hover:underline hover:underline-offset-4"
-            :href="withBase('/about.html')"
-          >
+          <div class="meta-icon-user i-carbon-user" />
+          <a class="meta-link" :href="withBase('/about.html')">
             {{ author }}
           </a>
         </div>
@@ -113,134 +110,146 @@
 </script>
 
 <style scoped lang="scss">
+  /* Blog List Item */
   .blog-list {
-    @apply relative mx-auto w-full;
-    @apply transition-colors duration-200;
-    @apply border-solid border-gray-400 dark:border-gray-600;
-    // Default: only bottom border for each item
-    @apply border-b-[0.5px];
-    // Remove default top border, it will be added conditionally for the first item
-    @apply border-t-0;
-    @apply border-x-0;
+    @apply relative mx-auto w-full transition-colors duration-200;
+    @apply border-solid border-b border-t-0 border-x-0;
+    @apply border-gray-300 dark:border-gray-700;
+    @apply md:border-gray-400 md:dark:border-gray-600 md:border-b-[0.5px];
 
-    // Conditional top extension AND top border for the first blog list item
     &.is-first-item {
-      @apply border-t-[0.5px]; // Add top border specifically for the first item
+      @apply border-t md:border-t-[0.5px];
 
       .divider-extensions::before {
-        @apply absolute left-1/2 h-12 w-[0.5px] content-[''];
+        @apply absolute h-12 w-[0.5px] content-[''] transform -translate-x-1/2 -top-12;
         @apply bg-gray-400 dark:bg-gray-600;
-        @apply -translate-x-1/2 transform;
-        @apply -top-12;
+        @apply hidden md:block md:left-1/2;
       }
     }
 
-    // Conditional bottom extension for the last blog list item
     &.is-last-item {
-      // No change needed for border here, it already has a bottom border
       .divider-extensions::after {
-        @apply absolute left-1/2 h-12 w-[0.5px] content-[''];
+        @apply absolute h-12 w-[0.5px] content-[''] transform -translate-x-1/2 -bottom-12;
         @apply bg-gray-400 dark:bg-gray-600;
-        @apply -translate-x-1/2 transform;
-        @apply -bottom-12;
+        @apply hidden md:block md:left-1/2;
       }
     }
   }
 
+  /* Blog List Container */
   .blog-list-container {
-    @apply min-h-42 flex px-6 py-0;
-    @apply items-stretch;
+    @apply flex items-stretch flex-col px-4 py-3 min-h-0;
+    @apply md:flex-row md:px-6 md:py-0 md:min-h-42;
   }
 
-  /* Column Styles */
+  /* Meta Column */
   .column-meta {
-    // Title, Date, Author
-    @apply mt-2 flex flex-col justify-start py-4 pl-8 pr-4;
-    @apply w-1/3 min-w-[300px];
+    @apply flex flex-col justify-start w-full py-3 pl-0 pr-0 mt-1;
+    @apply md:w-1/3 md:min-w-[300px] md:py-4 md:pl-8 md:pr-4 md:mt-2;
   }
 
+  /* Content Column */
   .column-content {
-    // Description
-    @apply flex flex-1 flex-col justify-center px-4 py-4;
-    @apply pr-12;
+    @apply flex flex-1 flex-col justify-center py-2 px-0;
+    @apply md:py-4 md:px-4 md:pr-12;
   }
 
-  /* Meta Item Adjustments */
+  /* Meta Item */
   .meta-item {
-    @apply @apply mb-2 mr-0 flex items-center text-sm;
+    @apply mb-2 mr-0 flex items-center text-xs;
     @apply text-gray-600 dark:text-gray-400;
+    @apply md:text-sm;
   }
+
   .date-item {
-    @apply mt-2;
+    @apply mt-1 md:mt-2;
   }
+
+  /* Meta Text */
+  .meta-text {
+    @apply ml-1;
+  }
+
+  /* Meta Icon User */
+  .meta-icon-user {
+    @apply ml-4;
+  }
+
+  /* Meta Link */
+  .meta-link {
+    @apply meta-text hover:underline hover:underline-offset-4;
+  }
+
+  /* List Header */
   .list-header {
     @apply mt-0;
   }
 
+  /* List Title */
   .list-title {
-    @apply text-xl font-semibold;
+    @apply font-semibold text-lg;
+    @apply md:text-xl;
   }
 
+  /* Title Link */
   .title-link {
-    @apply text-color-[var(--vp-c-brand)];
-    @apply transition-all duration-200;
-    @apply hover:(underline underline-offset-6);
+    @apply text-color-[var(--vp-c-brand)] transition-all duration-200 break-words;
+    @apply hover:underline hover:underline-offset-6;
   }
 
+  /* Tags Container */
   .tags-container {
-    @apply mb-4 mr-4 mt-2 flex flex-wrap gap-x-2 gap-y-[6px];
-    @apply justify-start;
+    @apply mt-2 flex flex-wrap justify-start gap-x-2 gap-y-[6px] mb-3 mr-0;
+    @apply md:mb-4 md:mr-4;
   }
 
+  /* Tag Wrapper */
   .tag-wrapper {
     @apply inline-block;
   }
 
+  /* Tag */
   .tag {
-    @apply cursor-pointer text-[12px] hover:text-[var(--vp-c-brand)];
+    @apply cursor-pointer text-[11px];
+    @apply md:text-[12px];
+    @apply hover:text-[var(--vp-c-brand)];
   }
 
-  /* Custom Divider styles */
+  /* Custom Divider */
   .custom-divider {
-    // This IS the vertical line between columns
-    @apply w-[0.5px] bg-gray-400 dark:bg-gray-600;
-    @apply relative mx-3;
-    @apply self-stretch;
+    @apply relative self-stretch bg-gray-400 dark:bg-gray-600;
+    @apply hidden md:block md:w-[0.5px] md:mx-3;
 
-    // Intersection Dots (top and bottom of this vertical line)
     &::before,
     &::after {
-      @apply absolute left-1/2 h-[6px] w-[6px] rounded-full content-[''];
+      @apply absolute h-[6px] w-[6px] rounded-full content-[''];
       @apply bg-gray-400 dark:bg-gray-400;
-      @apply -translate-x-1/2 transform;
+      @apply left-1/2 -translate-x-1/2 transform;
     }
 
     &::before {
-      // Top dot
       @apply top-[-3px];
     }
 
     &::after {
-      // Bottom dot
       @apply bottom-[-3px];
     }
   }
 
+  /* Divider Extensions */
   .divider-extensions {
     @apply absolute inset-x-0 block h-full;
   }
 
+  /* Description */
   .describe {
-    @apply text-md text-gray-700 dark:text-gray-300;
-    @apply mt-2 line-clamp-3 indent-2;
-    @apply flex-grow;
+    @apply flex-grow break-words mt-1 line-clamp-2 indent-0 text-sm leading-relaxed;
+    @apply text-gray-700 dark:text-gray-300;
+    @apply md:mt-2 md:line-clamp-3 md:indent-2 md:text-md md:leading-normal;
   }
 
+  /* Empty Description */
   .empty-description {
     @apply h-4 flex-grow;
-  }
-
-  .meta-text {
-    @apply ml-1;
   }
 </style>

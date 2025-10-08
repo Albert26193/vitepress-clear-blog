@@ -15,7 +15,7 @@
         <a
           v-for="i in pagesNum"
           :key="i"
-          class="link ml-1"
+          class="pagination-link"
           :class="{ active: pageCurrent === i }"
           @click="handlePageChange(i)"
           >{{ i }}</a
@@ -58,32 +58,43 @@
 </script>
 
 <style scoped>
+  /* Main Container */
   .blog-list-pagination {
     @apply flex flex-col;
     min-height: calc(100vh - var(--vp-nav-height) - 64px);
   }
 
+  /* List Container */
   .list-container {
-    @apply mx-auto mt-16 space-y-0;
-    @apply max-w-[1280px] flex-1;
-    @apply min-h-190;
+    @apply mx-auto space-y-0 flex-1 max-w-[1280px] mt-8 min-h-[60vh] px-3;
+    @apply md:mt-16 md:min-h-190 md:px-6 lg:px-8;
   }
 
+  /* Page Footer */
   .page-footer {
-    @apply mb-4 mt-8;
-    @apply border-t border-gray-200;
+    @apply mb-4 mt-6 border-t border-gray-200 px-4;
+    @apply dark:border-gray-700;
+    @apply md:mt-8 md:px-6;
   }
 
+  /* Pagination */
   .pagination {
-    @apply flex justify-center;
+    @apply flex justify-center flex-wrap gap-1 pt-4;
+    @apply md:gap-0 md:pt-0;
   }
 
-  .pagination .link {
-    @apply flex h-6 w-6 cursor-pointer items-center justify-center rounded-md;
+  /* Pagination Link */
+  .pagination-link {
+    @apply flex cursor-pointer items-center justify-center rounded-md transition-all duration-200;
+    @apply h-8 w-8 ml-0 text-sm;
     @apply text-gray-600 dark:text-gray-400;
+    @apply hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply md:h-6 md:w-6 md:ml-1 md:text-base;
   }
 
-  .pagination .link.active {
+  /* Active Pagination Link */
+  .pagination-link.active {
     @apply bg-[var(--vp-c-brand)] text-gray-100 shadow-xl;
+    @apply hover:bg-[var(--vp-c-brand)] dark:hover:bg-[var(--vp-c-brand)];
   }
 </style>

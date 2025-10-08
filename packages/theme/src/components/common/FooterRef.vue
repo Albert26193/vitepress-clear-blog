@@ -48,9 +48,8 @@
 
 <style scoped>
   .footnote-ref {
-    @apply leading-0 relative text-base;
-    @apply ml-[1px];
-    /* @apply vertical-super; */
+    @apply leading-0 relative text-xs;
+    @apply ml-[5px];
   }
 
   .footnote-badge-link {
@@ -59,26 +58,29 @@
   }
 
   .footnote-badge {
-    @apply leading-2 font-500 inline items-center rounded-md text-xs;
-    @apply mx-[1px] px-[6px] py-[0.5px];
+    @apply leading-2 font-500 inline items-center rounded-md text-[11px];
+    @apply mx-[1px] px-[6px] py-[0.5px] -vertical-30%;
     @apply bg-gray-200 text-slate-900;
     @apply no-underline! hover:no-underline!;
+    @apply dark:bg-gray-700/80 dark:text-gray-300;
   }
 
   /**TODO: media query */
   .footnote-tooltip {
     @apply absolute bottom-full left-1/2 z-10 mb-[1px] -translate-x-1/2;
     @apply w-max max-w-64 rounded-lg p-3;
-    @apply border-[1.5px] border-solid border-gray-600 bg-gray-100;
+    @apply border-[1px] border-solid border-gray-600;
     @apply leading-5.5 text-left text-sm font-normal;
-    @apply dark:bg-[var(--vp-c-bg)] dark:border-gray-300/90;
+    @apply bg-[var(--vp-sidebar-bg-color)];
+    @apply dark:border-gray-500/90;
   }
 
   .tooltip-arrow {
-    @apply absolute left-1/2 -translate-x-1/2;
+    @apply absolute left-1/2 -translate-x-1/2 -bottom-2;
     @apply border-6px border-solid;
     @apply border-gray-600 border-x-transparent border-b-transparent;
-    @apply border-[var(--vp-c-bg)];
+    @apply bg-[var(--vp-sidebar-bg-color)];
+    @apply hidden;
   }
 
   .tooltip-content {

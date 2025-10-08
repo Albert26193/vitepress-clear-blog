@@ -1,6 +1,6 @@
 <template>
   <div class="custom-page-layout timeline-page">
-    <div class="mr-18 -mb-8 mt-6 flex justify-end gap-6">
+    <div class="controls-container">
       <IconToggleButton
         v-model="sortDirection"
         :icons="[
@@ -31,7 +31,7 @@
         v-for="curYearPostList in sortedDataByYear"
         :key="getYear(curYearPostList)"
       >
-        <div class="font-serif">
+        <div class="year-header">
           <!-- year and post count -->
           <span
             @click="toggleYear(getYear(curYearPostList))"
@@ -39,13 +39,13 @@
           >
             <span
               v-if="displayStatus.years[getYear(curYearPostList)]"
-              class="i-carbon-chevron-down mr-2 text-lg"
+              class="chevron-icon i-carbon-chevron-down"
             />
-            <span class="i-carbon-chevron-right mr-2 text-lg" v-else />
+            <span class="chevron-icon i-carbon-chevron-right" v-else />
             <span class="timeline-year-title">
               {{ getYear(curYearPostList) }}
             </span>
-            <span class="timeline-post-count mt-[3px]">
+            <span class="timeline-post-count">
               {{ `( ${curYearPostList.length} )` }}
             </span>
           </span>
@@ -68,9 +68,9 @@
                     `${getYear(curYearPostList)}-${getMonth(monthList)}`
                   ]
                 "
-                class="i-carbon-chevron-down mr-1"
+                class="chevron-icon-small i-carbon-chevron-down"
               />
-              <span class="i-carbon-chevron-right mr-1" v-else />
+              <span class="chevron-icon-small i-carbon-chevron-right" v-else />
               <span>{{ getYearMonth(monthList) }}</span>
               <span class="timeline-post-count">
                 {{ `( ${monthList.length} )` }}
@@ -98,10 +98,8 @@
                 >
                   {{ useTitle(article.frontMatter, article.html || '') }}
                 </a>
-                <div
-                  class="border-b-dashed mx-3 flex-1 border-gray-200 dark:border-gray-600"
-                ></div>
-                <div class="date">{{ getDay(article) }}</div>
+                <div class="post-divider"></div>
+                <div class="post-date">{{ getDay(article) }}</div>
               </div>
             </div>
           </div>
@@ -214,74 +212,122 @@
 </script>
 
 <style scoped>
+  /* Page Container */
   .timeline-page {
-    @apply w-7/10 mx-auto;
+    @apply mx-auto;
+    @apply w-full px-4;
+    @apply md:w-7/10 md:px-0;
   }
 
+  /* Controls Container */
+  .controls-container {
+    @apply -mb-8 mt-6 flex justify-end gap-3;
+    @apply md:gap-6 md:mr-18;
+  }
+
+  /* Timeline Container */
   .timeline-container {
-    @apply mx-auto flex w-4/5 flex-col pb-4;
-    @apply border-b-solid border border-gray-200;
+    @apply mx-auto flex flex-col pb-4 w-full border-b-solid border border-gray-200;
     @apply dark:border-gray-900/20;
+    @apply md:w-4/5;
   }
 
+  /* Year Header */
+  .year-header {
+    @apply font-serif;
+  }
+
+  /* Year Content */
   .timeline-year-content {
-    @apply relative mb-1 ml-2;
+    @apply relative mb-1 ml-1;
+    @apply md:ml-2;
   }
 
-  .timeline-post-count {
-    @apply ml-2 text-[var(--vp-c-brand)];
-    @apply font-normal;
-  }
-
-  .timeline-year-title {
-    @apply pb-1 pt-2 text-xl;
-    @apply font-extrabold;
-  }
-
-  .timeline-year-line {
-    @apply absolute bottom-0 top-0 w-[1px] bg-gray-200;
-    @apply dark:bg-gray-700;
-  }
-
+  /* Year Title Span */
   .timeline-year-title-span {
-    @apply flex max-w-36 cursor-pointer items-center font-serif;
+    @apply flex cursor-pointer items-center font-serif max-w-full text-sm;
     @apply animate-fade-in delay-100 duration-200;
     @apply dark:text-gray-500;
+    @apply md:max-w-36 md:text-base;
   }
 
+  /* Year Title */
+  .timeline-year-title {
+    @apply pb-1 pt-2 font-extrabold text-lg;
+    @apply md:text-xl;
+  }
+
+  /* Post Count */
+  .timeline-post-count {
+    @apply ml-2 font-normal text-[var(--vp-c-brand)] text-xs;
+    @apply md:text-sm;
+  }
+
+  /* Chevron Icons */
+  .chevron-icon {
+    @apply mr-2 text-lg;
+  }
+
+  .chevron-icon-small {
+    @apply mr-1;
+  }
+
+  /* Year Line */
+  .timeline-year-line {
+    @apply absolute bottom-0 top-0 w-[1px] left-0;
+    @apply bg-gray-200 dark:bg-gray-700;
+    @apply md:left-auto;
+  }
+
+  /* Month Title */
   .timeline-month-title {
-    @apply ml-4 pb-1 pt-2;
-    @apply font-semibold;
-    @apply flex items-center justify-between;
+    @apply pb-1 pt-2 font-semibold flex items-center justify-between ml-3 text-sm;
     @apply dark:text-gray-400;
+    @apply md:ml-4 md:text-base;
   }
 
+  /* Month Title Span */
+  .timeline-month-title-span {
+    @apply flex cursor-pointer items-center font-serif max-w-full;
+    @apply animate-fade-in delay-200 duration-200;
+    @apply md:max-w-36;
+  }
+
+  /* Month Container */
   .timeline-month-container {
     @apply relative;
   }
 
-  .timeline-month-title-span {
-    @apply flex max-w-36 cursor-pointer items-center font-serif;
-    @apply animate-fade-in delay-200 duration-200;
-  }
-
+  /* Month Line */
   .timeline-month-line {
-    @apply absolute bottom-0 left-4 top-0 w-[1px] bg-gray-200;
-    @apply ml-2;
-    @apply dark:bg-gray-700;
+    @apply absolute bottom-0 top-0 w-[1px] ml-2 left-3;
+    @apply bg-gray-200 dark:bg-gray-700;
+    @apply md:left-4;
   }
 
+  /* Posts Wrapper */
   .posts-wrapper {
-    @apply relative ml-2 flex items-center justify-between px-9 py-1;
+    @apply relative flex items-center justify-between py-1 gap-2 ml-1 px-6;
+    @apply md:ml-2 md:px-9;
   }
 
+  /* Post Item */
   .post-item {
-    @apply hover:text-[var(--vp-c-brand)];
-    @apply h-6 hover:no-underline;
+    @apply flex-shrink min-w-0 break-words h-auto text-sm;
+    @apply hover:text-[var(--vp-c-brand)] hover:no-underline;
+    @apply md:h-6 md:text-base;
   }
 
-  .date {
+  /* Post Divider */
+  .post-divider {
+    @apply flex-1 mx-3 border-b-dashed border-gray-200;
+    @apply dark:border-gray-600;
+  }
+
+  /* Post Date */
+  .post-date {
+    @apply flex-shrink-0 whitespace-nowrap font-serif text-xs;
     @apply text-gray-500 dark:text-gray-400;
-    @apply font-serif;
+    @apply md:text-sm;
   }
 </style>

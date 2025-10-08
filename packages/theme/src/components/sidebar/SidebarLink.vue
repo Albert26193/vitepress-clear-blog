@@ -80,7 +80,7 @@
 
   .link-title {
     @apply mb-2 flex items-center text-base font-semibold;
-    color: var(--vp-c-text-1);
+    @apply text-gray-600 dark:text-gray-400;
   }
 
   .links-list {

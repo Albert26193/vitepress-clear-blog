@@ -118,13 +118,13 @@
 
   .tag-title {
     @apply mb-4 flex items-center text-base font-semibold;
-    color: var(--vp-c-text-1);
+    @apply text-gray-600 dark:text-gray-400;
   }
 
   .current-tags {
     @apply flex flex-wrap gap-x-1 gap-y-[6px] pb-4;
-    @apply border-b-1 border-b-dashed border-gray-800;
-    @apply dark:border-gray-600;
+    @apply border-b-1 border-b-dashed;
+    @apply border-gray-300 dark:border-gray-700/60;
   }
 
   .sidebar-tag {
