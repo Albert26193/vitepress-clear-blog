@@ -1,32 +1,26 @@
 // import 'virtual:uno.css'
-import type { EnhanceAppContext, Theme } from 'vitepress';
-import { useRoute } from 'vitepress';
-import DefaultTheme from 'vitepress/theme';
-import { VPBadge } from 'vitepress/theme';
-import { nextTick, onMounted, watch } from 'vue';
+import type { EnhanceAppContext, Theme } from 'vitepress'
+import { useRoute } from 'vitepress'
+import DefaultTheme from 'vitepress/theme'
+import { VPBadge } from 'vitepress/theme'
+import { nextTick, onMounted, watch } from 'vue'
 
-
-
-import Collections from './components/Collections.vue';
-import NewLayout from './components/NewLayout.vue';
-import Timeline from './components/Timeline.vue';
-import PostMermaid from './components/articles/PostMermaid.vue';
-import BlogMain from './components/blog/BlogMain.vue';
-import FooterRef from './components/common/FooterRef.vue';
-import Tags from './components/common/Tags.vue';
-import D3FullScreen from './components/d3/D3FullScreen.vue';
-import D3PageSidebar from './components/d3/D3PageSidebar.vue';
-import Homepage from './components/homepage/Homepage.vue';
-import SidebarLink from './components/sidebar/SidebarLink.vue';
-import SidebarTag from './components/sidebar/SidebarTag.vue';
+import Collections from './components/Collections.vue'
+import NewLayout from './components/NewLayout.vue'
+import Timeline from './components/Timeline.vue'
+import PostMermaid from './components/articles/PostMermaid.vue'
+import BlogMain from './components/blog/BlogMain.vue'
+import FooterRef from './components/common/FooterRef.vue'
+import Tags from './components/common/Tags.vue'
+import D3FullScreen from './components/d3/D3FullScreen.vue'
+import D3PageSidebar from './components/d3/D3PageSidebar.vue'
+import Homepage from './components/homepage/Homepage.vue'
+import SidebarLink from './components/sidebar/SidebarLink.vue'
+import SidebarTag from './components/sidebar/SidebarTag.vue'
 // styles
-import './styles/index.scss';
-import { mediumZoomInit } from './utils/client';
-import { addClassForHetiElement, registerHetiScript } from './utils/client/';
-
-
-
-
+import './styles/index.scss'
+import { mediumZoomInit } from './utils/client'
+import { addClassForHetiElement, registerHetiScript } from './utils/client/'
 
 export const BlogTheme: Theme = {
   ...DefaultTheme,

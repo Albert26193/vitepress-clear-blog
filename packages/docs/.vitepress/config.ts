@@ -1,8 +1,9 @@
 import footnotePlugin from 'markdown-it-footnote'
+// @ts-ignore
 import markdownItHashtag from 'markdown-it-hashtag'
 import mathjax3 from 'markdown-it-mathjax3'
+// @ts-ignore
 import wikilinks from 'markdown-it-wikilinks'
-// import UnoCSS from 'unocss/vite'
 import { defineConfig } from 'vitepress'
 import { getThemeConfig } from 'vitepress-clear-blog/node'
 import {
@@ -11,10 +12,6 @@ import {
   mermaidPlugin
 } from 'vitepress-clear-blog/node'
 import { calloutPlugin } from 'vitepress-plugin-callout'
-
-// import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
-
-// import { generateThemePlugin } from 'vitepress-plugin-config'
 
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
@@ -63,26 +60,8 @@ export default defineConfig({
       }
     }
   },
-  vite: blogTheme.vite,
-  // vite: {
-  //   server: {
-  //     port: 4000
-  //   },
-  //   css: {
-  //     preprocessorOptions: {
-  //       scss: {
-  //         api: 'modern-compiler' // or "modern"
-  //       }
-  //     }
-  //   },
-  //   plugins: [
-  //     vitePressAnalyzerPlugin(analyzerOptions),
-  //     // generateThemePlugin(),
-  //     UnoCSS()
-  //     //RssPlugin(RSS)
-  //   ]
-  // },
-  // title: '55555555',
+  vite: blogTheme.vite as any,
+  title: '55555555',
   base: '/',
   srcDir: './docs',
   head,
