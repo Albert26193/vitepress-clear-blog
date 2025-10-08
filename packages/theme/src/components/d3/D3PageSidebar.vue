@@ -96,6 +96,7 @@
 <style scoped>
   .d3-page-container {
     @apply border-gray-500 border-1 border-solid;
+    @apply dark:border-gray-500/50;
   }
 
   .d3-force-sidebar-container {

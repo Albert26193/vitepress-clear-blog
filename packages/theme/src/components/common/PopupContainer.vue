@@ -76,17 +76,18 @@
 
   .popup-backdrop {
     @apply absolute inset-0 backdrop-blur-lg;
+    @apply bg-[var(--vp-sidebar-bg-color)];
   }
 
   .popup-content {
     @apply fixed;
     @apply left-1/2 top-1/2;
     @apply h-[90vh] w-[90vw];
-    margin-left: -45vw;
-    margin-top: -45vh;
-    @apply overflow-hidden rounded-lg bg-white shadow-xl;
+    @apply -ml-[45vw] -mt-[45vh];
+    @apply overflow-hidden rounded-lg shadow-xl;
     @apply flex flex-col;
     @apply transition-transform duration-300;
+    @apply bg-[var(--vp-c-bg)];
   }
 
   .popup-close-wrapper {
@@ -95,13 +96,15 @@
 
   .popup-close-button {
     @apply h-5 w-5 rounded-full bg-gray-200 text-gray-600;
-    @apply hover:bg-gray-300 hover:text-gray-900;
+    @apply hover:bg-gray-300;
     @apply transition-colors duration-200;
     @apply flex items-center justify-center;
+    @apply dark:bg-gray-500 dark:hover:bg-gray-700;
   }
 
   .popup-close-icon {
-    @apply h-4 w-4;
+    @apply h-4 w-4 hover:text-gray-900;
+    @apply dark:text-gray-900 dark:hover:text-gray-300;
   }
 
   .popup-body {

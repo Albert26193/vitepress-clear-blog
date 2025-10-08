@@ -39,6 +39,16 @@
 					"label": ""
 				}
 			]
+		},
+		{
+			"path": "packages/theme/src/components/common/PopupContainer.vue",
+			"bookmarks": [
+				{
+					"line": 14,
+					"column": 29,
+					"label": ""
+				}
+			]
 		}
 	]
 }

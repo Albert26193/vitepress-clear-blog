@@ -188,7 +188,7 @@
     node
       .append('rect')
       .attr('class', 'text-background')
-      .attr('fill', 'rgba(240, 240, 240, 0.95)')
+      .attr('fill', 'var(--vp-c-bg)')
       .attr('opacity', 0.95)
       .attr('rx', 3) // rounded rectangle
       .attr('ry', 3)
@@ -220,9 +220,9 @@
         // Update the background rectangle's size and position
         nodeElement
           .select('rect.text-background')
-          .attr('width', textWidth + 10) // text width plus some padding
-          .attr('height', textHeight + 4) // add some vertical padding
-          .attr('x', -textWidth / 2 - 5) // center horizontally
+          .attr('width', textWidth + 16) // text width plus some padding
+          .attr('height', textHeight + 6) // add some vertical padding
+          .attr('x', -textWidth / 2 - 8) // center horizontally
           .attr(
             'y',
             (ratioMap.get(d.id) || 1) * props.diameter + 15 - textHeight / 2 - 2
@@ -440,7 +440,7 @@
 
   :deep(.d3-force-node) text {
     transition: all 0.3s ease;
-    fill: #030406;
+    fill: var(--vp-c-text-1);
   }
 
   :deep(.d3-force-node.d3-force-node-highlight) text {
@@ -448,7 +448,7 @@
   }
 
   :deep(.d3-force-node.d3-force-node-active) .text-background {
-    fill: rgba(250, 250, 250, 1);
+    fill: var(--vp-c-bg);
   }
 
   :deep(.d3-force-node.d3-force-node-dim) circle {
