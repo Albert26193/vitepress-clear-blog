@@ -221,13 +221,13 @@
 
   /* Controls Container */
   .controls-container {
-    @apply -mb-8 mt-6 flex justify-end gap-3;
-    @apply md:gap-6 md:mr-18;
+    @apply mt-6 -mb-8 flex justify-end gap-3;
+    @apply md:mr-18 md:gap-6;
   }
 
   /* Timeline Container */
   .timeline-container {
-    @apply mx-auto flex flex-col pb-4 w-full border-b-solid border border-gray-200;
+    @apply border-b-solid mx-auto flex w-full flex-col border border-gray-200 pb-4;
     @apply dark:border-gray-900/20;
     @apply md:w-4/5;
   }
@@ -245,7 +245,7 @@
 
   /* Year Title Span */
   .timeline-year-title-span {
-    @apply flex cursor-pointer items-center font-serif max-w-full text-sm;
+    @apply flex max-w-full cursor-pointer items-center font-serif text-sm;
     @apply animate-fade-in delay-100 duration-200;
     @apply dark:text-gray-500;
     @apply md:max-w-36 md:text-base;
@@ -253,13 +253,13 @@
 
   /* Year Title */
   .timeline-year-title {
-    @apply pb-1 pt-2 font-extrabold text-lg;
+    @apply pt-2 pb-1 text-lg font-extrabold;
     @apply md:text-xl;
   }
 
   /* Post Count */
   .timeline-post-count {
-    @apply ml-2 font-normal text-[var(--vp-c-brand)] text-xs;
+    @apply ml-2 text-xs font-normal text-[var(--vp-c-brand)];
     @apply md:text-sm;
   }
 
@@ -274,21 +274,21 @@
 
   /* Year Line */
   .timeline-year-line {
-    @apply absolute bottom-0 top-0 w-[1px] left-0;
+    @apply absolute top-0 bottom-0 left-0 w-[1px];
     @apply bg-gray-200 dark:bg-gray-700;
     @apply md:left-auto;
   }
 
   /* Month Title */
   .timeline-month-title {
-    @apply pb-1 pt-2 font-semibold flex items-center justify-between ml-3 text-sm;
+    @apply ml-3 flex items-center justify-between pt-2 pb-1 text-sm font-semibold;
     @apply dark:text-gray-400;
     @apply md:ml-4 md:text-base;
   }
 
   /* Month Title Span */
   .timeline-month-title-span {
-    @apply flex cursor-pointer items-center font-serif max-w-full;
+    @apply flex max-w-full cursor-pointer items-center font-serif;
     @apply animate-fade-in delay-200 duration-200;
     @apply md:max-w-36;
   }
@@ -300,33 +300,33 @@
 
   /* Month Line */
   .timeline-month-line {
-    @apply absolute bottom-0 top-0 w-[1px] ml-2 left-3;
+    @apply absolute top-0 bottom-0 left-3 ml-2 w-[1px];
     @apply bg-gray-200 dark:bg-gray-700;
     @apply md:left-4;
   }
 
   /* Posts Wrapper */
   .posts-wrapper {
-    @apply relative flex items-center justify-between py-1 gap-2 ml-1 px-6;
+    @apply relative ml-1 flex items-center justify-between gap-2 px-6 py-1;
     @apply md:ml-2 md:px-9;
   }
 
   /* Post Item */
   .post-item {
-    @apply flex-shrink min-w-0 break-words h-auto text-sm;
+    @apply h-auto min-w-0 flex-shrink text-sm break-words;
     @apply hover:text-[var(--vp-c-brand)] hover:no-underline;
     @apply md:h-6 md:text-base;
   }
 
   /* Post Divider */
   .post-divider {
-    @apply flex-1 mx-3 border-b-dashed border-gray-200;
+    @apply border-b-dashed mx-3 flex-1 border-gray-200;
     @apply dark:border-gray-600;
   }
 
   /* Post Date */
   .post-date {
-    @apply flex-shrink-0 whitespace-nowrap font-serif text-xs;
+    @apply flex-shrink-0 font-serif text-xs whitespace-nowrap;
     @apply text-gray-500 dark:text-gray-400;
     @apply md:text-sm;
   }

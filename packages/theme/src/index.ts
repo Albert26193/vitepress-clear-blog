@@ -1,6 +1,8 @@
-// import 'virtual:uno.css'
 import type { EnhanceAppContext, Theme } from 'vitepress'
 import { useRoute } from 'vitepress'
+import setupCodeBlockFold from 'vitepress-plugin-codeblock-fold'
+import { DetailsBlock } from 'vitepress-plugin-details-block'
+import 'vitepress-plugin-details-block/dist/index.css'
 import DefaultTheme from 'vitepress/theme'
 import { VPBadge } from 'vitepress/theme'
 import { nextTick, onMounted, watch } from 'vue'
@@ -27,7 +29,6 @@ export const BlogTheme: Theme = {
   Layout: NewLayout,
   enhanceApp({ app, router }: EnhanceAppContext) {
     // register global components
-    // app.component('ExampleUsage', ExampleUsage)
     app.component('Tags', Tags)
     app.component('Timeline', Timeline)
     app.component('BlogMain', BlogMain)
@@ -39,11 +40,13 @@ export const BlogTheme: Theme = {
     app.component('Collections', Collections)
     app.component('FooterRef', FooterRef)
     app.component('PostMermaid', PostMermaid)
+    app.component('DetailsBlock', DetailsBlock)
     // vitepress original
     app.component('Badge', VPBadge)
   },
   setup() {
     const route = useRoute()
+    setupCodeBlockFold()
     onMounted(() => {
       nextTick(() => {
         addClassForHetiElement()

@@ -1,0 +1,57 @@
+.vp-doc div[class*='language-'].vp-code-fold-processed {
+  position: relative;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.vp-code-fold-mask {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+/* Folded state */
+.vp-code-fold-active .vp-code-fold-mask {
+  height: 48px;
+  background: linear-gradient(to bottom, transparent 0%, var(--vp-c-bg) 80%);
+}
+
+/* Expanded state */
+.vp-code-fold-processed:not(.vp-code-fold-active) {
+  padding-bottom: 28px; /* Reserve space for button */
+}
+
+.vp-code-fold-processed:not(.vp-code-fold-active) .vp-code-fold-mask {
+  height: 28px;
+  background: var(
+    --vp-c-bg
+  ); /* Solid background at bottom to prevent code from showing through button area */
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.vp-code-fold-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+}
+
+.vp-code-fold-mask:hover .vp-code-fold-btn {
+  color: var(--vp-code-fold-btn-hover-color, #10b981);
+  border-color: var(--vp-code-fold-btn-hover-color, #10b981);
+  transform: scale(1.1);
+}

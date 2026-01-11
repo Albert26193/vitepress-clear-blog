@@ -12,8 +12,8 @@
 
     <D3HomePage
       :width="width"
-      :height="height*0.9"
-      class="border-1 border-solid mt-6"
+      :height="height * 0.9"
+      class="mt-6 border-1 border-solid"
     ></D3HomePage>
   </section>
 </template>
@@ -48,8 +48,8 @@
   .homepage-container .homepage-go {
     @apply relative cursor-pointer overflow-hidden;
     @apply flex items-center;
-    @apply bg-[var(--main-page-text)] text-white; 
-    @apply ml-4 ml-3;
+    @apply bg-[var(--main-page-text)] text-white;
+    @apply ml-3 ml-4;
     @apply rounded-xl px-4 py-1 text-sm font-bold;
     @apply transition-all duration-300;
     @apply dark:bg-gray-300/90;

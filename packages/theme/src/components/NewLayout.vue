@@ -50,8 +50,8 @@
   import DocBanner from './articles/DocBanner.vue'
   import Copyright from './common/Copyright.vue'
   import HideSidebarButton from './common/HideSidebarButton.vue'
-  import SidebarLink from './sidebar/SidebarLink.vue'
   import D3PageSidebar from './d3/D3PageSidebar.vue'
+  import SidebarLink from './sidebar/SidebarLink.vue'
   import SidebarTag from './sidebar/SidebarTag.vue'
 
   useDarkTransition()

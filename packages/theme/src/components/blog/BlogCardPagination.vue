@@ -64,11 +64,11 @@
     @apply mx-auto mt-8 grid grid-cols-1 items-center gap-x-6 gap-y-4;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
     @apply max-w-[1280px];
-    @apply justify-center items-center;
+    @apply items-center justify-center;
   }
 
   .page-footer {
-    @apply mb-4 mt-8;
+    @apply mt-8 mb-4;
     @apply border-t border-gray-200;
     @apply dark:text-gray-400;
   }

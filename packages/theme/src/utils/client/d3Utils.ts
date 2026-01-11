@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+
 import type { D3Link, D3Node } from '../../types/types.d'
 
 interface RatioOptions {
@@ -17,8 +18,10 @@ export function calculateNodeRatios(
   // 1. Calculate degree for each node
   nodes.forEach((node) => degreeMap.set(node.id, 0))
   links.forEach((link) => {
-    const sourceId = typeof link.source === 'object' ? link.source.id : link.source
-    const targetId = typeof link.target === 'object' ? link.target.id : link.target
+    const sourceId =
+      typeof link.source === 'object' ? link.source.id : link.source
+    const targetId =
+      typeof link.target === 'object' ? link.target.id : link.target
     degreeMap.set(sourceId, (degreeMap.get(sourceId) || 0) + 1)
     degreeMap.set(targetId, (degreeMap.get(targetId) || 0) + 1)
   })

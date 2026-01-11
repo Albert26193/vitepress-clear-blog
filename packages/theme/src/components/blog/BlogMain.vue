@@ -9,7 +9,11 @@
             iconClass: 'i-carbon-table-of-contents',
             tooltip: 'List View'
           },
-          { value: 'cardType', iconClass: 'i-carbon-grid', tooltip: 'Card View' }
+          {
+            value: 'cardType',
+            iconClass: 'i-carbon-grid',
+            tooltip: 'Card View'
+          }
         ]"
       />
     </header>
@@ -45,11 +49,11 @@
 
 <style scoped>
   .blog-main {
-    @apply w-9/10 mx-auto max-w-6xl;
+    @apply mx-auto w-9/10 max-w-6xl;
   }
 
   .pagination-header {
     @apply position-relative mx-auto max-w-[1280px];
-    @apply ml-3 mt-8 flex;
+    @apply mt-8 ml-3 flex;
   }
 </style>

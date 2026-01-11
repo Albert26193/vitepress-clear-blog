@@ -11,12 +11,12 @@
       {{
         useTruncatedDescription(post.frontMatter.description, {
           maxChineseChars: 60,
-          maxEnglishWords: 60,
+          maxEnglishWords: 60
         }).value
       }}
     </div>
     <div v-else class="describe heti heti--serif">
-      <div v-html="preview"/>
+      <div v-html="preview" />
     </div>
     <div class="card-banner">
       <div class="card-time">
@@ -68,15 +68,14 @@
 <style scoped>
   .blog-card {
     @apply relative flex flex-col;
-    @apply justify-between overflow-hidden
-    @apply rounded-xl bg-white p-6 shadow-sm;
-    @apply max-w-90 h-55;
+    @apply @apply justify-between overflow-hidden rounded-xl bg-white p-6 shadow-sm;
+    @apply h-55 max-w-90;
     @apply cursor-pointer;
     @apply dark:bg-[var(--vp-c-bg)];
   }
 
   .blog-card::before {
-    @apply border-1 border-solid; 
+    @apply border-1 border-solid;
     @apply absolute inset-0 rounded-xl content-[''];
     @apply pointer-events-none border-gray-800;
     @apply dark:border-gray-400;
@@ -92,7 +91,7 @@
   }
 
   .card-time {
-    @apply flex items-center flex-wrap;
+    @apply flex flex-wrap items-center;
     @apply dark:text-gray-300;
   }
 

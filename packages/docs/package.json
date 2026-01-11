@@ -13,12 +13,15 @@
   "dependencies": {
     "@types/markdown-it-footnote": "^3.0.4",
     "markdown-it-footnote": "^4.0.0",
-    "vitepress": "^1.6.3",
+    "vitepress": "^1.6.4",
     "vitepress-clear-blog": "workspace:*",
     "vitepress-plugin-analyzer": "workspace:*",
+    "vitepress-plugin-callout": "workspace:*",
     "vitepress-plugin-config": "workspace:*",
-    "vitepress-plugin-rss": "^0.3.1",
-    "vitepress-sidebar": "^1.31.0",
-    "vitepress-plugin-callout": "workspace:*"
+    "vitepress-plugin-rss": "^0.4.2",
+    "vitepress-sidebar": "^1.33.1"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

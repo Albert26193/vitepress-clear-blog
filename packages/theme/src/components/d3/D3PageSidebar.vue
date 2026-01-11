@@ -2,7 +2,7 @@
   <div class="d3-page-container">
     <div class="flex justify-end">
       <button
-        class="-mb-2 mr-2 mt-1 items-center"
+        class="mt-1 mr-2 -mb-2 items-center"
         @click="popupOverview"
         :disabled="showOverview || showExpand"
         title="Overview"
@@ -12,7 +12,7 @@
         />
       </button>
       <button
-        class="-mb-2 mr-1 mt-1 items-center"
+        class="mt-1 mr-1 -mb-2 items-center"
         @click="expandGraph"
         :disabled="showOverview || showExpand"
         title="Expand"
@@ -95,7 +95,7 @@
 
 <style scoped>
   .d3-page-container {
-    @apply border-gray-500 border-1 border-solid;
+    @apply border-1 border-solid border-gray-500;
     @apply dark:border-gray-500/50;
   }
 

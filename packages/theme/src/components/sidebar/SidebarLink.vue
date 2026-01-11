@@ -93,7 +93,7 @@
 
   .page-links::before {
     content: '';
-    @apply absolute left-0 top-1 h-full w-[1px] bg-gray-200;
+    @apply absolute top-1 left-0 h-full w-[1px] bg-gray-200;
     @apply dark:bg-gray-600;
   }
 
@@ -109,7 +109,7 @@
 
   .page-link:hover::before {
     content: '';
-    @apply @apply absolute left-0 top-1 h-5 w-[2px];
+    @apply @apply absolute top-1 left-0 h-5 w-[2px];
     @apply bg-[var(--vp-c-brand)] transition-colors duration-300;
   }
 
@@ -119,6 +119,6 @@
 
   .no-links {
     @apply text-sm text-gray-400 dark:text-gray-500;
-    @apply ml-6 mt-0;
+    @apply mt-0 ml-6;
   }
 </style>

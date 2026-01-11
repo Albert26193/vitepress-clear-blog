@@ -113,8 +113,8 @@
   /* Tags Container */
   .tags-container {
     @apply mt-12 flex flex-wrap gap-2 border border-dashed border-gray-500;
-    @apply p-3 mx-3;
-    @apply md:p-4 md:mx-0;
+    @apply mx-3 p-3;
+    @apply md:mx-0 md:p-4;
   }
 
   /* Count */
@@ -124,15 +124,15 @@
 
   /* Tag View */
   .tag-view {
-    @apply inline-block rounded-full cursor-pointer transition-all duration-300;
-    @apply px-2 py-[2px] text-[11px] font-500;
+    @apply inline-block cursor-pointer rounded-full transition-all duration-300;
+    @apply font-500 px-2 py-[2px] text-[11px];
     @apply md:px-3 md:text-[13px];
   }
 
   /* Tag View Active */
   .tag-view.active {
     @apply box-border border-[var(--vp-c-brand)] text-[var(--vp-c-brand)];
-    @apply transition-all duration-300 ring-0.5px ring-[var(--vp-c-brand)];
+    @apply ring-0.5px ring-[var(--vp-c-brand)] transition-all duration-300;
   }
 
   .tag-view.active .count {
@@ -162,22 +162,22 @@
 
   /* Tag Post Item */
   .tag-post-item {
-    @apply flex items-center justify-between py-1 mx-auto;
+    @apply mx-auto flex items-center justify-between py-1;
     @apply w-full px-4;
     @apply md:w-9/10 md:px-12;
   }
 
   /* Post Item Title */
   .post-item-title {
-    @apply cursor-pointer flex-1 min-w-0;
+    @apply min-w-0 flex-1 cursor-pointer;
     @apply hover:text-[var(--vp-c-brand)];
     @apply text-sm;
-    @apply md:text-base md:h-4;
+    @apply md:h-4 md:text-base;
   }
 
   /* Date */
   .date {
-    @apply flex-shrink-0 whitespace-nowrap ml-2;
+    @apply ml-2 flex-shrink-0 whitespace-nowrap;
     @apply text-xs;
     @apply md:text-sm;
   }

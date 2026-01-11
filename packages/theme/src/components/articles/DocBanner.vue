@@ -96,7 +96,7 @@
 
   /* Tags Container */
   .tags-container {
-    @apply mt-2 grow flex flex-wrap gap-x-2 gap-y-2;
+    @apply mt-2 flex grow flex-wrap gap-x-2 gap-y-2;
   }
 
   /* Tag Wrapper */
@@ -106,7 +106,7 @@
 
   /* Tag */
   .tag {
-    @apply cursor-pointer inline-block text-xs;
+    @apply inline-block cursor-pointer text-xs;
     @apply hover:text-[var(--vp-c-brand)];
     @apply md:text-sm;
   }
@@ -115,11 +115,11 @@
   .tag-on-page {
     @apply cursor-pointer;
   }
-  
+
   .tag-on-page a {
     @apply font-bold text-[var(--vp-c-text)] no-underline;
   }
-  
+
   .tag-on-page:hover {
     @apply text-[var(--vp-c-brand)] no-underline;
   }

@@ -65,7 +65,7 @@
     @apply flex items-center justify-center text-xl font-bold;
     @apply font-800 h-6 w-6 text-[17px];
     @apply hover:border-gray-800 hover:shadow-inner;
-    @apply dark:border-gray-400 dark:hover:bg-[var(--vp-c-bg)] dark:hover:border-gray-300;
+    @apply dark:border-gray-400 dark:hover:border-gray-300 dark:hover:bg-[var(--vp-c-bg)];
   }
 
   :deep(.VPSidebar) {

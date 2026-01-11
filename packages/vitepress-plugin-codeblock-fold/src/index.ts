@@ -1,0 +1,95 @@
+import { useRoute } from 'vitepress'
+import { nextTick, onMounted, watch } from 'vue'
+
+import './style.css'
+
+export interface CodeBlockFoldOptions {
+  /**
+   * The height threshold to trigger folding.
+   * @default 200
+   */
+  minHeight?: number
+  /**
+   * The height of the collapsed code block.
+   * @default 50
+   */
+  visibleHeight?: number
+}
+
+export function setupCodeBlockFold(options: CodeBlockFoldOptions = {}) {
+  // Ensure running in browser environment
+  if (typeof window === 'undefined') return
+
+  const route = useRoute()
+  const minHeight = options.minHeight ?? 200
+  const visibleHeight = options.visibleHeight ?? minHeight
+
+  const foldCodeBlocks = () => {
+    const codeBlocks = document.querySelectorAll(
+      '.vp-doc div[class*="language-"]'
+    )
+
+    codeBlocks.forEach((el) => {
+      const htmlEl = el as HTMLElement
+      if (htmlEl.classList.contains('vp-code-fold-processed')) return
+
+      // Get actual height
+      const height = htmlEl.clientHeight
+
+      if (height > minHeight) {
+        htmlEl.classList.add('vp-code-fold-processed')
+
+        // Create mask and button
+        const mask = document.createElement('div')
+        mask.className = 'vp-code-fold-mask'
+
+        // Initial state: folded
+        let isFolded = true
+
+        const updateState = () => {
+          if (isFolded) {
+            htmlEl.style.maxHeight = `${visibleHeight}px`
+            htmlEl.classList.add('vp-code-fold-active')
+            mask.innerHTML = `<div class="vp-code-fold-btn" title="Expand">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>`
+          } else {
+            // When expanded, set to scrollHeight + padding
+            // Note: padding-bottom is set to 28px in CSS
+            htmlEl.style.maxHeight = `${htmlEl.scrollHeight + 30}px`
+            htmlEl.classList.remove('vp-code-fold-active')
+            mask.innerHTML = `<div class="vp-code-fold-btn" title="Collapse">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+            </div>`
+          }
+        }
+
+        mask.onclick = (e) => {
+          e.stopPropagation()
+          isFolded = !isFolded
+          updateState()
+        }
+
+        // Apply initial state
+        updateState()
+        htmlEl.appendChild(mask)
+      }
+    })
+  }
+
+  onMounted(() => {
+    foldCodeBlocks()
+    // Watch route changes
+    watch(
+      () => route.path,
+      () => {
+        nextTick(() => {
+          // Delay to ensure DOM update
+          setTimeout(foldCodeBlocks, 500)
+        })
+      }
+    )
+  })
+}
+
+export default setupCodeBlockFold

@@ -1,0 +1,41 @@
+{
+  "name": "vitepress-plugin-details-block",
+  "version": "1.0.0",
+  "description": "A customizable details block component for VitePress",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.mjs",
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.umd.js"
+    },
+    "./dist/index.css": "./dist/index.css"
+  },
+  "scripts": {
+    "build": "vite build && vue-tsc -p tsconfig.json",
+    "dev": "vite build --watch"
+  },
+  "keywords": [
+    "vitepress",
+    "plugin",
+    "details",
+    "component"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vue": "^3.5.26",
+    "vue-tsc": "^3.2.2"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

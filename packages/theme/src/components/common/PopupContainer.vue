@@ -71,7 +71,7 @@
 
 <style scoped>
   .popup-wrapper {
-    @apply z-9999 fixed inset-0;
+    @apply fixed inset-0 z-9999;
   }
 
   .popup-backdrop {
@@ -81,9 +81,9 @@
 
   .popup-content {
     @apply fixed;
-    @apply left-1/2 top-1/2;
+    @apply top-1/2 left-1/2;
     @apply h-[90vh] w-[90vw];
-    @apply -ml-[45vw] -mt-[45vh];
+    @apply -mt-[45vh] -ml-[45vw];
     @apply overflow-hidden rounded-lg shadow-xl;
     @apply flex flex-col;
     @apply transition-transform duration-300;
@@ -91,7 +91,7 @@
   }
 
   .popup-close-wrapper {
-    @apply absolute right-4 top-4 z-10;
+    @apply absolute top-4 right-4 z-10;
   }
 
   .popup-close-button {

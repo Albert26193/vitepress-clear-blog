@@ -132,8 +132,62 @@ WWW-Authenticate: Basic realm="Restricted Area"
 
 ## 6. `SSE` 机制
 
-<details class='details open'>
-<summary>点击查看更多</summary>
-</details>
+<DetailsBlock>
+
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+- this is the detaild
+
+</DetailsBlock>
 
 - `server side event`
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+int main()
+```

@@ -1,26 +1,17 @@
 {
-  "name": "vitepress-plugin-config",
+  "name": "vitepress-plugin-codeblock-fold",
   "version": "0.1.0",
-  "description": "",
+  "description": "A VitePress plugin to fold long code blocks",
   "author": "Albert26193",
   "license": "MIT",
   "type": "module",
-  "homepage": "",
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "bugs": {},
-  "keywords": [
-    "vitepress",
-    "plugin"
-  ],
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
       "import": "./lib/index.js",
       "require": "./lib/index.cjs"
-    }
+    },
+    "./style.css": "./lib/style.css"
   },
   "main": "lib/index.cjs",
   "module": "lib/index.js",
@@ -29,16 +20,17 @@
     "lib"
   ],
   "scripts": {
-    "dev": "tsup --config tsup.config.ts --watch",
-    "build": "tsup --config tsup.config.ts",
-    "clean": "rimraf lib"
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "vitepress": "^1.5.0"
+    "vue": "^3.0.0"
   },
-  "dependencies": {
-    "fs-extra": "^11.3.3",
-    "smol-toml": "^1.6.0"
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vue": "^3.5.26"
   },
   "engines": {
     "node": ">=22.0.0"
