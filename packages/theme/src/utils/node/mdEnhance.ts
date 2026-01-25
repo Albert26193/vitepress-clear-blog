@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it'
+import taskLists from 'markdown-it-task-lists'
 import type Token from 'markdown-it/lib/token.mjs'
 
 /**
@@ -119,4 +120,21 @@ const mermaidPlugin = (md: MarkdownIt): void => {
   }
 }
 
-export { getFooterRefTag, getHashtag, mermaidPlugin }
+/**
+ * Task lists plugin
+ *
+ * render task lists with checkboxes
+ * - [ ] unchecked task
+ * - [x] checked task
+ *
+ * @param md - markdown-it instance
+ */
+const taskListsPlugin = (md: MarkdownIt): void => {
+  md.use(taskLists, {
+    enabled: true,
+    label: true,
+    labelAfter: true
+  })
+}
+
+export { getFooterRefTag, getHashtag, mermaidPlugin, taskListsPlugin }

@@ -117,6 +117,21 @@ importers:
         specifier: ^1.33.1
         version: 1.33.1
 
+  packages/intro:
+    dependencies:
+      vitepress:
+        specifier: ^1.6.4
+        version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.0.6)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@5.9.3)
+      vitepress-clear-blog:
+        specifier: workspace:*
+        version: link:../theme
+      vitepress-plugin-callout:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-callout
+      vitepress-plugin-config:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-config
+
   packages/theme:
     dependencies:
       '@iconify-json/carbon':
@@ -155,6 +170,9 @@ importers:
       markdown-it-footnote:
         specifier: ^4.0.0
         version: 4.0.0
+      markdown-it-task-lists:
+        specifier: ^2.1.1
+        version: 2.1.1
       medium-zoom:
         specifier: ^1.1.0
         version: 1.1.0
@@ -3385,6 +3403,9 @@ packages:
 
   markdown-it-regexp@0.4.0:
     resolution: {integrity: sha512-0XQmr46K/rMKnI93Y3CLXsHj4jIioRETTAiVnJnjrZCEkGaDOmUxTbZj/aZ17G5NlRcVpWBYjqpwSlQ9lj+Kxw==}
+
+  markdown-it-task-lists@2.1.1:
+    resolution: {integrity: sha512-TxFAc76Jnhb2OUu+n3yz9RMu4CwGfaT788br6HhEDlvWfdeJcLUsxk1Hgw2yJio0OXsxv7pyIPmvECY7bMbluA==}
 
   markdown-it-wikilinks@1.4.0:
     resolution: {integrity: sha512-LJhRWett3Do9doMMkpodOV5pvAMZjOOODqcifPfd+jdobhdg3UY8i824L5657UBWx7HSbOqicwNUzcVjOiswgw==}
@@ -7926,6 +7947,8 @@ snapshots:
       - encoding
 
   markdown-it-regexp@0.4.0: {}
+
+  markdown-it-task-lists@2.1.1: {}
 
   markdown-it-wikilinks@1.4.0:
     dependencies:

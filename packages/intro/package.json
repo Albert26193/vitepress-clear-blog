@@ -1,0 +1,22 @@
+{
+  "name": "intro",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev:intro": "vitepress dev --host",
+    "build:intro": "vitepress build --clean-cache --clean-temp",
+    "clean:intro": "rimraf .vitepress/cache .vitepress/dist",
+    "preview:intro": "vitepress preview"
+  },
+  "dependencies": {
+    "vitepress": "^1.6.4",
+    "vitepress-clear-blog": "workspace:*",
+    "vitepress-plugin-callout": "workspace:*",
+    "vitepress-plugin-config": "workspace:*"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

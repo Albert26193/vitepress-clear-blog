@@ -90,5 +90,24 @@
 <style scoped>
   .mermaid-diagram {
     @apply mx-auto block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .mermaid-img {
+    min-width: 400px;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* Scale up small diagrams */
+  @media (min-width: 768px) {
+    .mermaid-img {
+      min-width: 600px;
+      transform-origin: center;
+    }
   }
 </style>

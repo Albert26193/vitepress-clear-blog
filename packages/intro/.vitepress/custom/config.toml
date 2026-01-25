@@ -1,0 +1,34 @@
+[meta]
+title = "vitepress-clear-blog 项目文档"
+description = "vitepress-clear-blog 项目架构、技术选型、工程规范与功能介绍"
+author = "vitepress-clear-blog team"
+keywords = "vitepress blog theme monorepo architecture"
+locale = "zh_CN"
+lang = "zh-CN"
+siteUrl = "https://github.com/your-username/vitepress-clear-blog"
+theme-color = "#1934e9"
+
+[page]
+pageSize = 10
+
+[theme]
+vp-c-bg = "#fafafa"
+vp-c-brand = "#1934e9"
+vp-c-brand-1 = "#3b82f6"
+vp-c-text-1 = "#222"
+vp-button-brand-bg = "#1934e9"
+c-text-code = "#305fef"
+c-text-strong = "#f00"
+c-text-em = "#0000ff"
+vp-sidebar-bg-color = "#f3f3f3"
+
+[theme.dark]
+vp-c-bg = "#202127"
+vp-c-brand = "#60a5fa"
+vp-c-brand-1 = "#3b82f6"
+vp-c-text-1 = "#ccccccff"
+vp-button-brand-bg = "#3b82f6"
+c-text-code = "#60a5fa"
+c-text-strong = "#ff6b6b"
+c-text-em = "#4ecdc4"
+vp-sidebar-bg-color = "#181922"

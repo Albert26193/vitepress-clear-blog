@@ -1,0 +1,23 @@
+:root {
+  --vp-c-bg: #fafafa !important;
+  --vp-c-brand: #1934e9 !important;
+  --vp-c-brand-1: #3b82f6 !important;
+  --vp-c-text-1: #222 !important;
+  --vp-button-brand-bg: #1934e9 !important;
+  --c-text-code: #305fef !important;
+  --c-text-strong: #f00 !important;
+  --c-text-em: #0000ff !important;
+  --vp-sidebar-bg-color: #f3f3f3 !important;
+}
+
+.dark {
+  --vp-c-bg: #202127 !important;
+  --vp-c-brand: #60a5fa !important;
+  --vp-c-brand-1: #3b82f6 !important;
+  --vp-c-text-1: #ccccccff !important;
+  --vp-button-brand-bg: #3b82f6 !important;
+  --c-text-code: #60a5fa !important;
+  --c-text-strong: #ff6b6b !important;
+  --c-text-em: #4ecdc4 !important;
+  --vp-sidebar-bg-color: #181922 !important;
+}

@@ -11,8 +11,8 @@
     </div>
 
     <D3HomePage
-      :width="width"
-      :height="height * 0.9"
+      :width="Math.min(width * 0.75, 1000)"
+      :height="Math.min(width * 0.5, 600)"
       class="mt-6 border-1 border-solid"
     ></D3HomePage>
   </section>

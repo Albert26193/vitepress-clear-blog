@@ -330,3 +330,106 @@
   --db-content-bg: transparent;
   --db-radius: 8px;
 }
+
+/* for table styles */
+.vp-doc table {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin: 16px 0;
+  overflow-x: auto;
+
+  th,
+  td {
+    padding: 10px 16px;
+    text-align: left;
+    word-wrap: break-word;
+  }
+
+  th {
+    font-weight: 600;
+    background-color: var(--vp-c-bg-soft);
+  }
+
+  tr {
+    border-top: 1px solid var(--vp-c-divider);
+  }
+
+  tr:first-child {
+    border-top: none;
+  }
+}
+
+/* for task lists (todo list) */
+.vp-doc .contains-task-list {
+  list-style: none;
+  padding-left: 0;
+
+  .task-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px 0;
+
+    label {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      cursor: pointer;
+      line-height: 1.5;
+    }
+
+    input[type='checkbox'] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 2px solid var(--vp-c-text-2);
+      border-radius: 4px;
+      background-color: var(--vp-c-bg);
+      cursor: pointer;
+      position: relative;
+      margin-top: 3px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: var(--vp-c-brand);
+      }
+
+      &:checked {
+        background-color: var(--vp-c-brand);
+        border-color: var(--vp-c-brand);
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 5px;
+          top: 1px;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+        }
+      }
+
+      &:disabled {
+        cursor: default;
+        opacity: 0.7;
+      }
+    }
+
+    &:has(input:checked) {
+      color: var(--vp-c-text-2);
+      text-decoration: line-through;
+      text-decoration-color: var(--vp-c-text-3);
+    }
+  }
+
+  /* nested task lists */
+  .contains-task-list {
+    margin-left: 24px;
+  }
+}

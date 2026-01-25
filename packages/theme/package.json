@@ -44,6 +44,7 @@
     "gray-matter": "^4.0.3",
     "heti": "^0.9.6",
     "markdown-it-footnote": "^4.0.0",
+    "markdown-it-task-lists": "^2.1.1",
     "medium-zoom": "^1.1.0",
     "mermaid": "^11.12.2",
     "typescript": "^5.9.3",
