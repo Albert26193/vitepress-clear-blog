@@ -1,2 +1,8 @@
 packages:
   - 'packages/*'
+
+onlyBuiltDependencies:
+  - "reurl"
+  - "@parcel/watcher"
+  - "esbuild"
+  - "sharp"
