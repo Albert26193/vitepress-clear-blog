@@ -4,7 +4,6 @@ import { relative, resolve } from 'node:path'
 import type {
   AnalyzerConfig,
   Page,
-  PageLink,
   PageMetadata,
   SitePages
 } from '../../../types'

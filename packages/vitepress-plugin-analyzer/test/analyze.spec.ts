@@ -9,9 +9,9 @@ import {
 } from '../src/node/parsers/analyze'
 import type { AnalyzerConfig } from '../types'
 
-// Create a test configuration
+// Create a test configuration using absolute path to avoid process.cwd() issues
 const testConfig: AnalyzerConfig = createConfig({
-  docsDir: 'packages/plugin-analyzer/test',
+  docsDir: resolve(__dirname),
   excludeDirs: ['node_modules', '.git', 'dist'],
   includeFiles: ['.md'],
   excludeFiles: [],
@@ -33,7 +33,13 @@ describe('Document Analyzer', () => {
   describe('Basic Document Analysis', () => {
     it('should analyze document structure', () => {
       const content = readTestFile('doc1.md')
-      const metadata = analyzeDocument(content, testConfig, './attach/doc1.md')
+      const metadata = analyzeDocument(
+        content,
+        testConfig,
+        'attach/doc1',
+        {},
+        {}
+      )
 
       console.log('meta', metadata)
       expect(metadata).toMatchObject({
@@ -59,14 +65,26 @@ describe('Document Analyzer', () => {
 
     it('should handle document without headings', () => {
       const content = 'Just some text without any headings'
-      const metadata = analyzeDocument(content, testConfig, 'no-heading.md')
+      const metadata = analyzeDocument(
+        content,
+        testConfig,
+        'no-heading.md',
+        {},
+        {}
+      )
 
       expect(metadata.firstHeading).toBe('no-heading')
     })
 
     it('should calculate word count correctly', () => {
       const content = readTestFile('doc2.md')
-      const metadata = analyzeDocument(content, testConfig, 'attach/doc2.md')
+      const metadata = analyzeDocument(
+        content,
+        testConfig,
+        'attach/doc2',
+        {},
+        {}
+      )
 
       console.log('metadata', metadata)
       // Doc2 has specific number of words (excluding frontmatter)
@@ -76,12 +94,9 @@ describe('Document Analyzer', () => {
 
   describe('Document Relationships', () => {
     it('should build relationships using analyzeAllDocuments', () => {
-      // Create a test directory structure for this test
-      const testDocsDir = 'packages/plugin-analyzer/test/attach'
-
-      // Create a test config with the test directory
+      // Create a test config using absolute path for the attach directory
       const testDirConfig = createConfig({
-        docsDir: testDocsDir,
+        docsDir: resolve(__dirname, 'attach'),
         excludeDirs: ['node_modules', '.git', 'dist'],
         includeFiles: ['.md'],
         excludeFiles: [],
@@ -89,7 +104,7 @@ describe('Document Analyzer', () => {
       })
 
       // Analyze all documents in the test directory
-      const globalMetadata = analyzeAllDocuments(testDirConfig)
+      const { globalMetadata } = analyzeAllDocuments(testDirConfig)
 
       // Check that we have metadata for doc1 and doc2
       expect(globalMetadata['doc1']).toBeDefined()
@@ -118,7 +133,13 @@ describe('Document Analyzer', () => {
   describe('Edge Cases', () => {
     it('should handle missing documents gracefully', () => {
       const content = readTestFile('doc2.md')
-      const metadata = analyzeDocument(content, testConfig, './attach/doc2.md')
+      const metadata = analyzeDocument(
+        content,
+        testConfig,
+        'attach/doc2',
+        {},
+        {}
+      )
       console.log('metadata', metadata)
       expect(metadata.outgoingLinks).not.toContain(
         expect.objectContaining({

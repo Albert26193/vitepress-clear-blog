@@ -48,9 +48,9 @@ Use `gh api` to create issues. This supports all parameters including issue type
 ```bash
 gh api repos/{owner}/{repo}/issues \
   -X POST \
-  -f title="Issue title" \
-  -f body="Issue body in markdown" \
-  -f type="Bug" \
+  -f 'title=Issue title' \
+  -f 'body=Issue body in markdown' \
+  -f 'type=Bug' \
   --jq '{number, html_url}'
 ```
 
@@ -133,11 +133,11 @@ Only include fields you want to change. Available fields: `title`, `body`, `stat
 ```bash
 gh api repos/{owner}/{repo}/issues \
   -X POST \
-  -f title="Implement local graph component" \
-  -f type="Feature" \
-  -f labels[]="area:theme" \
-  -f labels[]="priority:P2" \
-  -f body="## Description
+  -f 'title=Implement local graph component' \
+  -f 'type=Feature' \
+  -f 'labels[]=area:theme' \
+  -f 'labels[]=priority:P2' \
+  -f 'body=## Description
 The current graph system only has full-site (D3FullScreen) and page-level
 (D3PageGraph) graphs. There is no way to show a local association network
 for the current page, similar to Obsidian's Local Graph feature.
@@ -163,11 +163,11 @@ for the current page, similar to Obsidian's Local Graph feature.
 ```bash
 gh api repos/{owner}/{repo}/issues \
   -X POST \
-  -f title="Fix D3 graph drag delta calculation in Firefox" \
-  -f type="Bug" \
-  -f labels[]="area:theme" \
-  -f labels[]="priority:P1" \
-  -f body="## Description
+  -f 'title=Fix D3 graph drag delta calculation in Firefox' \
+  -f 'type=Bug' \
+  -f 'labels[]=area:theme' \
+  -f 'labels[]=priority:P1' \
+  -f 'body=## Description
 The graph node drag offset is incorrect in Firefox because event deltaX/deltaY
 values differ from Chromium when using SVG coordinate transforms.
 
@@ -206,6 +206,7 @@ Use these standard labels when applicable:
 - Ask for missing critical information rather than guessing
 - Link related issues when known: `Related to #123`
 - For updates, fetch current issue first to preserve unchanged fields
+- **zsh bracket globbing**: Always wrap `-f` values in single quotes when they contain `[]` (e.g. `-f 'labels[]=area:theme'`). zsh interprets `[]` as glob patterns, so unquoted `-f labels[]=area:theme` will fail with `no matches found`. Applies to `labels[]`, `assignees[]`, and any other array parameters.
 
 ## Extended Capabilities
 

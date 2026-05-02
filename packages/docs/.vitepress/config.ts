@@ -1,8 +1,8 @@
 import footnotePlugin from 'markdown-it-footnote'
-// @ts-ignore
+// @ts-expect-error - markdown-it-hashtag has no type declarations
 import markdownItHashtag from 'markdown-it-hashtag'
 import mathjax3 from 'markdown-it-mathjax3'
-// @ts-ignore
+// @ts-expect-error - markdown-it-wikilinks has no type declarations
 import wikilinks from 'markdown-it-wikilinks'
 import { defineConfig } from 'vitepress'
 import { getThemeConfig } from 'vitepress-clear-blog/node'
@@ -60,7 +60,7 @@ export default defineConfig({
       }
     }
   },
-  vite: blogTheme.vite as any,
+  vite: blogTheme.vite as object,
   title: '55555555',
   base: '/',
   srcDir: './docs',

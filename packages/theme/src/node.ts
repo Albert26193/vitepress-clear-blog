@@ -1,5 +1,5 @@
-export function getThemeConfig(cfg: Record<string, any> = {}) {
-  const pagesData: any[] = []
+export function getThemeConfig(cfg: Record<string, unknown> = {}) {
+  const pagesData: unknown[] = []
   return {
     themeConfig: {
       blog: { pagesData, ...cfg }

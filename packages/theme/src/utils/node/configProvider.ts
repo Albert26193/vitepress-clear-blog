@@ -3,7 +3,9 @@ import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { generateThemePlugin } from 'vitepress-plugin-config'
 import llmstxt from 'vitepress-plugin-llms'
 
-const getThemeConfig = async (cfg = {}): Promise<any> => {
+const getThemeConfig = async (
+  cfg: Record<string, unknown> = {}
+): Promise<Record<string, unknown>> => {
   return {
     clearBlogConfig: {
       title: 'TTTTTTTitle',

@@ -1,0 +1,26 @@
+{
+  "skill_name": "tool-ci-check",
+  "evals": [
+    {
+      "id": 1,
+      "name": "success-run-full-pipeline",
+      "prompt": "CI run 25254392974 on branch issue-6-ci-cd-pipeline-fix-tests passed with all jobs green. This is a commit on my PR. Pull all the job logs to local and generate the full report so I can review the pipeline output. Save everything under .ai_dev/",
+      "expected_output": "Full pipeline output: pulls all 4 job logs (Build, Lint, Type Check, Test) to .ai_dev/, generates report.md with job status table. All jobs show success.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "failed-run-lint-typecheck",
+      "prompt": "CI run 25253781048 failed on branch issue-6-ci-cd-pipeline-fix-tests — Lint and Type Check jobs are red. Pull all the logs to local and generate a report with troubleshooting. I need to debug what went wrong. Save under .ai_dev/",
+      "expected_output": "Full pipeline output: pulls all 4 job logs, report.md includes troubleshooting section with grep hits for failed Lint and Type Check jobs. Identifies actual lint/type errors in the logs.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "failed-run-build-typecheck",
+      "prompt": "CI run 25254122258 failed on branch issue-6-ci-cd-pipeline-fix-tests — Build and Type Check jobs are red, but Lint and Test passed. Pull all logs to local and generate a report with troubleshooting hints. Save under .ai_dev/",
+      "expected_output": "Full pipeline output: pulls all 4 job logs, report.md includes troubleshooting section with grep hits for failed Build and Type Check jobs. Identifies actual build/type errors in the logs.",
+      "files": []
+    }
+  ]
+}

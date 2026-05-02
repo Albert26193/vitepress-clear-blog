@@ -234,7 +234,7 @@ The script handles:
 
 If the current branch already matches — skip this step.
 
-### Step 4: Stage changes and write commit message — invoke `tool-git-commit`
+### Step 4: Stage, lint, and write commit message — invoke `tool-git-commit`
 
 Stage everything:
 
@@ -244,6 +244,21 @@ git add <specific-files-and-directories>
 
 Prefer explicit paths over `git add -A` or `git add .`. Never stage `.env`,
 credentials, or large binaries.
+
+Run lint to auto-fix formatting before committing:
+
+```bash
+pnpm lint
+```
+
+After lint auto-fixes, re-stage the same files to capture any corrections:
+
+```bash
+git add <same-specific-files>
+```
+
+This ensures the commit contains clean, formatted code. The `pnpm lint` command
+runs `eslint --fix` which auto-corrects fixable issues in place.
 
 **Invoke the tool-git-commit skill** to generate the commit message. Pass it:
 - The issue number (from step 2 or from detection)
@@ -273,10 +288,16 @@ git add <specific-files>
 
 # Soft-reset to the merge base — keeps ALL changes staged in the index
 git reset --soft "$MERGE_BASE"
+
+# Run lint to auto-fix formatting on the squashed changes
+pnpm lint
+
+# Re-stage after lint fixes
+git add <specific-files>
 ```
 
-After this, the branch has zero commits and all changes are staged, ready for a
-single clean `git commit`.
+After this, the branch has zero commits and all changes are staged (and
+formatted), ready for a single clean `git commit`.
 
 Once tool-git-commit returns the validated message, commit it:
 
