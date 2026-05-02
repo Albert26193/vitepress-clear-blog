@@ -1,0 +1,10 @@
+fix(plugin-codeblock-fold): handle empty code blocks gracefully and refactor theme sidebar composable
+
+- Guard against undefined innerHTML when code blocks have no content,
+  preventing a runtime crash on empty or whitespace-only pre/code elements
+- Extract sidebar toggle logic from inline component code into a dedicated
+  composable (useSidebar) to improve readability and reusability
+
+Closes #99
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>

@@ -1,0 +1,15 @@
+chore: #0 update .gitignore with AI dev tool entries
+
+DESC
+===
+
+code:
+- Add .codex, .claude, .cursor, and .ai_dev* patterns to .gitignore
+
+test:
+- N/A
+
+summarize:
+- Exclude AI development assistant directories from version control
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>

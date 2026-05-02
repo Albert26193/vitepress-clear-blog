@@ -1,0 +1,18 @@
+{
+  "eval_id": 2,
+  "eval_name": "monorepo-multi-package",
+  "prompt": "ok so i fixed a bug in the codeblock-fold plugin where it was crashing on empty code blocks, and also refactored the theme sidebar component to use a composable instead of inline logic. Both of these are staged on branch fix/issue-99-empty-codeblock. Write me a commit message that covers both changes properly.",
+  "assertions": [
+    "Subject matches format: type(scope?): #N description",
+    "Type is a valid Conventional Commits type",
+    "Subject contains '#<N>' issue reference after the colon",
+    "Subject does not end with a period",
+    "Body contains 'DESC' header followed by '==='",
+    "Body contains 'code:' subsection",
+    "Body contains 'test:' subsection",
+    "Body contains 'summarize:' subsection",
+    "Footer includes 'Co-Authored-By: Claude Opus' line",
+    "All body lines are under 200 characters",
+    "Subject has a non-empty description after the issue reference"
+  ]
+}

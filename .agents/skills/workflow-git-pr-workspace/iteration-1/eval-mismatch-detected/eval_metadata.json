@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "eval_name": "mismatch-detected",
+  "prompt": "当前在 issue-2-fix-login-bug 分支上，但实际改动是新增 .agents/ 目录和技能文件。用户说 '帮我提交'。",
+  "assertions": [
+    "Extracts issue #2 from branch name",
+    "Fetches issue #2 content",
+    "Detects mismatch: issue #2 says 'fix login bug' but diff is AI agent tooling",
+    "Presents mismatch evidence to user with options (A/B/C)",
+    "Does NOT proceed until user chooses",
+    "Does NOT blindly link changes to wrong issue"
+  ]
+}

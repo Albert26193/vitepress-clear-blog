@@ -38,3 +38,10 @@ test.log
 # cache
 cache
 ./cache
+**/*/__pycache__
+
+# ai_dev
+.codex
+.claude
+.cursor
+.ai_dev*

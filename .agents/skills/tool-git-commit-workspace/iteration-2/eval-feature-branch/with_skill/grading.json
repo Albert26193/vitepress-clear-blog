@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "Subject matches format: type(scope?): #N description",
+      "passed": true,
+      "evidence": "Subject: 'chore: #42 add AI dev tool directories to gitignore'"
+    },
+    {
+      "text": "Type is a valid Conventional Commits type",
+      "passed": true,
+      "evidence": "Type from subject: 'chore'"
+    },
+    {
+      "text": "Subject contains '#<N>' issue reference (or '#?' placeholder) after the colon",
+      "passed": true,
+      "evidence": "Subject: 'chore: #42 add AI dev tool directories to gitignore'"
+    },
+    {
+      "text": "Subject does not end with a period",
+      "passed": true,
+      "evidence": "Subject ends with: 'e'"
+    },
+    {
+      "text": "Body contains 'DESC' header followed by '==='",
+      "passed": true,
+      "evidence": "DESC/=== found"
+    },
+    {
+      "text": "Body contains 'code:' subsection",
+      "passed": true,
+      "evidence": "'code:' section found"
+    },
+    {
+      "text": "Body contains 'test:' subsection",
+      "passed": true,
+      "evidence": "'test:' section found"
+    },
+    {
+      "text": "Body contains 'summarize:' subsection",
+      "passed": true,
+      "evidence": "'summarize:' section found"
+    },
+    {
+      "text": "Footer includes 'Co-Authored-By: Claude Opus' line",
+      "passed": true,
+      "evidence": "Co-Authored-By found"
+    },
+    {
+      "text": "All body lines are under 200 characters",
+      "passed": true,
+      "evidence": "All lines OK"
+    },
+    {
+      "text": "Subject has a non-empty description after the issue reference",
+      "passed": true,
+      "evidence": "Description: '42'"
+    }
+  ],
+  "summary": {
+    "passed": 11,
+    "failed": 0,
+    "total": 11,
+    "pass_rate": 1.0
+  }
+}

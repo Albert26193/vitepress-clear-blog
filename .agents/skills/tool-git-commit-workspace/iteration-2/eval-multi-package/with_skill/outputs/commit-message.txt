@@ -1,0 +1,17 @@
+fix: #99 fix empty code block crash and refactor sidebar logic
+
+DESC
+===
+
+code:
+- Handle empty code blocks in codeblock-fold plugin to prevent crash
+- Extract sidebar inline logic into a dedicated composable for better maintainability
+
+test:
+- Verify codeblock-fold plugin renders empty code blocks without crashing
+- Confirm sidebar behavior and rendering remain unchanged after refactoring
+
+summarize:
+- Fix crash on empty code blocks and improve sidebar code organization
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>

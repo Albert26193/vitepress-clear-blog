@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Extracts issue #3 from branch name issue-3-ai-agent-tooling", "passed": true, "evidence": "git branch --show-current parsed correctly, 3 extracted from issue-3-* pattern"},
+    {"text": "Fetches issue #3 and confirms match with current diff", "passed": true, "evidence": "gh issue view 3 returned AI agent tooling title, diff shows .agents/ files — consistent"},
+    {"text": "Classifies as PATH M — skips Step 2 and Step 3", "passed": true, "evidence": "Both issue and branch already correct, Step 2 and Step 3 clearly marked SKIP"},
+    {"text": "Uses issue #3 for commit message and PR body", "passed": true, "evidence": "Commit 421549d subject: feat: #3 ..., PR #5 body: Closes #3"},
+    {"text": "Single commit with #3 reference", "passed": true, "evidence": "git log shows exactly 1 commit on issue-3-ai-agent-tooling"},
+    {"text": "PR with Closes #3", "passed": true, "evidence": "PR #5 body contains 'Closes #3'"}
+  ]
+}

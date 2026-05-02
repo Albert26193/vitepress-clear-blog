@@ -1,0 +1,18 @@
+{
+  "eval_id": 0,
+  "eval_name": "feature-branch-summary",
+  "prompt": "I'm on branch feat/42-new-auth-flow and I've been working for a few days on adding JWT authentication to the theme package. Can you look at what I've changed and write a good commit message? I haven't staged anything yet.",
+  "assertions": [
+    "Subject matches format: type(scope?): #N description",
+    "Type is a valid Conventional Commits type",
+    "Subject contains '#<N>' issue reference after the colon",
+    "Subject does not end with a period",
+    "Body contains 'DESC' header followed by '==='",
+    "Body contains 'code:' subsection",
+    "Body contains 'test:' subsection",
+    "Body contains 'summarize:' subsection",
+    "Footer includes 'Co-Authored-By: Claude Opus' line",
+    "All body lines are under 200 characters",
+    "Subject has a non-empty description after the issue reference"
+  ]
+}

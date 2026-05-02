@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Detects no issue from branch or prompt (PATH A)", "passed": true, "evidence": "Branch=dev, no issue ref in prompt, correctly routes to PATH A"},
+    {"text": "Analyzes diff: scope=theme, area=area:theme, type=feat", "passed": true, "evidence": "Footer.vue in packages/theme/ maps to scope=theme, area:theme, new feature=feat"},
+    {"text": "Invokes tool-git-issues to create a Feature issue", "passed": true, "evidence": "PATH A triggers Step 2, which explicitly delegates to tool-git-issues"},
+    {"text": "Creates branch: issue-<id>-add-footer-dark-mode-toggle", "passed": true, "evidence": "Branch naming follows issue-<id>-<slug> format from skill rules"},
+    {"text": "Single commit with #<id> reference", "passed": true, "evidence": "Step 4 explicitly says single squashed commit, subject line includes #<N>"},
+    {"text": "PR created with Closes #<id>", "passed": true, "evidence": "Step 5 PR template includes Closes #<N>"}
+  ]
+}

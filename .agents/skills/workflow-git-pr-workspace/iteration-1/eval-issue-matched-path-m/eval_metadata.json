@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "issue-matched-path-m",
+  "prompt": "当前在 issue-3-ai-agent-tooling 分支上，还有对 tool-git-commit SKILL.md 的修改，帮我提交并提 PR。",
+  "assertions": [
+    "Extracts issue #3 from branch name issue-3-ai-agent-tooling",
+    "Fetches issue #3 and confirms match with current diff",
+    "Classifies as PATH M — skips Step 2 and Step 3",
+    "Uses issue #3 for commit message and PR body",
+    "Single commit with #3 reference",
+    "PR with Closes #3"
+  ]
+}
