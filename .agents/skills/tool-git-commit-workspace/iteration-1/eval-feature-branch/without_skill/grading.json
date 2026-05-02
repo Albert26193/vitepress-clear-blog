@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "Subject matches format: type(scope?): #N description",
+      "passed": false,
+      "evidence": "Subject: 'feat(agents): add AI agent skill infrastructure with multi-IDE symlink support'"
+    },
+    {
+      "text": "Type is a valid Conventional Commits type",
+      "passed": false,
+      "evidence": "Type from subject: 'N/A'"
+    },
+    {
+      "text": "Subject contains '#<N>' issue reference after the colon",
+      "passed": false,
+      "evidence": "Subject: 'feat(agents): add AI agent skill infrastructure with multi-IDE symlink support'"
+    },
+    {
+      "text": "Subject does not end with a period",
+      "passed": true,
+      "evidence": "Subject ends with: 't'"
+    },
+    {
+      "text": "Body contains 'DESC' header followed by '==='",
+      "passed": false,
+      "evidence": "DESC/=== missing"
+    },
+    {
+      "text": "Body contains 'code:' subsection",
+      "passed": false,
+      "evidence": "'code:' section missing"
+    },
+    {
+      "text": "Body contains 'test:' subsection",
+      "passed": false,
+      "evidence": "'test:' section missing"
+    },
+    {
+      "text": "Body contains 'summarize:' subsection",
+      "passed": false,
+      "evidence": "'summarize:' section missing"
+    },
+    {
+      "text": "Footer includes 'Co-Authored-By: Claude Opus' line",
+      "passed": false,
+      "evidence": "Co-Authored-By missing"
+    },
+    {
+      "text": "All body lines are under 200 characters",
+      "passed": true,
+      "evidence": "All lines OK"
+    },
+    {
+      "text": "Subject has a non-empty description after the issue reference",
+      "passed": false,
+      "evidence": "Description: 'N/A'"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 9,
+    "total": 11,
+    "pass_rate": 0.18
+  }
+}

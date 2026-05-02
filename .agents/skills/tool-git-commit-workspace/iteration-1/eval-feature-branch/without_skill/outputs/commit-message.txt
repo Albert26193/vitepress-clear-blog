@@ -1,0 +1,7 @@
+feat(agents): add AI agent skill infrastructure with multi-IDE symlink support
+
+- Add .agents/ directory with skill definitions for git-commit, git-issues,
+  skill-creator, and sync-skills-command
+- Add scripts/link.sh to manage per-item symlinks from IDE dot-directories
+  (.cursor/.claude/.codex) back to .agents/
+- Update .gitignore to exclude IDE-specific dot-directories

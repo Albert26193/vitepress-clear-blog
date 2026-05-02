@@ -1,0 +1,17 @@
+docs: add callout plugin API docs, update README, fix contributing guide typos
+
+DESC
+===
+
+code:
+- Add API documentation for the callout plugin
+- Update README with latest project information
+- Fix typos in the contributing guide
+
+test:
+- N/A
+
+summarize:
+- Add API documentation for the callout plugin, refresh README content, and correct typos in the contributing guide
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>

@@ -38,3 +38,9 @@ test.log
 # cache
 cache
 ./cache
+
+# ai_dev
+.codex
+.claude
+.cursor
+.ai_dev*

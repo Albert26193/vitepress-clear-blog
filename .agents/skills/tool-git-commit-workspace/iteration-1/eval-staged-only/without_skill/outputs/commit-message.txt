@@ -1,0 +1,5 @@
+docs: update README, add callout plugin API docs, and fix contributing guide typos
+
+- Update project README with current information
+- Add API documentation for the vitepress-plugin-callout package
+- Fix typos and improve wording in the contributing guide
