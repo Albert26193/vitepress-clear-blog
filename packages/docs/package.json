@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "dev:docs": "vitepress dev --host",
+    "build": "vitepress build --clean-cache --clean-temp",
     "build:docs": "vitepress build --clean-cache --clean-temp",
+    "clean": "rimraf .vitepress/cache .vitepress/dist",
     "clean:docs": "rimraf .vitepress/cache .vitepress/dist",
     "preview:docs": "vitepress preview"
   },
