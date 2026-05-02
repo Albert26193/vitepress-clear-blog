@@ -1,0 +1,7 @@
+chore: add AI agent skill infrastructure and utility scripts
+
+- Add .agents/ directory with skills for git commits, GitHub issues,
+  skill creation, skill sync, and evaluation frameworks
+- Add scripts/link.sh utility script
+- Add AI dev tool patterns (.codex, .claude, .cursor, .ai_dev*) to
+  .gitignore

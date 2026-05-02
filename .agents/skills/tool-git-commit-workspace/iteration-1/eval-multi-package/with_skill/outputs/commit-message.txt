@@ -1,0 +1,16 @@
+fix(plugin-codeblock-fold): #99 fix empty code block crash and refactor sidebar
+
+DESC
+===
+
+code:
+- Add empty code block guard check in codeblock-fold plugin to prevent crash on zero-height elements
+- Extract sidebar link and tag filtering logic into useSidebar composable for reuse
+
+test:
+- N/A
+
+summarize:
+- Fix codeblock-fold crash on empty code blocks and refactor sidebar inline logic into reusable composable
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>

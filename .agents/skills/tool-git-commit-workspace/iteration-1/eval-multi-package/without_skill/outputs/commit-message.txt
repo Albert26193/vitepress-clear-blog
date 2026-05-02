@@ -1,0 +1,11 @@
+fix(codeblock-fold): prevent crash on empty code blocks
+
+Guard against empty or malformed code blocks that cause the plugin to
+throw when accessing clientHeight or manipulating non-existent DOM
+elements. The selector now filters out elements with zero height or
+missing content before applying fold logic.
+
+Also refactor the theme sidebar components to extract inline tag
+filtering and link resolution logic into a dedicated composable
+(useSidebar), improving reusability and testability. This does not
+change the user-facing behavior of SidebarTag or SidebarLink.

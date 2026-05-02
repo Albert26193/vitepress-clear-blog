@@ -1,0 +1,15 @@
+docs: #? update readme, add callout api docs, fix guide typos
+
+DESC
+===
+
+code:
+- N/A
+
+test:
+- N/A
+
+summarize:
+- enhance project documentation with readme updates, callout plugin api reference, and contributing guide corrections
+
+Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>

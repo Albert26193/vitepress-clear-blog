@@ -1,0 +1,1 @@
+docs: update README, add callout plugin API docs, and fix typos in contributing guide

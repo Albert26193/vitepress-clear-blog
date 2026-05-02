@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Extracts issue #2 from branch name", "passed": true, "evidence": "issue-2-fix-login-bug parsed, 2 extracted from issue-2-* pattern"},
+    {"text": "Fetches issue #2 content", "passed": true, "evidence": "Step 0b specifies gh issue view <id> to retrieve title, body, labels"},
+    {"text": "Detects mismatch: issue #2 says 'fix login bug' but diff is AI agent tooling", "passed": true, "evidence": "Comparison table shows mismatches on all 3 dimensions: files, nature, area"},
+    {"text": "Presents mismatch evidence to user with options (A/B/C)", "passed": true, "evidence": "Step 0c mismatch template shows 3 options clearly presented"},
+    {"text": "Does NOT proceed until user chooses", "passed": true, "evidence": "Skill says 'Do not proceed until the user answers. Never silently link mismatched changes'"},
+    {"text": "Does NOT blindly link changes to wrong issue", "passed": true, "evidence": "No commit/PR created — workflow halts at mismatch detection"}
+  ]
+}

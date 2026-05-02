@@ -1,0 +1,13 @@
+{
+  "eval_id": 0,
+  "eval_name": "full-workflow-path-a",
+  "prompt": "我修改了 packages/theme/src/components/Footer.vue，加了个 dark mode 切换按钮。帮我提交并提 PR。",
+  "assertions": [
+    "Detects no issue from branch or prompt (PATH A)",
+    "Analyzes diff: scope=theme, area=area:theme, type=feat",
+    "Invokes tool-git-issues to create a Feature issue",
+    "Creates branch: issue-<id>-add-footer-dark-mode-toggle",
+    "Single commit with #<id> reference",
+    "PR created with Closes #<id>"
+  ]
+}
