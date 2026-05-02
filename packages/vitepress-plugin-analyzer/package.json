@@ -39,6 +39,7 @@
     "dev": "tsup --config tsup.config.ts --watch",
     "build": "tsup --config tsup.config.ts",
     "clean": "rimraf lib",
+    "test": "vitest run",
     "test:ui": "vitest --ui"
   },
   "dependencies": {

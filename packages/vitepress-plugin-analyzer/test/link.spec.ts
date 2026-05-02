@@ -6,9 +6,9 @@ import { createConfig } from '../src/node/config'
 import { extractInnerLinks } from '../src/node/parsers/link'
 import type { AnalyzerConfig } from '../types'
 
-// Create a test configuration
+// Create a test configuration using absolute path to avoid process.cwd() issues
 const testConfig: AnalyzerConfig = createConfig({
-  docsDir: 'packages/plugin-analyzer/test', // Use the test directory as docs root
+  docsDir: path.resolve(__dirname),
   excludeDirs: ['node_modules', '.git', 'dist'],
   includeFiles: ['.md'],
   excludeFiles: [],

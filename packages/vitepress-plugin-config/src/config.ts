@@ -20,7 +20,7 @@ const generateThemePlugin = (
     async buildStart() {
       await generateThemeFile(configPath)
     },
-    configureServer(server: any) {
+    configureServer(server) {
       const configFilePath = resolve(process.cwd(), configPath)
       const generatedCssPath = resolve(
         process.cwd(),

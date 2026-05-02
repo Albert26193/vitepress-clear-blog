@@ -13,7 +13,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -62,13 +61,20 @@ check_commitlint() {
     local msg_file="$1"
     local result
 
-    result=$(cat "$msg_file" | npx --no commitlint 2>/dev/null) || true
+    result=$(cat "$msg_file" | pnpm --silent check-commit 2>/dev/null) || true
 
     if [[ -z "$result" ]]; then
         return 0
-    else
+    fi
+
+    # Only fail on errors (✖), not warnings (⚠)
+    if echo "$result" | grep -q '✖'; then
         echo "$result"
         return 1
+    else
+        # Warnings only — print but don't fail
+        echo "$result" >&2
+        return 0
     fi
 }
 

@@ -1,6 +1,6 @@
 import type MarkdownIt from 'markdown-it'
 
-const markerRE = /^\[\!([^\]]+)\]([^\n\r]*)/i
+const markerRE = /^\[!([^\]]+)\]([^\n\r]*)/i
 const PRESET_CALLOUTS = [
   'tip',
   'note',

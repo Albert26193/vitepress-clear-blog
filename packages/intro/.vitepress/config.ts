@@ -1,6 +1,10 @@
 import wikilinks from 'markdown-it-wikilinks'
 import { defineConfig } from 'vitepress'
-import { getThemeConfig, mermaidPlugin, taskListsPlugin } from 'vitepress-clear-blog/node'
+import {
+  getThemeConfig,
+  mermaidPlugin,
+  taskListsPlugin
+} from 'vitepress-clear-blog/node'
 import { calloutPlugin } from 'vitepress-plugin-callout'
 
 import { head, metaData } from './custom/head'
@@ -31,7 +35,7 @@ export default defineConfig({
       dark: 'ayu-dark'
     }
   },
-  vite: blogTheme.vite as any,
+  vite: blogTheme.vite as object,
   title: metaData.title,
   description: metaData.description,
   base: '/',
@@ -46,7 +50,10 @@ export default defineConfig({
     outline: [2, 3],
     outlineTitle: 'Table of Contents',
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Albert26193/vitepress-clear-blog' }
+      {
+        icon: 'github',
+        link: 'https://github.com/Albert26193/vitepress-clear-blog'
+      }
     ]
   },
   srcExclude: ['README.md'],

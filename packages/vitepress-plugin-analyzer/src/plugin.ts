@@ -1,4 +1,3 @@
-import { resolve } from 'node:path'
 import type { Plugin } from 'vite'
 
 import type { SiteMetadata, SitePages } from '../types'

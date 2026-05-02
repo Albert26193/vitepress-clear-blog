@@ -60,7 +60,7 @@ const getFooterRefTag = (md: MarkdownIt) => {
   const originalFootnoteRef = md.renderer.rules.footnote_ref
   md.renderer.rules.footnote_ref = (tokens, idx, options, env, self) => {
     const id = tokens[idx].meta?.id || idx
-    let refLabel = ''
+    let refLabel: string
 
     if (originalFootnoteRef) {
       const originalHTML = originalFootnoteRef(tokens, idx, options, env, self)
