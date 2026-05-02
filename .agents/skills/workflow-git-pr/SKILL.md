@@ -348,14 +348,19 @@ The PR title should match the commit subject line.
 
 ### Step 6: Report
 
-Output a summary table:
+Output a summary table. The Issue and PR columns must contain the **raw full
+URL** — no markdown links, no `#N` prefix. Users need to see and copy the URL
+directly:
 
 | Step | Result |
 |------|--------|
-| Issue | `#<N>` — URL |
+| Issue | https://github.com/Albert26193/vitepress-clear-blog/issues/N |
 | Branch | `issue-<id>-<slug>` |
 | Commit | `<hash>` — subject |
-| PR | `#<M>` — URL |
+| PR | https://github.com/Albert26193/vitepress-clear-blog/pull/M |
+
+Do not wrap the URL in a markdown link or prefix it with `#N` — just paste
+the bare https URL as the cell content.
 
 ## GH_TOKEN handling
 
