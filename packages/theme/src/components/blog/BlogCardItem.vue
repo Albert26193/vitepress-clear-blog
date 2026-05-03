@@ -69,7 +69,7 @@
   .blog-card {
     @apply relative flex flex-col;
     @apply @apply justify-between overflow-hidden rounded-xl bg-white p-6 shadow-sm;
-    @apply h-55 max-w-90;
+    @apply h-[55px] max-w-[90px];
     @apply cursor-pointer;
     @apply dark:bg-[var(--vp-c-bg)];
   }

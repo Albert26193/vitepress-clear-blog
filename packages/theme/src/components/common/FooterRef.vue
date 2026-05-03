@@ -98,6 +98,6 @@
 
   .tooltip-fade-enter-from,
   .tooltip-fade-leave-to {
-    @apply translate-y-10px -translate-x-1/2 opacity-0;
+    @apply -translate-x-1/2 translate-y-[10px] opacity-0;
   }
 </style>
