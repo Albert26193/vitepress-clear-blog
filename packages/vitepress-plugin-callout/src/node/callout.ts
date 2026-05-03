@@ -1,4 +1,6 @@
 import type MarkdownIt from 'markdown-it'
+import type StateCore from 'markdown-it/lib/rules_core/state_core.mjs'
+import type Token from 'markdown-it/lib/token.mjs'
 
 const markerRE = /^\[!([^\]]+)\]([^\n\r]*)/i
 const PRESET_CALLOUTS = [
@@ -12,9 +14,9 @@ const PRESET_CALLOUTS = [
 ]
 const LETTER_RE = /^[a-zA-Z]+$/
 
-const calloutPlugin = (md: MarkdownIt) => {
-  md.core.ruler.after('block', 'custom-callout', (state) => {
-    const tokens = state.tokens
+const calloutPlugin = (md: MarkdownIt): void => {
+  md.core.ruler.after('block', 'custom-callout', (state: StateCore): void => {
+    const tokens = state.tokens as Token[]
     for (let i = 0; i < tokens.length; i++) {
       if (tokens[i].type === 'blockquote_open') {
         const startIndex = i
@@ -74,7 +76,10 @@ const calloutPlugin = (md: MarkdownIt) => {
     }
   })
 
-  md.renderer.rules.custom_callout_open = function (tokens, idx) {
+  md.renderer.rules.custom_callout_open = function (
+    tokens: Token[],
+    idx: number
+  ): string {
     const { title, type } = tokens[idx].meta
     return `<div class="${type} custom-block custom-callout"><p class="custom-block-title">${title}</p>\n`
   }
