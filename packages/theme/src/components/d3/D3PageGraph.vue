@@ -66,7 +66,7 @@
   }
 
   .zoom-display {
-    @apply top-2 right-2 hidden px-1 py-1 text-xs;
+    @apply top-2 right-2 px-1 py-1 text-xs;
     @apply text-gray-600/90;
     @apply rounded bg-white;
     @apply backdrop-blur-md;

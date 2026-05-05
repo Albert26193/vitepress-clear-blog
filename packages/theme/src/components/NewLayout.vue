@@ -37,7 +37,9 @@
       />
     </template>
 
-    <Copyright />
+    <template #layout-bottom>
+      <Copyright />
+    </template>
   </Layout>
 </template>
 

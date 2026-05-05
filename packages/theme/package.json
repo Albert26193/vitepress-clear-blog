@@ -29,7 +29,8 @@
     "copy": "cpx \"src/**/*.{d.ts,vue,css,scss,jpg,png,woff2}\" lib",
     "copy:watch": "cpx \"src/**/*.{d.ts,vue,css,scss,jpg,png,woff2}\" lib -w",
     "tsup": "tsup --config tsup.config.ts",
-    "tsup:watch": "tsup --config tsup.config.ts --watch -- -c"
+    "tsup:watch": "tsup --config tsup.config.ts --watch -- -c",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@iconify-json/carbon": "^1.2.16",
@@ -53,6 +54,7 @@
     "vitepress-sidebar": "^1.33.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.56.0",
     "@types/d3": "^7.4.3",
     "@types/lodash": "^4.17.23",
     "@vue/compiler-sfc": "^3.5.26",
