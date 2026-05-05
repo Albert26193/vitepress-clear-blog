@@ -73,7 +73,7 @@ jobs:
 
       - run: pnpm typecheck
 
-  test:
+  unit-test:
     name: Unit Test
     runs-on: ubuntu-latest
     steps:
@@ -89,6 +89,8 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build:packages
 
       - run: pnpm test:unit
 

@@ -38,6 +38,13 @@ export default [
       'prettier/prettier': ['error', { singleQuote: true }]
     }
   },
+  // Test file overrides — explicit any is normal for mocks
+  {
+    files: ['**/*.{test,spec}.{js,ts}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off'
+    }
+  },
   // Ignored files
   {
     ignores: [
