@@ -29,6 +29,10 @@ origin_theme.css
 # local workspace
 local-workspace
 
+# Test and coverage outputs
+test-results
+coverage
+
 # for test docs
 docs/test/*
 docs/blogs/test/*
