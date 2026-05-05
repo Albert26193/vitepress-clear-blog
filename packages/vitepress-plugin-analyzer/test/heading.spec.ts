@@ -45,4 +45,14 @@ describe('Heading Extraction Function Test', () => {
     const heading = extractFirstHeading(content)
     expect(heading).toBe('This is the real heading')
   })
+
+  it('should return no-heading for empty heading text', () => {
+    const heading = extractFirstHeading('# ')
+    expect(heading).toBe('no-heading')
+  })
+
+  it('should return no-heading for H1 with only whitespace', () => {
+    const heading = extractFirstHeading('#   ')
+    expect(heading).toBe('no-heading')
+  })
 })

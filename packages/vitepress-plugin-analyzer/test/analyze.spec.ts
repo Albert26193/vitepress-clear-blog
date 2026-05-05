@@ -5,9 +5,10 @@ import { describe, expect, it } from 'vitest'
 import { createConfig } from '../src/node/config'
 import {
   analyzeAllDocuments,
-  analyzeDocument
+  analyzeDocument,
+  scanDirectory
 } from '../src/node/parsers/analyze'
-import type { AnalyzerConfig } from '../types'
+import type { AnalyzerConfig, PageMetadata, SitePages } from '../types'
 
 // Create a test configuration using absolute path to avoid process.cwd() issues
 const testConfig: AnalyzerConfig = createConfig({
@@ -148,6 +149,52 @@ describe('Document Analyzer', () => {
           type: 'markdown'
         })
       )
+    })
+  })
+
+  describe('scanDirectory', () => {
+    it('should skip excluded directories', () => {
+      const globalMetadata: Record<string, PageMetadata> = {}
+      const globalPages: SitePages = {}
+      const configWithExcludedDirs = createConfig({
+        docsDir: resolve(__dirname, 'attach'),
+        excludeDirs: ['deep']
+      })
+
+      scanDirectory(
+        resolve(__dirname, 'attach'),
+        configWithExcludedDirs,
+        globalMetadata,
+        globalPages
+      )
+
+      // Files in deep/ should not be scanned
+      const deepFiles = Object.keys(globalMetadata).filter((k) =>
+        k.startsWith('deep')
+      )
+      expect(deepFiles).toHaveLength(0)
+      // Files at root level should still be scanned
+      expect(globalMetadata['doc1']).toBeDefined()
+      expect(globalMetadata['doc2']).toBeDefined()
+    })
+
+    it('should skip files matching excludeFiles pattern', () => {
+      const globalMetadata: Record<string, PageMetadata> = {}
+      const globalPages: SitePages = {}
+      const configWithExcludedFiles = createConfig({
+        docsDir: resolve(__dirname, 'attach'),
+        excludeFiles: ['doc1']
+      })
+
+      scanDirectory(
+        resolve(__dirname, 'attach'),
+        configWithExcludedFiles,
+        globalMetadata,
+        globalPages
+      )
+
+      expect(globalMetadata['doc1']).toBeUndefined()
+      expect(globalMetadata['doc2']).toBeDefined()
     })
   })
 })
