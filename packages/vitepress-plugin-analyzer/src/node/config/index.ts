@@ -23,9 +23,9 @@ export const createConfig = (
     ...defaultConfig,
     ...userConfig,
     // Ensure arrays are properly overridden
-    excludeDirs: userConfig?.excludeDirs || defaultConfig.excludeDirs,
-    includeFiles: userConfig?.includeFiles || defaultConfig.includeFiles,
-    excludeFiles: userConfig?.excludeFiles || defaultConfig.excludeFiles
+    excludeDirs: userConfig?.excludeDirs ?? defaultConfig.excludeDirs,
+    includeFiles: userConfig?.includeFiles ?? defaultConfig.includeFiles,
+    excludeFiles: userConfig?.excludeFiles ?? defaultConfig.excludeFiles
   }
 
   return config

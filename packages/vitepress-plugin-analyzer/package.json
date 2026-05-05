@@ -40,7 +40,8 @@
     "build": "tsup --config tsup.config.ts",
     "clean": "rimraf lib",
     "test": "vitest run",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "markdown-it": "^14.1.0"
