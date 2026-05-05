@@ -12,7 +12,9 @@ export default defineConfig({
     video: 'retain-on-failure'
   },
   webServer: {
-    command: 'pnpm exec vitepress preview packages/docs',
+    command: process.env.CI
+      ? 'python3 -m http.server 4173 -d packages/docs/.vitepress/dist'
+      : 'pnpm exec vitepress preview packages/docs',
     cwd: '../..',
     port: 4173,
     reuseExistingServer: !process.env.CI
