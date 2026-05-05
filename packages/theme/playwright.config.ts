@@ -13,7 +13,7 @@ export default defineConfig({
   },
   webServer: {
     command: process.env.CI
-      ? 'python3 -m http.server 4173 -d packages/docs/.vitepress/dist'
+      ? 'pnpm build && pnpm exec vitepress preview packages/docs'
       : 'pnpm exec vitepress preview packages/docs',
     cwd: '../..',
     port: 4173,
