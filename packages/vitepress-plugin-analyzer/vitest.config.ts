@@ -4,7 +4,12 @@ export default defineConfig({
   test: {
     include: ['test/**/*.{test,spec}.{js,ts}'],
     coverage: {
-      enabled: false
+      enabled: true,
+      provider: 'v8',
+      thresholds: {
+        branches: 90,
+        lines: 90
+      }
     }
   }
 })

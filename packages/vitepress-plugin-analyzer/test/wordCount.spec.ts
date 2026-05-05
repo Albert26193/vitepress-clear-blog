@@ -53,4 +53,18 @@ describe('calculateWords', () => {
     // Chinese(2) + test(2) + const(1) + let(1) + print(1) + hello(1) + js(1) + python(1) + n(multiple)
     expect(wordCount).toBe(10)
   })
+
+  it('should skip standalone hyphens and single non-letter characters', () => {
+    const content = 'word @ test # 5 end'
+    const wordCount = calculateWords(content)
+    // word(1) + test(1) + end(1) = 3 — @ and # (single non-letters) and 5 (pure number) skipped
+    expect(wordCount).toBe(3)
+  })
+
+  it('should skip pure number words', () => {
+    const content = 'chapter 1 2 3 end'
+    const wordCount = calculateWords(content)
+    // chapter(1) + end(1) = 2
+    expect(wordCount).toBe(2)
+  })
 })

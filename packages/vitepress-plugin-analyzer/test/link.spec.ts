@@ -527,6 +527,12 @@ describe('Invalid Link Tests', () => {
     expect(links).toHaveLength(0)
   })
 
+  it('should return empty array for wiki link with empty path', () => {
+    const content = '[[|Display Text]]'
+    const links = extractInnerLinks(content, testConfig, 'test.md')
+    expect(links).toHaveLength(0)
+  })
+
   it('should return empty array for malformed links', () => {
     // Testing various malformed link formats
     const content = `
