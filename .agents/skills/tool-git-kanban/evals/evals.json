@@ -1,0 +1,29 @@
+{
+  "skill_name": "tool-git-kanban",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "把 GitHub Project 的 kanban 状态 pull 到 .ai_dev/issues，本地用远程覆盖；先告诉我会改哪些文件，别直接写。",
+      "expected_output": "Should invoke the kanban sync skill, inspect project/items/local issues, produce a remote-over-local diff plan, and stop for human confirmation before writing files.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我想把 .ai_dev/issues 里的本地 issue 推到 GitHub Projects 看板，本地 status 要覆盖远程列，缺失的远程 issue 也创建一下。",
+      "expected_output": "Should plan a local-over-remote push, validate local schema, summarize visible remote changes, ask for confirmation before creating/updating remote issues, and describe writing back remote IDs after success.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "设计一下 .ai_dev/issues 和 kanban 的映射格式，尤其是 done/in progress/blocked 这些状态怎么放到 markdown frontmatter 里。",
+      "expected_output": "Should recommend a backward-compatible Markdown frontmatter schema with status, github metadata, kanban metadata, and a clear local-to-Project status mapping.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "直接同步一下 kanban，远程覆盖本地就行。",
+      "expected_output": "Should treat this as pull, but still require a diff summary and explicit human confirmation before overwriting local files.",
+      "files": []
+    }
+  ]
+}
