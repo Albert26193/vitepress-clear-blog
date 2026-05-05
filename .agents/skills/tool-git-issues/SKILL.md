@@ -72,6 +72,14 @@ gh api graphql -f query='{ organization(login: "ORG") { issueTypes(first: 10) { 
 
 **Prefer issue types over labels for categorization.** When issue types are available (e.g., Bug, Feature, Task), use the `type` parameter instead of applying equivalent labels like `bug` or `enhancement`. Issue types are the canonical way to categorize issues on GitHub. Only fall back to labels when the org has no issue types configured.
 
+### Language
+
+**All issue titles and bodies MUST be written in English.** This is a hard requirement for this project. Chinese content in remote GitHub issues is not permitted.
+
+- Title: English only, < 72 characters
+- Body: English only — all sections (`## Description`, `## Acceptance Criteria`, `## Notes`, `## Discussion Points`) must use English section headers and English content
+- When translating from a Chinese discussion or requirement, produce natural English, not word-for-word translations
+
 ### Title Guidelines
 
 - Be specific and actionable

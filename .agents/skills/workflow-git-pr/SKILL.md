@@ -192,6 +192,9 @@ monorepo. Root-level file changes produce `scope: null` and `area_label: "area:r
 **Only run this step for PATH A** (no candidate issue, or user chose "create new"
 after a mismatch).
 
+**Language**: All issue titles and bodies MUST be written in English. The
+tool-git-issues skill enforces this requirement — see its "Language" section.
+
 Invoke the **tool-git-issues** skill to handle issue creation. Pass it the
 analysis from step 1 (scope, area label, change summary from diffs).
 
@@ -199,7 +202,7 @@ The tool-git-issues skill will:
 - Select the correct template (`feature-bug.md`, `task.md`, etc.) from its assets/
 - Determine the GitHub issue type (Feature, Bug, Task)
 - Map the scope to the correct `area:` label
-- Craft the title (< 72 chars) and body (Description, Acceptance Criteria, Notes)
+- Craft the title (< 72 chars, English) and body (Description, Acceptance Criteria, Notes — all English)
 - Call `gh api repos/{owner}/{repo}/issues -X POST` with the right flags
 - Return the issue number and URL
 
