@@ -344,8 +344,8 @@
 
       if (isDragging) {
         // After that, use relative displacement to update the position
-        event.subject.fx = event.x + dx / 1000
-        event.subject.fy = event.y + dy / 1000
+        event.subject.fx = event.x
+        event.subject.fy = event.y
       }
     }
 
