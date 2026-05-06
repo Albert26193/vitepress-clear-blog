@@ -159,6 +159,90 @@ describe('setupCodeBlockFold', () => {
     expect(mask!.querySelector('.vp-code-fold-btn')).not.toBeNull()
   })
 
+  it('sets aria attributes on fold mask', () => {
+    const doc = createDocContainer()
+    const block = createCodeBlock(300)
+    doc.appendChild(block)
+
+    setupCodeBlockFold()
+    onMountedCbs.forEach((cb) => cb())
+
+    const mask = block.querySelector('.vp-code-fold-mask') as HTMLElement
+    expect(mask.getAttribute('role')).toBe('button')
+    expect(mask.getAttribute('tabindex')).toBe('0')
+    expect(mask.getAttribute('aria-expanded')).toBe('false')
+    expect(mask.getAttribute('aria-label')).toBe('Expand code block')
+  })
+
+  it('updates aria attributes on toggle', () => {
+    const doc = createDocContainer()
+    const block = createCodeBlock(300)
+    doc.appendChild(block)
+
+    setupCodeBlockFold()
+    onMountedCbs.forEach((cb) => cb())
+
+    const mask = block.querySelector('.vp-code-fold-mask') as HTMLElement
+
+    // Click to expand
+    mask.click()
+    expect(mask.getAttribute('aria-expanded')).toBe('true')
+    expect(mask.getAttribute('aria-label')).toBe('Collapse code block')
+
+    // Click to fold
+    mask.click()
+    expect(mask.getAttribute('aria-expanded')).toBe('false')
+    expect(mask.getAttribute('aria-label')).toBe('Expand code block')
+  })
+
+  it('toggles on Enter key', () => {
+    const doc = createDocContainer()
+    const block = createCodeBlock(300)
+    doc.appendChild(block)
+
+    setupCodeBlockFold()
+    onMountedCbs.forEach((cb) => cb())
+
+    const mask = block.querySelector('.vp-code-fold-mask') as HTMLElement
+    expect(mask.getAttribute('aria-expanded')).toBe('false')
+
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })
+    mask.dispatchEvent(event)
+    expect(mask.getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('toggles on Space key', () => {
+    const doc = createDocContainer()
+    const block = createCodeBlock(300)
+    doc.appendChild(block)
+
+    setupCodeBlockFold()
+    onMountedCbs.forEach((cb) => cb())
+
+    const mask = block.querySelector('.vp-code-fold-mask') as HTMLElement
+    expect(mask.getAttribute('aria-expanded')).toBe('false')
+
+    const event = new KeyboardEvent('keydown', { key: ' ', bubbles: true })
+    mask.dispatchEvent(event)
+    expect(mask.getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('ignores non-activation keys on keydown', () => {
+    const doc = createDocContainer()
+    const block = createCodeBlock(300)
+    doc.appendChild(block)
+
+    setupCodeBlockFold()
+    onMountedCbs.forEach((cb) => cb())
+
+    const mask = block.querySelector('.vp-code-fold-mask') as HTMLElement
+    expect(mask.getAttribute('aria-expanded')).toBe('false')
+
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+    mask.dispatchEvent(event)
+    expect(mask.getAttribute('aria-expanded')).toBe('false')
+  })
+
   it('toggles between folded and expanded state on click', () => {
     const doc = createDocContainer()
     const block = createCodeBlock(300)
