@@ -23,7 +23,7 @@
 <script setup lang="ts">
   import * as d3 from 'd3'
   import lodash from 'lodash'
-  import { useRouter } from 'vitepress'
+  import { useRouter, withBase } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
 
   import type { D3ForceConfig, D3Link, D3Node } from '../../types/types'
@@ -173,7 +173,7 @@
       .style('cursor', 'pointer')
       .on('click', (event, d) => {
         if (d.fullUrl) {
-          router.go(d.fullUrl)
+          router.go(withBase(d.fullUrl))
         }
       })
 
@@ -312,7 +312,7 @@
 
     const handleNodeClick = (node: D3Node) => {
       if (node.fullUrl) {
-        router.go(node.fullUrl)
+        router.go(withBase(node.fullUrl))
       }
       updateNodeState(null)
     }
