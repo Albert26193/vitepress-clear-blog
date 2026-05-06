@@ -1,20 +1,6 @@
 import { useScriptTag } from '@vueuse/core'
 import hetiScript from 'heti/umd/heti-addon.min.js?url'
 
-/**
- * Heti interface declaration
- */
-interface HetiConstructor {
-  new (selector: string): {
-    autoSpacing: () => void
-  }
-}
-declare global {
-  interface Window {
-    Heti: HetiConstructor
-  }
-}
-
 const _getHeitElements = (): Element[] => {
   const hetiClassSelector = [
     '#VPContent .VPDoc .content-container main.main',
