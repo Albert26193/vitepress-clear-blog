@@ -22,12 +22,14 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
+    "test:unit": "vitest run",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "jsdom": "^26.0.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vue": "^3.5.26"
