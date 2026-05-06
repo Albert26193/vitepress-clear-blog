@@ -60,10 +60,7 @@
 
     document.querySelectorAll('.meta-des').forEach((v) => v.remove())
     const docDomContainer = window.document.querySelector('#VPContent')
-    let el = docDomContainer?.querySelector('h1')
-    if (!el) {
-      el = docDomContainer?.querySelector('h1')
-    }
+    const el = docDomContainer?.querySelector('h1')
     el?.['after']?.($des.value!)
   }
 
