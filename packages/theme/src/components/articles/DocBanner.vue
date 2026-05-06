@@ -33,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-  //TODO: how to calculate layout on mobile? if we have too many tags?
   import { useData, useRouter, withBase } from 'vitepress'
   import { onMounted, ref } from 'vue'
 
@@ -93,7 +92,8 @@
 
   /* Tags Container */
   .tags-container {
-    @apply mt-2 flex grow flex-wrap gap-x-2 gap-y-2;
+    @apply mt-2 flex grow flex-nowrap gap-x-2 gap-y-2 overflow-x-auto;
+    @apply sm:flex-wrap;
   }
 
   /* Tag Wrapper */
