@@ -10,23 +10,33 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import mermaid from 'mermaid'
-  import { onMounted, ref } from 'vue'
+  import { type PropType, onMounted, ref } from 'vue'
+
+  interface SvgDimensions {
+    width: number | null
+    height: number | null
+  }
 
   const props = defineProps({
-    id: String,
-    code: String
+    id: {
+      type: String as PropType<string>,
+      required: true
+    },
+    code: {
+      type: String as PropType<string>,
+      required: true
+    }
   })
 
-  const render = async (id, code) => {
+  const render = async (id: string, code: string): Promise<string> => {
     mermaid.initialize({ startOnLoad: false })
     const { svg } = await mermaid.render(id, code)
     return svg
   }
 
-  // Extract SVG dimensions from SVG string
-  const extractSvgDimensions = (svgString) => {
+  const extractSvgDimensions = (svgString: string): SvgDimensions => {
     const parser = new DOMParser()
     const doc = parser.parseFromString(svgString, 'image/svg+xml')
     const svgElement = doc.querySelector('svg')
@@ -35,11 +45,9 @@
       return { width: null, height: null }
     }
 
-    // Try to get width and height attributes first
-    let width = svgElement.getAttribute('width')
-    let height = svgElement.getAttribute('height')
+    let width: string | number | null = svgElement.getAttribute('width')
+    let height: string | number | null = svgElement.getAttribute('height')
 
-    // If no width/height, try to extract from viewBox
     if (!width || !height) {
       const viewBox = svgElement.getAttribute('viewBox')
       if (viewBox) {
@@ -49,8 +57,7 @@
       }
     }
 
-    // Parse numeric values (remove 'px' suffix if present)
-    const parseSize = (size) => {
+    const parseSize = (size: string | number | null): number | null => {
       if (!size) return null
       return typeof size === 'string'
         ? parseFloat(size.replace('px', ''))
@@ -63,28 +70,24 @@
     }
   }
 
-  // Convert SVG string to data URL for img tag
-  const createSvgDataUrl = (svgString) => {
-    // Encode SVG for data URL
+  const createSvgDataUrl = (svgString: string): string => {
     const encodedSvg = encodeURIComponent(svgString)
     return `data:image/svg+xml,${encodedSvg}`
   }
 
-  onMounted(async () => {
+  onMounted(async (): Promise<void> => {
     const svgString = await render(props.id, decodeURIComponent(props.code))
 
-    // Extract original SVG dimensions
     const { width, height } = extractSvgDimensions(svgString)
     svgWidth.value = width
     svgHeight.value = height
 
-    // Create data URL
     imgSrc.value = createSvgDataUrl(svgString)
   })
 
-  const imgSrc = ref('')
-  const svgWidth = ref(null)
-  const svgHeight = ref(null)
+  const imgSrc = ref<string>('')
+  const svgWidth = ref<number | null>(null)
+  const svgHeight = ref<number | null>(null)
 </script>
 
 <style scoped>
