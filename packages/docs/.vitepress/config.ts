@@ -18,7 +18,7 @@ import { head } from './custom/head'
 import { nav } from './custom/nav'
 
 const wikilinksOptions = {
-  baseURL: 'http://10.177.73.149:5000',
+  baseURL: '/',
   htmlAttributes: {
     class: 'clear-wikilink'
     // rel: 'nofollow'
