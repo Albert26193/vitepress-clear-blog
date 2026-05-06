@@ -48,8 +48,12 @@ test.describe('BlogCardItem', () => {
     const count = await cards.count()
     for (let i = 0; i < Math.min(count, 3); i++) {
       const card = cards.nth(i)
-      await expect(card.locator('.card-title')).toBeVisible()
-      await expect(card.locator('.card-time')).toBeVisible()
+      await expect(
+        card.locator(':scope > .card-header .card-title')
+      ).toBeVisible()
+      await expect(
+        card.locator(':scope > .card-banner .card-time')
+      ).toBeVisible()
     }
   })
 })
