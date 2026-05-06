@@ -52,27 +52,27 @@ export const generateThemeFile = async (
 
   const generatedCssTemplate = `
 :root {
-  --vp-c-bg: ${bgColor} !important;
-  --vp-c-brand: ${brandColor} !important;
-  --vp-c-brand-1: ${brandColor1} !important;
-  --vp-c-text-1: ${textColor1} !important;
-  --vp-button-brand-bg: ${buttonBgColor} !important;
-  --c-text-code: ${codeColor} !important;
-  --c-text-strong: ${strongColor} !important;
-  --c-text-em: ${emColor} !important;
-  --vp-sidebar-bg-color: ${SideBarBg} !important;
+  --vp-c-bg: ${bgColor};
+  --vp-c-brand: ${brandColor};
+  --vp-c-brand-1: ${brandColor1};
+  --vp-c-text-1: ${textColor1};
+  --vp-button-brand-bg: ${buttonBgColor};
+  --c-text-code: ${codeColor};
+  --c-text-strong: ${strongColor};
+  --c-text-em: ${emColor};
+  --vp-sidebar-bg-color: ${SideBarBg};
 }
 
 .dark {
-  --vp-c-bg: ${darkBgColor} !important;
-  --vp-c-brand: ${darkBrandColor} !important;
-  --vp-c-brand-1: ${darkBrandColor1} !important;
-  --vp-c-text-1: ${darkTextColor1} !important;
-  --vp-button-brand-bg: ${darkButtonBgColor} !important;
-  --c-text-code: ${darkCodeColor} !important;
-  --c-text-strong: ${darkStrongColor} !important;
-  --c-text-em: ${darkEmColor} !important;
-  --vp-sidebar-bg-color: ${darkSideBarBg} !important;
+  --vp-c-bg: ${darkBgColor};
+  --vp-c-brand: ${darkBrandColor};
+  --vp-c-brand-1: ${darkBrandColor1};
+  --vp-c-text-1: ${darkTextColor1};
+  --vp-button-brand-bg: ${darkButtonBgColor};
+  --c-text-code: ${darkCodeColor};
+  --c-text-strong: ${darkStrongColor};
+  --c-text-em: ${darkEmColor};
+  --vp-sidebar-bg-color: ${darkSideBarBg};
 }
 `.trim()
 
