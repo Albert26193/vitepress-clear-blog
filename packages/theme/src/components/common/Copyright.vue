@@ -1,14 +1,16 @@
 <template>
   <div class="site-footer">
     <a class="vitepress" :href="website">{{ webTitle }}</a>
-    <a class="ml-4" href="https://beian.miit.gov.cn/">沪ICP备2024051666号</a>
+    <a v-if="icpNumber" class="ml-4" href="https://beian.miit.gov.cn/">{{
+      icpNumber
+    }}</a>
     <br />
     Powered by
     <a class="vitepress" target="_blank" href="//vitepress.vuejs.org/"
       >VitePress</a
     >
     Theme by
-    <a class="vitepress" target="_blank" href="">Vitepress-blog</a>
+    <a class="vitepress" target="_blank" :href="themeLink">Vitepress-blog</a>
   </div>
 </template>
 
@@ -18,6 +20,10 @@
   const { site, theme } = useData()
   const website = theme.value.website
   const webTitle = site.value.title
+  const icpNumber = theme.value.icpNumber || ''
+  const themeLink =
+    theme.value.themeLink ||
+    'https://github.com/Albert26193/vitepress-clear-blog'
 </script>
 
 <style scoped>

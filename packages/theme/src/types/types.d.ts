@@ -26,6 +26,8 @@ export interface Post {
 export interface BlogConfig extends DefaultTheme.Config {
   posts: Post[]
   website: string
+  icpNumber?: string
+  themeLink?: string
 }
 
 export interface PageLink {
