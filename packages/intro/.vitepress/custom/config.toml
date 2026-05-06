@@ -7,6 +7,8 @@ locale = "zh_CN"
 lang = "zh-CN"
 siteUrl = "https://github.com/your-username/vitepress-clear-blog"
 theme-color = "#1934e9"
+icpNumber = ""
+themeLink = ""
 
 [page]
 pageSize = 10
