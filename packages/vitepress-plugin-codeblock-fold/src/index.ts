@@ -42,6 +42,8 @@ export function setupCodeBlockFold(options: CodeBlockFoldOptions = {}) {
         // Create mask and button
         const mask = document.createElement('div')
         mask.className = 'vp-code-fold-mask'
+        mask.setAttribute('role', 'button')
+        mask.setAttribute('tabindex', '0')
 
         // Initial state: folded
         let isFolded = true
@@ -50,17 +52,30 @@ export function setupCodeBlockFold(options: CodeBlockFoldOptions = {}) {
           if (isFolded) {
             htmlEl.style.maxHeight = `${visibleHeight}px`
             htmlEl.classList.add('vp-code-fold-active')
-            mask.innerHTML = `<div class="vp-code-fold-btn" title="Expand">
+            mask.setAttribute('aria-expanded', 'false')
+            mask.setAttribute('aria-label', 'Expand code block')
+            mask.innerHTML = `<span class="vp-code-fold-btn">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </div>`
+            </span>`
           } else {
             // When expanded, set to scrollHeight + padding
             // Note: padding-bottom is set to 28px in CSS
             htmlEl.style.maxHeight = `${htmlEl.scrollHeight + 30}px`
             htmlEl.classList.remove('vp-code-fold-active')
-            mask.innerHTML = `<div class="vp-code-fold-btn" title="Collapse">
+            mask.setAttribute('aria-expanded', 'true')
+            mask.setAttribute('aria-label', 'Collapse code block')
+            mask.innerHTML = `<span class="vp-code-fold-btn">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
-            </div>`
+            </span>`
+          }
+        }
+
+        mask.onkeydown = (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            e.stopPropagation()
+            isFolded = !isFolded
+            updateState()
           }
         }
 
