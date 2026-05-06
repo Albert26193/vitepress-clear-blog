@@ -10,7 +10,7 @@
         <a
           v-for="link in outgoingLinks"
           :key="link.relativePath"
-          :href="link.fullUrl"
+          :href="withBase(link.fullUrl)"
           class="page-link slide-enter"
           :title="getTitleFromPost(link, allPostsData || [])"
         >
@@ -27,7 +27,7 @@
         <a
           v-for="link in backLinks"
           :key="link.relativePath"
-          :href="link.fullUrl"
+          :href="withBase(link.fullUrl)"
           class="page-link slide-enter"
           :title="getTitleFromPost(link, allPostsData || [])"
         >
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
   import { siteMetadata } from 'virtual:vitepress-analyzer'
-  import { useRoute } from 'vitepress'
+  import { useRoute, withBase } from 'vitepress'
   import {
     getPageBackLinks,
     // getPageMetadata,
