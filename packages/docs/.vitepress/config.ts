@@ -34,6 +34,7 @@ const analyzerOptions = {
 }
 
 const blogTheme = await getThemeConfig()
+const base = process.env.VITEPRESS_BASE || '/'
 
 export default defineConfig({
   extends: blogTheme.clearBlogConfig,
@@ -62,7 +63,7 @@ export default defineConfig({
   },
   vite: blogTheme.vite as object,
   title: '55555555',
-  base: '/',
+  base,
   srcDir: './docs',
   head,
   themeConfig: {
