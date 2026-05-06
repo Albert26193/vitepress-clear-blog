@@ -24,7 +24,7 @@
       <div class="i-carbon-user ml-3" />
       <span
         class="hover:text-color-[var(--vp-c-brand)] ml-1 align-middle text-sm hover:cursor-pointer"
-        @click="router.go('/about.html')"
+        @click="router.go(withBase('/about.html'))"
       >
         {{ author }}
       </span>
