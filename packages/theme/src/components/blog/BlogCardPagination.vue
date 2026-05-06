@@ -61,10 +61,9 @@
   }
 
   .card-container {
-    @apply mx-auto mt-8 grid grid-cols-1 items-center gap-x-6 gap-y-4;
+    @apply mx-auto mt-8 grid grid-cols-1 gap-x-6 gap-y-4;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
     @apply max-w-[1280px];
-    @apply items-center justify-center;
   }
 
   .page-footer {
