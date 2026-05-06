@@ -34,11 +34,11 @@ const transformPageD3Data = (
   nodesMap.set(currentPath, {
     id: currentPath,
     relativePath: currentPath,
-    fullUrl: currentPath,
+    fullUrl: '/' + currentPath,
     name: getTitleFromPost(
       {
         relativePath: currentPath,
-        fullUrl: currentPath,
+        fullUrl: '/' + currentPath,
         text: currentPath.split('/').pop() || currentPath,
         absolutePath: currentPath,
         type: 'markdown',
@@ -166,7 +166,7 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
     getOrCreateNode(
       path,
       path.split('/').pop() || path,
-      path,
+      '/' + path,
       'page',
       0,
       metadata.outgoingLinks.length

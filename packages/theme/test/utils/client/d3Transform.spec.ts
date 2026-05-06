@@ -434,6 +434,62 @@ describe('transformSiteD3Data', () => {
     expect(result.links.length).toBe(2)
   })
 
+  it('fullUrl starts with / for page nodes in transformSiteD3Data', () => {
+    const metadata: SiteMetadata = {
+      'page-x': {
+        outgoingLinks: [],
+        backLinks: [],
+        wordCount: 10,
+        firstHeading: 'Page X',
+        lastUpdated: 100
+      }
+    }
+    const result = transformSiteD3Data(metadata)
+    const pageNode = result.nodes.find((n) => n.id === 'page-x')
+    expect(pageNode).toBeDefined()
+    expect(pageNode?.fullUrl).toBe('/page-x')
+  })
+
+  it('fullUrl starts with / for link nodes in transformSiteD3Data', () => {
+    const metadata: SiteMetadata = {
+      source: {
+        outgoingLinks: [
+          {
+            text: 'Target',
+            relativePath: 'target',
+            fullUrl: '/target',
+            type: 'markdown',
+            raw: '/target'
+          }
+        ],
+        backLinks: [],
+        wordCount: 1,
+        firstHeading: 'Source',
+        lastUpdated: 1
+      }
+    }
+    const result = transformSiteD3Data(metadata)
+    const linkNode = result.nodes.find((n) => n.id === 'target')
+    expect(linkNode).toBeDefined()
+    expect(linkNode?.fullUrl).toBe('/target')
+  })
+
+  it('fullUrl starts with / for current page node in transformPageD3Data', () => {
+    const metadata: SiteMetadata = {
+      'the-page': {
+        outgoingLinks: [],
+        backLinks: [],
+        wordCount: 5,
+        firstHeading: 'The Page',
+        lastUpdated: 1
+      }
+    }
+    const result = transformPageD3Data('the-page', metadata)
+    const centerNode = result.nodes.find((n) => n.id === 'the-page')
+    expect(centerNode).toBeDefined()
+    expect(centerNode?.fullUrl).toBe('/the-page')
+  })
+
   it('handles backlink pointing to a path already in nodesMap from outgoingLinks', () => {
     const metadata: SiteMetadata = {
       '/center': {
