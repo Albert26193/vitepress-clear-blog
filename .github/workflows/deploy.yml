@@ -33,6 +33,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm build
+        env:
+          VITEPRESS_BASE: /vitepress-clear-blog/
 
       - uses: actions/upload-pages-artifact@v4
         with:
