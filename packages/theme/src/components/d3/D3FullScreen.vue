@@ -27,17 +27,20 @@
   import D3ForceGraph from './D3ForceGraph.vue'
 
   const { isDark } = useData()
-  const zoomLevel = ref(0.8)
   const props = withDefaults(
     defineProps<{
       width?: number
       height?: number
+      zoomLevel?: number
     }>(),
     {
       width: 960,
-      height: 960
+      height: 960,
+      zoomLevel: 0.8
     }
   )
+
+  const zoomLevel = ref(props.zoomLevel)
 
   const graphData = computed(() => transformSiteD3Data(siteMetadata))
   const linkColor = computed(() => {

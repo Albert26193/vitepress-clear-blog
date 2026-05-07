@@ -10,11 +10,12 @@
       </div>
     </div>
 
-    <D3HomePage
+    <D3FullScreen
       :width="Math.min(width * 0.75, 1000)"
       :height="Math.min(width * 0.5, 600)"
+      :zoom-level="0.7"
       class="mt-6 border-1 border-solid"
-    ></D3HomePage>
+    ></D3FullScreen>
   </section>
 </template>
 
@@ -84,7 +85,7 @@
   import { useWindowSize } from '@vueuse/core'
   import { useRouter, withBase } from 'vitepress'
 
-  import D3HomePage from '../d3/D3HomePage.vue'
+  import D3FullScreen from '../d3/D3FullScreen.vue'
 
   const router = useRouter()
   const { width, height } = useWindowSize()
