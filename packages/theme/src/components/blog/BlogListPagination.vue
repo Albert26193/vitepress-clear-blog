@@ -60,13 +60,14 @@
 <style scoped>
   /* Main Container — stretch within .blog-main (fills viewport band) */
   .blog-list-pagination {
-    @apply flex min-h-0 flex-1 flex-col;
+    @apply flex min-h-0 flex-1 flex-col pt-24;
+    @apply md:pt-20;
   }
 
   /* List Container */
   .list-container {
-    @apply mx-auto mt-5 min-h-0 max-w-[1280px] flex-1 space-y-0 px-3;
-    @apply md:mt-6 md:px-6 lg:px-8;
+    @apply mx-auto min-h-0 max-w-[1280px] flex-1 space-y-0 px-3;
+    @apply md:px-6 lg:px-8;
   }
 
   /* Page Footer */

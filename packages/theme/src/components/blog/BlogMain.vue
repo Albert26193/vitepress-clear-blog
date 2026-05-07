@@ -53,8 +53,8 @@
     @apply mx-auto flex w-full max-w-[min(96rem,calc(100%-1.5rem))] flex-col px-3;
     /* Breathing room under nav without the old oversized gap */
     @apply pt-5 pb-8 md:pt-7 md:pb-10;
-    min-height: calc(100vh - var(--vp-nav-height) - 10rem);
-    min-height: calc(100dvh - var(--vp-nav-height) - 10rem);
+    min-height: calc(100vh - var(--vp-nav-height) - 3rem);
+    min-height: calc(100dvh - var(--vp-nav-height) - 3rem);
   }
 
   .pagination-header {

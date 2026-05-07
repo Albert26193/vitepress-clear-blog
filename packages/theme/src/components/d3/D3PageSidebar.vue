@@ -1,8 +1,8 @@
 <template>
   <div class="d3-page-container">
-    <div class="flex justify-end">
+    <div class="d3-page-actions">
       <button
-        class="mt-1 mr-2 -mb-2 items-center"
+        class="items-center"
         @click="popupOverview"
         :disabled="showOverview || showExpand"
         title="Overview"
@@ -12,7 +12,7 @@
         />
       </button>
       <button
-        class="mt-1 mr-1 -mb-2 items-center"
+        class="items-center"
         @click="expandGraph"
         :disabled="showOverview || showExpand"
         title="Expand"
@@ -25,11 +25,11 @@
     <div class="d3-force-sidebar-container">
       <D3PageGraph
         :width="520"
-        :height="500"
+        :height="525"
         :circle-color="'var(--vp-c-brand)'"
         :text-color="'var(--vp-c-text-1)'"
-        :diameter="9"
-        :text-size="18"
+        :diameter="8"
+        :text-size="20"
       />
     </div>
   </div>
@@ -95,8 +95,13 @@
 
 <style scoped>
   .d3-page-container {
+    @apply relative;
     @apply border-1 border-solid border-gray-500;
     @apply dark:border-gray-500/50;
+  }
+
+  .d3-page-actions {
+    @apply absolute top-1 right-1 z-20 flex items-center gap-2;
   }
 
   .d3-force-sidebar-container {
