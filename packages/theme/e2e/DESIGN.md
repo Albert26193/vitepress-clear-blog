@@ -51,7 +51,7 @@ Every `.vue` file under `packages/theme/src/components/` **must** have a matchin
 |-----------|------|-------|----------------|
 | D3ForceGraph | `D3ForceGraph.spec.ts` | `/` | SVG+circles+lines render, force simulation runs (nodes move), drag node→follows mouse→releases back to simulation, zoom scroll, hover→connected nodes highlight+unrelated fade, click node→navigate to post |
 | D3FullScreen | `D3FullScreen.spec.ts` | `/` → fullscreen button | fullscreen graph opens, Escape exits, interactions work (drag/zoom/click) in fullscreen |
-| D3HomePage | `D3HomePage.spec.ts` | `/` | graph renders in homepage container, zoomLevel appropriate for inline, nodes labeled |
+| D3FullScreen (homepage) | `D3HomePage.spec.ts` | `/` | graph renders in homepage container with zoomLevel=0.7, nodes labeled |
 | D3PageGraph | `D3PageGraph.spec.ts` | `/blogs/vitepress-first` → sidebar graph | page-local graph renders, current page node highlighted, neighbor nodes visible, click neighbor→navigate |
 | D3PageSidebar | `D3PageSidebar.spec.ts` | `/blogs/vitepress-first` | graph icon/button in sidebar, click→popup opens, popup contains D3PageGraph |
 
@@ -59,7 +59,7 @@ Every `.vue` file under `packages/theme/src/components/` **must** have a matchin
 
 | Component | Spec | Route | What to Verify |
 |-----------|------|-------|----------------|
-| Homepage | `Homepage.spec.ts` | `/` | D3HomePage renders, BlogMain renders, blog cards present, page title set, meta description, copyright visible |
+| Homepage | `Homepage.spec.ts` | `/` | D3FullScreen renders with zoomLevel=0.7, BlogMain renders, blog cards present, page title set, meta description, copyright visible |
 
 ### Layout
 
