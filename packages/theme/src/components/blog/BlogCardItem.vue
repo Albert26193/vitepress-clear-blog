@@ -67,8 +67,8 @@
 
 <style scoped>
   .blog-card {
-    @apply relative flex flex-col;
-    @apply justify-between overflow-hidden rounded-xl bg-white p-6 shadow-sm;
+    @apply relative flex flex-col justify-start overflow-hidden rounded-xl bg-white;
+    @apply px-5 pt-4 pb-5 shadow-sm;
     @apply min-h-[200px];
     @apply cursor-pointer;
     @apply dark:bg-[var(--vp-c-bg)];
@@ -86,8 +86,8 @@
   }
 
   .card-banner {
-    @apply mt-2 flex items-center justify-between;
-    @apply text-sm text-gray-500;
+    @apply mt-auto flex shrink-0 items-center justify-between;
+    @apply pt-2 text-sm text-gray-500;
   }
 
   .card-time {
@@ -96,12 +96,19 @@
   }
 
   .card-title {
-    @apply my-1 text-lg;
+    @apply mt-0 mb-1 border-none pb-0 text-lg;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    text-decoration: none !important;
+  }
+
+  .card-title span {
+    text-decoration: none !important;
   }
 
   .describe {
-    @apply my-2 text-sm text-gray-700;
-    @apply mb-4 indent-2;
+    @apply mt-1 text-sm leading-relaxed text-gray-700;
+    @apply mb-2 indent-2;
     @apply dark:text-gray-300/90;
   }
 

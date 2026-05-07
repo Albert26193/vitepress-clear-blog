@@ -1,5 +1,13 @@
 // @import 'heti/umd/heti.min.css';
 
+/* `heti.min.css` caps `.heti { max-width: 42em }`. `addClassForHetiElement` adds
+ * `.heti` to `main.main`, so wide custom layouts (timeline, article index…) get
+ * squeezed to ~672px and sit left-aligned in the content band. */
+.VPDoc .content-container main.main.heti:has(.timeline-page),
+.VPDoc .content-container main.main.heti:has(.blog-main) {
+  max-width: none !important;
+}
+
 .VPDoc {
   .main {
     &.heti .meta-des {

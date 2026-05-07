@@ -58,23 +58,22 @@
 </script>
 
 <style scoped>
-  /* Main Container */
+  /* Main Container — stretch within .blog-main (fills viewport band) */
   .blog-list-pagination {
-    @apply flex flex-col;
-    min-height: calc(100vh - var(--vp-nav-height) - 64px);
+    @apply flex min-h-0 flex-1 flex-col;
   }
 
   /* List Container */
   .list-container {
-    @apply mx-auto mt-8 min-h-[60vh] max-w-[1280px] flex-1 space-y-0 px-3;
-    @apply md:mt-16 md:min-h-190 md:px-6 lg:px-8;
+    @apply mx-auto mt-5 min-h-0 max-w-[1280px] flex-1 space-y-0 px-3;
+    @apply md:mt-6 md:px-6 lg:px-8;
   }
 
   /* Page Footer */
   .page-footer {
-    @apply mt-6 mb-4 border-t border-gray-200 px-4;
+    @apply mt-auto shrink-0 border-t border-gray-200 px-4 pt-6 pb-2;
     @apply dark:border-gray-700;
-    @apply md:mt-8 md:px-6;
+    @apply md:px-6;
   }
 
   /* Pagination */

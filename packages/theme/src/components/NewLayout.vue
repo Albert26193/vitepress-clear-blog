@@ -1,7 +1,7 @@
 <template>
   <Layout class="clear-layout">
     <template #doc-before>
-      <div v-if="true">
+      <div v-if="showDocBanner">
         <ClientOnly>
           <DocBanner />
         </ClientOnly>
@@ -61,6 +61,12 @@
   const { frontmatter, site } = useData()
   const route = useRoute()
   const layout = computed(() => frontmatter.value.layout)
+
+  /** Index-style routes only embed custom UI in markdown; DocBanner is for real posts. */
+  const showDocBanner = computed(() => {
+    const p = route.path.replace(/\.html$/, '')
+    return !/^\/(pages|timeline|tags|collections)(\/|$)/.test(p)
+  })
 
   const ROUTE_COMPONENTS = {
     timeline: defineAsyncComponent(() => import('./Timeline.vue')),
