@@ -129,6 +129,36 @@ describe('Document Analyzer', () => {
         ])
       )
     })
+
+    it('should keep valid wiki links and build wiki backlinks', () => {
+      const testDirConfig = createConfig({
+        docsDir: resolve(__dirname, 'attach'),
+        excludeDirs: ['node_modules', '.git', 'dist'],
+        includeFiles: ['.md'],
+        excludeFiles: [],
+        ignoreCase: true
+      })
+
+      const { globalMetadata } = analyzeAllDocuments(testDirConfig)
+
+      expect(globalMetadata['links-wiki'].outgoingLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            text: 'bananas',
+            relativePath: 'bananas',
+            type: 'wiki'
+          })
+        ])
+      )
+      expect(globalMetadata['bananas'].backLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            relativePath: 'links-wiki',
+            type: 'wiki'
+          })
+        ])
+      )
+    })
   })
 
   describe('Edge Cases', () => {
