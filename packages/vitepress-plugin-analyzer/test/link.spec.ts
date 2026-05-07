@@ -455,6 +455,24 @@ describe('Link Type Tests', () => {
       })
     })
 
+    it('should ignore wiki links whose target file does not exist', () => {
+      const content = '[[Simple Link]] and [[Missing Wiki Page]]'
+      const links = extractInnerLinks(content, testConfig, 'attach/test.md')
+
+      expect(links).toHaveLength(1)
+      expect(links[0]).toMatchObject({
+        type: 'wiki',
+        relativePath: 'attach/Simple Link'
+      })
+      expect(links).not.toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            relativePath: 'attach/Missing Wiki Page'
+          })
+        ])
+      )
+    })
+
     it('should handle mixed link types in the same content', () => {
       // Using actual content from links-wiki.md
       const content =

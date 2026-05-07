@@ -100,6 +100,35 @@ describe('transformPageD3Data', () => {
     expect(result.links[0].target).toBe('/page-b')
   })
 
+  it('does not create page graph nodes or links for missing wiki targets', () => {
+    const metadata: SiteMetadata = {
+      '/page-a': {
+        outgoingLinks: [
+          {
+            text: 'Missing Wiki',
+            relativePath: '/missing-wiki',
+            fullUrl: '/missing-wiki',
+            type: 'wiki',
+            raw: '[[Missing Wiki]]'
+          }
+        ],
+        backLinks: [],
+        wordCount: 100,
+        firstHeading: 'Page A',
+        lastUpdated: 1000
+      }
+    }
+
+    const result = transformPageD3Data('/page-a', metadata)
+
+    expect(result.nodes).toHaveLength(1)
+    expect(result.nodes[0].outDegree).toBe(0)
+    expect(result.nodes.find((node) => node.id === '/missing-wiki')).toBe(
+      undefined
+    )
+    expect(result.links).toHaveLength(0)
+  })
+
   it('creates back link nodes and links', () => {
     const result = transformPageD3Data('/page-b', twoPageMetadata)
     const backLinkNode = result.nodes.find((n) => n.id === '/page-a')
@@ -318,12 +347,48 @@ describe('transformSiteD3Data', () => {
         wordCount: 10,
         firstHeading: 'Main',
         lastUpdated: 100
+      },
+      '/wiki-page': {
+        outgoingLinks: [],
+        backLinks: [],
+        wordCount: 10,
+        firstHeading: 'Wiki Page',
+        lastUpdated: 100
       }
     }
     const result = transformSiteD3Data(metadata)
     const wikiNode = result.nodes.find((n) => n.id === 'wiki-page')
     expect(wikiNode).toBeDefined()
     expect(wikiNode?.type).toBe('wiki')
+  })
+
+  it('does not create site graph nodes or links for missing wiki targets', () => {
+    const metadata: SiteMetadata = {
+      '/main': {
+        outgoingLinks: [
+          {
+            text: 'Missing Wiki',
+            relativePath: '/missing-wiki',
+            fullUrl: '/missing-wiki',
+            type: 'wiki',
+            raw: '[[Missing Wiki]]'
+          }
+        ],
+        backLinks: [],
+        wordCount: 10,
+        firstHeading: 'Main',
+        lastUpdated: 100
+      }
+    }
+
+    const result = transformSiteD3Data(metadata)
+
+    expect(result.nodes.find((node) => node.id === 'missing-wiki')).toBe(
+      undefined
+    )
+    expect(
+      result.links.find((link) => link.target === 'missing-wiki')
+    ).toBeUndefined()
   })
 
   it('normalizes paths with multiple slashes', () => {

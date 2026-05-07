@@ -8,6 +8,26 @@ import {
 import { data as allPostsData } from '../node/posts.data'
 import { getTitleFromPost } from './title'
 
+type PageGraphLink = SiteMetadata[string]['outgoingLinks'][number]
+
+const normalizeMetadataKey = (path: string): string =>
+  path.replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/')
+
+const hasPageMetadata = (path: string, siteMetadata: SiteMetadata): boolean => {
+  if (siteMetadata[path]) return true
+
+  const normalizedPath = normalizeMetadataKey(path)
+  return Boolean(
+    siteMetadata[normalizedPath] || siteMetadata[`/${normalizedPath}`]
+  )
+}
+
+const isRenderableGraphLink = (
+  link: PageGraphLink,
+  siteMetadata: SiteMetadata
+): boolean =>
+  link.type !== 'wiki' || hasPageMetadata(link.relativePath, siteMetadata)
+
 /**
  * Transform post links into D3 force graph data structure for current page
  *
@@ -29,6 +49,14 @@ const transformPageD3Data = (
 
   // Store unique nodes in a map
   const nodesMap = new Map<string, D3Node>()
+  const outgoingLinks =
+    currentPageData.outgoingLinks?.filter((link) =>
+      isRenderableGraphLink(link, siteMetadata)
+    ) || []
+  const backLinks =
+    currentPageData.backLinks?.filter((link) =>
+      isRenderableGraphLink(link, siteMetadata)
+    ) || []
 
   // Add current page as source node
   nodesMap.set(currentPath, {
@@ -47,12 +75,12 @@ const transformPageD3Data = (
       allPostsData || []
     ),
     type: 'page',
-    inDegree: currentPageData.backLinks?.length || 0,
-    outDegree: currentPageData.outgoingLinks?.length || 0
+    inDegree: backLinks.length,
+    outDegree: outgoingLinks.length
   })
 
   // Add nodes from outgoing links
-  currentPageData.outgoingLinks?.forEach((link) => {
+  outgoingLinks.forEach((link) => {
     if (!nodesMap.has(link.relativePath)) {
       nodesMap.set(link.relativePath, {
         id: link.relativePath,
@@ -70,7 +98,7 @@ const transformPageD3Data = (
   })
 
   // Add nodes from back links
-  currentPageData.backLinks?.forEach((link) => {
+  backLinks.forEach((link) => {
     if (!nodesMap.has(link.relativePath)) {
       nodesMap.set(link.relativePath, {
         id: link.relativePath,
@@ -90,17 +118,17 @@ const transformPageD3Data = (
   // Create links array
   const links = [
     // Outgoing links
-    ...(currentPageData.outgoingLinks?.map((link) => ({
+    ...outgoingLinks.map((link) => ({
       source: currentPath,
       target: link.relativePath,
       type: link.type
-    })) || []),
+    })),
     // Back links
-    ...(currentPageData.backLinks?.map((link) => ({
+    ...backLinks.map((link) => ({
       source: link.relativePath,
       target: currentPath,
       type: link.type
-    })) || [])
+    }))
   ]
 
   return {
@@ -162,6 +190,10 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
 
   // First pass: Create all nodes with initial degree values
   Object.entries(siteMetadata).forEach(([path, metadata]) => {
+    const outgoingLinks = metadata.outgoingLinks.filter((link) =>
+      isRenderableGraphLink(link, siteMetadata)
+    )
+
     // Add current page as a node
     getOrCreateNode(
       path,
@@ -169,11 +201,11 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
       '/' + path,
       'page',
       0,
-      metadata.outgoingLinks.length
+      outgoingLinks.length
     )
 
     // Add target nodes from page's outgoing links
-    metadata.outgoingLinks.forEach((link) => {
+    outgoingLinks.forEach((link) => {
       getOrCreateNode(
         link.relativePath,
         link.text,
@@ -189,14 +221,16 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   const links: D3Link[] = []
   Object.entries(siteMetadata).forEach(([path, metadata]) => {
     const sourceId = normalizeId(path)
-    metadata.outgoingLinks.forEach((link) => {
-      const targetId = normalizeId(link.relativePath)
-      links.push({
-        source: sourceId,
-        target: targetId,
-        type: link.type
+    metadata.outgoingLinks
+      .filter((link) => isRenderableGraphLink(link, siteMetadata))
+      .forEach((link) => {
+        const targetId = normalizeId(link.relativePath)
+        links.push({
+          source: sourceId,
+          target: targetId,
+          type: link.type
+        })
       })
-    })
   })
 
   // Convert to D3 data structure

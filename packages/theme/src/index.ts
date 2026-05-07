@@ -1,3 +1,4 @@
+import { siteMetadata } from 'virtual:vitepress-analyzer'
 import type { EnhanceAppContext, Theme } from 'vitepress'
 import { useRoute } from 'vitepress'
 import setupCodeBlockFold from 'vitepress-plugin-codeblock-fold'
@@ -22,7 +23,11 @@ import SidebarTag from './components/sidebar/SidebarTag.vue'
 // styles
 import './styles/index.scss'
 import { mediumZoomInit } from './utils/client'
-import { addClassForHetiElement, registerHetiScript } from './utils/client/'
+import {
+  addClassForHetiElement,
+  markBrokenWikiLinks,
+  registerHetiScript
+} from './utils/client/'
 
 export const BlogTheme: Theme = {
   ...DefaultTheme,
@@ -43,6 +48,49 @@ export const BlogTheme: Theme = {
     app.component('DetailsBlock', DetailsBlock)
     // vitepress original
     app.component('Badge', VPBadge)
+
+    if (typeof window !== 'undefined') {
+      let wikiLinkRefreshTimer: number | undefined
+      let wikiLinkObserver: MutationObserver | undefined
+      const getBaseFromLocation = () => {
+        const routePath = router.route.path
+        return window.location.pathname.endsWith(routePath)
+          ? window.location.pathname.slice(0, -routePath.length) || '/'
+          : '/'
+      }
+      const scheduleWikiLinkRefresh = () => {
+        window.clearTimeout(wikiLinkRefreshTimer)
+        wikiLinkRefreshTimer = window.setTimeout(() => {
+          markBrokenWikiLinks(siteMetadata, {
+            base: getBaseFromLocation(),
+            currentPath: router.route.path
+          })
+        })
+      }
+
+      app.mixin({
+        mounted: scheduleWikiLinkRefresh,
+        updated: scheduleWikiLinkRefresh
+      })
+      const ensureWikiLinkObserver = () => {
+        if (wikiLinkObserver) return
+        const target = document.querySelector('#app') || document.body
+        if (!target) {
+          window.setTimeout(ensureWikiLinkObserver, 50)
+          return
+        }
+        wikiLinkObserver = new MutationObserver(scheduleWikiLinkRefresh)
+        wikiLinkObserver.observe(target, {
+          childList: true,
+          subtree: true
+        })
+      }
+      window.setTimeout(scheduleWikiLinkRefresh)
+      window.setTimeout(scheduleWikiLinkRefresh, 100)
+      window.setTimeout(scheduleWikiLinkRefresh, 500)
+      window.addEventListener('load', scheduleWikiLinkRefresh, { once: true })
+      ensureWikiLinkObserver()
+    }
   },
   setup() {
     const route = useRoute()
