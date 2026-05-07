@@ -36,7 +36,7 @@
       color: var(--vp-c-brand);
     }
 
-    h2 {
+    h2:not(.card-title):not(.list-title) {
       font-size: 1.4rem;
       font-weight: 700;
       padding-bottom: 1px;
@@ -44,6 +44,18 @@
       border-bottom: 1px solid var(--vp-c-divider);
       border-top: 0px !important;
       margin: 0px 5px 5px -8px !important;
+    }
+
+    /* Undo VitePress “doc section” chrome on `.vp-doc h2` (border-top etc.) — card/list indexes use `<h2>`. */
+    .vp-doc h2.card-title,
+    .vp-doc h2.list-title {
+      margin: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      border-top: none !important;
+      border-bottom: none !important;
+      letter-spacing: normal;
+      line-height: 1.35;
     }
 
     h3 {

@@ -212,11 +212,10 @@
 </script>
 
 <style scoped>
-  /* Page Container */
+  /* Page Container — use full doc column width (avoid nested md:w-7/10 + md:w-4/5 shrinking) */
   .timeline-page {
-    @apply mx-auto;
-    @apply w-full px-4;
-    @apply md:w-7/10 md:px-0;
+    @apply mx-auto w-full px-4;
+    @apply md:px-0;
   }
 
   /* Controls Container */
@@ -229,7 +228,6 @@
   .timeline-container {
     @apply border-b-solid mx-auto flex w-full flex-col border border-gray-200 pb-4;
     @apply dark:border-gray-900/20;
-    @apply md:w-4/5;
   }
 
   /* Year Header */
@@ -248,7 +246,7 @@
     @apply flex max-w-full cursor-pointer items-center font-serif text-sm;
     @apply animate-fade-in delay-100 duration-200;
     @apply dark:text-gray-500;
-    @apply md:max-w-36 md:text-base;
+    @apply md:text-base;
   }
 
   /* Year Title */
@@ -290,7 +288,6 @@
   .timeline-month-title-span {
     @apply flex max-w-full cursor-pointer items-center font-serif;
     @apply animate-fade-in delay-200 duration-200;
-    @apply md:max-w-36;
   }
 
   /* Month Container */

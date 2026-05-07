@@ -49,11 +49,16 @@
 
 <style scoped>
   .blog-main {
-    @apply mx-auto w-9/10 max-w-6xl;
+    /* One column stretching to the visible viewport so card grid + pager feel grounded */
+    @apply mx-auto flex w-full max-w-[min(96rem,calc(100%-1.5rem))] flex-col px-3;
+    /* Breathing room under nav without the old oversized gap */
+    @apply pt-5 pb-8 md:pt-7 md:pb-10;
+    min-height: calc(100vh - var(--vp-nav-height) - 10rem);
+    min-height: calc(100dvh - var(--vp-nav-height) - 10rem);
   }
 
   .pagination-header {
-    @apply position-relative mx-auto max-w-[1280px];
-    @apply mt-8 ml-3 flex;
+    @apply position-relative mx-auto mt-0 flex shrink-0;
+    @apply w-full max-w-[min(96rem,calc(100%-1.5rem))] px-3 pb-1;
   }
 </style>

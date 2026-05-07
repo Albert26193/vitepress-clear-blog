@@ -1,12 +1,10 @@
 <template>
   <div class="blog-card-pagination">
-    <div class="flex-grow"></div>
     <div class="card-container slide-enter-content">
       <div v-for="post in currentPagePosts" :key="post.regularPath">
         <BlogCardItem :post="post"></BlogCardItem>
       </div>
     </div>
-    <div class="flex-grow"></div>
     <footer class="page-footer">
       <div class="pagination">
         <a
@@ -55,21 +53,20 @@
 </script>
 
 <style scoped>
+  /* Parent .blog-main sets viewport min-height; this grows between toolbar and bottom */
   .blog-card-pagination {
-    @apply flex flex-col;
-    @apply min-h-[calc(100vh-var(--vp-nav-height)-80px)];
+    @apply flex min-h-0 flex-1 flex-col;
   }
 
   .card-container {
-    @apply mx-auto mt-8 grid grid-cols-1 gap-x-6 gap-y-4;
+    @apply mx-auto mt-4 grid flex-1 grid-cols-1 content-start gap-x-6 gap-y-4;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
-    @apply max-w-[1280px];
+    @apply max-w-[1280px] self-stretch;
   }
 
   .page-footer {
-    @apply mt-8 mb-4;
-    @apply border-t border-gray-200;
-    @apply dark:text-gray-400;
+    @apply mt-auto shrink-0 border-t border-gray-200 px-3 pt-6 pb-2;
+    @apply dark:border-[var(--vp-c-divider)] dark:text-gray-400;
   }
 
   .pagination {
