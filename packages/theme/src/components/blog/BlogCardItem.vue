@@ -56,7 +56,7 @@
 
   const partedTags = props.post.frontMatter.tags?.slice(0, 1) ?? []
   const navigateToPost = (event: MouseEvent) => {
-    window.location.href = props.post.regularPath
+    window.location.href = withBase(props.post.regularPath)
   }
 
   const preview = useHtmlPreview(props.post.html || '', {
@@ -69,7 +69,7 @@
   .blog-card {
     @apply relative flex flex-col;
     @apply justify-between overflow-hidden rounded-xl bg-white p-6 shadow-sm;
-    @apply h-[55px] max-w-[90px];
+    @apply min-h-[200px];
     @apply cursor-pointer;
     @apply dark:bg-[var(--vp-c-bg)];
   }
