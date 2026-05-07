@@ -24,8 +24,12 @@
         <span>{{ useTimeFormat(post.frontMatter.date) }}</span>
       </div>
       <!-- tags -->
-      <div class="flex flex-wrap gap-1">
-        <span v-for="item in partedTags" :key="item + 'key'">
+      <div class="card-tags">
+        <span
+          v-for="item in partedTags"
+          :key="item + 'key'"
+          class="tag-wrapper"
+        >
           <a @click.stop :href="withBase(`/tags.html?tag=${item}`)" class="tag"
             >{{ item }}
           </a>
@@ -126,8 +130,27 @@
     @apply font-bold text-white;
   }
 
-  .tag-view a {
-    @apply cursor-pointer hover:text-[var(--vp-c-brand)];
+  .card-tags {
+    @apply flex flex-wrap gap-1;
+  }
+
+  .tag-wrapper {
+    @apply inline-block;
+  }
+
+  .tag {
+    @apply inline-flex cursor-pointer items-center rounded-full border border-gray-600 px-2 py-1 text-[11px] leading-4;
+    @apply text-gray-900 no-underline transition-colors duration-200 dark:text-gray-100;
+  }
+
+  .tag:hover,
+  .tag:focus,
+  .tag:active {
+    @apply no-underline;
+    border-color: var(--vp-c-brand);
+    color: var(--vp-c-brand);
+    padding-block-end: 0.25rem;
+    text-decoration: none;
   }
 
   @media screen and (max-width: 768px) {

@@ -55,11 +55,12 @@
 <style scoped>
   /* Parent .blog-main sets viewport min-height; this grows between toolbar and bottom */
   .blog-card-pagination {
-    @apply flex min-h-0 flex-1 flex-col;
+    @apply flex min-h-0 flex-1 flex-col pt-12;
+    @apply md:pt-14;
   }
 
   .card-container {
-    @apply mx-auto mt-4 grid flex-1 grid-cols-1 content-start gap-x-6 gap-y-4;
+    @apply mx-auto grid flex-1 grid-cols-1 content-start gap-x-6 gap-y-4;
     @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
     @apply max-w-[1280px] self-stretch;
   }

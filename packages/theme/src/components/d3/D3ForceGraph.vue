@@ -188,7 +188,7 @@
     node
       .append('rect')
       .attr('class', 'text-background')
-      .attr('fill', 'var(--vp-c-bg)')
+      .attr('fill', 'var(--vp-sidebar-bg-color)')
       .attr('opacity', 0.95)
       .attr('rx', 3) // rounded rectangle
       .attr('ry', 3)

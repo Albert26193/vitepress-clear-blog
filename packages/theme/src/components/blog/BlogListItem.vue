@@ -210,9 +210,19 @@
 
   /* Tag */
   .tag {
-    @apply cursor-pointer text-[11px];
+    @apply inline-flex cursor-pointer items-center rounded-full border border-gray-600 px-2 py-1 text-[11px] leading-4;
+    @apply text-gray-900 no-underline transition-colors duration-200 dark:text-gray-100;
     @apply md:text-[12px];
-    @apply hover:text-[var(--vp-c-brand)];
+  }
+
+  .tag:hover,
+  .tag:focus,
+  .tag:active {
+    @apply no-underline;
+    border-color: var(--vp-c-brand);
+    color: var(--vp-c-brand);
+    padding-block-end: 0.25rem;
+    text-decoration: none;
   }
 
   /* Custom Divider */
