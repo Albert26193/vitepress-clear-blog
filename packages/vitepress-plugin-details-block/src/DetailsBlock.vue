@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, useId } from 'vue'
 
   const props = defineProps({
     /**
@@ -19,6 +19,7 @@
   })
 
   const isOpen = ref(props.open)
+  const contentId = useId()
 
   const toggle = () => {
     isOpen.value = !isOpen.value
@@ -27,7 +28,16 @@
 
 <template>
   <div class="vp-details-block" :class="{ 'is-open': isOpen }">
-    <div class="vp-details-summary" @click="toggle">
+    <div
+      class="vp-details-summary"
+      role="button"
+      tabindex="0"
+      :aria-expanded="isOpen"
+      :aria-controls="contentId"
+      @click="toggle"
+      @keydown.enter.prevent="toggle"
+      @keydown.space.prevent="toggle"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="20"
@@ -40,12 +50,18 @@
         stroke-linejoin="round"
         class="vp-details-icon"
         :class="{ 'is-open': isOpen }"
+        aria-hidden="true"
       >
         <polyline points="9 18 15 12 9 6"></polyline>
       </svg>
       <slot name="summary">{{ summary }}</slot>
     </div>
-    <div class="vp-details-content" v-show="isOpen">
+    <div
+      :id="contentId"
+      class="vp-details-content"
+      v-show="isOpen"
+      :aria-hidden="!isOpen"
+    >
       <slot></slot>
     </div>
   </div>
