@@ -92,8 +92,7 @@
 
   /* Tags Container */
   .tags-container {
-    @apply mt-2 flex grow flex-nowrap gap-x-2 gap-y-2 overflow-x-auto;
-    @apply sm:flex-wrap;
+    @apply mt-2 flex grow flex-wrap gap-x-2 gap-y-2;
   }
 
   /* Tag Wrapper */
@@ -103,7 +102,7 @@
 
   /* Tag */
   .tag {
-    @apply inline-block cursor-pointer text-xs;
+    @apply inline-block cursor-pointer text-xs whitespace-nowrap;
     @apply hover:text-[var(--vp-c-brand)];
     @apply md:text-sm;
   }
