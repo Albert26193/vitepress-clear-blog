@@ -48,6 +48,13 @@ const getCurrentDirectory = (currentPath: string): string => {
   return parts.join('/')
 }
 
+/**
+ * Produces normalized lookup keys for a wiki href from both absolute and page-relative contexts.
+ *
+ * @param href - Link href captured from rendered Markdown.
+ * @param options - Base and current page context used to resolve relative wiki links.
+ * @returns Candidate metadata keys that may represent the linked page.
+ */
 const getWikiLinkCandidates = (
   href: string,
   options: Pick<WikiLinkOptions, 'base' | 'currentPath'>
@@ -82,6 +89,13 @@ const getWikiLinkCandidates = (
 const createExistingPageSet = (siteMetadata: SiteMetadata): Set<string> =>
   new Set(Object.keys(siteMetadata).map(normalizeMetadataPath))
 
+/**
+ * Marks unresolved wiki links in rendered content so readers can distinguish missing pages.
+ *
+ * @param siteMetadata - Analyzer metadata used as the source of existing pages.
+ * @param options - DOM and path context for resolving wiki link candidates.
+ * @returns Nothing; matching anchor elements are updated in place.
+ */
 const markBrokenWikiLinks = (
   siteMetadata: SiteMetadata,
   options: WikiLinkOptions = {}

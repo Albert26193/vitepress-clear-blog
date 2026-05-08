@@ -1,3 +1,9 @@
+/**
+ * Counts readable Markdown content for analyzer metadata while preserving code as searchable text.
+ *
+ * @param content - Markdown content to count.
+ * @returns Combined count of CJK characters and word-like non-CJK tokens.
+ */
 const calculateWords = (content: string): number => {
   // Store original content for code blocks
   let codeContent = ''

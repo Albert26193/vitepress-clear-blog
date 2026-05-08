@@ -85,14 +85,23 @@
   import type { Post } from '../../types/types'
 
   const props = defineProps({
+    /**
+     * Post data rendered in the timeline-style list row.
+     */
     post: {
       type: Object as PropType<Post>,
       required: true
     },
+    /**
+     * Marks the first row so connector styling can start cleanly.
+     */
     isFirst: {
       type: Boolean,
       default: false
     },
+    /**
+     * Marks the final row so connector styling can end cleanly.
+     */
     isLast: {
       type: Boolean,
       default: false

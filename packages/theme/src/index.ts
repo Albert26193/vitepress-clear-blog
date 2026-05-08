@@ -29,6 +29,9 @@ import {
   registerHetiScript
 } from './utils/client/'
 
+/**
+ * Extends VitePress with Clear Blog layout, global components, and client-only enhancements.
+ */
 export const BlogTheme: Theme = {
   ...DefaultTheme,
   Layout: NewLayout,

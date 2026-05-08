@@ -29,11 +29,11 @@ const isRenderableGraphLink = (
   link.type !== 'wiki' || hasPageMetadata(link.relativePath, siteMetadata)
 
 /**
- * Transform post links into D3 force graph data structure for current page
+ * Builds the local neighborhood graph for the current page so page views stay focused.
  *
- * @param {string} currentPath Path of the current page
- * @param {SiteMetadata} siteMetadata Metadata containing all pages and their links
- * @returns {D3Data} D3 force graph data structure with nodes and links
+ * @param currentPath - Current page path used as the graph center.
+ * @param siteMetadata - Analyzer metadata containing page relationships.
+ * @returns D3 graph data for the current page and directly related pages.
  */
 const transformPageD3Data = (
   currentPath: string,
@@ -139,10 +139,10 @@ const transformPageD3Data = (
 
 // TODO: maybe we need pre calculate
 /**
- * Transform all site links into D3 force graph data structure
+ * Builds a whole-site relationship graph for overview visualizations.
  *
- * @param {SiteMetadata} siteMetadata Metadata containing all pages and their links
- * @returns {D3Data} D3 force graph data structure with nodes and links for the entire site
+ * @param siteMetadata - Analyzer metadata containing all page relationships.
+ * @returns D3 graph data for the entire analyzed site.
  */
 const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
   // Store unique nodes in a map

@@ -12,14 +12,14 @@ import { extractHeading } from './heading'
 import { extractInnerLinks } from './link'
 
 /**
- * Analyze a single document and extract its metadata
- * Note: Frontmatter will be handled by VitePress's markdown transformer
+ * Extracts metadata from one Markdown document and updates shared analyzer maps in the same pass.
  *
- * @param content - Raw markdown content
- * @param config - The analyzer configuration
- * @param filePath - Path to the document relative to docs root
- * @param globalMetadata - Optional global metadata map to update backlinks
- * @returns Document metadata
+ * @param content - Raw Markdown content.
+ * @param config - Analyzer configuration for path and link resolution.
+ * @param filePath - Document path relative to the docs root.
+ * @param globalMetadata - Metadata map receiving this page and backlink updates.
+ * @param globalPages - Page map receiving this page record.
+ * @returns Metadata for the analyzed document.
  */
 export const analyzeDocument = (
   content: string,
@@ -75,12 +75,13 @@ export const analyzeDocument = (
 }
 
 /**
- * Analyze a markdown file and extract its metadata
+ * Reads one Markdown file from disk and analyzes it using its docs-root-relative path.
  *
- * @param filePath - Absolute path to the markdown file
- * @param config - The analyzer configuration
- * @param globalMetadata - Global metadata map to update
- * @returns The metadata for the analyzed file
+ * @param filePath - Absolute path to the Markdown file.
+ * @param config - Analyzer configuration for docs root and filtering.
+ * @param globalMetadata - Metadata map receiving this page and backlink updates.
+ * @param globalPages - Page map receiving this page record.
+ * @returns Metadata for the analyzed file.
  */
 export const analyzeFile = (
   filePath: string,
@@ -106,12 +107,13 @@ export const analyzeFile = (
 }
 
 /**
- * Scan a directory recursively and analyze all markdown files
+ * Walks a docs directory so analyzer metadata covers every included Markdown page.
  *
- * @param dirPath - Path to the directory to scan
- * @param config - The analyzer configuration
- * @param globalMetadata - Global metadata map to update
- * @param globalPages - Global pages map to update
+ * @param dirPath - Directory to scan recursively.
+ * @param config - Analyzer configuration for directory and file filtering.
+ * @param globalMetadata - Metadata map receiving analyzed pages.
+ * @param globalPages - Page map receiving analyzed page records.
+ * @returns Nothing; results are written into the provided maps.
  */
 export const scanDirectory = (
   dirPath: string,
@@ -148,10 +150,10 @@ export const scanDirectory = (
 }
 
 /**
- * Build relationships between documents (e.g., backlinks)
- * This should be called after all documents have been analyzed
+ * Rebuilds backlinks after all documents are known so relationships are not order-dependent.
  *
- * @param globalMetadata - Map of document paths to their metadata
+ * @param globalMetadata - Metadata map whose backlinks should mirror outgoing links.
+ * @returns Nothing; backlinks are rewritten in place.
  */
 export const buildDocumentRelationships = (
   globalMetadata: Record<string, PageMetadata>
@@ -178,10 +180,10 @@ export const buildDocumentRelationships = (
 }
 
 /**
- * Analyze all documents in a directory and build relationships
+ * Produces whole-site metadata used by the virtual module and graph components.
  *
- * @param config - The analyzer configuration
- * @returns Global metadata map with all document relationships
+ * @param config - Analyzer configuration for docs root and filtering rules.
+ * @returns Analyzer metadata and page records for the complete docs tree.
  */
 export const analyzeAllDocuments = (
   config: AnalyzerConfig

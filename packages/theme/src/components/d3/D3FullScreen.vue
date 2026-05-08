@@ -29,8 +29,11 @@
   const { isDark } = useData()
   const props = withDefaults(
     defineProps<{
+      /** Width reserved for the full-site graph SVG viewport. */
       width?: number
+      /** Height reserved for the full-site graph SVG viewport. */
       height?: number
+      /** Initial zoom scale chosen to fit the overview graph on screen. */
       zoomLevel?: number
     }>(),
     {

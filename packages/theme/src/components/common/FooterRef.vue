@@ -22,17 +22,23 @@
   import { ref } from 'vue'
 
   const props = defineProps({
-    // footnote id
+    /**
+     * Footnote id shared by the inline reference and target anchor.
+     */
     id: {
       type: [String, Number],
       required: true
     },
-    // footnote text inline display
+    /**
+     * Short inline label shown inside the footnote badge.
+     */
     text: {
       type: String,
       default: '1'
     },
-    // footnote content for tooltip
+    /**
+     * Rendered footnote HTML shown in the hover tooltip.
+     */
     content: {
       type: String,
       default: ''

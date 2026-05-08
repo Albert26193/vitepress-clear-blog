@@ -65,15 +65,10 @@ const findFirstHeading = (tokens: Token[]): string => {
 }
 
 /**
- * Extract the first heading from markdown content
- * Rules:
- * 1. If first heading is H1 or H2, return its content
- * 2. If first heading is lower than H2 (H3-H6), return 'no-heading'
- * 3. If no heading found, return 'no-heading'
- * 4. If content is empty, return null
+ * Extracts the first meaningful top-level heading for page summaries.
  *
- * @param content - The markdown content to parse
- * @returns The first heading text, 'no-heading', or null if empty content
+ * @param content - Markdown content to parse.
+ * @returns First H1/H2 text, a sentinel when no suitable heading exists, or null for empty content.
  */
 export const extractFirstHeading = (content: string): string | null => {
   if (!content) return null
@@ -82,7 +77,12 @@ export const extractFirstHeading = (content: string): string | null => {
   return findFirstHeading(tokens)
 }
 
-// Original function - keep for backward compatibility
+/**
+ * Preserves the historical array-based heading API while the analyzer stores one summary heading.
+ *
+ * @param content - Markdown content to parse.
+ * @returns An array containing the first summary heading when one is available.
+ */
 export const extractHeading = (content: string): string[] => {
   // This implementation can be expanded when needed
   const firstHeading = extractFirstHeading(content)

@@ -5,17 +5,25 @@ import './style.css'
 
 export interface CodeBlockFoldOptions {
   /**
-   * The height threshold to trigger folding.
+   * Defines when a code block becomes visually collapsible.
+   *
    * @default 200
    */
   minHeight?: number
   /**
-   * The height of the collapsed code block.
+   * Keeps a folded block tall enough to hint that more code is available.
+   *
    * @default 50
    */
   visibleHeight?: number
 }
 
+/**
+ * Installs client-side folding so long VitePress code blocks do not dominate article layouts.
+ *
+ * @param options - Thresholds that control when and how much code remains visible.
+ * @returns Nothing; the behavior is registered against the active Vue route.
+ */
 export function setupCodeBlockFold(options: CodeBlockFoldOptions = {}) {
   // Ensure running in browser environment
   if (typeof window === 'undefined') return

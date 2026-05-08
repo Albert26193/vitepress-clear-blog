@@ -1,12 +1,21 @@
 import type { PageMetadata, SitePages } from '../../../types'
 
-// Virtual module identifiers
+/**
+ * Public virtual module id imported by client-side consumers.
+ */
 export const VIRTUAL_MODULE_ID = 'virtual:vitepress-analyzer'
+
+/**
+ * Internal Vite id used to distinguish the resolved virtual analyzer module.
+ */
 export const RESOLVED_VIRTUAL_MODULE_ID = '\0' + VIRTUAL_MODULE_ID
 
 /**
- * Generate virtual module content
- * @param siteMetaData - Page metadata object
+ * Serializes analyzer state into a virtual module so runtime code can import static metadata.
+ *
+ * @param siteMetadata - Page metadata collected during the current analysis pass.
+ * @param sitePages - Page records collected during the current analysis pass.
+ * @returns JavaScript source for the virtual analyzer module.
  */
 export const generateVirtualModuleContent = (
   siteMetadata: Record<string, PageMetadata>,
@@ -29,19 +38,19 @@ export const sitePages = ${JSON.stringify(sitePages, null, 2)}
 }
 
 /**
- * Client API interface for the virtual module
+ * Documents the helper surface exposed alongside analyzer virtual-module data.
  */
 export interface ClientAPI {
-  /** Get metadata for a specific page */
+  /** Returns metadata for a path without exposing the backing map shape. */
   getPageMetadata: (path: string) => PageMetadata | undefined
-  /** Get metadata for all pages */
+  /** Returns the analyzer map for whole-site views. */
   getAllMetadata: () => Record<string, PageMetadata>
-  /** Get word count for a specific page */
+  /** Returns word count with callers deciding how to display missing pages. */
   getPageWordCount: (path: string) => number
-  /** Get headings for a specific page */
+  /** Returns headings used by navigational summaries. */
   getPageHeadings: (path: string) => string[]
-  /** Get outgoing links for a specific page */
+  /** Returns links from the page to its targets. */
   getPageOutgoingLinks: (path: string) => PageMetadata['outgoingLinks']
-  /** Get backlinks for a specific page */
+  /** Returns links from other pages back to this page. */
   getPageBackLinks: (path: string) => PageMetadata['backLinks']
 }

@@ -52,6 +52,9 @@
   import type { Post } from '../../types/types'
 
   const props = defineProps({
+    /**
+     * Post data rendered as a clickable card preview.
+     */
     post: {
       type: Object as PropType<Post>,
       required: true

@@ -6,10 +6,10 @@ import { generateThemeFile } from './node'
 const assignedConfigPath = '.vitepress/custom/config.toml'
 
 /**
- * generate the theme custom css
+ * Registers Vite hooks that keep generated theme CSS in sync with custom TOML config.
  *
- * @param configPath the path of the config file
- * @output the custom css file named generated.css
+ * @param configPath - Location of the TOML file that drives generated theme variables.
+ * @returns A VitePress plugin that updates CSS during build and local development.
  */
 const generateThemePlugin = (
   configPath: string = assignedConfigPath

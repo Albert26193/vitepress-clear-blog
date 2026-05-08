@@ -65,13 +65,10 @@ const useTruncatedDescription = (
 }
 
 /**
- * @abstract: use author for article,
- * if author is set in frontmatter,use author from frontmatter,
- * if author is not set in frontmatter, use author from config,
- * if author is not set in config, use default author
+ * Resolves the display author with frontmatter taking precedence over site defaults.
  *
- * @param frontMatter
- * @returns author name
+ * @param frontMatter - Post frontmatter that may override the configured author.
+ * @returns Author name suitable for post metadata UI.
  */
 const useAuthor = (frontMatter: PostFrontMatter) => {
   const { site } = useData()
@@ -88,7 +85,9 @@ const useAuthor = (frontMatter: PostFrontMatter) => {
 }
 
 /**
- * @abstract: use transition for dark mode
+ * Provides the appearance toggle hook used by VitePress while honoring reduced-motion preferences.
+ *
+ * @returns Nothing; the toggle function is provided to descendant components.
  */
 const useDarkTransition = () => {
   const { isDark } = useData()
@@ -280,13 +279,11 @@ const useHtmlPreview = (
 }
 
 /**
- * @abstract: use title for page cards,
- * candidate titles:
- * 1. title from frontmatter
- * 2. first heading of the page
+ * Chooses the best title for post cards when frontmatter is incomplete.
  *
- * @param frontMatter
- * @returns title
+ * @param frontMatter - Post frontmatter that may provide an explicit title.
+ * @param html - Rendered post HTML used to find a heading fallback.
+ * @returns Display title for post cards and lists.
  */
 const useTitle = (frontMatter: PostFrontMatter, html: string) => {
   // 1. first use title from frontmatter
@@ -304,9 +301,10 @@ const useTitle = (frontMatter: PostFrontMatter, html: string) => {
 }
 
 /**
- * @abstract: check if the date is in YYYY-MM-DD format
- * @param date YYYY-MM-DD
- * @returns true if the date is in YYYY-MM-DD format, false otherwise
+ * Validates dates before formatting so list UI does not display misleading fallback dates.
+ *
+ * @param date - Candidate date string from post frontmatter.
+ * @returns Whether the date can be formatted by the theme.
  */
 const _checkTimeFormat = (date: string) => {
   if (!date) {
@@ -325,9 +323,10 @@ const _checkTimeFormat = (date: string) => {
 }
 
 /**
- * format date from YYYY-MM-DD to Jun 5, 2025
- * @param date YYYY-MM-DD
- * @returns Formatted date string, e.g. Jun 5, 2025
+ * Formats valid frontmatter dates for compact post metadata display.
+ *
+ * @param date - Post date in the theme-supported format.
+ * @returns Display date, or an empty string when the input should not be shown.
  */
 const useTimeFormat = (date: string) => {
   if (!date || !_checkTimeFormat(date)) {

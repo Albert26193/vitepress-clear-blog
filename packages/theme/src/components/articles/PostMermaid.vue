@@ -20,10 +20,16 @@
   }
 
   const props = defineProps({
+    /**
+     * Stable Mermaid render id used to keep generated SVG ids unique on the page.
+     */
     id: {
       type: String as PropType<string>,
       required: true
     },
+    /**
+     * URL-encoded Mermaid source passed from the Markdown fence renderer.
+     */
     code: {
       type: String as PropType<string>,
       required: true

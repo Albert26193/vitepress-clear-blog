@@ -11,11 +11,10 @@ import {
 } from './node/virtual'
 
 /**
- * VitePress analyzer plugin
- * Analyzes markdown files and provides metadata through a virtual module
+ * Provides build-time Markdown analysis through a Vite virtual module consumed by the theme.
  *
- * @param userConfig - Optional user configuration
- * @returns VitePress plugin
+ * @param userConfig - Optional analyzer overrides for docs location and filtering rules.
+ * @returns Vite plugin that refreshes site metadata during dev and build.
  */
 export function vitePressAnalyzerPlugin(
   userConfig?: Partial<AnalyzerConfig>
