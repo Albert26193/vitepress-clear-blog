@@ -33,3 +33,5 @@ export default {
 
 - `minHeight`: The height threshold (in pixels) to trigger folding. Default is `200`.
 - `visibleHeight`: The height (in pixels) of the collapsed code block. Default is `50`.
+
+`visibleHeight` should be smaller than `minHeight`; otherwise folded code blocks may not appear visually collapsed.
