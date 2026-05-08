@@ -1,0 +1,61 @@
+{
+  "skill_name": "tool-test-check",
+  "evals": [
+    {
+      "id": 1,
+      "name": "blog-component-related-e2e",
+      "prompt": "我改了 packages/theme/src/components/blog/BlogMain.vue，帮我本地跑一下该跑的测试；unit 全量跑，e2e 只跑相关的。",
+      "expected_output": "Should choose quick local mode, run or propose `pnpm test:unit`, then select `pnpm -F vitepress-clear-blog test:e2e -- e2e/BlogMain.spec.ts`, and mention CI-aligned checks are still needed before PR.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "d3-related-e2e",
+      "prompt": "这次主要改了 D3ForceGraph 和 d3Utils，跑测试别全量 e2e，挑相关的。",
+      "expected_output": "Should choose quick local mode, include full root unit tests, and select D3-related specs such as D3ForceGraph.spec.ts, D3PageGraph.spec.ts, D3PageSidebar.spec.ts, D3FullScreen.spec.ts, or explain the selected subset based on exact changed files.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "global-layout-full-e2e",
+      "prompt": "我动了 NewLayout.vue 和主题入口，帮我设计本地验证命令。",
+      "expected_output": "Should run `pnpm test:unit`, select related local e2e specs instead of defaulting to naked `pnpm test:e2e`, and include `pnpm typecheck` because shared layout/theme entry changes are broad.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "plugin-unit-typecheck-no-e2e",
+      "prompt": "我只改了 vitepress-plugin-analyzer 的 parser 逻辑，怎么本地检查？",
+      "expected_output": "Should run root `pnpm test:unit`, skip Playwright e2e unless docs/theme rendering changed, and add `pnpm typecheck` for plugin/API confidence.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "lint-no-mutation",
+      "prompt": "顺手 lint 一下，但不要改我的文件。",
+      "expected_output": "Should avoid root `pnpm lint` because it uses `eslint --fix`, and instead use non-mutating `pnpm exec eslint './packages/**/*.{ts,tsx,js,jsx,vue}'`.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "pr-ci-aligned-full-check",
+      "prompt": "准备提 PR 了，按 CI 门禁帮我列一下本地要跑哪些检查，lint 和 typecheck 也得过。",
+      "expected_output": "Should choose PR/CI-aligned mode and include `pnpm lint; git diff --exit-code`, `bash scripts/check-e2e-coverage.sh`, `pnpm typecheck`, `pnpm test:unit`, `pnpm build`, and targeted related E2E via `pnpm -F vitepress-clear-blog test:e2e -- e2e/<Spec>.spec.ts` rather than naked `pnpm test:e2e`, plus note the commit check if validating the current commit.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "ci-lint-mutating-command",
+      "prompt": "我要和 GitHub Actions 完全一致地跑 lint，本地怎么跑？",
+      "expected_output": "Should recommend the CI command `pnpm lint; git diff --exit-code`, explain that `pnpm lint` may modify files through `eslint --fix`, and say to inspect/commit any resulting diff.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "e2e-coverage-check",
+      "prompt": "我新增了一个 theme 组件和 e2e spec，除了跑测试还要检查啥？",
+      "expected_output": "Should include `bash scripts/check-e2e-coverage.sh` because CI checks E2E coverage, plus unit tests and targeted related E2E specs based on the changed component/spec. It should not default to full local E2E unless requested or clearly necessary.",
+      "files": []
+    }
+  ]
+}
