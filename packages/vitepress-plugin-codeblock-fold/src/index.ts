@@ -30,7 +30,13 @@ export function setupCodeBlockFold(options: CodeBlockFoldOptions = {}) {
 
   const route = useRoute()
   const minHeight = options.minHeight ?? 200
-  const visibleHeight = options.visibleHeight ?? minHeight
+  const visibleHeight = options.visibleHeight ?? 50
+
+  if (visibleHeight >= minHeight) {
+    console.warn(
+      '[vitepress-plugin-codeblock-fold] visibleHeight should be smaller than minHeight so folded code blocks remain visibly collapsed.'
+    )
+  }
 
   const foldCodeBlocks = () => {
     const codeBlocks = document.querySelectorAll(
