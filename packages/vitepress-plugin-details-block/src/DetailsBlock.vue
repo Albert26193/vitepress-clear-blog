@@ -2,10 +2,16 @@
   import { ref } from 'vue'
 
   const props = defineProps({
+    /**
+     * Fallback summary shown when the named summary slot is not provided.
+     */
     summary: {
       type: String,
       default: 'Click to view details'
     },
+    /**
+     * Initial expansion state for pages that should reveal details by default.
+     */
     open: {
       type: Boolean,
       default: false

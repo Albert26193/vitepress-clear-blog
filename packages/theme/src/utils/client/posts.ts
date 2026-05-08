@@ -3,10 +3,10 @@ import mediumZoom from 'medium-zoom'
 import { Post } from '../../types/types.d'
 
 /**
- * Initialize tags from posts and group posts by tag
+ * Groups posts by tag so tag pages can reuse one normalized lookup table.
  *
- * @param {Post[]} post Array of posts to process
- * @returns {Record<string, Post[]>} Record object with tags as keys and arrays of posts as values
+ * @param post Array of posts to group.
+ * @returns Posts keyed by tag name.
  */
 const initTags = (post: Post[]) => {
   const data: Record<string, Post[]> = {}
@@ -28,10 +28,10 @@ const initTags = (post: Post[]) => {
 }
 
 /**
- * Sorts posts by year and returns them as nested arrays
+ * Groups posts by year for archive views that need stable reverse-chronological buckets.
  *
- * @param {Post[]} posts Array of posts to sort
- * @returns {Post[][]} Array of arrays, where each inner array contains posts from the same year
+ * @param posts Posts to organize by frontmatter year.
+ * @returns Year buckets ordered from newest to oldest.
  */
 const useYearSort = (posts: Post[]): Post[][] => {
   if (!posts) {
@@ -58,10 +58,10 @@ const useYearSort = (posts: Post[]): Post[][] => {
 }
 
 /**
- * Sorts posts by year and month, organizing them in a nested structure
+ * Groups posts by year and month for calendar-like archive navigation.
  *
- * @param {Post[]} posts Array of posts to sort
- * @returns {Record<string, Record<string, Post[]>>} Nested record object with years as top-level keys and months as second-level keys
+ * @param posts Posts to organize by frontmatter date.
+ * @returns Nested year and month buckets.
  */
 const useMonthYearSort = (
   posts: Post[]
@@ -84,10 +84,10 @@ const useMonthYearSort = (
 }
 
 /**
- * Calculates the number of words in the post
+ * Counts mixed-language content for reading-time and metadata displays.
  *
- * @param {string} content The content of the post to calculate
- * @returns {number} Number of words, counting Chinese characters individually
+ * @param content Content to count after Markdown has been loaded.
+ * @returns Word-like count with CJK characters counted individually.
  */
 const calculateWords = (content: string): number => {
   const pattern =
@@ -108,9 +108,9 @@ const calculateWords = (content: string): number => {
 }
 
 /**
- * function for Initialize medium-zoom with custom options
+ * Initializes medium-zoom for article images while avoiding layout artifacts from code labels.
  *
- * @returns {void}
+ * @returns Nothing; zoom handlers are attached to matching DOM elements.
  */
 const mediumZoomInit = () => {
   // Select images from both main content and mermaid diagrams

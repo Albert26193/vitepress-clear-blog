@@ -28,10 +28,16 @@
   import { Teleport, onMounted, onUnmounted, watch } from 'vue'
 
   const props = defineProps<{
+    /** Controls popup visibility while allowing the parent to own state. */
     show: boolean
   }>()
 
   const emit = defineEmits<{
+    /**
+     * Requests that the parent close the popup after backdrop, button, or ESC actions.
+     *
+     * @param e - Close event name.
+     */
     (e: 'close'): void
   }>()
 

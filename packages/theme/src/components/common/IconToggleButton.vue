@@ -24,9 +24,13 @@
 
   const props = withDefaults(
     defineProps<{
+      /** Current selected option value for v-model consumers. */
       modelValue: string
+      /** Options rendered as icon buttons in a compact control group. */
       icons: IconOption[]
+      /** Direction used when the control needs to fit narrow or tall spaces. */
       layout?: ButtonLayout
+      /** Size preset used to match surrounding navigation density. */
       size?: ButtonSize
     }>(),
     {
@@ -36,6 +40,12 @@
   )
 
   const emit = defineEmits<{
+    /**
+     * Keeps parent state synchronized with the selected icon option.
+     *
+     * @param e - Vue model update event name.
+     * @param value - Selected option value.
+     */
     (e: 'update:modelValue', value: string): void
   }>()
 

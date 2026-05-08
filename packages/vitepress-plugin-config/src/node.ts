@@ -7,10 +7,11 @@ import type { ConfigToml } from './types'
 const assignedConfigPath = '.vitepress/custom/config.toml'
 
 /**
- * generate the theme custom css
+ * Generates CSS variables from TOML so users can customize the theme without editing source styles.
  *
- * @param configPath the path of the config file
- * @output the custom css file named generated.css
+ * @param configPath - Location of the TOML file that provides theme color overrides.
+ * @returns Nothing; writes the generated stylesheet into the VitePress theme directory.
+ * @throws When the TOML file does not contain a theme section.
  */
 export const generateThemeFile = async (
   configPath: string = assignedConfigPath

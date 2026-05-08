@@ -35,6 +35,7 @@
   const svgRef = ref<SVGSVGElement | null>(null)
 
   interface Props extends D3ForceConfig {
+    /** Current zoom level mirrored through v-model for external controls. */
     modelValue?: number
   }
 
@@ -53,6 +54,12 @@
   })
 
   const emit = defineEmits<{
+    /**
+     * Keeps external zoom displays synchronized with D3 zoom behavior.
+     *
+     * @param e - Vue model update event name.
+     * @param value - Current D3 zoom scale.
+     */
     (e: 'update:modelValue', value: number): void
   }>()
 

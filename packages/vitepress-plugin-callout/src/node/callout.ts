@@ -14,6 +14,12 @@ const PRESET_CALLOUTS = [
 ]
 const LETTER_RE = /^[a-zA-Z]+$/
 
+/**
+ * Adds support for custom VitePress callout block types while leaving preset callouts untouched.
+ *
+ * @param md - Markdown-it instance whose token pipeline should recognize custom callouts.
+ * @returns Nothing; renderer rules are registered on the provided Markdown-it instance.
+ */
 const calloutPlugin = (md: MarkdownIt): void => {
   md.core.ruler.after('block', 'custom-callout', (state: StateCore): void => {
     const tokens = state.tokens as Token[]

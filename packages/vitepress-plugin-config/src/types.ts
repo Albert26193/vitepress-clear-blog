@@ -1,3 +1,6 @@
+/**
+ * Describes custom CSS variable overrides for both light and dark theme modes.
+ */
 export interface ThemeConfig {
   'vp-c-bg'?: string
   'vp-c-brand'?: string
@@ -11,6 +14,9 @@ export interface ThemeConfig {
   dark?: ThemeConfig
 }
 
+/**
+ * Mirrors the custom TOML file shape consumed by the generated-theme plugin.
+ */
 export interface ConfigToml {
   meta: {
     title?: string

@@ -7,6 +7,14 @@ interface RatioOptions {
   maxRatio?: number
 }
 
+/**
+ * Scales graph nodes by connectivity so dense pages stay visually prominent without manual sizing.
+ *
+ * @param nodes - Graph nodes whose ids should receive a display ratio.
+ * @param links - Graph links used to derive each node degree.
+ * @param options - Optional ratio bounds for the generated scale.
+ * @returns Ratio map keyed by node id.
+ */
 export function calculateNodeRatios(
   nodes: D3Node[],
   links: D3Link[],

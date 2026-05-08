@@ -19,6 +19,11 @@ const _getHeitElements = (): Element[] => {
   return hetiElements
 }
 
+/**
+ * Adds Heti classes to VitePress content regions so Chinese typography is applied consistently.
+ *
+ * @returns Nothing; matching DOM elements are updated in place.
+ */
 const addClassForHetiElement = (): void => {
   const elements = _getHeitElements()
   if (!elements.length) {
@@ -33,7 +38,9 @@ const addClassForHetiElement = (): void => {
 }
 
 /**
- * Init Heti class and scripts
+ * Loads Heti after content exists so automatic spacing can run against hydrated pages.
+ *
+ * @returns Nothing once the Heti script has loaded and spacing has been applied.
  */
 const registerHetiScript = async () => {
   const { load } = useScriptTag(hetiScript, () => {}, { immediate: false })

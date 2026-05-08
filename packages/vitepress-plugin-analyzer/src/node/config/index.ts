@@ -11,10 +11,10 @@ const defaultConfig: AnalyzerConfig = {
 }
 
 /**
- * Create a configuration object for the analyzer
+ * Merges analyzer defaults with user overrides while preserving default arrays unless explicitly replaced.
  *
- * @param userConfig - Optional user configuration to override defaults
- * @returns The merged configuration object
+ * @param userConfig - Optional configuration supplied by plugin consumers.
+ * @returns Analyzer configuration used by parsers and path resolution.
  */
 export const createConfig = (
   userConfig?: Partial<AnalyzerConfig>

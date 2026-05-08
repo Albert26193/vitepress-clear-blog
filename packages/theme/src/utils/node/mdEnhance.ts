@@ -3,13 +3,10 @@ import taskLists from 'markdown-it-task-lists'
 import type Token from 'markdown-it/lib/token.mjs'
 
 /**
- * Get footer ref tag
+ * Rewrites footnote references to the theme tooltip component while preserving markdown-it footnote output.
  *
- * render footnote to <FooterRef/> vue component
- * side effect: add footer ref tag to the markdown-it instance,
- * and transform it to vue component
- *
- * @param md - markdown-it instance
+ * @param md - Markdown-it instance whose footnote renderer should be extended.
+ * @returns Nothing; renderer rules are registered on the provided Markdown-it instance.
  */
 const getFooterRefTag = (md: MarkdownIt) => {
   const footnoteContents: Record<string, string> = {}
@@ -79,11 +76,10 @@ const getFooterRefTag = (md: MarkdownIt) => {
 }
 
 /**
- * Get hashtag tag
+ * Converts hashtag tokens into theme tag links for consistent tag navigation.
  *
- * render #hashtag to <a href='/tags?tag=hashtag' class='blog-tag'>hashtag</a>
- *
- * @param md - markdown-it instance
+ * @param md - Markdown-it instance whose hashtag renderer should be extended.
+ * @returns Nothing; renderer rules are registered on the provided Markdown-it instance.
  */
 const getHashtag = (md: MarkdownIt) => {
   md.renderer.rules.hashtag_text = function (tokens, idx) {
@@ -101,11 +97,10 @@ const getHashtag = (md: MarkdownIt) => {
 }
 
 /**
- * Get mermaid plugin
+ * Replaces Mermaid fences with the theme renderer component so diagrams hydrate inside VitePress pages.
  *
- * render mermaid code block to <PostMermaid/> vue component
- *
- * @param md - markdown-it instance
+ * @param md - Markdown-it instance whose fence renderer should be extended.
+ * @returns Nothing; renderer rules are registered on the provided Markdown-it instance.
  */
 const mermaidPlugin = (md: MarkdownIt): void => {
   const fence = md.renderer.rules.fence?.bind(md.renderer.rules)
@@ -121,13 +116,10 @@ const mermaidPlugin = (md: MarkdownIt): void => {
 }
 
 /**
- * Task lists plugin
+ * Enables accessible task-list checkboxes in Markdown content.
  *
- * render task lists with checkboxes
- * - [ ] unchecked task
- * - [x] checked task
- *
- * @param md - markdown-it instance
+ * @param md - Markdown-it instance that should receive task-list support.
+ * @returns Nothing; the task-list plugin is registered on the provided instance.
  */
 const taskListsPlugin = (md: MarkdownIt): void => {
   md.use(taskLists, {

@@ -28,11 +28,17 @@
   const { isDark } = useData()
   const props = withDefaults(
     defineProps<{
+      /** Width reserved for the page graph SVG viewport. */
       width?: number
+      /** Height reserved for the page graph SVG viewport. */
       height?: number
+      /** Base node diameter before relationship-based scaling. */
       diameter?: number
+      /** Label size used to keep sidebar graphs readable. */
       textSize?: number
+      /** Default node color when metadata does not provide one. */
       circleColor?: string
+      /** Label color aligned with the active color mode. */
       textColor?: string
     }>(),
     {
