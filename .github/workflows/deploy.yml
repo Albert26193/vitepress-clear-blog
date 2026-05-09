@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - 'packages/docs/**'
+      - 'packages/demo/**'
       - 'packages/theme/**'
       - 'packages/vitepress-plugin-*/**'
       - '.github/workflows/deploy.yml'
@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: packages/docs/.vitepress/dist
+          path: packages/demo/.vitepress/dist
 
   deploy:
     name: Deploy

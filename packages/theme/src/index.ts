@@ -1,3 +1,4 @@
+import 'virtual:uno.css'
 import { siteMetadata } from 'virtual:vitepress-analyzer'
 import type { EnhanceAppContext, Theme } from 'vitepress'
 import { useRoute } from 'vitepress'

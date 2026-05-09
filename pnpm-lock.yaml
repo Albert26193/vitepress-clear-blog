@@ -93,6 +93,21 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0(eslint@10.1.0(jiti@2.6.1))
 
+  packages/create-blog-template:
+    devDependencies:
+      rimraf:
+        specifier: ^5.0.1
+        version: 5.0.10
+
+  packages/demo:
+    dependencies:
+      vitepress:
+        specifier: ^1.6.4
+        version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2)
+      vitepress-clear-blog:
+        specifier: workspace:*
+        version: link:../theme
+
   packages/docs:
     dependencies:
       '@types/markdown-it-footnote':
@@ -179,9 +194,18 @@ importers:
       markdown-it-footnote:
         specifier: ^4.0.0
         version: 4.0.0
+      markdown-it-hashtag:
+        specifier: ^0.4.0
+        version: 0.4.0
+      markdown-it-mathjax3:
+        specifier: ^4.3.2
+        version: 4.3.2
       markdown-it-task-lists:
         specifier: ^2.1.1
         version: 2.1.1
+      markdown-it-wikilinks:
+        specifier: ^1.4.0
+        version: 1.4.0
       medium-zoom:
         specifier: ^1.1.0
         version: 1.1.0
@@ -191,18 +215,15 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      unocss:
+        specifier: ^66.6.7
+        version: 66.6.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))
       vitepress:
         specifier: ^1.6.4
         version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.0.6)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@5.9.3)
-      vitepress-plugin-analyzer:
+      vitepress-plugin-callout:
         specifier: workspace:*
-        version: link:../vitepress-plugin-analyzer
-      vitepress-plugin-config:
-        specifier: workspace:*
-        version: link:../vitepress-plugin-config
-      vitepress-plugin-llms:
-        specifier: ^1.10.0
-        version: 1.10.0
+        version: link:../vitepress-plugin-callout
       vitepress-plugin-rss:
         specifier: ^0.4.2
         version: 0.4.2(vitepress@1.6.4(@algolia/client-search@5.46.2)(@types/node@25.0.6)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@5.9.3))
@@ -240,15 +261,6 @@ importers:
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
-      markdown-it-hashtag:
-        specifier: ^0.4.0
-        version: 0.4.0
-      markdown-it-mathjax3:
-        specifier: ^4.3.2
-        version: 4.3.2
-      markdown-it-wikilinks:
-        specifier: ^1.4.0
-        version: 1.4.0
       markdown-link-extractor:
         specifier: ^4.0.3
         version: 4.0.3
@@ -261,6 +273,21 @@ importers:
       smol-toml:
         specifier: ^1.6.0
         version: 1.6.0
+      vitepress-plugin-analyzer:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-analyzer
+      vitepress-plugin-codeblock-fold:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-codeblock-fold
+      vitepress-plugin-config:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-config
+      vitepress-plugin-details-block:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-details-block
+      vitepress-plugin-llms:
+        specifier: ^1.10.0
+        version: 1.10.0
       vitest:
         specifier: ^4.1.2
         version: 4.1.2(@types/node@25.0.6)(happy-dom@20.9.0)(jsdom@26.1.0)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))
@@ -4267,6 +4294,10 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
+  rimraf@5.0.10:
+    resolution: {integrity: sha512-l0OE8wL34P4nJH/H2ffoaniAokM2qSmrtXHmlpvYr5AVVX8msAyW0l8NVJFDxlSK4u3Uh/f41cQheDVdnYijwQ==}
+    hasBin: true
+
   rimraf@6.1.3:
     resolution: {integrity: sha512-LKg+Cr2ZF61fkcaK1UdkH2yEBBKnYjTyWzTJT6KNPcSPaiT7HSdhtMXQuN5wkTX0Xu72KQ1l8S42rlmexS2hSA==}
     engines: {node: 20 || >=22}
@@ -6659,6 +6690,19 @@ snapshots:
   '@unocss/transformer-variant-group@66.6.7':
     dependencies:
       '@unocss/core': 66.6.7
+
+  '@unocss/vite@66.6.7(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))':
+    dependencies:
+      '@jridgewell/remapping': 2.3.5
+      '@unocss/config': 66.6.7
+      '@unocss/core': 66.6.7
+      '@unocss/inspector': 66.6.7
+      chokidar: 5.0.0
+      magic-string: 0.30.21
+      pathe: 2.0.3
+      tinyglobby: 0.2.15
+      unplugin-utils: 0.3.1
+      vite: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3)
 
   '@unocss/vite@66.6.7(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))':
     dependencies:
@@ -9194,6 +9238,10 @@ snapshots:
 
   rfdc@1.4.1: {}
 
+  rimraf@5.0.10:
+    dependencies:
+      glob: 10.5.0
+
   rimraf@6.1.3:
     dependencies:
       glob: 13.0.6
@@ -9723,6 +9771,30 @@ snapshots:
       unist-util-visit-parents: 6.0.2
 
   universalify@2.0.1: {}
+
+  unocss@66.6.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3)):
+    dependencies:
+      '@unocss/cli': 66.6.7
+      '@unocss/core': 66.6.7
+      '@unocss/preset-attributify': 66.6.7
+      '@unocss/preset-icons': 66.6.7
+      '@unocss/preset-mini': 66.6.7
+      '@unocss/preset-tagify': 66.6.7
+      '@unocss/preset-typography': 66.6.7
+      '@unocss/preset-uno': 66.6.7
+      '@unocss/preset-web-fonts': 66.6.7
+      '@unocss/preset-wind': 66.6.7
+      '@unocss/preset-wind3': 66.6.7
+      '@unocss/preset-wind4': 66.6.7
+      '@unocss/transformer-attributify-jsx': 66.6.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)
+      '@unocss/transformer-compile-class': 66.6.7
+      '@unocss/transformer-directives': 66.6.7
+      '@unocss/transformer-variant-group': 66.6.7
+      '@unocss/vite': 66.6.7(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
+      - vite
 
   unocss@66.6.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3)):
     dependencies:

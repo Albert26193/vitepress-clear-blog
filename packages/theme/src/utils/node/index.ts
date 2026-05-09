@@ -1,4 +1,8 @@
-// export * from './posts.data'
-export * from './configProvider'
-export * from './mdEnhance'
-export * from './pathUtils'
+export {
+  createBlog,
+  getFooterRefTag,
+  getHashtag,
+  getThemeConfig,
+  mermaidPlugin
+} from './configProvider'
+export { taskListsPlugin } from './mdEnhance'

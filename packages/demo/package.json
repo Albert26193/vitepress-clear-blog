@@ -1,0 +1,15 @@
+{
+  "name": "demo",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "vitepress": "^1.6.4",
+    "vitepress-clear-blog": "workspace:*"
+  }
+}

@@ -17,6 +17,15 @@ export interface ThemeConfig {
 /**
  * Mirrors the custom TOML file shape consumed by the generated-theme plugin.
  */
+export interface NavLabels {
+  home?: string
+  tags?: string
+  timeline?: string
+  collections?: string
+  pages?: string
+  about?: string
+}
+
 export interface ConfigToml {
   meta: {
     title?: string
@@ -30,6 +39,15 @@ export interface ConfigToml {
   }
   page: {
     pageSize?: number
+  }
+  nav?: NavLabels
+  markdown?: {
+    mathjax?: boolean
+    wikilinks?: boolean
+    footnote?: boolean
+    hashtag?: boolean
+    mermaid?: boolean
+    callout?: boolean
   }
   theme: ThemeConfig
 }
