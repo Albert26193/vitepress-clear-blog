@@ -51,6 +51,9 @@
     "mermaid": "^11.12.2",
     "typescript": "^5.9.3",
     "vitepress": "^1.6.4",
+    "vitepress-plugin-analyzer": "workspace:*",
+    "vitepress-plugin-config": "workspace:*",
+    "vitepress-plugin-llms": "^1.10.0",
     "vitepress-plugin-rss": "^0.4.2",
     "vitepress-sidebar": "^1.33.1"
   },
@@ -72,12 +75,6 @@
     "jsdom": "^26.0.0",
     "sass": "^1.97.2",
     "smol-toml": "^1.6.0",
-    "vitepress-plugin-analyzer": "workspace:*",
-    "vitepress-plugin-callout": "workspace:*",
-    "vitepress-plugin-codeblock-fold": "workspace:*",
-    "vitepress-plugin-config": "workspace:*",
-    "vitepress-plugin-details-block": "workspace:*",
-    "vitepress-plugin-llms": "^1.10.0",
     "vitest": "^4.1.2"
   },
   "engines": {
