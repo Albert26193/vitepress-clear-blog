@@ -1,6 +1,6 @@
 ---
 name: workflow-git-pr
-description: Full git workflow from unstaged changes to a merged PR. Use this skill whenever the user wants to turn current changes into a GitHub issue, proper branch, commit, and pull request — especially when they say things like "提交并提 PR", "create an issue and PR for these changes", "按照改动建 issue 提 pr", "push these changes with a proper issue", or any request that involves creating an issue and PR from working-tree changes. This skill orchestrates the tool-git-commit and tool-git-issues skills into a single correct workflow.
+description: Full git workflow from unstaged changes to a merged PR. Use this skill whenever the user wants to turn current changes into a GitHub issue, proper branch, commit, quality gate, and pull request — especially when they say things like "提交并提 PR", "create an issue and PR for these changes", "按照改动建 issue 提 pr", "push these changes with a proper issue", or any request that involves creating an issue and PR from working-tree changes. This skill orchestrates the tool-git-issues, tool-git-commit, and tool-test-check skills into a single correct workflow.
 ---
 
 # Git Issue-to-PR Workflow
@@ -18,9 +18,9 @@ commands work regardless of the current working directory.
 ---
 
 Orchestrates the complete path from unstaged changes to a pull request. This
-skill delegates the two specialized steps — issue creation and commit message
-generation — to the `tool-git-issues` and `tool-git-commit` skills rather than
-duplicating their logic.
+skill delegates the specialized steps — issue creation, commit message
+generation, and the pre-PR quality gate — to `tool-git-issues`,
+`tool-git-commit`, and `tool-test-check` rather than duplicating their logic.
 
 ## Skill delegation
 
@@ -28,6 +28,7 @@ duplicating their logic.
 |------|-------------|--------------|
 | Analyze + create issue | **tool-git-issues** | Reads templates, picks type/labels, crafts title+body, calls `gh api` |
 | Analyze + write commit | **tool-git-commit** | Gathers context, determines type/scope, writes Conventional Commits message, validates with checker |
+| Pre-PR quality gate | **tool-test-check** | Runs the local/CI-aligned quality checks and blocks PR creation on failures |
 | Everything else | This skill | Auth check, branch naming, staging, git operations, push, PR creation |
 
 ## Two Hard Rules
@@ -311,7 +312,38 @@ EOF
 )"
 ```
 
-### Step 5: Push and create PR
+### Step 5: Quality gate — invoke `tool-test-check`
+
+Before pushing or creating a PR, invoke the **tool-test-check** skill as a
+blocking quality gate. This step must pass before continuing to PR creation.
+
+Ask `tool-test-check` to run the PR/CI-aligned local gate for the staged commit:
+
+- `pnpm lint; git diff --exit-code`
+- `bash scripts/check-e2e-coverage.sh`
+- `pnpm typecheck`
+- `pnpm test:unit`
+- `pnpm build`
+- related E2E specs for the current changes, not naked full `pnpm test:e2e`
+
+Use `tool-test-check`'s E2E selection rules to choose the related cases. Only run
+full local E2E if the user explicitly requested it or if the changes are broad
+enough that targeted cases would be misleading.
+
+If the quality gate passes, continue to Step 6.
+
+If any quality gate check fails:
+
+1. Stop before push/PR creation.
+2. Diagnose and fix the failure.
+3. Re-stage the affected files with explicit paths.
+4. Replace the existing workflow commit with a new single squashed commit that
+   includes the fixes.
+5. Re-run this quality gate.
+
+Do not push or create the PR until `tool-test-check` reports that the gate passed.
+
+### Step 6: Push and create PR
 
 The bundled script pushes the branch and creates the PR. First, write the PR
 body to a temp file:
@@ -349,7 +381,7 @@ The script will:
 
 The PR title should match the commit subject line.
 
-### Step 6: Report
+### Step 7: Report
 
 Output a summary table. The Issue and PR columns must contain the **raw full
 URL** — no markdown links, no `#N` prefix. Users need to see and copy the URL
@@ -359,6 +391,7 @@ directly:
 |------|--------|
 | Issue | https://github.com/Albert26193/vitepress-clear-blog/issues/N |
 | Branch | `issue-<id>-<slug>` |
+| Quality gate | Passed — `<tool-test-check summary>` |
 | Commit | `<hash>` — subject |
 | PR | https://github.com/Albert26193/vitepress-clear-blog/pull/M |
 
