@@ -5,7 +5,7 @@ author = "Blogger"
 keywords = "blog, vitepress, static-site"
 locale = "zh_CN"
 lang = "zh-CN"
-siteUrl = "https://example.com"
+siteUrl = "https://your-blog.github.io"
 theme-color = "#4259f3"
 
 [page]
