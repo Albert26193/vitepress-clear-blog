@@ -4,6 +4,9 @@ import markdownItHashtag from 'markdown-it-hashtag'
 import mathjax3 from 'markdown-it-mathjax3'
 // @ts-expect-error - markdown-it-wikilinks has no type declarations
 import wikilinks from 'markdown-it-wikilinks'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { parse } from 'smol-toml'
 import { defineConfig } from 'vitepress'
 import { getThemeConfig } from 'vitepress-clear-blog/node'
 import {
@@ -16,6 +19,17 @@ import { calloutPlugin } from 'vitepress-plugin-callout'
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
 import { nav } from './custom/nav'
+
+const tomlPath = resolve(import.meta.dirname, 'custom/config.toml')
+let siteTitle = 'Blog'
+try {
+  const raw = readFileSync(tomlPath, 'utf-8')
+  const parsed = parse(raw) as Record<string, unknown>
+  const meta = (parsed.meta as Record<string, string>) || {}
+  siteTitle = meta.title || 'Blog'
+} catch {
+  // fall back to default title if config.toml is missing
+}
 
 const wikilinksOptions = {
   baseURL: '/',
@@ -62,7 +76,7 @@ export default defineConfig({
     }
   },
   vite: blogTheme.vite as object,
-  title: '55555555',
+  title: siteTitle,
   base,
   srcDir: './docs',
   head,

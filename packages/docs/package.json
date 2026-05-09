@@ -15,6 +15,7 @@
   "dependencies": {
     "@types/markdown-it-footnote": "^3.0.4",
     "markdown-it-footnote": "^4.0.0",
+    "smol-toml": "^1.6.0",
     "vitepress": "^1.6.4",
     "vitepress-clear-blog": "workspace:*",
     "vitepress-plugin-analyzer": "workspace:*",
