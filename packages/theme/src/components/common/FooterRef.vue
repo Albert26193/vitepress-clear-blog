@@ -71,7 +71,6 @@
     @apply dark:bg-gray-700/80 dark:text-gray-300;
   }
 
-  /**TODO: media query */
   .footnote-tooltip {
     @apply absolute bottom-full left-1/2 z-10 mb-[1px] -translate-x-1/2;
     @apply w-max max-w-64 rounded-lg p-3;
@@ -79,6 +78,7 @@
     @apply text-left text-sm leading-5.5 font-normal;
     @apply bg-[var(--vp-sidebar-bg-color)];
     @apply dark:border-gray-500/90;
+    @apply max-sm:left-0 max-sm:max-w-[200px] max-sm:translate-x-0;
   }
 
   .tooltip-arrow {
@@ -86,7 +86,7 @@
     @apply border-6px border-solid;
     @apply border-gray-600 border-x-transparent border-b-transparent;
     @apply bg-[var(--vp-sidebar-bg-color)];
-    @apply hidden;
+    @apply max-sm:block;
   }
 
   .tooltip-content {
