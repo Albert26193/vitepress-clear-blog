@@ -1,0 +1,50 @@
+[meta]
+title = "My Blog"
+description = "A personal blog powered by VitePress Clear Blog"
+author = "Blogger"
+keywords = "blog, vitepress, static-site"
+locale = "zh_CN"
+lang = "zh-CN"
+siteUrl = "https://example.com"
+theme-color = "#4259f3"
+
+[page]
+pageSize = 10
+
+[nav]
+home = "Home"
+tags = "Tags"
+timeline = "Timeline"
+collections = "Collections"
+pages = "Pages"
+about = "About"
+
+[markdown]
+mathjax = true
+wikilinks = true
+footnote = true
+hashtag = true
+mermaid = true
+callout = true
+
+[theme]
+vp-c-bg = "#fafafa"
+vp-c-brand = "#4259f3"
+vp-c-brand-1 = "#42a903"
+vp-c-text-1 = "#222"
+vp-button-brand-bg = "#129083"
+c-text-code = "#305fef"
+c-text-strong = "#f00"
+c-text-em = "#0000ff"
+vp-sidebar-bg-color = "#f3f3f3"
+
+[theme.dark]
+vp-c-bg = "#202127"
+vp-c-brand = "#94fe00ff"
+vp-c-brand-1 = "#fb9300ff"
+vp-c-text-1 = "#ccccccff"
+vp-button-brand-bg = "#f2b983"
+c-text-code = "#00ff00"
+c-text-strong = "#ff0000"
+c-text-em = "#00ffff"
+vp-sidebar-bg-color = "#181922"

@@ -1,0 +1,19 @@
+{
+  "name": "create-blog-template",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Scaffold a VitePress Clear Blog project with one command",
+  "bin": {
+    "create-blog-template": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch --publicDir",
+    "build": "rimraf dist && tsup --minify --publicDir"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.1"
+  }
+}

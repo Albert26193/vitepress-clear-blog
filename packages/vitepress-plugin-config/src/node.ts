@@ -1,5 +1,5 @@
-import { readFileSync, writeFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
 import { parse } from 'smol-toml'
 
 import type { ConfigToml } from './types'
@@ -77,5 +77,9 @@ export const generateThemeFile = async (
 }
 `.trim()
 
+  const outDir = dirname(generatedCssPath)
+  if (!existsSync(outDir)) {
+    mkdirSync(outDir, { recursive: true })
+  }
   writeFileSync(generatedCssPath, generatedCssTemplate)
 }
