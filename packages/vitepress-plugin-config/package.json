@@ -31,7 +31,8 @@
   "scripts": {
     "dev": "tsup --config tsup.config.ts --watch",
     "build": "tsup --config tsup.config.ts",
-    "clean": "rimraf lib"
+    "clean": "rimraf lib",
+    "test:unit": "vitest run"
   },
   "peerDependencies": {
     "vitepress": "^1.5.0"
@@ -39,6 +40,9 @@
   "dependencies": {
     "fs-extra": "^11.3.3",
     "smol-toml": "^1.6.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.2"
   },
   "engines": {
     "node": ">=22.0.0"

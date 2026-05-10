@@ -6,6 +6,49 @@ import type { ConfigToml } from './types'
 
 const assignedConfigPath = '.vitepress/custom/config.toml'
 
+// Accepts hex, color functions, CSS variables, or named colors.
+const VALID_COLOR = (v: string): boolean =>
+  /^#/.test(v) ||
+  /^rgba?\(/.test(v) ||
+  /^hsla?\(/.test(v) ||
+  /^var\(--/.test(v) ||
+  /^[a-zA-Z]+$/.test(v)
+
+/**
+ * Validates a CSS color value and warns on likely typos.
+ *
+ * @returns `true` when the value is acceptable, `false` after a warning.
+ */
+const validateColor = (
+  key: string,
+  value: unknown,
+  fallback: string
+): value is string => {
+  if (typeof value !== 'string' || value.length === 0) {
+    console.warn(
+      `[config] config.toml: ${key} must be a non-empty string, got "${String(value)}" — using default "${fallback}"`
+    )
+    return false
+  }
+  if (!VALID_COLOR(value)) {
+    console.warn(
+      `[config] config.toml: ${key}="${value}" looks malformed — expected a hex, rgb, hsl, var(--x), or named color`
+    )
+  }
+  return true
+}
+
+const color = (
+  obj: Record<string, unknown> | undefined,
+  key: string,
+  fallback: string
+): string => {
+  const val = obj?.[key]
+  if (val === undefined || val === null) return fallback
+  if (!validateColor(key, val, fallback)) return fallback
+  return val as string
+}
+
 /**
  * Generates CSS variables from TOML so users can customize the theme without editing source styles.
  *
@@ -23,28 +66,30 @@ export const generateThemeFile = async (
     throw new Error('Missing theme configuration in config.toml')
   }
 
-  const theme = config.theme
-  const darkTheme = config.theme?.dark
+  const theme = config.theme as unknown as Record<string, unknown>
+  const darkTheme = config.theme?.dark as unknown as
+    | Record<string, unknown>
+    | undefined
 
-  const bgColor = theme?.['vp-c-bg'] || '#fff'
-  const brandColor = theme?.['vp-c-brand'] || '#f00'
-  const brandColor1 = theme?.['vp-c-brand-1'] || '#0f0'
-  const codeColor = theme?.['c-text-code'] || '#ff0'
-  const strongColor = theme?.['c-text-strong'] || '#000'
-  const emColor = theme?.['c-text-em'] || '#000'
-  const buttonBgColor = theme?.['vp-button-brand-bg'] || '#00f'
-  const SideBarBg = theme?.['vp-sidebar-bg-color'] || '#000'
-  const textColor1 = theme?.['vp-c-text-1'] || '#000'
+  const bgColor = color(theme, 'vp-c-bg', '#fff')
+  const brandColor = color(theme, 'vp-c-brand', '#f00')
+  const brandColor1 = color(theme, 'vp-c-brand-1', '#0f0')
+  const codeColor = color(theme, 'c-text-code', '#ff0')
+  const strongColor = color(theme, 'c-text-strong', '#000')
+  const emColor = color(theme, 'c-text-em', '#000')
+  const buttonBgColor = color(theme, 'vp-button-brand-bg', '#00f')
+  const SideBarBg = color(theme, 'vp-sidebar-bg-color', '#000')
+  const textColor1 = color(theme, 'vp-c-text-1', '#000')
 
-  const darkBgColor = darkTheme?.['vp-c-bg'] || '#000'
-  const darkBrandColor = darkTheme?.['vp-c-brand'] || '#f00'
-  const darkBrandColor1 = darkTheme?.['vp-c-brand-1'] || '#0f0'
-  const darkCodeColor = darkTheme?.['c-text-code'] || '#ff0'
-  const darkStrongColor = darkTheme?.['c-text-strong'] || '#000'
-  const darkEmColor = darkTheme?.['c-text-em'] || '#000'
-  const darkButtonBgColor = darkTheme?.['vp-button-brand-bg'] || '#00f'
-  const darkSideBarBg = darkTheme?.['vp-sidebar-bg-color'] || '#000'
-  const darkTextColor1 = darkTheme?.['vp-c-text-1'] || '#000'
+  const darkBgColor = color(darkTheme, 'vp-c-bg', '#000')
+  const darkBrandColor = color(darkTheme, 'vp-c-brand', '#f00')
+  const darkBrandColor1 = color(darkTheme, 'vp-c-brand-1', '#0f0')
+  const darkCodeColor = color(darkTheme, 'c-text-code', '#ff0')
+  const darkStrongColor = color(darkTheme, 'c-text-strong', '#000')
+  const darkEmColor = color(darkTheme, 'c-text-em', '#000')
+  const darkButtonBgColor = color(darkTheme, 'vp-button-brand-bg', '#00f')
+  const darkSideBarBg = color(darkTheme, 'vp-sidebar-bg-color', '#000')
+  const darkTextColor1 = color(darkTheme, 'vp-c-text-1', '#000')
 
   const generatedCssPath = resolve(
     process.cwd(),
