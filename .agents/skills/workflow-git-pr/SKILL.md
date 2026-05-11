@@ -17,10 +17,11 @@ commands work regardless of the current working directory.
 
 ---
 
-Orchestrates the complete path from unstaged changes to a pull request. This
-skill delegates the specialized steps — issue creation, commit message
-generation, and the pre-PR quality gate — to `tool-git-issues`,
-`tool-git-commit`, and `tool-test-check` rather than duplicating their logic.
+Orchestrates the complete path from unstaged changes to a PR with all CI
+checks passing. This skill delegates the specialized steps — issue creation,
+commit message generation, local quality gate, and CI verification — to
+`tool-git-issues`, `tool-git-commit`, `tool-test-check`, and `tool-ci-check`
+rather than duplicating their logic.
 
 ## Skill delegation
 
@@ -29,6 +30,7 @@ generation, and the pre-PR quality gate — to `tool-git-issues`,
 | Analyze + create issue | **tool-git-issues** | Reads templates, picks type/labels, crafts title+body, calls `gh api` |
 | Analyze + write commit | **tool-git-commit** | Gathers context, determines type/scope, writes Conventional Commits message, validates with checker |
 | Pre-PR quality gate | **tool-test-check** | Runs the local/CI-aligned quality checks and blocks PR creation on failures |
+| Post-PR CI verification | **tool-ci-check** | Detects PR, polls CI status, fetches all job logs, generates report; blocks final report until all CI jobs pass |
 | Everything else | This skill | Auth check, branch naming, staging, git operations, push, PR creation |
 
 ## Two Hard Rules
@@ -381,7 +383,32 @@ The script will:
 
 The PR title should match the commit subject line.
 
-### Step 7: Report
+### Step 7: CI verification — invoke `tool-ci-check`
+
+After the PR is created, invoke the **tool-ci-check** skill to wait for and
+verify all CI checks pass. This step blocks the final report until every
+required CI job has succeeded.
+
+Invoke `tool-ci-check` with the PR number from Step 6. It will:
+
+1. Detect the PR from the current branch
+2. Poll CI status until all jobs complete
+3. If any job fails, report the failure, fetch logs, and stop — do NOT proceed
+   to Step 8
+4. If all jobs pass, continue to Step 8
+
+If CI is still `in_progress`, poll at 60-120 second intervals until all jobs
+complete. Do not proceed past this step until CI is fully green.
+
+If CI fails:
+
+1. Report which jobs failed with links to the logs
+2. Diagnose the root cause
+3. Fix the issue locally and amend the commit
+4. Force-push and re-trigger CI
+5. Loop back to checking CI status
+
+### Step 8: Report
 
 Output a summary table. The Issue and PR columns must contain the **raw full
 URL** — no markdown links, no `#N` prefix. Users need to see and copy the URL
@@ -394,6 +421,7 @@ directly:
 | Quality gate | Passed — `<tool-test-check summary>` |
 | Commit | `<hash>` — subject |
 | PR | https://github.com/Albert26193/vitepress-clear-blog/pull/M |
+| CI | Passed — `<ci-status-summary>` |
 
 Do not wrap the URL in a markdown link or prefix it with `#N` — just paste
 the bare https URL as the cell content.
