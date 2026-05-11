@@ -190,7 +190,10 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
     head,
     markdown,
     vite: base.vite,
-    themeConfig: { nav }
+    themeConfig: {
+      nav,
+      sidebar: [{ text: '', items: [] }]
+    }
   }
 }
 
