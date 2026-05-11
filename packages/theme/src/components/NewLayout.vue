@@ -91,6 +91,17 @@
     )
   })
 
+  // Force sidebar visible on page-type layouts even if localStorage has it hidden
+  watchEffect(() => {
+    if (!showSidebarButton.value) {
+      document.documentElement.style.setProperty('--vp-sidebar-width', '272px')
+      const sidebar = document.querySelector('.VPSidebar')
+      const sidebarTitle = document.querySelector('.VPNavBarTitle')
+      if (sidebar) sidebar.classList.remove('hidden')
+      if (sidebarTitle) sidebarTitle.classList.remove('hidden')
+    }
+  })
+
   const routeParams = computed(() => {
     const [, search] = route.path.split('?')
     if (!search) return {}
