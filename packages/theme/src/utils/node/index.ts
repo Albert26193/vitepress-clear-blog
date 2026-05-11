@@ -1,7 +1,6 @@
 export {
   createBlog,
   getFooterRefTag,
-  getHashtag,
   getThemeConfig,
   mermaidPlugin
 } from './configProvider'

@@ -1,0 +1,1 @@
+export { hashtagPlugin } from './hashtag'

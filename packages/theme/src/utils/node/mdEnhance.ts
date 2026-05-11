@@ -76,27 +76,6 @@ const getFooterRefTag = (md: MarkdownIt) => {
 }
 
 /**
- * Converts hashtag tokens into theme tag links for consistent tag navigation.
- *
- * @param md - Markdown-it instance whose hashtag renderer should be extended.
- * @returns Nothing; renderer rules are registered on the provided Markdown-it instance.
- */
-const getHashtag = (md: MarkdownIt) => {
-  md.renderer.rules.hashtag_text = function (tokens, idx) {
-    return `#${tokens[idx].content}`
-  }
-
-  md.renderer.rules.hashtag_open = function (tokens, idx) {
-    const tagName = tokens[idx].content.toLowerCase()
-    return `<a href='/tags?tag=${tagName}' class='blog-tag'>`
-  }
-
-  md.renderer.rules.hashtag_close = function () {
-    return '</a>'
-  }
-}
-
-/**
  * Replaces Mermaid fences with the theme renderer component so diagrams hydrate inside VitePress pages.
  *
  * @param md - Markdown-it instance whose fence renderer should be extended.
@@ -129,4 +108,4 @@ const taskListsPlugin = (md: MarkdownIt): void => {
   })
 }
 
-export { getFooterRefTag, getHashtag, mermaidPlugin, taskListsPlugin }
+export { getFooterRefTag, mermaidPlugin, taskListsPlugin }

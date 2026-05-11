@@ -20,6 +20,7 @@
     "vitepress-clear-blog": "workspace:*",
     "vitepress-plugin-analyzer": "workspace:*",
     "vitepress-plugin-callout": "workspace:*",
+    "vitepress-plugin-hashtag": "workspace:*",
     "vitepress-plugin-config": "workspace:*",
     "vitepress-plugin-rss": "^0.4.2",
     "vitepress-sidebar": "^1.33.1"

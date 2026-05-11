@@ -1,6 +1,4 @@
 import footnotePlugin from 'markdown-it-footnote'
-// @ts-expect-error - markdown-it-hashtag has no type declarations
-import markdownItHashtag from 'markdown-it-hashtag'
 import mathjax3 from 'markdown-it-mathjax3'
 // @ts-expect-error - markdown-it-wikilinks has no type declarations
 import wikilinks from 'markdown-it-wikilinks'
@@ -9,12 +7,9 @@ import { resolve } from 'node:path'
 import { parse } from 'smol-toml'
 import { defineConfig } from 'vitepress'
 import { getThemeConfig } from 'vitepress-clear-blog/node'
-import {
-  getFooterRefTag,
-  getHashtag,
-  mermaidPlugin
-} from 'vitepress-clear-blog/node'
+import { getFooterRefTag, mermaidPlugin } from 'vitepress-clear-blog/node'
 import { calloutPlugin } from 'vitepress-plugin-callout'
+import { hashtagPlugin } from 'vitepress-plugin-hashtag'
 
 import { customElements } from './custom/constant'
 import { head } from './custom/head'
@@ -57,11 +52,10 @@ export default defineConfig({
       md.use(mathjax3)
       md.use(wikilinks(wikilinksOptions))
       md.use(footnotePlugin)
-      md.use(markdownItHashtag)
+      md.use(hashtagPlugin)
       md.use(mermaidPlugin)
       md.use(calloutPlugin)
       getFooterRefTag(md)
-      getHashtag(md)
     },
     theme: {
       light: 'github-light',

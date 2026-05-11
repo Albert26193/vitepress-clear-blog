@@ -134,6 +134,9 @@ importers:
       vitepress-plugin-config:
         specifier: workspace:*
         version: link:../vitepress-plugin-config
+      vitepress-plugin-hashtag:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-hashtag
       vitepress-plugin-rss:
         specifier: ^0.4.2
         version: 0.4.2(vitepress@1.6.4(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2))
@@ -194,9 +197,6 @@ importers:
       markdown-it-footnote:
         specifier: ^4.0.0
         version: 4.0.0
-      markdown-it-hashtag:
-        specifier: ^0.4.0
-        version: 0.4.0
       markdown-it-mathjax3:
         specifier: ^4.3.2
         version: 4.3.2
@@ -224,6 +224,9 @@ importers:
       vitepress-plugin-callout:
         specifier: workspace:*
         version: link:../vitepress-plugin-callout
+      vitepress-plugin-hashtag:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-hashtag
       vitepress-plugin-rss:
         specifier: ^0.4.2
         version: 0.4.2(vitepress@1.6.4(@algolia/client-search@5.46.2)(@types/node@25.0.6)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@5.9.3))
@@ -366,6 +369,22 @@ importers:
       vue-tsc:
         specifier: ^3.2.2
         version: 3.2.2(typescript@5.9.3)
+
+  packages/vitepress-plugin-hashtag:
+    dependencies:
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.1.0
+      markdown-it-hashtag:
+        specifier: ^0.4.0
+        version: 0.4.0
+    devDependencies:
+      '@types/markdown-it':
+        specifier: ^14.1.2
+        version: 14.1.2
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.2(@types/node@25.5.0)(happy-dom@20.9.0)(jsdom@26.1.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))
 
 packages:
 

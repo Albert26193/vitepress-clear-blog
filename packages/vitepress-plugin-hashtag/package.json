@@ -1,0 +1,43 @@
+{
+  "name": "vitepress-plugin-hashtag",
+  "version": "0.1.0",
+  "description": "Hashtag support plugin for VitePress — converts #TagName into clickable tag links",
+  "author": "Albert26193",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "vitepress",
+    "plugin",
+    "hashtag"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/node/index.d.ts",
+      "import": "./lib/node/index.js",
+      "require": "./lib/node/index.cjs"
+    }
+  },
+  "main": "lib/node/index.cjs",
+  "module": "lib/node/index.js",
+  "types": "lib/node/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "dev": "tsup --config tsup.config.ts --watch",
+    "build": "rimraf lib && tsup --config tsup.config.ts",
+    "clean": "rimraf lib",
+    "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "markdown-it-hashtag": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

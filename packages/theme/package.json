@@ -46,7 +46,7 @@
     "gray-matter": "^4.0.3",
     "heti": "^0.9.6",
     "markdown-it-footnote": "^4.0.0",
-    "markdown-it-hashtag": "^0.4.0",
+    "vitepress-plugin-hashtag": "workspace:*",
     "markdown-it-mathjax3": "^4.3.2",
     "markdown-it-task-lists": "^2.1.1",
     "markdown-it-wikilinks": "^1.4.0",

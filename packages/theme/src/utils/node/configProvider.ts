@@ -1,6 +1,4 @@
 import footnotePlugin from 'markdown-it-footnote'
-// @ts-expect-error - markdown-it-hashtag has no type declarations
-import markdownItHashtag from 'markdown-it-hashtag'
 import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import { readFileSync } from 'node:fs'
@@ -12,10 +10,11 @@ import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { calloutPlugin } from 'vitepress-plugin-callout'
 import { generateThemePlugin } from 'vitepress-plugin-config'
 import type { ConfigToml } from 'vitepress-plugin-config'
+import { hashtagPlugin } from 'vitepress-plugin-hashtag'
 import llmstxt from 'vitepress-plugin-llms'
 import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
-import { getFooterRefTag, getHashtag, mermaidPlugin } from './mdEnhance'
+import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
 
 const assignedConfigPath = '.vitepress/custom/config.toml'
 
@@ -173,11 +172,10 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
         )
       }
       if (mdConf.footnote !== false) md.use(footnotePlugin)
-      if (mdConf.hashtag !== false) md.use(markdownItHashtag)
+      if (mdConf.hashtag !== false) md.use(hashtagPlugin)
       if (mdConf.mermaid !== false) md.use(mermaidPlugin)
       if (mdConf.callout !== false) md.use(calloutPlugin)
       getFooterRefTag(md)
-      getHashtag(md)
     }
   }
 
@@ -196,10 +194,4 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
   }
 }
 
-export {
-  createBlog,
-  getFooterRefTag,
-  getHashtag,
-  getThemeConfig,
-  mermaidPlugin
-}
+export { createBlog, getFooterRefTag, getThemeConfig, mermaidPlugin }
