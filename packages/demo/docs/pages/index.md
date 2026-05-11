@@ -1,6 +1,8 @@
 ---
 page: true
 title: Pages
-description: Pages
+description: Article index
 aside: false
 ---
+
+<BlogMain />
