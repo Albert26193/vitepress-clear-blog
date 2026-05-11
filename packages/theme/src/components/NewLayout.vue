@@ -86,6 +86,7 @@
   const showSidebarButton = computed(() => {
     return (
       (!layout.value || layout.value == 'doc') &&
+      !frontmatter.value.page &&
       frontmatter.value.sidebar !== false
     )
   })
