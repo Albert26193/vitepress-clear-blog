@@ -83,3 +83,14 @@
     @apply bg-[var(--vp-c-brand)] text-gray-100 shadow-xl;
   }
 </style>
+
+<style>
+  /* Override VPDoc content max-width so card grid can expand on full-width pages */
+  .VPDoc:not(.has-sidebar):has(.blog-card-pagination) .content {
+    max-width: min(1280px, 100%);
+  }
+
+  .VPDoc:not(.has-sidebar):has(.blog-card-pagination) .container {
+    max-width: min(100%, 100vw - 64px);
+  }
+</style>
