@@ -179,6 +179,52 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
     }
   }
 
+  const customElements = [
+    'mjx-container',
+    'mjx-assistive-mml',
+    'math',
+    'maction',
+    'maligngroup',
+    'malignmark',
+    'menclose',
+    'merror',
+    'mfenced',
+    'mfrac',
+    'mi',
+    'mlongdiv',
+    'mmultiscripts',
+    'mn',
+    'mo',
+    'mover',
+    'mpadded',
+    'mphantom',
+    'mroot',
+    'mrow',
+    'ms',
+    'mscarries',
+    'mscarry',
+    'msgroup',
+    'mspace',
+    'msqrt',
+    'msrow',
+    'mstack',
+    'mstyle',
+    'msub',
+    'msup',
+    'msubsup',
+    'mtable',
+    'mtd',
+    'mtext',
+    'mtr',
+    'munder',
+    'munderover',
+    'none',
+    'semantics',
+    'annotation',
+    'annotation-xml',
+    'mprescripts'
+  ]
+
   return {
     extends: base.clearBlogConfig,
     base: process.env.VITEPRESS_BASE || '/',
@@ -190,7 +236,20 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
     head,
     markdown,
     vite: base.vite,
-    themeConfig: { nav }
+    vue: {
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag: string) => customElements.includes(tag)
+        }
+      }
+    },
+    themeConfig: {
+      nav,
+      sidebar: [{ text: '', items: [] }],
+      search: { provider: 'local' },
+      outline: [2, 3],
+      outlineTitle: 'Table of Contents'
+    }
   }
 }
 
