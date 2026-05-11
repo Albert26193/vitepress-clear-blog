@@ -137,7 +137,6 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
     { text: navLabels.home || 'Home', link: '/' },
     { text: navLabels.tags || 'Tags', link: '/tags' },
     { text: navLabels.timeline || 'Timeline', link: '/timeline' },
-    { text: navLabels.collections || 'Collections', link: '/collections' },
     { text: navLabels.pages || 'Pages', link: '/pages' },
     { text: navLabels.about || 'About', link: '/about' }
   ]

@@ -21,7 +21,6 @@ export interface NavLabels {
   home?: string
   tags?: string
   timeline?: string
-  collections?: string
   pages?: string
   about?: string
 }
