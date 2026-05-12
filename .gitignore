@@ -34,8 +34,8 @@ test-results
 coverage
 
 # for test docs
-docs/test/*
-docs/blogs/test/*
+testbed/test/*
+testbed/blogs/test/*
 test.log
 **/*/test.log
 

@@ -80,7 +80,7 @@ A VitePress-based blog theme with Obsidian-style features.
 
 ## Directory Structure
 - packages/theme - Main theme package
-- packages/docs - Documentation site
+- packages/testbed - Documentation site
 - packages/vitepress-plugin-* - Plugins
 
 ## Conventions

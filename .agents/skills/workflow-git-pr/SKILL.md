@@ -86,7 +86,7 @@ Now compare along these dimensions:
 
 | Dimension | Check | Mismatch signal |
 |-----------|-------|-----------------|
-| **Files changed** | Do the paths in `git diff --stat` relate to the issue's `area:` label? | Issue tagged `area:theme` but diff is only in `packages/docs/` |
+| **Files changed** | Do the paths in `git diff --stat` relate to the issue's `area:` label? | Issue tagged `area:theme` but diff is only in `packages/testbed/` |
 | **Change nature** | Does `git diff` look like what the issue describes? | Issue says "add dark mode" but diff is fixing a typo in README |
 | **Scope** | Is the magnitude of changes consistent with the issue? | Issue is a small bug fix but diff shows 80 new files |
 

@@ -5,7 +5,7 @@ on:
     branches: [master]
     paths:
       - 'packages/demo/**'
-      - 'packages/docs/**'
+      - 'packages/testbed/**'
       - 'packages/theme/**'
       - 'packages/vitepress-plugin-*/**'
       - '.github/workflows/deploy.yml'
@@ -37,14 +37,14 @@ jobs:
         env:
           VITEPRESS_BASE: /vitepress-clear-blog/demo/
 
-      - run: pnpm -F=docs build:docs
+      - run: pnpm -F=testbed build
         env:
-          VITEPRESS_BASE: /vitepress-clear-blog/docs/
+          VITEPRESS_BASE: /vitepress-clear-blog/testbed/
 
       - run: |
-          mkdir -p _deploy/demo _deploy/docs
+          mkdir -p _deploy/demo _deploy/testbed
           cp -r packages/demo/.vitepress/dist/* _deploy/demo/
-          cp -r packages/docs/.vitepress/dist/* _deploy/docs/
+          cp -r packages/testbed/.vitepress/dist/* _deploy/testbed/
 
       - uses: actions/upload-pages-artifact@v4
         with:

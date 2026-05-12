@@ -66,7 +66,7 @@ If you cannot find one, use `#?` as a placeholder and tell the user to replace i
 
 **scope** — infer from the changed files:
 - Changes in `packages/theme/` → `theme`
-- Changes in `packages/docs/` → `docs`
+- Changes in `packages/testbed/` → `testbed`
 - Changes in `packages/vitepress-plugin-xxx/` → `plugin-xxx`
 - Changes affecting multiple packages → pick the primary one, or omit scope
 - Root-level config changes → omit scope or use the affected tool name

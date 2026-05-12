@@ -51,7 +51,7 @@ export default [
       '**/dist/**',
       '**/node_modules/**',
       '**/packages/**/lib/**',
-      '**/packages/docs/.vitepress/cache/**',
+      '**/packages/testbed/.vitepress/cache/**',
       '.vscode/',
       '.idea/',
       '*.sh',

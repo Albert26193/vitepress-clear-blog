@@ -110,7 +110,7 @@ When creating issues for this monorepo, apply these labels to map project metada
 
 | Project field | GitHub label | Example |
 |--------------|-------------|---------|
-| `package` | `area:root`, `area:theme`, `area:docs`, `area:plugin-callout`, `area:plugin-config`, `area:plugin-codeblock-fold`, `area:plugin-details-block`, `area:plugin-hashtag`, `area:plugin-analyzer` | `area:theme` |
+| `package` | `area:root`, `area:theme`, `area:testbed`, `area:plugin-callout`, `area:plugin-config`, `area:plugin-codeblock-fold`, `area:plugin-details-block`, `area:plugin-hashtag`, `area:plugin-analyzer` | `area:theme` |
 | `priority` | `priority:P0`, `priority:P1`, `priority:P2`, `priority:P3` | `priority:P1` |
 | `type` | Use GitHub issue type (`Bug`, `Feature`, `Task`) — don't duplicate with a label | `-f type="Bug"` |
 

@@ -10,6 +10,21 @@ theme-color = "#42b983"
 icpNumber = ""
 themeLink = ""
 
+[nav]
+home = "Home"
+tags = "Tags"
+timeline = "Timeline"
+pages = "Pages"
+about = "About"
+
+[markdown]
+mathjax = true
+wikilinks = true
+footnote = true
+hashtag = true
+mermaid = true
+callout = true
+
 [page]
 pageSize = 10
 

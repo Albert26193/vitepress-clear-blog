@@ -4,8 +4,8 @@
 # Analyse staged + unstaged changes and output JSON metadata for the workflow.
 #
 # Output: JSON with scope, area_label, changed_files, packages, suggested_type.
-#   scope  — Conventional Commits scope (theme|docs|plugin-*|null)
-#   area_label — GitHub label (area:theme|area:docs|area:plugin-*|area:root)
+#   scope  — Conventional Commits scope (theme|testbed|plugin-*|null)
+#   area_label — GitHub label (area:theme|area:testbed|area:plugin-*|area:root)
 #   suggested_type — best-guess commit type (feat|fix|docs|chore)
 #
 # Usage:
@@ -20,7 +20,7 @@ set -euo pipefail
 declare -A PKG
 PKG=(
     ["packages/theme/"]="theme"
-    ["packages/docs/"]="docs"
+    ["packages/testbed/"]="testbed"
     ["packages/vitepress-plugin-analyzer/"]="plugin-analyzer"
     ["packages/vitepress-plugin-callout/"]="plugin-callout"
     ["packages/vitepress-plugin-codeblock-fold/"]="plugin-codeblock-fold"

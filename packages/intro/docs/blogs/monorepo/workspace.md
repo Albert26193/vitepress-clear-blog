@@ -57,7 +57,7 @@ pnpm add -D typescript -w
 pnpm add lodash --filter vitepress-clear-blog
 
 # 添加内部依赖
-pnpm add vitepress-plugin-callout --filter docs --workspace
+pnpm add vitepress-plugin-callout --filter testbed --workspace
 ```
 
 ### 依赖提升
