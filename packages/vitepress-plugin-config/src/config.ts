@@ -39,25 +39,11 @@ const generateThemePlugin = (
             const cssModule = server.moduleGraph.getModuleById(generatedCssPath)
             if (cssModule) {
               server.moduleGraph.invalidateModule(cssModule)
-              server.ws.send({
-                type: 'update',
-                updates: [
-                  {
-                    type: 'css-update',
-                    path: generatedCssPath,
-                    acceptedPath: generatedCssPath,
-                    timestamp: Date.now()
-                  }
-                ]
-              })
             }
-            // This method ensures the page reloads
-            setTimeout(() => {
-              server.ws.send({
-                type: 'full-reload',
-                path: '*'
-              })
-            }, 100)
+            server.ws.send({
+              type: 'full-reload',
+              path: '*'
+            })
           } catch (error) {
             console.error(
               '[vite-plugin-generated-theme] Error generating theme:',
