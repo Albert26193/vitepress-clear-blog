@@ -203,6 +203,47 @@ describe('useMonthYearSort', () => {
     const result = useMonthYearSort([post])
     expect(result).toEqual({})
   })
+
+  it('preserves descending post order within same month when input is newest-first', () => {
+    const posts = [
+      makePost('2024-03-20', []),
+      makePost('2024-03-10', []),
+      makePost('2024-03-05', [])
+    ]
+    const result = useMonthYearSort(posts)
+    const monthPosts = result['2024']['03']
+    expect(monthPosts[0].frontMatter.date).toBe('2024-03-20')
+    expect(monthPosts[1].frontMatter.date).toBe('2024-03-10')
+    expect(monthPosts[2].frontMatter.date).toBe('2024-03-05')
+  })
+
+  it('preserves ascending post order within same month when input is oldest-first', () => {
+    const posts = [
+      makePost('2024-03-05', []),
+      makePost('2024-03-10', []),
+      makePost('2024-03-20', [])
+    ]
+    const result = useMonthYearSort(posts)
+    const monthPosts = result['2024']['03']
+    expect(monthPosts[0].frontMatter.date).toBe('2024-03-05')
+    expect(monthPosts[1].frontMatter.date).toBe('2024-03-10')
+    expect(monthPosts[2].frontMatter.date).toBe('2024-03-20')
+  })
+
+  it('preserves key insertion order matching input order for month keys', () => {
+    // When posts are fed newest-first, months within a year appear in insertion order
+    const posts = [
+      makePost('2024-12-25', []),
+      makePost('2024-03-10', []),
+      makePost('2024-01-01', [])
+    ]
+    const result = useMonthYearSort(posts)
+    const monthKeys = Object.keys(result['2024'])
+    // Months appear in the order they were first encountered
+    expect(monthKeys[0]).toBe('12')
+    expect(monthKeys[1]).toBe('03')
+    expect(monthKeys[2]).toBe('01')
+  })
 })
 
 describe('calculateWords', () => {
