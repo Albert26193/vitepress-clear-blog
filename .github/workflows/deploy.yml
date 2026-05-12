@@ -35,15 +35,15 @@ jobs:
 
       - run: pnpm build
         env:
-          VITEPRESS_BASE: /vitepress-clear-blog/
+          VITEPRESS_BASE: /vitepress-clear-blog/demo/
 
       - run: pnpm -F=docs build:docs
         env:
           VITEPRESS_BASE: /vitepress-clear-blog/docs/
 
       - run: |
-          mkdir -p _deploy/docs
-          cp -r packages/demo/.vitepress/dist/* _deploy/
+          mkdir -p _deploy/demo _deploy/docs
+          cp -r packages/demo/.vitepress/dist/* _deploy/demo/
           cp -r packages/docs/.vitepress/dist/* _deploy/docs/
 
       - uses: actions/upload-pages-artifact@v4
