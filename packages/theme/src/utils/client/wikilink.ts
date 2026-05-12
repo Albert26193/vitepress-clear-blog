@@ -1,9 +1,12 @@
 import type { SiteMetadata } from '../../types/types'
+import type { Post } from '../../types/types.d'
 
 interface WikiLinkOptions {
   base?: string
   currentPath?: string
   root?: ParentNode
+  renderTitle?: string
+  allPosts?: Post[]
 }
 
 const WIKI_LINK_SELECTOR = 'a.clear-wikilink'
@@ -90,10 +93,61 @@ const createExistingPageSet = (siteMetadata: SiteMetadata): Set<string> =>
   new Set(Object.keys(siteMetadata).map(normalizeMetadataPath))
 
 /**
- * Marks unresolved wiki links in rendered content so readers can distinguish missing pages.
+ * Resolves the canonical title for a wiki link target by matching against posts data.
+ * Only runs client-side (needs DOM for first_heading extraction).
+ */
+const resolveInlineWikiTitle = (
+  relativePath: string,
+  allPosts: Post[],
+  renderTitle: string
+): string | null => {
+  if (renderTitle === 'alias') return null
+
+  let linkPath: string
+  if (relativePath.endsWith('.md')) {
+    linkPath = '/' + relativePath.replace(/\.md$/, '.html')
+  } else {
+    linkPath = '/' + relativePath + '.html'
+  }
+
+  const matchedPost = allPosts.find(
+    (post: Post) => post.regularPath === linkPath
+  )
+  if (!matchedPost) return null
+
+  switch (renderTitle) {
+    case 'file_name':
+      return (
+        relativePath
+          .split('/')
+          .pop()
+          ?.replace(/\.(md|html)$/, '') || null
+      )
+
+    case 'frontmatter_title':
+      return matchedPost.frontMatter.title || null
+
+    case 'first_heading': {
+      if (typeof document !== 'undefined') {
+        const div = document.createElement('div')
+        div.innerHTML = matchedPost.html || ''
+        const heading = div.querySelector('h1, h2')
+        if (heading?.textContent) return heading.textContent.trim()
+      }
+      return matchedPost.frontMatter.title || null
+    }
+
+    default:
+      return null
+  }
+}
+
+/**
+ * Marks unresolved wiki links in rendered content and optionally replaces link text
+ * with the canonical page title.
  *
  * @param siteMetadata - Analyzer metadata used as the source of existing pages.
- * @param options - DOM and path context for resolving wiki link candidates.
+ * @param options - DOM, path context, and title resolution config.
  * @returns Nothing; matching anchor elements are updated in place.
  */
 const markBrokenWikiLinks = (
@@ -103,15 +157,26 @@ const markBrokenWikiLinks = (
   const root = options.root || document
   const existingPages = createExistingPageSet(siteMetadata)
   const wikiLinks = root.querySelectorAll<HTMLAnchorElement>(WIKI_LINK_SELECTOR)
+  const allPosts = options.allPosts || []
+  const renderTitle = options.renderTitle || 'alias'
 
   wikiLinks.forEach((link) => {
     const href = link.getAttribute('href')
     if (!href) return
 
     const candidates = getWikiLinkCandidates(href, options)
-    const exists = candidates.some((candidate) => existingPages.has(candidate))
+    const matched = candidates.find((candidate) => existingPages.has(candidate))
+    const exists = !!matched
     link.classList.toggle(BROKEN_WIKI_LINK_CLASS, !exists)
     link.toggleAttribute('data-wikilink-broken', !exists)
+
+    // Replace link text with canonical title when configured
+    if (exists && matched && renderTitle !== 'alias') {
+      const title = resolveInlineWikiTitle(matched, allPosts, renderTitle)
+      if (title) {
+        link.textContent = title
+      }
+    }
   })
 }
 
@@ -119,5 +184,7 @@ export {
   BROKEN_WIKI_LINK_CLASS,
   WIKI_LINK_SELECTOR,
   getWikiLinkCandidates,
-  markBrokenWikiLinks
+  markBrokenWikiLinks,
+  resolveInlineWikiTitle
 }
+export type { WikiLinkOptions }

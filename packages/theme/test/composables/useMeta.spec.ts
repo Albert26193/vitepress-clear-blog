@@ -282,6 +282,10 @@ describe('useTimeFormat', () => {
     expect(useTimeFormat('20240615')).toBe('')
   })
 
+  it('returns empty string for date with slashes instead of dashes (same length)', () => {
+    expect(useTimeFormat('2024/06/15')).toBe('')
+  })
+
   it('returns empty string for completely invalid input', () => {
     expect(useTimeFormat('not-a-date')).toBe('')
   })

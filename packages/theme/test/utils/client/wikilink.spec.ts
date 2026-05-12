@@ -4,10 +4,12 @@
 import { describe, expect, it } from 'vitest'
 
 import type { SiteMetadata } from '../../../src/types/types.d'
+import type { Post } from '../../../src/types/types.d'
 import {
   BROKEN_WIKI_LINK_CLASS,
   getWikiLinkCandidates,
-  markBrokenWikiLinks
+  markBrokenWikiLinks,
+  resolveInlineWikiTitle
 } from '../../../src/utils/client/wikilink'
 
 const siteMetadata: SiteMetadata = {
@@ -165,5 +167,166 @@ describe('markBrokenWikiLinks', () => {
         .querySelector('.clear-wikilink')
         ?.classList.contains(BROKEN_WIKI_LINK_CLASS)
     ).toBe(false)
+  })
+
+  it('replaces link text with canonical title when renderTitle is set', () => {
+    document.body.innerHTML = `
+      <main>
+        <a class="clear-wikilink" href="/blogs/existing">Alias Text</a>
+      </main>
+    `
+
+    const posts: Post[] = [
+      {
+        frontMatter: {
+          title: 'Canonical Title',
+          date: '2024-01-01',
+          tags: [],
+          description: ''
+        },
+        regularPath: '/blogs/existing.html',
+        html: '<h1>Canonical Title</h1><p>Content</p>'
+      }
+    ]
+
+    markBrokenWikiLinks(siteMetadata, {
+      currentPath: '/blogs/current',
+      renderTitle: 'frontmatter_title',
+      allPosts: posts
+    })
+
+    const link = document.querySelector<HTMLAnchorElement>(
+      'a[href="/blogs/existing"]'
+    )
+    expect(link?.textContent).toBe('Canonical Title')
+  })
+
+  it('keeps original text when renderTitle is alias', () => {
+    document.body.innerHTML = `
+      <main>
+        <a class="clear-wikilink" href="/blogs/existing">Alias Text</a>
+      </main>
+    `
+
+    const posts: Post[] = [
+      {
+        frontMatter: {
+          title: 'Canonical Title',
+          date: '2024-01-01',
+          tags: [],
+          description: ''
+        },
+        regularPath: '/blogs/existing.html',
+        html: '<p>Content</p>'
+      }
+    ]
+
+    markBrokenWikiLinks(siteMetadata, {
+      currentPath: '/blogs/current',
+      renderTitle: 'alias',
+      allPosts: posts
+    })
+
+    const link = document.querySelector<HTMLAnchorElement>(
+      'a[href="/blogs/existing"]'
+    )
+    expect(link?.textContent).toBe('Alias Text')
+  })
+})
+
+describe('resolveInlineWikiTitle', () => {
+  const posts: Post[] = [
+    {
+      frontMatter: {
+        title: 'FT Title',
+        date: '2024-01-01',
+        tags: [],
+        description: ''
+      },
+      regularPath: '/blogs/target.html',
+      html: '<h1>Heading Title</h1><p>Content</p>'
+    }
+  ]
+
+  it('returns null for alias mode', () => {
+    expect(resolveInlineWikiTitle('blogs/target', posts, 'alias')).toBeNull()
+  })
+
+  it('returns filename for file_name mode', () => {
+    expect(resolveInlineWikiTitle('blogs/target', posts, 'file_name')).toBe(
+      'target'
+    )
+  })
+
+  it('returns frontmatter title for frontmatter_title mode', () => {
+    expect(
+      resolveInlineWikiTitle('blogs/target', posts, 'frontmatter_title')
+    ).toBe('FT Title')
+  })
+
+  it('returns first heading for first_heading mode', () => {
+    expect(resolveInlineWikiTitle('blogs/target', posts, 'first_heading')).toBe(
+      'Heading Title'
+    )
+  })
+
+  it('returns null when post not found', () => {
+    expect(
+      resolveInlineWikiTitle('blogs/missing', posts, 'frontmatter_title')
+    ).toBeNull()
+  })
+
+  it('returns null for unknown mode', () => {
+    expect(resolveInlineWikiTitle('blogs/target', posts, 'unknown')).toBeNull()
+  })
+
+  it('resolves with .md extension in relativePath', () => {
+    expect(
+      resolveInlineWikiTitle('blogs/target.md', posts, 'frontmatter_title')
+    ).toBe('FT Title')
+  })
+
+  it('frontmatter_title returns null when matched post has empty title', () => {
+    const emptyTitlePosts: Post[] = [
+      {
+        frontMatter: {
+          title: '',
+          date: '2024-01-01',
+          tags: [],
+          description: ''
+        },
+        regularPath: '/blogs/target.html',
+        html: '<p>Content</p>'
+      }
+    ]
+    expect(
+      resolveInlineWikiTitle(
+        'blogs/target',
+        emptyTitlePosts,
+        'frontmatter_title'
+      )
+    ).toBeNull()
+  })
+
+  it('first_heading falls back to frontmatter.title when no headings in HTML', () => {
+    const noHeadingPosts: Post[] = [
+      {
+        frontMatter: {
+          title: 'Only Title',
+          date: '2024-01-01',
+          tags: [],
+          description: ''
+        },
+        regularPath: '/blogs/no-heading.html',
+        html: '<p>No headings here</p>'
+      }
+    ]
+    expect(
+      resolveInlineWikiTitle(
+        'blogs/no-heading',
+        noHeadingPosts,
+        'first_heading'
+      )
+    ).toBe('Only Title')
   })
 })

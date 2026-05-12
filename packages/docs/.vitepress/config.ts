@@ -17,11 +17,14 @@ import { nav } from './custom/nav'
 
 const tomlPath = resolve(import.meta.dirname, 'custom/config.toml')
 let siteTitle = 'Blog'
+let wikiRenderTitle = 'frontmatter_title'
 try {
   const raw = readFileSync(tomlPath, 'utf-8')
   const parsed = parse(raw) as Record<string, unknown>
   const meta = (parsed.meta as Record<string, string>) || {}
+  const mdConf = (parsed.markdown as Record<string, unknown>) || {}
   siteTitle = meta.title || 'Blog'
+  wikiRenderTitle = (mdConf.render_title as string) || 'frontmatter_title'
 } catch {
   // fall back to default title if config.toml is missing
 }
@@ -69,7 +72,16 @@ export default defineConfig({
       }
     }
   },
-  vite: blogTheme.vite as object,
+  vite: {
+    ...(blogTheme.vite as object),
+    define: {
+      ...(((blogTheme.vite as Record<string, unknown>)?.define as Record<
+        string,
+        string
+      >) || {}),
+      __WIKI_RENDER_TITLE__: JSON.stringify(wikiRenderTitle)
+    }
+  },
   title: siteTitle,
   base,
   srcDir: './docs',
@@ -84,6 +96,7 @@ export default defineConfig({
     search: {
       provider: 'local'
     },
+    wikiRenderTitle,
     nav,
     outline: [2, 3],
     outlineTitle: 'Table of Contents',

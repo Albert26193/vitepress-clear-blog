@@ -47,6 +47,7 @@ export interface ConfigToml {
     hashtag?: boolean
     mermaid?: boolean
     callout?: boolean
+    render_title?: 'frontmatter_title' | 'first_heading' | 'alias' | 'file_name'
   }
   theme: ThemeConfig
 }
