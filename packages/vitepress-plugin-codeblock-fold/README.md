@@ -35,3 +35,22 @@ export default {
 - `visibleHeight`: The height (in pixels) of the collapsed code block. Default is `50`.
 
 `visibleHeight` should be smaller than `minHeight`; otherwise folded code blocks may not appear visually collapsed.
+
+## Style customization
+
+Importing `vitepress-plugin-codeblock-fold/style.css` is required. Override the `--vp-code-fold-*` CSS variables in your theme styles to customize the fold mask and button.
+
+```css
+:root {
+  --vp-code-fold-btn-hover-color: var(--vp-c-brand);
+  --vp-code-fold-btn-bg: var(--vp-c-bg-soft);
+  --vp-code-fold-btn-color: var(--vp-c-text-2);
+  --vp-code-fold-btn-size: 24px;
+  --vp-code-fold-active-mask-bg: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--vp-c-bg) 80%
+  );
+  --vp-code-fold-expanded-padding-bottom: 28px;
+}
+```

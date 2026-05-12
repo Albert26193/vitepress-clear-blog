@@ -20,10 +20,13 @@
     "lib"
   ],
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsup --watch --onSuccess \"pnpm run copy:css\"",
+    "clean": "rimraf lib",
+    "tsup": "tsup --config tsup.config.ts",
+    "copy:css": "node -e \"require('node:fs').mkdirSync('lib',{recursive:true});require('node:fs').copyFileSync('src/style.css','lib/style.css')\"",
+    "build": "pnpm run clean && pnpm run tsup && pnpm run copy:css",
     "test:unit": "vitest run",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

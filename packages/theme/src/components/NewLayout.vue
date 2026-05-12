@@ -93,6 +93,8 @@
 
   // Force sidebar visible on page-type layouts even if localStorage has it hidden
   watchEffect(() => {
+    if (typeof document === 'undefined') return
+
     if (!showSidebarButton.value) {
       document.documentElement.style.setProperty('--vp-sidebar-width', '272px')
       const sidebar = document.querySelector('.VPSidebar')
@@ -117,6 +119,8 @@
   } as const
 
   watchEffect(() => {
+    if (typeof document === 'undefined') return
+
     const path = route.path.replace(/\.html$/, '')
     const match = path.match(/^\/([^/?]+)/)
     if (match) {
