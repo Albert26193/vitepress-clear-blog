@@ -4,10 +4,11 @@
   "type": "module",
   "description": "Scaffold a VitePress Clear Blog project with one command",
   "bin": {
-    "create-blog-template": "./dist/index.js"
+    "create-blog-template": "./bin/create-blog-template.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "scripts": {
     "dev": "tsup --watch --publicDir",
