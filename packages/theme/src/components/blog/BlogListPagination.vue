@@ -66,8 +66,7 @@
 
   /* List Container */
   .list-container {
-    @apply mx-auto min-h-0 max-w-[1280px] flex-1 space-y-0 px-3;
-    @apply md:px-6 lg:px-8;
+    @apply mx-auto min-h-0 max-w-[1280px] flex-1 space-y-0;
   }
 
   /* Page Footer */
