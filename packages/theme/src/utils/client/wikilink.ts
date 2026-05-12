@@ -108,9 +108,8 @@ const markBrokenWikiLinks = (
     const href = link.getAttribute('href')
     if (!href) return
 
-    const exists = getWikiLinkCandidates(href, options).some((candidate) =>
-      existingPages.has(candidate)
-    )
+    const candidates = getWikiLinkCandidates(href, options)
+    const exists = candidates.some((candidate) => existingPages.has(candidate))
     link.classList.toggle(BROKEN_WIKI_LINK_CLASS, !exists)
     link.toggleAttribute('data-wikilink-broken', !exists)
   })
