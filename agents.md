@@ -180,7 +180,7 @@ Closes #123
 pnpm dev
 
 # Start only docs site
-pnpm dev:docs
+pnpm dev:testbed
 
 # Start only packages (watch mode)
 pnpm dev:packages
@@ -198,7 +198,7 @@ pnpm build
 pnpm build:packages
 
 # Build only docs site
-pnpm build:docs
+pnpm build:testbed
 
 # Build UnoCSS styles
 pnpm build:unocss
@@ -207,13 +207,13 @@ pnpm build:unocss
 pnpm clean
 
 # Clean only docs cache
-pnpm clean:docs
+pnpm clean:testbed
 ```
 
 #### Preview & Testing
 ```bash
 # Preview built docs site
-pnpm preview:docs
+pnpm preview:testbed
 
 # Run tests with UI
 pnpm test:ui
@@ -385,7 +385,7 @@ pnpm dev
 
 # 2. Start docs to see changes
 cd ../docs
-pnpm dev:docs
+pnpm dev:testbed
 
 # 3. Make changes to theme files
 # Changes will hot-reload in docs site
@@ -412,7 +412,7 @@ pnpm dev:docs
 #### 1. Create Markdown File
 ```bash
 # Add new post/page
-cd packages/docs
+cd packages/testbed
 touch posts/my-new-post.md
 ```
 

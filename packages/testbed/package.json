@@ -1,16 +1,14 @@
 {
-  "name": "docs",
+  "name": "testbed",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev:docs": "vitepress dev --host",
+    "dev": "vitepress dev --host",
     "build": "vitepress build --clean-cache --clean-temp",
-    "build:docs": "vitepress build --clean-cache --clean-temp",
     "clean": "rimraf .vitepress/cache .vitepress/dist",
-    "clean:docs": "rimraf .vitepress/cache .vitepress/dist",
-    "preview:docs": "vitepress preview"
+    "preview": "vitepress preview"
   },
   "dependencies": {
     "@types/markdown-it-footnote": "^3.0.4",

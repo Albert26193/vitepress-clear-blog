@@ -52,7 +52,7 @@ description: 项目的 TypeScript 类型系统配置
 {
   "references": [
     { "path": "./packages/theme" },
-    { "path": "./packages/docs" },
+    { "path": "./packages/testbed" },
     { "path": "./packages/vitepress-plugin-callout" }
   ]
 }
