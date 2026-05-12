@@ -3,8 +3,6 @@ import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-// We test the validation helpers by importing generateThemeFile and inspecting
-// the generated CSS + console warnings.
 import { generateThemeFile } from '../src/node'
 
 let tmpDir: string
@@ -22,7 +20,6 @@ beforeEach(() => {
   configPath = join(tmpDir, '.vitepress/custom/config.toml')
   cssPath = join(tmpDir, '.vitepress/theme/styles/generated.css')
 
-  // generateThemeFile uses process.cwd() to resolve paths, so we mock cwd
   vi.spyOn(process, 'cwd').mockReturnValue(tmpDir)
 })
 
@@ -145,7 +142,7 @@ vp-c-brand = "not-a-valid-color!!!"
     expect(css).toContain('--vp-c-brand: not-a-valid-color!!!')
   })
 
-  it('warns on non-string value (number)', async () => {
+  it('warns on non-string value (number) and falls back', async () => {
     writeToml(`[theme]
 vp-c-brand = 12345
 `)
@@ -155,7 +152,7 @@ vp-c-brand = 12345
     const css = readCss()
 
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('vp-c-brand must be a non-empty string')
+      expect.stringContaining('expected string')
     )
     expect(css).toContain('--vp-c-brand: #f00')
   })

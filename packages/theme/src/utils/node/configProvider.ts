@@ -9,7 +9,8 @@ import UnoCSS from 'unocss/vite'
 import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { calloutPlugin } from 'vitepress-plugin-callout'
 import { generateThemePlugin } from 'vitepress-plugin-config'
-import type { ConfigToml } from 'vitepress-plugin-config'
+import type { ValidatedConfigToml } from 'vitepress-plugin-config'
+import { validateConfigTomlWithFallback } from 'vitepress-plugin-config'
 import { hashtagPlugin } from 'vitepress-plugin-hashtag'
 import llmstxt from 'vitepress-plugin-llms'
 import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
@@ -18,11 +19,11 @@ import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
 
 const assignedConfigPath = '.vitepress/custom/config.toml'
 
-const readConfig = (configPath?: string): ConfigToml | null => {
+const readConfig = (configPath?: string): ValidatedConfigToml | null => {
   const path = resolve(process.cwd(), configPath || assignedConfigPath)
   try {
     const raw = readFileSync(path, 'utf-8')
-    return parse(raw) as unknown as ConfigToml
+    return validateConfigTomlWithFallback(parse(raw), path)
   } catch {
     return null
   }
