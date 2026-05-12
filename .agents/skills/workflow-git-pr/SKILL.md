@@ -86,7 +86,7 @@ Now compare along these dimensions:
 
 | Dimension | Check | Mismatch signal |
 |-----------|-------|-----------------|
-| **Files changed** | Do the paths in `git diff --stat` relate to the issue's `area:` label? | Issue tagged `area:theme` but diff is only in `packages/docs/` |
+| **Files changed** | Do the paths in `git diff --stat` relate to the issue's `package:` label? | Issue tagged `package:theme` but diff is only in `packages/docs/` |
 | **Change nature** | Does `git diff` look like what the issue describes? | Issue says "add dark mode" but diff is fixing a typo in README |
 | **Scope** | Is the magnitude of changes consistent with the issue? | Issue is a small bug fix but diff shows 80 new files |
 
@@ -120,7 +120,7 @@ user decide:
   Current diff:    <summary from git diff>
 
   Changed files:   <key paths from diff --stat>
-  Issue area:      <area label from issue>
+  Issue package:    <package label from issue>
 
 What would you like to do?
   A) Proceed anyway — link these changes to issue #<N>
@@ -183,12 +183,12 @@ Run the diff analysis script to get structured metadata:
 bash "$SKILL_DIR/scripts/analyze-diff.sh"
 ```
 
-This outputs JSON with `scope`, `area_label`, `changed_files`, `packages`, and
+This outputs JSON with `scope`, `package_label`, `changed_files`, `packages`, and
 `suggested_type`. The LLM should review `suggested_type` and override it if the
 context warrants (e.g., a `fix` tag on what is clearly a `feat`).
 
-The script handles the scope/area-label mapping for all known packages in this
-monorepo. Root-level file changes produce `scope: null` and `area_label: "area:root"`.
+The script handles the scope/package-label mapping for all known packages in this
+monorepo. Root-level file changes produce `scope: null` and `package_label: "package:root"`.
 
 ### Step 2: Create the issue — invoke `tool-git-issues` → PATH A only
 
@@ -199,12 +199,12 @@ after a mismatch).
 tool-git-issues skill enforces this requirement — see its "Language" section.
 
 Invoke the **tool-git-issues** skill to handle issue creation. Pass it the
-analysis from step 1 (scope, area label, change summary from diffs).
+analysis from step 1 (scope, package label, change summary from diffs).
 
 The tool-git-issues skill will:
 - Select the correct template (`feature-bug.md`, `task.md`, etc.) from its assets/
 - Determine the GitHub issue type (Feature, Bug, Task)
-- Map the scope to the correct `area:` label
+- Map the scope to the correct `package:` label
 - Craft the title (< 72 chars, English) and body (Description, Acceptance Criteria, Notes — all English)
 - Call `gh api repos/{owner}/{repo}/issues -X POST` with the right flags
 - Return the issue number and URL
