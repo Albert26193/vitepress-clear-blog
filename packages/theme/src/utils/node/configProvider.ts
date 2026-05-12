@@ -235,7 +235,19 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
     description: meta.description || '',
     head,
     markdown,
-    vite: base.vite,
+    vite: {
+      ...(base.vite as Record<string, unknown>),
+      define: {
+        ...(((base.vite as Record<string, unknown>)?.define as Record<
+          string,
+          string
+        >) || {}),
+        __WIKI_RENDER_TITLE__: JSON.stringify(
+          (mdConf as Record<string, unknown>).render_title ||
+            'frontmatter_title'
+        )
+      }
+    },
     vue: {
       template: {
         compilerOptions: {
@@ -248,7 +260,9 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       sidebar: [{ text: '', items: [] }],
       search: { provider: 'local' },
       outline: [2, 3],
-      outlineTitle: 'Table of Contents'
+      outlineTitle: 'Table of Contents',
+      wikiRenderTitle:
+        (mdConf as Record<string, unknown>).render_title || 'frontmatter_title'
     }
   }
 }

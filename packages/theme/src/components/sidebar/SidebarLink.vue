@@ -12,9 +12,9 @@
           :key="link.relativePath"
           :href="withBase(link.fullUrl)"
           class="page-link slide-enter"
-          :title="getTitleFromPost(link, allPostsData || [])"
+          :title="resolveWikiLinkTitle(link, allPostsData || [], renderTitle)"
         >
-          {{ getTitleFromPost(link, allPostsData || []) }}
+          {{ resolveWikiLinkTitle(link, allPostsData || [], renderTitle) }}
         </a>
       </div>
       <!-- if no links -->
@@ -29,9 +29,9 @@
           :key="link.relativePath"
           :href="withBase(link.fullUrl)"
           class="page-link slide-enter"
-          :title="getTitleFromPost(link, allPostsData || [])"
+          :title="resolveWikiLinkTitle(link, allPostsData || [], renderTitle)"
         >
-          {{ getTitleFromPost(link, allPostsData || []) }}
+          {{ resolveWikiLinkTitle(link, allPostsData || [], renderTitle) }}
         </a>
       </div>
       <div v-else class="no-links">No Back Links</div>
@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
   import { siteMetadata } from 'virtual:vitepress-analyzer'
-  import { useRoute, withBase } from 'vitepress'
+  import { useData, useRoute, withBase } from 'vitepress'
   import {
     getPageBackLinks,
     // getPageMetadata,
@@ -50,8 +50,13 @@
   import type { PageLink } from 'vitepress-plugin-analyzer/types'
   import { computed, ref, watch } from 'vue'
 
-  import { getTitleFromPost } from '../../utils/client/title'
+  import { resolveWikiLinkTitle } from '../../utils/client/title'
   import { data as allPostsData } from '../../utils/node/posts.data'
+
+  const { site } = useData()
+  const renderTitle =
+    (site.value.themeConfig as Record<string, unknown>)?.wikiRenderTitle ||
+    'frontmatter_title'
 
   const route = useRoute()
   const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))

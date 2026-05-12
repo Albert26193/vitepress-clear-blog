@@ -30,10 +30,13 @@ import {
   markBrokenWikiLinks,
   registerHetiScript
 } from './utils/client/'
+import { data as allPostsData } from './utils/node/posts.data'
 
 /**
  * Extends VitePress with Clear Blog layout, global components, and client-only enhancements.
  */
+declare const __WIKI_RENDER_TITLE__: string
+
 export const BlogTheme: Theme = {
   ...DefaultTheme,
   Layout: NewLayout,
@@ -78,7 +81,12 @@ export const BlogTheme: Theme = {
         wikiLinkRefreshTimer = window.setTimeout(() => {
           markBrokenWikiLinks(siteMetadata, {
             base: getBaseFromLocation(),
-            currentPath: router.route.data.relativePath
+            currentPath: router.route.data.relativePath,
+            renderTitle:
+              typeof __WIKI_RENDER_TITLE__ !== 'undefined'
+                ? __WIKI_RENDER_TITLE__
+                : 'frontmatter_title',
+            allPosts: allPostsData
           })
         })
       }
