@@ -27,9 +27,9 @@
 </script>
 
 <template>
-  <div class="vp-details-block" :class="{ 'is-open': isOpen }">
-    <div
-      class="vp-details-summary"
+  <div class="custom-block collapse-block" :class="{ 'is-open': isOpen }">
+    <p
+      class="custom-block-title collapse-block-title"
       role="button"
       tabindex="0"
       :aria-expanded="isOpen"
@@ -38,27 +38,16 @@
       @keydown.enter.prevent="toggle"
       @keydown.space.prevent="toggle"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="vp-details-icon"
+      <span
+        class="collapse-block-icon"
         :class="{ 'is-open': isOpen }"
         aria-hidden="true"
-      >
-        <polyline points="9 18 15 12 9 6"></polyline>
-      </svg>
+      />
       <slot name="summary">{{ summary }}</slot>
-    </div>
+    </p>
     <div
       :id="contentId"
-      class="vp-details-content"
+      class="collapse-block-content"
       v-show="isOpen"
       :aria-hidden="!isOpen"
     >
@@ -68,37 +57,37 @@
 </template>
 
 <style scoped>
-  .vp-details-block {
-    border: 1px solid var(--vp-c-divider);
-    border-radius: 8px;
-    background-color: var(--vp-c-bg-soft);
-    margin: 16px 0;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-
-  .vp-details-summary {
-    padding: 10px 14px;
+  .collapse-block-title {
     cursor: pointer;
     display: flex;
     align-items: center;
     user-select: none;
   }
 
-  .vp-details-icon {
-    margin-right: 8px;
-    transition: transform 0.2s ease;
+  .collapse-block-icon {
     display: inline-block;
     flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    transition: transform 0.2s ease;
   }
 
-  .vp-details-icon.is-open {
+  .collapse-block-icon::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg) translateY(-2px);
+  }
+
+  .collapse-block-icon.is-open {
     transform: rotate(90deg);
   }
 
-  .vp-details-content {
-    padding: 4px 6px;
-    border-top: 1px solid var(--vp-c-divider);
-    background-color: transparent;
+  .collapse-block-content {
+    padding: 4px 16px;
   }
 </style>
