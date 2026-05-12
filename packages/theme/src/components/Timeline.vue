@@ -51,7 +51,7 @@
           </span>
         </div>
         <div
-          v-for="monthList in dataByYearMonth[getYear(curYearPostList)]"
+          v-for="monthList in sortedDataByYearMonth[getYear(curYearPostList)]"
           :key="`${getYear(curYearPostList)}-${getMonth(monthList)}`"
           v-show="displayStatus.years[getYear(curYearPostList)]"
           class="timeline-year-content"
@@ -142,6 +142,27 @@
   const sortedDataByYear = computed(() => {
     const data = [...dataByYear.value]
     return sortDirection.value === 'asc' ? data.reverse() : data
+  })
+
+  const sortedDataByYearMonth = computed(() => {
+    const data = dataByYearMonth.value
+    const direction = sortDirection.value
+
+    const result: Record<string, Record<string, Post[]>> = {}
+    for (const year of Object.keys(data)) {
+      result[year] = {}
+      const sortedMonths = Object.keys(data[year]).sort((a, b) =>
+        direction === 'asc' ? a.localeCompare(b) : b.localeCompare(a)
+      )
+      for (const month of sortedMonths) {
+        result[year][month] = [...data[year][month]].sort((a, b) => {
+          const dateA = +new Date(a.frontMatter.date)
+          const dateB = +new Date(b.frontMatter.date)
+          return direction === 'asc' ? dateA - dateB : dateB - dateA
+        })
+      }
+    }
+    return result
   })
 
   watch(expandStatus, (newValue: 'expand' | 'collapse') => {
