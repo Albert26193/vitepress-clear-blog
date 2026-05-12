@@ -58,17 +58,27 @@ export const BlogTheme: Theme = {
       let wikiLinkRefreshTimer: number | undefined
       let wikiLinkObserver: MutationObserver | undefined
       const getBaseFromLocation = () => {
-        const routePath = router.route.path
-        return window.location.pathname.endsWith(routePath)
-          ? window.location.pathname.slice(0, -routePath.length) || '/'
-          : '/'
+        const relativePath = router.route.data.relativePath
+        const pathname = window.location.pathname
+        if (relativePath) {
+          const clean = relativePath.replace(/\.(md|html)$/, '')
+          if (pathname.endsWith(clean + '.html') || pathname.endsWith(clean)) {
+            return (
+              pathname.slice(
+                0,
+                -clean.length - (pathname.endsWith(clean + '.html') ? 5 : 0)
+              ) || '/'
+            )
+          }
+        }
+        return '/'
       }
       const scheduleWikiLinkRefresh = () => {
         window.clearTimeout(wikiLinkRefreshTimer)
         wikiLinkRefreshTimer = window.setTimeout(() => {
           markBrokenWikiLinks(siteMetadata, {
             base: getBaseFromLocation(),
-            currentPath: router.route.path
+            currentPath: router.route.data.relativePath
           })
         })
       }
