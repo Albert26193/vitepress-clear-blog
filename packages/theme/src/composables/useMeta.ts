@@ -152,6 +152,10 @@ const useHtmlPreview = (
     if (!html) return ''
 
     try {
+      if (typeof document === 'undefined') {
+        return html.substring(0, 200) + (html.length > 200 ? '...' : '')
+      }
+
       // Create a temporary div to parse HTML
       const div = document.createElement('div')
       div.innerHTML = html
@@ -289,6 +293,9 @@ const useTitle = (frontMatter: PostFrontMatter, html: string) => {
   // 1. first use title from frontmatter
   if (frontMatter.title) {
     return frontMatter.title
+  }
+  if (typeof document === 'undefined') {
+    return ''
   }
   // 2. otherwise use first heading of the page
   const div = document.createElement('div')

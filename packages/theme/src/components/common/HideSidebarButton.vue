@@ -23,6 +23,8 @@
   }
 
   const updateDOM = (hidden: boolean) => {
+    if (typeof document === 'undefined') return
+
     document.documentElement.style.setProperty(
       '--vp-sidebar-width',
       hidden ? '0px' : '272px'

@@ -57,6 +57,8 @@
   watch(
     () => props.show,
     (newValue) => {
+      if (typeof document === 'undefined') return
+
       document.body.style.overflow = newValue ? 'hidden' : ''
     },
     { immediate: true }

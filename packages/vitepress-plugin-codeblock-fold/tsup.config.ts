@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['src/index.ts', 'src/style.css'],
+  entry: ['src/index.ts'],
   format: ['esm', 'cjs'],
   dts: true,
   splitting: false,
@@ -9,7 +9,6 @@ export default defineConfig({
   minify: true,
   sourcemap: false,
   treeshake: true,
-  injectStyle: true,
   outDir: 'lib',
   outExtension({ format }) {
     return {
