@@ -1,5 +1,5 @@
 export { generateThemePlugin } from './config'
-export type { ConfigToml, ThemeConfig } from './types'
+export type { ConfigToml, DatetimeConfig, ThemeConfig } from './types'
 export {
   validateConfigToml,
   validateConfigTomlWithFallback,

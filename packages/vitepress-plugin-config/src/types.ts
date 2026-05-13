@@ -17,6 +17,12 @@ export interface ThemeConfig {
 /**
  * Mirrors the custom TOML file shape consumed by the generated-theme plugin.
  */
+export interface DatetimeConfig {
+  frontmatterFields?: string[]
+  formats?: string[]
+  outputFormat?: string
+}
+
 export interface NavLabels {
   home?: string
   tags?: string
@@ -51,5 +57,6 @@ export interface ConfigToml {
     callout?: boolean
     render_title?: 'frontmatter_title' | 'first_heading' | 'alias' | 'file_name'
   }
+  datetime?: DatetimeConfig
   theme: ThemeConfig
 }

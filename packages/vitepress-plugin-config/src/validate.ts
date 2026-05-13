@@ -50,6 +50,12 @@ const metaSchema = z.object({
   themeLink: z.string().optional()
 })
 
+const datetimeSchema = z.object({
+  frontmatterFields: z.array(z.string()).optional(),
+  formats: z.array(z.string()).optional(),
+  outputFormat: z.string().optional()
+})
+
 const pageSchema = z.object({
   pageSize: z.number().int().positive().optional()
 })
@@ -59,6 +65,7 @@ export const configTomlSchema = z.object({
   page: pageSchema.optional().default({}),
   nav: navLabelsSchema.optional(),
   markdown: markdownSchema.optional(),
+  datetime: datetimeSchema.optional(),
   theme: themeConfigSchema
 })
 
