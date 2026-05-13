@@ -61,6 +61,11 @@ mindmap
 - Mermaid 图表
 - 代码折叠
 
+### [[hashtag-plugin|Hashtag 标签]]
+- `#TagName` 语法自动链接
+- 标签筛选集成
+- 可配置开关
+
 ### [[search-and-nav|搜索与导航]]
 - 本地全文搜索
 - 时间线视图
