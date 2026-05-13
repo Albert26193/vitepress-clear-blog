@@ -42,6 +42,16 @@ describe('resolveDate', () => {
       const result = resolveDate({ date: 'Jan 15, 2024' })
       expect(result).toBe('2024-01-15')
     })
+
+    it('normalizes a Date object (VitePress frontmatter may produce these)', () => {
+      expect(resolveDate({ date: new Date('2024-01-15') })).toBe('2024-01-15')
+    })
+
+    it('normalizes a Date object with time component', () => {
+      expect(resolveDate({ date: new Date('2024-06-15T12:30:00Z') })).toBe(
+        '2024-06-15'
+      )
+    })
   })
 
   describe('frontmatter field priority', () => {

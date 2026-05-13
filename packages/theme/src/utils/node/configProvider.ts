@@ -267,6 +267,7 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       icpNumber: meta.icpNumber || '',
       themeLink: meta.themeLink || DEFAULT_META.themeLink,
       pageSize: page.pageSize || DEFAULT_PAGE_SIZE,
+      dateFormat: toml?.datetime?.outputFormat || undefined,
       meta: { author: meta.author || DEFAULT_META.author }
     }
   }

@@ -339,7 +339,11 @@ const useTimeFormat = (date: string) => {
   if (!date || !_checkTimeFormat(date)) {
     return ''
   }
-  return moment(date).format('MMM D, YYYY')
+  const { theme } = useData()
+  const format = (theme.value as Record<string, unknown>).dateFormat as
+    | string
+    | undefined
+  return moment(date).format(format || 'MMM D, YYYY')
 }
 
 export {

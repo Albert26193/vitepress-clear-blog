@@ -18,6 +18,15 @@ export default createContentLoader<Post[]>('blogs/**/*.md', {
           )
           if (normalized) {
             page.frontmatter.date = normalized
+          } else {
+            // Safety net: fall back to legacy behavior when the datetime
+            // pipeline cannot normalize the value (e.g. timestamp numbers).
+            const date = new Date(
+              page.frontmatter.date as string | number | Date
+            )
+            if (!isNaN(date.getTime())) {
+              page.frontmatter.date = date.toISOString().split('T')[0]
+            }
           }
         }
         const post = {
