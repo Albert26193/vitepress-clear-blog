@@ -64,8 +64,11 @@ const getThemeConfig = async (
       },
       plugins: [
         vitePressAnalyzerPlugin({
-          resolutionModes:
-            (toml?.links?.resolutionModes as ResolutionMode[] | undefined) ?? []
+          ...(toml?.links?.resolutionModes?.length
+            ? {
+                resolutionModes: toml.links.resolutionModes as ResolutionMode[]
+              }
+            : {})
         }),
         llmstxt(),
         generateThemePlugin(),
