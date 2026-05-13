@@ -110,11 +110,11 @@ When creating issues for this monorepo, apply these labels to map project metada
 
 | Project field | GitHub label | Example |
 |--------------|-------------|---------|
-| `package` | `area:root`, `area:theme`, `area:testbed`, `area:plugin-callout`, `area:plugin-config`, `area:plugin-codeblock-fold`, `area:plugin-details-block`, `area:plugin-hashtag`, `area:plugin-analyzer` | `area:theme` |
+| `package` | `package:root`, `package:theme`, `package:docs`, `package:plugin-callout`, `package:plugin-config`, `package:plugin-codeblock-fold`, `package:plugin-details-block`, `package:plugin-hashtag`, `package:plugin-analyzer` | `package:theme` |
 | `priority` | `priority:P0`, `priority:P1`, `priority:P2`, `priority:P3` | `priority:P1` |
 | `type` | Use GitHub issue type (`Bug`, `Feature`, `Task`) — don't duplicate with a label | `-f type="Bug"` |
 
-**Why labels matter**: The `area:*` labels make it trivial to filter issues by module in the GitHub UI. Combined with `priority:*` labels, anyone can sort the backlog by package and urgency without reading every issue body. The label naming follows GitHub's canonical `area:` and `priority:` conventions, which also enables automated workflows and project board column rules.
+**Why labels matter**: The `package:*` labels provide a MECE classification of issues by physical monorepo package. Combined with `priority:*` labels, anyone can sort the backlog by module and urgency without reading every issue body. Each issue should use one primary `package:*` label that maps to its main affected package, keeping the taxonomy mutually exclusive and collectively exhaustive.
 
 ## Updating Issues
 
@@ -143,7 +143,7 @@ gh api repos/{owner}/{repo}/issues \
   -X POST \
   -f 'title=Implement local graph component' \
   -f 'type=Feature' \
-  -f 'labels[]=area:theme' \
+  -f 'labels[]=package:theme' \
   -f 'labels[]=priority:P2' \
   -f 'body=## Description
 The current graph system only has full-site (D3FullScreen) and page-level
@@ -173,7 +173,7 @@ gh api repos/{owner}/{repo}/issues \
   -X POST \
   -f 'title=Fix D3 graph drag delta calculation in Firefox' \
   -f 'type=Bug' \
-  -f 'labels[]=area:theme' \
+  -f 'labels[]=package:theme' \
   -f 'labels[]=priority:P1' \
   -f 'body=## Description
 The graph node drag offset is incorrect in Firefox because event deltaX/deltaY
@@ -214,7 +214,7 @@ Use these standard labels when applicable:
 - Ask for missing critical information rather than guessing
 - Link related issues when known: `Related to #123`
 - For updates, fetch current issue first to preserve unchanged fields
-- **zsh bracket globbing**: Always wrap `-f` values in single quotes when they contain `[]` (e.g. `-f 'labels[]=area:theme'`). zsh interprets `[]` as glob patterns, so unquoted `-f labels[]=area:theme` will fail with `no matches found`. Applies to `labels[]`, `assignees[]`, and any other array parameters.
+- **zsh bracket globbing**: Always wrap `-f` values in single quotes when they contain `[]` (e.g. `-f 'labels[]=package:theme'`). zsh interprets `[]` as glob patterns, so unquoted `-f labels[]=package:theme` will fail with `no matches found`. Applies to `labels[]`, `assignees[]`, and any other array parameters.
 
 ## Extended Capabilities
 

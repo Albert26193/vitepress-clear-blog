@@ -3,9 +3,9 @@
 # analyze-diff.sh
 # Analyse staged + unstaged changes and output JSON metadata for the workflow.
 #
-# Output: JSON with scope, area_label, changed_files, packages, suggested_type.
-#   scope  — Conventional Commits scope (theme|testbed|plugin-*|null)
-#   area_label — GitHub label (area:theme|area:testbed|area:plugin-*|area:root)
+# Output: JSON with scope, package_label, changed_files, packages, suggested_type.
+#   scope  — Conventional Commits scope (theme|docs|plugin-*|null)
+#   package_label — GitHub label (package:theme|package:docs|package:plugin-*|package:root)
 #   suggested_type — best-guess commit type (feat|fix|docs|chore)
 #
 # Usage:
@@ -88,18 +88,18 @@ main() {
     done < "$paths_tmp"
     rm -f "$paths_tmp"
 
-    # Determine scope and area
+    # Determine scope and package label
     local scope="null"
-    local area="area:root"
+    local pkg_label="package:root"
     if [[ ${#unique_pkgs[@]} -eq 1 ]]; then
         scope="\"$matched_pkg\""
-        area="area:${matched_pkg}"
+        pkg_label="package:${matched_pkg}"
     elif [[ ${#unique_pkgs[@]} -gt 1 ]]; then
         scope="null"
-        area="area:root"
+        pkg_label="package:root"
     else
         scope="null"
-        area="area:root"
+        pkg_label="package:root"
     fi
 
     # Build packages JSON array
@@ -121,8 +121,8 @@ main() {
         stype="fix"
     fi
 
-    printf '{"scope":%s,"area_label":"%s","changed_files":%d,"packages":%s,"suggested_type":"%s"}\n' \
-        "$scope" "$area" "$count" "$pkgs_json" "$stype"
+    printf '{"scope":%s,"package_label":"%s","changed_files":%d,"packages":%s,"suggested_type":"%s"}\n' \
+        "$scope" "$pkg_label" "$count" "$pkgs_json" "$stype"
 }
 
 main "$@"
