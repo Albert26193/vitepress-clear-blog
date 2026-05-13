@@ -25,6 +25,7 @@
 
 <script lang="ts" setup>
   import { useLocalStorage } from '@vueuse/core'
+  import { useData } from 'vitepress'
   import { ref, watch } from 'vue'
 
   import IconToggleButton from '../common/IconToggleButton.vue'
@@ -33,9 +34,13 @@
 
   type PageType = 'cardType' | 'ListType'
 
+  const { theme } = useData()
+  const configDefaultMode: PageType =
+    theme.value.defaultViewMode === 'list' ? 'ListType' : 'cardType'
+
   const storedViewType = useLocalStorage<PageType>(
     'vp-blog-view-type',
-    'cardType'
+    configDefaultMode
   )
 
   // Use localStorage value directly

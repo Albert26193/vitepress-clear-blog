@@ -20,7 +20,9 @@ vi.mock('vitepress-plugin-config', () => ({
     'theme-color': '#1934e9',
     themeLink: 'https://github.com/Albert26193/vitepress-clear-blog'
   },
-  DEFAULT_PAGE_SIZE: 10
+  DEFAULT_PAGE_SIZE: 10,
+  DEFAULT_BLOG: { defaultViewMode: 'card' },
+  DEFAULT_TIMELINE: { sortDirection: 'desc' }
 }))
 
 describe('getThemeConfig', async () => {
@@ -330,6 +332,52 @@ describe('createBlog with mocked config.toml', async () => {
     expect((config as any).themeConfig.themeLink).toBe(
       'https://github.com/Albert26193/vitepress-clear-blog'
     )
+  })
+
+  it('sets defaultViewMode from blog section', async () => {
+    const toml = {
+      meta: { title: 'Blog' },
+      page: {},
+      blog: { defaultViewMode: 'list' },
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.defaultViewMode).toBe('list')
+  })
+
+  it('uses default view mode when blog section is missing', async () => {
+    const toml = {
+      meta: { title: 'No Blog Section' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.defaultViewMode).toBe('card')
+  })
+
+  it('sets timelineSortDirection from timeline section', async () => {
+    const toml = {
+      meta: { title: 'Timeline' },
+      page: {},
+      timeline: { sortDirection: 'asc' },
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.timelineSortDirection).toBe('asc')
+  })
+
+  it('uses default sort direction when timeline section is missing', async () => {
+    const toml = {
+      meta: { title: 'No Timeline Section' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.timelineSortDirection).toBe('desc')
   })
 })
 

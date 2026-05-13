@@ -60,12 +60,22 @@ const pageSchema = z.object({
   pageSize: z.number().int().positive().optional()
 })
 
+const blogSchema = z.object({
+  defaultViewMode: z.enum(['card', 'list']).optional()
+})
+
+const timelineSchema = z.object({
+  sortDirection: z.enum(['desc', 'asc']).optional()
+})
+
 export const configTomlSchema = z.object({
   meta: metaSchema.optional().default({}),
   page: pageSchema.optional().default({}),
   nav: navLabelsSchema.optional(),
   markdown: markdownSchema.optional(),
   datetime: datetimeSchema.optional(),
+  blog: blogSchema.optional(),
+  timeline: timelineSchema.optional(),
   theme: themeConfigSchema
 })
 

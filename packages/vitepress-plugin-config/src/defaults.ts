@@ -2,6 +2,14 @@ export const CONFIG_PATH = '.vitepress/custom/config.toml'
 
 export const DEFAULT_PAGE_SIZE = 10
 
+export const DEFAULT_BLOG = {
+  defaultViewMode: 'card'
+} as const
+
+export const DEFAULT_TIMELINE = {
+  sortDirection: 'desc'
+} as const
+
 export const DEFAULT_NAV_LABELS = {
   home: 'Home',
   tags: 'Tags',

@@ -6,9 +6,11 @@ import UnoCSS from 'unocss/vite'
 import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { calloutPlugin } from 'vitepress-plugin-callout'
 import {
+  DEFAULT_BLOG,
   DEFAULT_META,
   DEFAULT_NAV_LABELS,
   DEFAULT_PAGE_SIZE,
+  DEFAULT_TIMELINE,
   generateThemePlugin,
   loadConfig
 } from 'vitepress-plugin-config'
@@ -120,6 +122,8 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
   const page = toml?.page || {}
   const mdConf = toml?.markdown || {}
   const navLabels = toml?.nav || {}
+  const blog = toml?.blog || {}
+  const timeline = toml?.timeline || {}
 
   const base = await getThemeConfig()
 
@@ -267,6 +271,9 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       icpNumber: meta.icpNumber || '',
       themeLink: meta.themeLink || DEFAULT_META.themeLink,
       pageSize: page.pageSize || DEFAULT_PAGE_SIZE,
+      defaultViewMode: blog.defaultViewMode || DEFAULT_BLOG.defaultViewMode,
+      timelineSortDirection:
+        timeline.sortDirection || DEFAULT_TIMELINE.sortDirection,
       dateFormat: toml?.datetime?.outputFormat || undefined,
       meta: { author: meta.author || DEFAULT_META.author }
     }
