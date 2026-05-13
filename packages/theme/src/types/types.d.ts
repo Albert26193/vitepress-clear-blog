@@ -40,6 +40,7 @@ export interface BlogConfig extends DefaultTheme.Config {
   website: string
   icpNumber?: string
   themeLink?: string
+  pageSize?: number
 }
 
 /**

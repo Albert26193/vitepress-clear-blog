@@ -35,6 +35,8 @@ export interface ConfigToml {
     lang?: string
     siteUrl?: string
     'theme-color'?: string
+    icpNumber?: string
+    themeLink?: string
   }
   page: {
     pageSize?: number

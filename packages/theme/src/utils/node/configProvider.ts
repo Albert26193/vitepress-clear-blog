@@ -128,6 +128,7 @@ const getThemeConfig = async (
 const createBlog = async (): Promise<Record<string, unknown>> => {
   const toml = readConfig()
   const meta = toml?.meta || {}
+  const page = toml?.page || {}
   const mdConf = toml?.markdown || {}
   const navLabels = toml?.nav || {}
 
@@ -263,7 +264,11 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       outline: [2, 3],
       outlineTitle: 'Table of Contents',
       wikiRenderTitle:
-        (mdConf as Record<string, unknown>).render_title || 'frontmatter_title'
+        (mdConf as Record<string, unknown>).render_title || 'frontmatter_title',
+      website: meta.siteUrl || '',
+      icpNumber: meta.icpNumber || '',
+      themeLink: meta.themeLink || '',
+      pageSize: page.pageSize
     }
   }
 }
