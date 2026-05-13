@@ -34,6 +34,7 @@
       tabindex="0"
       :aria-expanded="isOpen"
       :aria-controls="contentId"
+      :style="{ borderBottomColor: isOpen ? undefined : 'transparent' }"
       @click="toggle"
       @keydown.enter.prevent="toggle"
       @keydown.space.prevent="toggle"
