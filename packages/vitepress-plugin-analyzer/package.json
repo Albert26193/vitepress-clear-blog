@@ -45,7 +45,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "markdown-it": "^14.1.0"
+    "markdown-it": "^14.1.0",
+    "markdown-it-wikilinks": "^1.4.0"
   },
   "peerDependencies": {
     "vitepress": "^1.5.0"
