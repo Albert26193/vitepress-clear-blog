@@ -10,6 +10,15 @@ export const DEFAULT_TIMELINE = {
   sortDirection: 'desc'
 } as const
 
+export const DEFAULT_LINKS = {
+  resolutionModes: [
+    'repoRoot',
+    'absolutePath',
+    'relativeToCurrentFile',
+    'obsidianShortest'
+  ]
+} as const
+
 export const DEFAULT_NAV_LABELS = {
   home: 'Home',
   tags: 'Tags',
