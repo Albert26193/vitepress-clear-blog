@@ -27,6 +27,12 @@
   import { onMounted, ref, watch } from 'vue'
 
   import type { D3ForceConfig, D3Link, D3Node } from '../../types/types'
+  import {
+    createDrag,
+    createHover,
+    createZoom,
+    updateNodeHighlight
+  } from '../../utils/client/d3Interaction'
   import { calculateNodeRatios } from '../../utils/client/d3Utils'
 
   const { debounce } = lodash
@@ -121,20 +127,7 @@
     const containerWidth = svgRef.value.parentElement?.clientWidth || 200
     svgRef.value.setAttribute('width', containerWidth.toString())
 
-    // Create the zoom behavior
-    const zoom = d3
-      .zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.1, 2.0])
-      .translateExtent([
-        [0, 0],
-        [width, height]
-      ])
-      .on('zoom', (event) => {
-        g.attr('transform', event.transform)
-        debouncedEmit(event.transform.k)
-      })
-
-    // Select the SVG element and add zoom behavior
+    // Create SVG and root group
     const svg = d3
       .select(svgRef.value)
       .attr('width', width)
@@ -145,20 +138,11 @@
       )
       .attr('viewBox', [0, 0, width, height])
 
-    // Create a fixed root group element (must create before calling zoom)
     const g = svg.append('g')
 
-    // Apply zoom behavior after g is created
-    svg.call(zoom)
-
-    // Set initial zoom scale from modelValue with center positioning
-    // Calculate the translation to keep content centered when scaled
-    const scale = props.modelValue
-    const translateX = (width * (1 - scale)) / 2
-    const translateY = (height * (1 - scale)) / 2
-    svg.call(
-      zoom.transform,
-      d3.zoomIdentity.translate(translateX, translateY).scale(scale)
+    // Zoom behavior extracted to d3Interaction
+    createZoom(svg, g, width, height, { initialScale: props.modelValue }, (s) =>
+      debouncedEmit(s)
     )
 
     // create links
@@ -178,11 +162,6 @@
       .join('g')
       .attr('class', 'd3-force-node')
       .style('cursor', 'pointer')
-      .on('click', (event, d) => {
-        if (d.fullUrl) {
-          router.go(withBase(d.fullUrl))
-        }
-      })
 
     // add node circles
     node
@@ -264,137 +243,15 @@
         .strength(1)
     )
 
-    // Add drag functionality
-    let isDragging = false
-    let draggedNode: D3Node | null = null
-    let dragStartPosition = { x: 0, y: 0 }
-
-    const updateNodeState = (d: D3Node | null) => {
-      if (!d) {
-        // Reset all states when no node is selected
-        node
-          .classed('d3-force-node-highlight', false)
-          .classed('d3-force-node-dim', false)
-          .classed('d3-force-node-active', false)
-          .each(function () {
-            d3.select(this)
-              .select('text')
-              .style('font-size', `${props.textSize}px`)
-          })
-        link
-          .classed('d3-force-link-highlight', false)
-          .classed('d3-force-link-dim', false)
-        return
+    // Drag + click extracted to d3Interaction
+    createDrag(node, link, simulation, props.textSize, {}, (d) => {
+      if (d.fullUrl) {
+        router.go(withBase(d.fullUrl))
       }
-      // Find all connected nodes
-      const connectedNodes = new Set()
-      link.each((l) => {
-        if (l.source === d) connectedNodes.add(l.target)
-        if (l.target === d) connectedNodes.add(l.source)
-      })
-      // Update node states
-      node
-        .classed(
-          'd3-force-node-highlight',
-          (n) => n === d || connectedNodes.has(n)
-        )
-        .classed('d3-force-node-active', (n) => n === d)
-        .classed('d3-force-node-dim', (n) => n !== d && !connectedNodes.has(n))
-        .each(function (n) {
-          const textElement = d3.select(this).select('text')
-          if (n === d) {
-            textElement.style('font-size', '1.4rem')
-          } else {
-            textElement.style('font-size', `${props.textSize}px`)
-          }
-        })
-      // Update link states
-      link
-        .classed(
-          'd3-force-link-highlight',
-          (l) => l.source === d || l.target === d
-        )
-        .classed('d3-force-link-dim', (l) => l.source !== d && l.target !== d)
-    }
+    })
 
-    const handleNodeClick = (node: D3Node) => {
-      if (node.fullUrl) {
-        router.go(withBase(node.fullUrl))
-      }
-      updateNodeState(null)
-    }
-
-    const dragStarted = (
-      event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>
-    ) => {
-      event.sourceEvent.stopPropagation()
-      dragStartPosition = { x: event.x, y: event.y }
-      isDragging = false
-      draggedNode = event.subject
-      updateNodeState(draggedNode)
-
-      // Start the simulation when dragging starts
-      if (!event.active) simulation.alphaTarget(0.3).restart()
-    }
-
-    const dragged = (event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>) => {
-      const dx = event.x - dragStartPosition.x
-      const dy = event.y - dragStartPosition.y
-      const dragDistance = Math.sqrt(dx * dx + dy * dy)
-
-      if (!isDragging && dragDistance > 0) {
-        // When dragging starts, start from the node's current position
-        isDragging = true
-        event.subject.fx = event.subject.x
-        event.subject.fy = event.subject.y
-      }
-
-      if (isDragging) {
-        // After that, use relative displacement to update the position
-        event.subject.fx = event.x
-        event.subject.fy = event.y
-      }
-    }
-
-    const dragEnded = (event: d3.D3DragEvent<SVGGElement, D3Node, D3Node>) => {
-      if (!isDragging) {
-        // If not dragging, it's a click event
-        handleNodeClick(event.subject)
-      }
-
-      // Reset states
-      isDragging = false
-      draggedNode = null
-
-      // Release the node to continue moving
-      event.subject.fx = null
-      event.subject.fy = null
-
-      // Gradually stop the simulation
-      simulation.alphaTarget(0)
-    }
-
-    // Add hover effects only when not dragging
-    node
-      .on('mouseover', (event, d) => {
-        if (!isDragging) {
-          updateNodeState(d)
-        }
-      })
-      .on('mouseout', (event) => {
-        if (!isDragging) {
-          updateNodeState(null)
-        }
-      })
-
-    // Bind drag functions to nodes
-    node.call(
-      d3
-        .drag<SVGGElement, D3Node>()
-        .on('start', dragStarted)
-        .on('drag', dragged)
-        .on('end', dragEnded)
-    )
+    // Hover extracted to d3Interaction
+    createHover(node, link, props.textSize)
 
     // Start the simulation
     simulation.on('tick', () => {
