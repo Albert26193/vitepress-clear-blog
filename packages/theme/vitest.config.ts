@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     include: ['test/**/*.{test,spec}.{js,ts}'],
+    exclude: ['e2e/**'],
     setupFiles: ['./test/setup.ts'],
     coverage: {
       enabled: true,

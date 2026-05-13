@@ -35,7 +35,8 @@
         "@types/node": "^25.5.0",
         "@unocss/cli": "^66.6.7",
         "@unocss/preset-icons": "66.6.7",
-        "@vitest/coverage-v8": "^4.1.2",
+        "@vitejs/plugin-vue": "^6.0.3",
+        "@vitest/coverage-v8": "^4.1.6",
         "commitlint": "^20.5.0",
         "conventional-changelog": "^7.2.0",
         "cpx2": "^8.0.0",
@@ -54,7 +55,7 @@
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.57.2",
         "unocss": "66.6.7",
-        "vitest": "^4.1.2",
+        "vitest": "^4.1.6",
         "vue-eslint-parser": "^10.4.0"
     },
     "lint-staged": {
