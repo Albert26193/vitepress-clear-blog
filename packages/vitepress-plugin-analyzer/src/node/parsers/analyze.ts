@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { readFile, readdir } from 'node:fs/promises'
 import { relative, resolve } from 'node:path'
 
 import type {
@@ -83,20 +83,17 @@ export const analyzeDocument = (
  * @param globalPages - Page map receiving this page record.
  * @returns Metadata for the analyzed file.
  */
-export const analyzeFile = (
+export const analyzeFile = async (
   filePath: string,
   config: AnalyzerConfig,
   globalMetadata: Record<string, PageMetadata>,
   globalPages: SitePages
-): PageMetadata => {
-  // Read the file content
-  const content = readFileSync(filePath, 'utf-8')
+): Promise<PageMetadata> => {
+  const content = await readFile(filePath, 'utf-8')
 
-  // Get the path relative to the docs directory
   const docsRoot = resolve(process.cwd(), config.docsDir)
   const relativePath = relative(docsRoot, filePath).replace(/\.md$/, '')
 
-  // Analyze the document and update global metadata
   return analyzeDocument(
     content,
     config,
@@ -115,38 +112,33 @@ export const analyzeFile = (
  * @param globalPages - Page map receiving analyzed page records.
  * @returns Nothing; results are written into the provided maps.
  */
-export const scanDirectory = (
+export const scanDirectory = async (
   dirPath: string,
   config: AnalyzerConfig,
   globalMetadata: Record<string, PageMetadata>,
   globalPages: SitePages
-): void => {
-  // Get the list of files in the directory
-  const files = readdirSync(dirPath)
+): Promise<void> => {
+  const entries = await readdir(dirPath, { withFileTypes: true })
 
-  // Process each file
-  files.forEach((file) => {
-    // Skip excluded directories
-    if (config.excludeDirs.includes(file)) {
+  const tasks = entries.map(async (entry) => {
+    if (config.excludeDirs.includes(entry.name)) {
       return
     }
 
-    const fullPath = resolve(dirPath, file)
-    const stat = statSync(fullPath)
+    const fullPath = resolve(dirPath, entry.name)
 
-    if (stat.isDirectory()) {
-      // Recursively scan subdirectories
-      scanDirectory(fullPath, config, globalMetadata, globalPages)
-    } else if (file.endsWith('.md')) {
-      // Skip excluded files
-      if (config.excludeFiles.some((pattern) => file.includes(pattern))) {
+    if (entry.isDirectory()) {
+      await scanDirectory(fullPath, config, globalMetadata, globalPages)
+    } else if (entry.name.endsWith('.md')) {
+      if (config.excludeFiles.some((pattern) => entry.name.includes(pattern))) {
         return
       }
 
-      // Analyze markdown files
-      analyzeFile(fullPath, config, globalMetadata, globalPages)
+      await analyzeFile(fullPath, config, globalMetadata, globalPages)
     }
   })
+
+  await Promise.all(tasks)
 }
 
 /**
@@ -185,20 +177,19 @@ export const buildDocumentRelationships = (
  * @param config - Analyzer configuration for docs root and filtering rules.
  * @returns Analyzer metadata and page records for the complete docs tree.
  */
-export const analyzeAllDocuments = (
+export const analyzeAllDocuments = async (
   config: AnalyzerConfig
-): { globalMetadata: Record<string, PageMetadata>; globalPages: SitePages } => {
-  // Initialize global metadata map
+): Promise<{
+  globalMetadata: Record<string, PageMetadata>
+  globalPages: SitePages
+}> => {
   const globalMetadata: Record<string, PageMetadata> = {}
   const globalPages: SitePages = {}
 
-  // Get the docs root directory
   const docsRoot = resolve(process.cwd(), config.docsDir)
 
-  // Scan the docs directory and analyze all markdown files
-  scanDirectory(docsRoot, config, globalMetadata, globalPages)
+  await scanDirectory(docsRoot, config, globalMetadata, globalPages)
 
-  // Build document relationships
   buildDocumentRelationships(globalMetadata)
 
   return { globalMetadata, globalPages }

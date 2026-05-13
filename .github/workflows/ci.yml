@@ -115,8 +115,8 @@ jobs:
 
       - uses: actions/upload-artifact@v5
         with:
-          name: docs-dist
-          path: packages/docs/.vitepress/dist
+          name: testbed-dist
+          path: packages/testbed/.vitepress/dist
           retention-days: 7
 
   e2e:
@@ -140,8 +140,8 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v5
         with:
-          name: docs-dist
-          path: packages/docs/.vitepress/dist
+          name: testbed-dist
+          path: packages/testbed/.vitepress/dist
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
@@ -24,16 +24,16 @@ const testConfig: AnalyzerConfig = createConfig({
  * @param filename - Name of the test file
  * @returns Content of the file
  */
-const readTestFile = (filename: string): string => {
+const readTestFile = async (filename: string): Promise<string> => {
   const path = resolve(__dirname, 'attach', filename)
   console.log('path', path)
-  return readFileSync(path, 'utf-8')
+  return readFile(path, 'utf-8')
 }
 
 describe('Document Analyzer', () => {
   describe('Basic Document Analysis', () => {
-    it('should analyze document structure', () => {
-      const content = readTestFile('doc1.md')
+    it('should analyze document structure', async () => {
+      const content = await readTestFile('doc1.md')
       const metadata = analyzeDocument(
         content,
         testConfig,
@@ -77,8 +77,8 @@ describe('Document Analyzer', () => {
       expect(metadata.firstHeading).toBe('no-heading')
     })
 
-    it('should calculate word count correctly', () => {
-      const content = readTestFile('doc2.md')
+    it('should calculate word count correctly', async () => {
+      const content = await readTestFile('doc2.md')
       const metadata = analyzeDocument(
         content,
         testConfig,
@@ -94,7 +94,7 @@ describe('Document Analyzer', () => {
   })
 
   describe('Document Relationships', () => {
-    it('should build relationships using analyzeAllDocuments', () => {
+    it('should build relationships using analyzeAllDocuments', async () => {
       // Create a test config using absolute path for the attach directory
       const testDirConfig = createConfig({
         docsDir: resolve(__dirname, 'attach'),
@@ -105,7 +105,7 @@ describe('Document Analyzer', () => {
       })
 
       // Analyze all documents in the test directory
-      const { globalMetadata } = analyzeAllDocuments(testDirConfig)
+      const { globalMetadata } = await analyzeAllDocuments(testDirConfig)
 
       // Check that we have metadata for doc1 and doc2
       expect(globalMetadata['doc1']).toBeDefined()
@@ -130,7 +130,7 @@ describe('Document Analyzer', () => {
       )
     })
 
-    it('should keep valid wiki links and build wiki backlinks', () => {
+    it('should keep valid wiki links and build wiki backlinks', async () => {
       const testDirConfig = createConfig({
         docsDir: resolve(__dirname, 'attach'),
         excludeDirs: ['node_modules', '.git', 'dist'],
@@ -139,7 +139,7 @@ describe('Document Analyzer', () => {
         ignoreCase: true
       })
 
-      const { globalMetadata } = analyzeAllDocuments(testDirConfig)
+      const { globalMetadata } = await analyzeAllDocuments(testDirConfig)
 
       expect(globalMetadata['links-wiki'].outgoingLinks).toEqual(
         expect.arrayContaining([
@@ -162,8 +162,8 @@ describe('Document Analyzer', () => {
   })
 
   describe('Edge Cases', () => {
-    it('should handle missing documents gracefully', () => {
-      const content = readTestFile('doc2.md')
+    it('should handle missing documents gracefully', async () => {
+      const content = await readTestFile('doc2.md')
       const metadata = analyzeDocument(
         content,
         testConfig,
@@ -183,7 +183,7 @@ describe('Document Analyzer', () => {
   })
 
   describe('scanDirectory', () => {
-    it('should skip excluded directories', () => {
+    it('should skip excluded directories', async () => {
       const globalMetadata: Record<string, PageMetadata> = {}
       const globalPages: SitePages = {}
       const configWithExcludedDirs = createConfig({
@@ -191,7 +191,7 @@ describe('Document Analyzer', () => {
         excludeDirs: ['deep']
       })
 
-      scanDirectory(
+      await scanDirectory(
         resolve(__dirname, 'attach'),
         configWithExcludedDirs,
         globalMetadata,
@@ -208,7 +208,7 @@ describe('Document Analyzer', () => {
       expect(globalMetadata['doc2']).toBeDefined()
     })
 
-    it('should skip files matching excludeFiles pattern', () => {
+    it('should skip files matching excludeFiles pattern', async () => {
       const globalMetadata: Record<string, PageMetadata> = {}
       const globalPages: SitePages = {}
       const configWithExcludedFiles = createConfig({
@@ -216,7 +216,7 @@ describe('Document Analyzer', () => {
         excludeFiles: ['doc1']
       })
 
-      scanDirectory(
+      await scanDirectory(
         resolve(__dirname, 'attach'),
         configWithExcludedFiles,
         globalMetadata,

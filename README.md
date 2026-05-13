@@ -19,9 +19,9 @@ pnpm dev
 # Build packages
 pnpm build:packages
 
-# Build docs
-pnpm build:docs
+# Build testbed
+pnpm build:testbed
 
-# Preview docs
-pnpm preview:docs
+# Preview testbed
+pnpm preview:testbed
 ```

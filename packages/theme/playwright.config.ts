@@ -13,8 +13,8 @@ export default defineConfig({
   },
   webServer: {
     command: process.env.CI
-      ? 'pnpm build && pnpm exec vitepress preview packages/docs'
-      : 'pnpm exec vitepress preview packages/docs',
+      ? 'pnpm build && pnpm exec vitepress preview packages/testbed'
+      : 'pnpm exec vitepress preview packages/testbed',
     cwd: '../..',
     port: 4173,
     reuseExistingServer: !process.env.CI

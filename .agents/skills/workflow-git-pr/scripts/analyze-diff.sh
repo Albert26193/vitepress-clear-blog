@@ -20,7 +20,7 @@ set -euo pipefail
 declare -A PKG
 PKG=(
     ["packages/theme/"]="theme"
-    ["packages/docs/"]="docs"
+    ["packages/testbed/"]="testbed"
     ["packages/vitepress-plugin-analyzer/"]="plugin-analyzer"
     ["packages/vitepress-plugin-callout/"]="plugin-callout"
     ["packages/vitepress-plugin-codeblock-fold/"]="plugin-codeblock-fold"

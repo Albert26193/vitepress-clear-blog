@@ -2,41 +2,9 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { parse } from 'smol-toml'
 
-import type { ConfigToml } from './types'
+import { validateConfigToml } from './validate'
 
 const assignedConfigPath = '.vitepress/custom/config.toml'
-
-// Accepts hex, color functions, CSS variables, or named colors.
-const VALID_COLOR = (v: string): boolean =>
-  /^#/.test(v) ||
-  /^rgba?\(/.test(v) ||
-  /^hsla?\(/.test(v) ||
-  /^var\(--/.test(v) ||
-  /^[a-zA-Z]+$/.test(v)
-
-/**
- * Validates a CSS color value and warns on likely typos.
- *
- * @returns `true` when the value is acceptable, `false` after a warning.
- */
-const validateColor = (
-  key: string,
-  value: unknown,
-  fallback: string
-): value is string => {
-  if (typeof value !== 'string' || value.length === 0) {
-    console.warn(
-      `[config] config.toml: ${key} must be a non-empty string, got "${String(value)}" — using default "${fallback}"`
-    )
-    return false
-  }
-  if (!VALID_COLOR(value)) {
-    console.warn(
-      `[config] config.toml: ${key}="${value}" looks malformed — expected a hex, rgb, hsl, var(--x), or named color`
-    )
-  }
-  return true
-}
 
 const color = (
   obj: Record<string, unknown> | undefined,
@@ -44,9 +12,8 @@ const color = (
   fallback: string
 ): string => {
   const val = obj?.[key]
-  if (val === undefined || val === null) return fallback
-  if (!validateColor(key, val, fallback)) return fallback
-  return val as string
+  if (typeof val !== 'string' || val.length === 0) return fallback
+  return val
 }
 
 /**
@@ -60,16 +27,21 @@ export const generateThemeFile = async (
   configPath: string = assignedConfigPath
 ) => {
   const content = readFileSync(configPath, 'utf-8')
-  const config = parse(content) as unknown as ConfigToml
+  const raw = parse(content)
+  const rawObj = raw as Record<string, unknown>
 
-  if (!config.theme) {
+  if (!rawObj.theme) {
     throw new Error('Missing theme configuration in config.toml')
   }
 
-  const theme = config.theme as unknown as Record<string, unknown>
-  const darkTheme = config.theme?.dark as unknown as
-    | Record<string, unknown>
-    | undefined
+  // Validate schema + colors, log diagnostics (non-fatal)
+  const { issues } = validateConfigToml(raw, configPath)
+  for (const issue of issues) {
+    console.warn(`[config] ${issue.path}: ${issue.message}`)
+  }
+
+  const theme = rawObj.theme as Record<string, unknown>
+  const darkTheme = theme.dark as Record<string, unknown> | undefined
 
   const bgColor = color(theme, 'vp-c-bg', '#fff')
   const brandColor = color(theme, 'vp-c-brand', '#f00')

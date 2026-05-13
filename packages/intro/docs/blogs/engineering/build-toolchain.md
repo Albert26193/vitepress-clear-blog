@@ -46,10 +46,10 @@ export default defineConfig({
 
 ```bash
 # 构建文档站点
-pnpm build:docs
+pnpm build:testbed
 
 # 预览构建结果
-pnpm preview:docs
+pnpm preview:testbed
 ```
 
 ### 优化配置

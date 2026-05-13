@@ -108,7 +108,22 @@ importers:
         specifier: workspace:*
         version: link:../theme
 
-  packages/docs:
+  packages/intro:
+    dependencies:
+      vitepress:
+        specifier: ^1.6.4
+        version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2)
+      vitepress-clear-blog:
+        specifier: workspace:*
+        version: link:../theme
+      vitepress-plugin-callout:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-callout
+      vitepress-plugin-config:
+        specifier: workspace:*
+        version: link:../vitepress-plugin-config
+
+  packages/testbed:
     dependencies:
       '@types/markdown-it-footnote':
         specifier: ^3.0.4
@@ -143,21 +158,6 @@ importers:
       vitepress-sidebar:
         specifier: ^1.33.1
         version: 1.33.1
-
-  packages/intro:
-    dependencies:
-      vitepress:
-        specifier: ^1.6.4
-        version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2)
-      vitepress-clear-blog:
-        specifier: workspace:*
-        version: link:../theme
-      vitepress-plugin-callout:
-        specifier: workspace:*
-        version: link:../vitepress-plugin-callout
-      vitepress-plugin-config:
-        specifier: workspace:*
-        version: link:../vitepress-plugin-config
 
   packages/theme:
     dependencies:
@@ -347,6 +347,9 @@ importers:
       vitepress:
         specifier: ^1.5.0
         version: 1.6.3(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2)
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       vitest:
         specifier: ^4.1.2
@@ -4380,11 +4383,6 @@ packages:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
     engines: {node: '>=4'}
 
-  semver@7.7.3:
-    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.7.4:
     resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
     engines: {node: '>=10'}
@@ -5156,6 +5154,9 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -9373,15 +9374,13 @@ snapshots:
       extend-shallow: 2.0.1
       kind-of: 6.0.3
 
-  semver@7.7.3: {}
-
   semver@7.7.4: {}
 
   sharp@0.34.5:
     dependencies:
       '@img/colour': 1.0.0
       detect-libc: 2.1.2
-      semver: 7.7.3
+      semver: 7.7.4
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.5
       '@img/sharp-darwin-x64': 0.34.5
@@ -10433,5 +10432,7 @@ snapshots:
       yargs-parser: 21.1.1
 
   yocto-queue@0.1.0: {}
+
+  zod@4.4.3: {}
 
   zwitch@2.0.4: {}
