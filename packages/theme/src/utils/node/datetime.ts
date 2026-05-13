@@ -50,6 +50,11 @@ export function resolveDate(
   let dateValue: string | undefined
   for (const field of fields) {
     const value = frontmatter[field]
+    // VitePress frontmatter parser may convert date-like strings to Date objects
+    if (value instanceof Date && !isNaN(value.getTime())) {
+      dateValue = moment(value).format(DEFAULT_OUTPUT)
+      break
+    }
     if (typeof value === 'string' && value.trim()) {
       dateValue = value.trim()
       break
