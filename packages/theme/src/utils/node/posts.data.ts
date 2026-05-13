@@ -1,6 +1,7 @@
 import { createContentLoader } from 'vitepress'
 
 import type { Post, PostFrontMatter } from '../../types/types.d'
+import { normalizePostDate } from './datetime'
 
 declare const data: Post[]
 export { data }
@@ -9,16 +10,15 @@ export default createContentLoader<Post[]>('blogs/**/*.md', {
   includeSrc: true,
   render: true,
   transform(rawData) {
-    // console.log(
-    //   '[posts.data.ts] Raw data loaded by createContentLoader:',
-    //   JSON.stringify(rawData, null, 2)
-    // )
-
     return rawData
       .map((page) => {
         if (page.frontmatter.date) {
-          const date = new Date(page.frontmatter.date)
-          page.frontmatter.date = date.toISOString().split('T')[0]
+          const normalized = normalizePostDate(
+            page.frontmatter as Record<string, unknown>
+          )
+          if (normalized) {
+            page.frontmatter.date = normalized
+          }
         }
         const post = {
           frontMatter: page.frontmatter as PostFrontMatter,
