@@ -1,1 +1,2 @@
-export * from './callout'
+export { calloutPlugin } from './callout'
+export type { CalloutPluginOptions, CalloutTypeConfig } from './callout'
