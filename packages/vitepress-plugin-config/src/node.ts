@@ -2,9 +2,9 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { parse } from 'smol-toml'
 
+import { CONFIG_PATH, THEME_COLOR_DEFAULTS } from './defaults'
 import { validateConfigToml } from './validate'
-
-const assignedConfigPath = '.vitepress/custom/config.toml'
+import type { ValidatedConfigToml } from './validate'
 
 const color = (
   obj: Record<string, unknown> | undefined,
@@ -19,49 +19,80 @@ const color = (
 /**
  * Generates CSS variables from TOML so users can customize the theme without editing source styles.
  *
- * @param configPath - Location of the TOML file that provides theme color overrides.
+ * @param configPathOrToml - Location of the TOML file, or a pre-parsed config object.
  * @returns Nothing; writes the generated stylesheet into the VitePress theme directory.
  * @throws When the TOML file does not contain a theme section.
  */
 export const generateThemeFile = async (
-  configPath: string = assignedConfigPath
+  configPathOrToml: string | ValidatedConfigToml = CONFIG_PATH
 ) => {
-  const content = readFileSync(configPath, 'utf-8')
-  const raw = parse(content)
-  const rawObj = raw as Record<string, unknown>
+  let theme: Record<string, unknown>
+  let darkTheme: Record<string, unknown> | undefined
 
-  if (!rawObj.theme) {
-    throw new Error('Missing theme configuration in config.toml')
+  if (typeof configPathOrToml === 'string') {
+    const content = readFileSync(configPathOrToml, 'utf-8')
+    const raw = parse(content)
+    const rawObj = raw as Record<string, unknown>
+
+    if (!rawObj.theme) {
+      throw new Error('Missing theme configuration in config.toml')
+    }
+
+    const { issues } = validateConfigToml(raw, configPathOrToml)
+    for (const issue of issues) {
+      console.warn(`[config] ${issue.path}: ${issue.message}`)
+    }
+
+    theme = rawObj.theme as Record<string, unknown>
+    darkTheme = theme.dark as Record<string, unknown> | undefined
+  } else {
+    const toml = configPathOrToml
+    theme = (toml.theme as Record<string, unknown>) || {}
+    darkTheme = theme.dark as Record<string, unknown> | undefined
+
+    if (Object.keys(theme).length === 0) {
+      throw new Error('Missing theme configuration in config.toml')
+    }
   }
 
-  // Validate schema + colors, log diagnostics (non-fatal)
-  const { issues } = validateConfigToml(raw, configPath)
-  for (const issue of issues) {
-    console.warn(`[config] ${issue.path}: ${issue.message}`)
-  }
+  const dL = THEME_COLOR_DEFAULTS.light
+  const dD = THEME_COLOR_DEFAULTS.dark
 
-  const theme = rawObj.theme as Record<string, unknown>
-  const darkTheme = theme.dark as Record<string, unknown> | undefined
+  const bgColor = color(theme, 'vp-c-bg', dL['vp-c-bg'])
+  const brandColor = color(theme, 'vp-c-brand', dL['vp-c-brand'])
+  const brandColor1 = color(theme, 'vp-c-brand-1', dL['vp-c-brand-1'])
+  const codeColor = color(theme, 'c-text-code', dL['c-text-code'])
+  const strongColor = color(theme, 'c-text-strong', dL['c-text-strong'])
+  const emColor = color(theme, 'c-text-em', dL['c-text-em'])
+  const buttonBgColor = color(
+    theme,
+    'vp-button-brand-bg',
+    dL['vp-button-brand-bg']
+  )
+  const SideBarBg = color(
+    theme,
+    'vp-sidebar-bg-color',
+    dL['vp-sidebar-bg-color']
+  )
+  const textColor1 = color(theme, 'vp-c-text-1', dL['vp-c-text-1'])
 
-  const bgColor = color(theme, 'vp-c-bg', '#fff')
-  const brandColor = color(theme, 'vp-c-brand', '#f00')
-  const brandColor1 = color(theme, 'vp-c-brand-1', '#0f0')
-  const codeColor = color(theme, 'c-text-code', '#ff0')
-  const strongColor = color(theme, 'c-text-strong', '#000')
-  const emColor = color(theme, 'c-text-em', '#000')
-  const buttonBgColor = color(theme, 'vp-button-brand-bg', '#00f')
-  const SideBarBg = color(theme, 'vp-sidebar-bg-color', '#000')
-  const textColor1 = color(theme, 'vp-c-text-1', '#000')
-
-  const darkBgColor = color(darkTheme, 'vp-c-bg', '#000')
-  const darkBrandColor = color(darkTheme, 'vp-c-brand', '#f00')
-  const darkBrandColor1 = color(darkTheme, 'vp-c-brand-1', '#0f0')
-  const darkCodeColor = color(darkTheme, 'c-text-code', '#ff0')
-  const darkStrongColor = color(darkTheme, 'c-text-strong', '#000')
-  const darkEmColor = color(darkTheme, 'c-text-em', '#000')
-  const darkButtonBgColor = color(darkTheme, 'vp-button-brand-bg', '#00f')
-  const darkSideBarBg = color(darkTheme, 'vp-sidebar-bg-color', '#000')
-  const darkTextColor1 = color(darkTheme, 'vp-c-text-1', '#000')
+  const darkBgColor = color(darkTheme, 'vp-c-bg', dD['vp-c-bg'])
+  const darkBrandColor = color(darkTheme, 'vp-c-brand', dD['vp-c-brand'])
+  const darkBrandColor1 = color(darkTheme, 'vp-c-brand-1', dD['vp-c-brand-1'])
+  const darkCodeColor = color(darkTheme, 'c-text-code', dD['c-text-code'])
+  const darkStrongColor = color(darkTheme, 'c-text-strong', dD['c-text-strong'])
+  const darkEmColor = color(darkTheme, 'c-text-em', dD['c-text-em'])
+  const darkButtonBgColor = color(
+    darkTheme,
+    'vp-button-brand-bg',
+    dD['vp-button-brand-bg']
+  )
+  const darkSideBarBg = color(
+    darkTheme,
+    'vp-sidebar-bg-color',
+    dD['vp-sidebar-bg-color']
+  )
+  const darkTextColor1 = color(darkTheme, 'vp-c-text-1', dD['vp-c-text-1'])
 
   const generatedCssPath = resolve(
     process.cwd(),
