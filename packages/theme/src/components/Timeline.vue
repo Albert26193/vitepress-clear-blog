@@ -110,7 +110,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { withBase } from 'vitepress'
+  import { useData, withBase } from 'vitepress'
   import { computed, reactive, ref, watch } from 'vue'
 
   import { useTitle } from '../composables/useMeta'
@@ -124,7 +124,10 @@
     months: { [yearMonth: string]: boolean }
   }
 
-  const sortDirection = ref<'asc' | 'desc'>('desc')
+  const { theme } = useData()
+  const sortDirection = ref<'asc' | 'desc'>(
+    (theme.value.timelineSortDirection as 'asc' | 'desc') || 'desc'
+  )
   const expandStatus = ref<'expand' | 'collapse'>('expand')
 
   const dataByYear = computed(() => useYearSort(allPostsData || []))

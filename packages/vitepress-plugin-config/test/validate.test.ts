@@ -43,6 +43,8 @@ describe('configTomlSchema', () => {
         pages: 'Pages',
         about: 'About'
       },
+      blog: { defaultViewMode: 'card' },
+      timeline: { sortDirection: 'desc' },
       theme: { 'vp-c-bg': '#fafafa' }
     }
     expect(configTomlSchema.safeParse(data).success).toBe(true)
@@ -90,6 +92,77 @@ describe('configTomlSchema', () => {
     const result = configTomlSchema.safeParse({
       theme: {},
       page: { pageSize: 3.5 }
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('blog & timeline sections', () => {
+  it('accepts valid blog section with defaultViewMode = "card"', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      blog: { defaultViewMode: 'card' }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts valid blog section with defaultViewMode = "list"', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      blog: { defaultViewMode: 'list' }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts valid timeline section with sortDirection = "desc"', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      timeline: { sortDirection: 'desc' }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts valid timeline section with sortDirection = "asc"', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      timeline: { sortDirection: 'asc' }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts config missing blog and timeline sections', () => {
+    const result = configTomlSchema.safeParse({ theme: {} })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects invalid defaultViewMode', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      blog: { defaultViewMode: 'grid' }
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects invalid sortDirection', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      timeline: { sortDirection: 'reverse' }
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-string blog value', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      blog: { defaultViewMode: true }
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-string timeline value', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      timeline: { sortDirection: 123 }
     })
     expect(result.success).toBe(false)
   })

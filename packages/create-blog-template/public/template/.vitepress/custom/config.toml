@@ -11,6 +11,14 @@ theme-color = "#4259f3"
 [page]
 pageSize = 10
 
+# Optional: configure blog listing defaults
+# [blog]
+# defaultViewMode = "card"    # "card" or "list"
+
+# Optional: configure timeline defaults
+# [timeline]
+# sortDirection = "desc"      # "desc" or "asc"
+
 [nav]
 home = "Home"
 tags = "Tags"

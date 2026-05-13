@@ -1,5 +1,11 @@
 export { generateThemePlugin } from './config'
-export type { ConfigToml, DatetimeConfig, ThemeConfig } from './types'
+export type {
+  BlogConfig,
+  ConfigToml,
+  DatetimeConfig,
+  ThemeConfig,
+  TimelineConfig
+} from './types'
 export {
   validateConfigToml,
   validateConfigTomlWithFallback,
@@ -15,6 +21,8 @@ export {
   CONFIG_PATH,
   DEFAULT_PAGE_SIZE,
   DEFAULT_NAV_LABELS,
+  DEFAULT_BLOG,
   DEFAULT_META,
+  DEFAULT_TIMELINE,
   THEME_COLOR_DEFAULTS
 } from './defaults'

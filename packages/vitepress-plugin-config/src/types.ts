@@ -23,6 +23,14 @@ export interface DatetimeConfig {
   outputFormat?: string
 }
 
+export interface BlogConfig {
+  defaultViewMode?: 'card' | 'list'
+}
+
+export interface TimelineConfig {
+  sortDirection?: 'desc' | 'asc'
+}
+
 export interface NavLabels {
   home?: string
   tags?: string
@@ -58,5 +66,7 @@ export interface ConfigToml {
     render_title?: 'frontmatter_title' | 'first_heading' | 'alias' | 'file_name'
   }
   datetime?: DatetimeConfig
+  blog?: BlogConfig
+  timeline?: TimelineConfig
   theme: ThemeConfig
 }

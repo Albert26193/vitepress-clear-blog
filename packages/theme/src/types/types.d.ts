@@ -41,6 +41,8 @@ export interface BlogConfig extends DefaultTheme.Config {
   icpNumber?: string
   themeLink?: string
   pageSize?: number
+  defaultViewMode?: 'card' | 'list'
+  timelineSortDirection?: 'desc' | 'asc'
 }
 
 /**
