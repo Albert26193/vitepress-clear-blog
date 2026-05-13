@@ -1,7 +1,7 @@
 .main .vp-doc .custom-callout {
   /* border: 1px solid var(--vp-c-text-1); */
   color: var(--vp-c-text);
-  background-color: #efefef;
+  background-color: var(--vp-c-bg-soft);
 }
 
 /* .main .vp-doc .custom-callout:hover {
