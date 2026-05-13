@@ -11,4 +11,6 @@ export interface AnalyzerConfig {
   excludeFiles: string[]
   ignoreCase: boolean
   resolutionModes: ResolutionMode[]
+  filenameIndex?: Map<string, string[]>
+  diagnostics?: string[]
 }

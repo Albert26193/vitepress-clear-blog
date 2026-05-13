@@ -7,6 +7,7 @@ import type {
   PageMetadata,
   SitePages
 } from '../../../types'
+import { buildFilenameIndex } from '../utils/path'
 import { calculateWords } from '../utils/wordCount'
 import { extractHeading } from './heading'
 import { extractInnerLinks } from './link'
@@ -188,9 +189,20 @@ export const analyzeAllDocuments = async (
 
   const docsRoot = resolve(process.cwd(), config.docsDir)
 
+  // Build filename index for obsidianShortest path resolution
+  config.filenameIndex = await buildFilenameIndex(docsRoot, config)
+  config.diagnostics = []
+
   await scanDirectory(docsRoot, config, globalMetadata, globalPages)
 
   buildDocumentRelationships(globalMetadata)
+
+  // Log diagnostics after analysis
+  if (config.diagnostics.length > 0) {
+    console.warn(
+      `[vitepress-analyzer] Link resolution warnings:\n${config.diagnostics.join('\n')}`
+    )
+  }
 
   return { globalMetadata, globalPages }
 }
