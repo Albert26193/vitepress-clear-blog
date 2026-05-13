@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest'
 import type { Post } from '../../../src/types/types'
 import {
   getTitleFromPost,
-  resolveWikiLinkTitle
+  resolveLinkTitle
 } from '../../../src/utils/client/title'
 
 const mockPosts: Post[] = [
@@ -52,86 +52,82 @@ const mockLink: PageLink = {
   raw: '[[test-target|Alias Text]]'
 }
 
-describe('resolveWikiLinkTitle', () => {
+describe('resolveLinkTitle', () => {
   it('file_name mode returns filename from relativePath', () => {
-    expect(resolveWikiLinkTitle(mockLink, mockPosts, 'file_name')).toBe(
+    expect(resolveLinkTitle(mockLink, mockPosts, 'file_name')).toBe(
       'test-target'
     )
   })
 
   it('file_name mode strips .md extension', () => {
     const linkWithExt = { ...mockLink, relativePath: 'blogs/target.md' }
-    expect(resolveWikiLinkTitle(linkWithExt, mockPosts, 'file_name')).toBe(
-      'target'
-    )
+    expect(resolveLinkTitle(linkWithExt, mockPosts, 'file_name')).toBe('target')
   })
 
   it('alias mode returns link text verbatim', () => {
-    expect(resolveWikiLinkTitle(mockLink, mockPosts, 'alias')).toBe(
-      'Alias Text'
-    )
+    expect(resolveLinkTitle(mockLink, mockPosts, 'alias')).toBe('Alias Text')
   })
 
   it('alias mode falls back to empty string when text is empty', () => {
     const noText = { ...mockLink, text: '' }
-    expect(resolveWikiLinkTitle(noText, mockPosts, 'alias')).toBe('')
+    expect(resolveLinkTitle(noText, mockPosts, 'alias')).toBe('')
   })
 
   it('frontmatter_title mode returns frontmatter.title', () => {
-    expect(resolveWikiLinkTitle(mockLink, mockPosts, 'frontmatter_title')).toBe(
+    expect(resolveLinkTitle(mockLink, mockPosts, 'frontmatter_title')).toBe(
       'Frontmatter Title'
     )
   })
 
   it('frontmatter_title falls back to link.text when post not found', () => {
     const unknownLink = { ...mockLink, relativePath: 'blogs/nonexistent' }
-    expect(
-      resolveWikiLinkTitle(unknownLink, mockPosts, 'frontmatter_title')
-    ).toBe('Alias Text')
+    expect(resolveLinkTitle(unknownLink, mockPosts, 'frontmatter_title')).toBe(
+      'Alias Text'
+    )
   })
 
   it('frontmatter_title returns fullUrl basename when post not found and text empty', () => {
     const link = { ...mockLink, text: '', relativePath: 'blogs/ghost' }
-    expect(resolveWikiLinkTitle(link, mockPosts, 'frontmatter_title')).toBe(
+    expect(resolveLinkTitle(link, mockPosts, 'frontmatter_title')).toBe(
       'test-target'
     )
   })
 
   it('frontmatter_title falls back to filename when post has no title', () => {
     const noTitleLink = { ...mockLink, relativePath: 'blogs/no-title' }
-    expect(
-      resolveWikiLinkTitle(noTitleLink, mockPosts, 'frontmatter_title')
-    ).toBe('no-title')
+    expect(resolveLinkTitle(noTitleLink, mockPosts, 'frontmatter_title')).toBe(
+      'no-title'
+    )
   })
 
   it('first_heading mode returns first h1 from rendered html', () => {
-    expect(resolveWikiLinkTitle(mockLink, mockPosts, 'first_heading')).toBe(
+    expect(resolveLinkTitle(mockLink, mockPosts, 'first_heading')).toBe(
       'First Heading Title'
     )
   })
 
   it('first_heading falls back to frontmatter.title when no headings', () => {
     const noHeadingLink = { ...mockLink, relativePath: 'blogs/no-heading' }
-    expect(
-      resolveWikiLinkTitle(noHeadingLink, mockPosts, 'first_heading')
-    ).toBe('No Heading Post')
+    expect(resolveLinkTitle(noHeadingLink, mockPosts, 'first_heading')).toBe(
+      'No Heading Post'
+    )
   })
 
   it('first_heading falls back to heading when post has no title', () => {
     const noTitleLink = { ...mockLink, relativePath: 'blogs/no-title' }
-    expect(resolveWikiLinkTitle(noTitleLink, mockPosts, 'first_heading')).toBe(
+    expect(resolveLinkTitle(noTitleLink, mockPosts, 'first_heading')).toBe(
       'Heading Fallback'
     )
   })
 
   it('default unknown mode returns link.text', () => {
-    expect(resolveWikiLinkTitle(mockLink, mockPosts, 'unknown_mode')).toBe(
+    expect(resolveLinkTitle(mockLink, mockPosts, 'unknown_mode')).toBe(
       'Alias Text'
     )
   })
 })
 
-describe('resolveWikiLinkTitle edge cases', () => {
+describe('resolveLinkTitle edge cases', () => {
   it('alias returns empty when both text and matched post missing', () => {
     const link: PageLink = {
       absolutePath: '',
@@ -141,7 +137,7 @@ describe('resolveWikiLinkTitle edge cases', () => {
       type: 'wiki',
       raw: '[[ghost]]'
     }
-    expect(resolveWikiLinkTitle(link, [], 'alias')).toBe('')
+    expect(resolveLinkTitle(link, [], 'alias')).toBe('')
   })
 
   it('file_name returns text fallback when relativePath has no segments', () => {
@@ -153,7 +149,7 @@ describe('resolveWikiLinkTitle edge cases', () => {
       type: 'wiki',
       raw: '[[/]]'
     }
-    const result = resolveWikiLinkTitle(link, [], 'file_name')
+    const result = resolveLinkTitle(link, [], 'file_name')
     expect(result).toBe('fallback')
   })
 
@@ -167,9 +163,7 @@ describe('resolveWikiLinkTitle edge cases', () => {
       raw: '[[nope]]'
     }
     // Post not found, should fallback to link.text
-    expect(resolveWikiLinkTitle(link, mockPosts, 'frontmatter_title')).toBe(
-      'alias'
-    )
+    expect(resolveLinkTitle(link, mockPosts, 'frontmatter_title')).toBe('alias')
   })
 
   it('first_heading falls back to filename when post has no title or headings', () => {
@@ -189,26 +183,26 @@ describe('resolveWikiLinkTitle edge cases', () => {
       raw: '[[empty]]'
     }
     // No title, no headings -> falls back to filename
-    expect(resolveWikiLinkTitle(link, posts, 'first_heading')).toBe('empty')
+    expect(resolveLinkTitle(link, posts, 'first_heading')).toBe('empty')
   })
 
   it('frontmatter_title works with .md extension in relativePath', () => {
     const mdLink = { ...mockLink, relativePath: 'blogs/test-target.md' }
-    expect(resolveWikiLinkTitle(mdLink, mockPosts, 'frontmatter_title')).toBe(
+    expect(resolveLinkTitle(mdLink, mockPosts, 'frontmatter_title')).toBe(
       'Frontmatter Title'
     )
   })
 
   it('first_heading works with .md extension in relativePath', () => {
     const mdLink = { ...mockLink, relativePath: 'blogs/test-target.md' }
-    expect(resolveWikiLinkTitle(mdLink, mockPosts, 'first_heading')).toBe(
+    expect(resolveLinkTitle(mdLink, mockPosts, 'first_heading')).toBe(
       'First Heading Title'
     )
   })
 
   it('default mode returns fullUrl basename when link.text is empty', () => {
     const noTextLink = { ...mockLink, text: '' }
-    expect(resolveWikiLinkTitle(noTextLink, mockPosts, 'unknown')).toBe(
+    expect(resolveLinkTitle(noTextLink, mockPosts, 'unknown')).toBe(
       'test-target'
     )
   })
@@ -352,5 +346,51 @@ describe('getTitleFromPost extended', () => {
       raw: '[[my-post|my text]]'
     }
     expect(getTitleFromPost(link, posts)).toBe('my text')
+  })
+})
+
+describe('resolveLinkTitle with string path input', () => {
+  it('resolves title from string path with file_name mode', () => {
+    expect(resolveLinkTitle('blogs/test-target', mockPosts, 'file_name')).toBe(
+      'test-target'
+    )
+  })
+
+  it('returns empty for alias mode with no fallback text', () => {
+    expect(resolveLinkTitle('blogs/test-target', mockPosts, 'alias')).toBe('')
+  })
+
+  it('uses fallbackText for alias mode when provided', () => {
+    expect(
+      resolveLinkTitle('blogs/test-target', mockPosts, 'alias', 'Display Text')
+    ).toBe('Display Text')
+  })
+
+  it('resolves frontmatter_title from string path', () => {
+    expect(
+      resolveLinkTitle(
+        'blogs/test-target',
+        mockPosts,
+        'frontmatter_title',
+        'Alias'
+      )
+    ).toBe('Frontmatter Title')
+  })
+
+  it('returns fallbackText when post not found for string path', () => {
+    expect(
+      resolveLinkTitle(
+        'blogs/missing',
+        mockPosts,
+        'frontmatter_title',
+        'Fallback'
+      )
+    ).toBe('Fallback')
+  })
+
+  it('resolves first_heading from string path', () => {
+    expect(
+      resolveLinkTitle('blogs/test-target', mockPosts, 'first_heading', 'Alias')
+    ).toBe('First Heading Title')
   })
 })

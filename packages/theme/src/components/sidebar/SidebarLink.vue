@@ -12,9 +12,9 @@
           :key="link.relativePath"
           :href="withBase(link.fullUrl)"
           class="page-link slide-enter"
-          :title="resolveWikiLinkTitle(link, allPostsData || [], renderTitle)"
+          :title="resolveLinkTitle(link, allPostsData || [], renderTitle)"
         >
-          {{ resolveWikiLinkTitle(link, allPostsData || [], renderTitle) }}
+          {{ resolveLinkTitle(link, allPostsData || [], renderTitle) }}
         </a>
       </div>
       <!-- if no links -->
@@ -29,9 +29,9 @@
           :key="link.relativePath"
           :href="withBase(link.fullUrl)"
           class="page-link slide-enter"
-          :title="resolveWikiLinkTitle(link, allPostsData || [], renderTitle)"
+          :title="resolveLinkTitle(link, allPostsData || [], renderTitle)"
         >
-          {{ resolveWikiLinkTitle(link, allPostsData || [], renderTitle) }}
+          {{ resolveLinkTitle(link, allPostsData || [], renderTitle) }}
         </a>
       </div>
       <div v-else class="no-links">No Back Links</div>
@@ -50,7 +50,7 @@
   import type { PageLink } from 'vitepress-plugin-analyzer/types'
   import { computed, ref, watch } from 'vue'
 
-  import { resolveWikiLinkTitle } from '../../utils/client/title'
+  import { resolveLinkTitle } from '../../utils/client/title'
   import { data as allPostsData } from '../../utils/node/posts.data'
 
   const { site } = useData()

@@ -27,7 +27,7 @@ import './styles/index.scss'
 import { mediumZoomInit } from './utils/client'
 import {
   addClassForHetiElement,
-  markBrokenWikiLinks,
+  markBrokenLinks,
   registerHetiScript
 } from './utils/client/'
 import { data as allPostsData } from './utils/node/posts.data'
@@ -79,7 +79,7 @@ export const BlogTheme: Theme = {
       const scheduleWikiLinkRefresh = () => {
         window.clearTimeout(wikiLinkRefreshTimer)
         wikiLinkRefreshTimer = window.setTimeout(() => {
-          markBrokenWikiLinks(siteMetadata, {
+          markBrokenLinks(siteMetadata, {
             base: getBaseFromLocation(),
             currentPath: router.route.data.relativePath,
             renderTitle:
