@@ -26,12 +26,14 @@
 </template>
 
 <script lang="ts" setup>
+  import { useData } from 'vitepress'
   import { computed, ref } from 'vue'
 
   import { data as allPostsData } from '../../utils/node/posts.data'
   import BlogListItem from './BlogListItem.vue'
 
-  const pageSize = 4
+  const { theme } = useData()
+  const pageSize = theme.value.pageSize || 4
   const pageCurrent = ref(1)
 
   // Current page posts

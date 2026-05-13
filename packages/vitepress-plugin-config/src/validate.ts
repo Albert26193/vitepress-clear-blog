@@ -31,7 +31,10 @@ const markdownSchema = z.object({
   footnote: z.boolean().optional(),
   hashtag: z.boolean().optional(),
   mermaid: z.boolean().optional(),
-  callout: z.boolean().optional()
+  callout: z.boolean().optional(),
+  render_title: z
+    .enum(['frontmatter_title', 'first_heading', 'alias', 'file_name'])
+    .optional()
 })
 
 const metaSchema = z.object({
@@ -42,7 +45,9 @@ const metaSchema = z.object({
   locale: z.string().optional(),
   lang: z.string().optional(),
   siteUrl: z.string().optional(),
-  'theme-color': z.string().optional()
+  'theme-color': z.string().optional(),
+  icpNumber: z.string().optional(),
+  themeLink: z.string().optional()
 })
 
 const pageSchema = z.object({
