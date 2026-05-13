@@ -5,6 +5,7 @@ export type {
   ClientAPI,
   PageLink,
   PageMetadata,
+  ResolutionMode,
   SiteMetadata
 } from '../../types'
 

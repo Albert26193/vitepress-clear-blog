@@ -7,7 +7,8 @@ const defaultConfig: AnalyzerConfig = {
   includeFiles: ['.md'],
   excludeFiles: [],
   // maxSearchDepth: 5,
-  ignoreCase: true
+  ignoreCase: true,
+  resolutionModes: ['repoRoot', 'absolutePath', 'relativeToCurrentFile']
 }
 
 /**
@@ -25,7 +26,9 @@ export const createConfig = (
     // Ensure arrays are properly overridden
     excludeDirs: userConfig?.excludeDirs ?? defaultConfig.excludeDirs,
     includeFiles: userConfig?.includeFiles ?? defaultConfig.includeFiles,
-    excludeFiles: userConfig?.excludeFiles ?? defaultConfig.excludeFiles
+    excludeFiles: userConfig?.excludeFiles ?? defaultConfig.excludeFiles,
+    resolutionModes:
+      userConfig?.resolutionModes ?? defaultConfig.resolutionModes
   }
 
   return config

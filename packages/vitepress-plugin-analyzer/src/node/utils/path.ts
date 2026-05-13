@@ -1,97 +1,171 @@
-import { dirname, join, normalize, resolve } from 'node:path'
+import { existsSync } from 'node:fs'
+import { dirname, isAbsolute, join, normalize, resolve } from 'node:path'
 
-import type { AnalyzerConfig } from '../../../types'
+import type { AnalyzerConfig, ResolutionMode } from '../../../types'
 
 /**
- * Get the absolute path to the docs root directory
- * This function assumes it's being called in the context of a VitePress site
- * where config.docsDir is relative to the current working directory
- *
- * @param config - The analyzer configuration
- * @returns The absolute path to the docs root directory
+ * Get the absolute path to the docs root directory.
  */
 const getDocsRoot = (config: AnalyzerConfig): string => {
   return resolve(process.cwd(), config.docsDir)
 }
 
 /**
- * Normalize a link by removing the anchor part
- *
- * @param link - The link to normalize
- * @returns The normalized link
+ * Normalize a link by removing the anchor part.
  */
 const normalizeLink = (link: string): string => link.split('#')[0]
 
 /**
+ * Check if a file exists at the given absolute path.
+ * Supports both with and without .md extension.
+ */
+const linkedFileExists = (absolutePath: string): boolean => {
+  if (existsSync(absolutePath)) return true
+  if (!absolutePath.endsWith('.md')) return existsSync(absolutePath + '.md')
+  return false
+}
+
+/**
  * Get the path relative to the project root (docs directory).
- * This function converts any path (absolute or relative) to a path relative to the project root.
- * Example:
- *  - Project root: /path/to/docs
- *  - Current file: /path/to/docs/posts/post1.md
- *  - Input link: ../pages/about.md
- *  - Output: pages/about
- *
- * @param relativePath - The input path (can be absolute or relative)
- * @param currentFile - The current file path relative to project root
- * @returns The path relative to project root, without extension
  */
 const getProjectRelativePath = (
   relativePath: string,
-  currentFile: string
+  currentFile: string,
+  docsRoot?: string
 ): string => {
-  // Remove anchor part and normalize the path
   const pathWithoutAnchor = normalizeLink(relativePath)
 
-  // If it's an absolute path (starts with /), just remove the leading slash
+  // Filesystem absolute path under docsRoot: make it relative to docs root
+  if (isAbsolute(pathWithoutAnchor) && docsRoot) {
+    const rel = normalize(pathWithoutAnchor).replace(/\\/g, '/')
+    const root = normalize(docsRoot).replace(/\\/g, '/')
+    if (rel.startsWith(root + '/')) {
+      return rel.substring(root.length + 1).replace(/\.md$/, '')
+    }
+    // Absolute path NOT under docsRoot — treat as repo-root-relative
+  }
+
   if (pathWithoutAnchor.startsWith('/')) {
     return pathWithoutAnchor.substring(1).replace(/\.md$/, '')
   }
 
-  // For relative paths, resolve against current file's location
   const currentDir = dirname(currentFile)
 
-  // Join paths to get the full path relative to the current directory
   let fullPath = join(currentDir, pathWithoutAnchor)
-
-  // Normalize the path to remove .. segments, but keep it relative
-  // We don't want to use path.resolve here as it would create an absolute path
   fullPath = normalize(fullPath).replace(/\\/g, '/')
 
-  // Make sure the path doesn't start with a slash and remove .md extension
-  return fullPath
-    .replace(/\.md$/, '') // Remove .md extension
-    .replace(/^\//, '') // Remove leading slash if exists
+  return fullPath.replace(/\.md$/, '').replace(/^\//, '')
+}
+
+// ── Mode-specific resolvers ───────────────────────────────────────
+
+/**
+ * Resolve the link as relative to the docs root.
+ * `/blog/post` or `blog/post` → `{docsRoot}/blog/post.md`
+ */
+const resolveRepoRoot = (
+  linkPath: string,
+  config: AnalyzerConfig,
+  _currentFile: string
+): string | null => {
+  const clean = linkPath.startsWith('/') ? linkPath.substring(1) : linkPath
+  const abs = resolve(getDocsRoot(config), clean)
+  return linkedFileExists(abs) ? abs : null
 }
 
 /**
- * Resolve the absolute path in the file system.
- * This function converts any path to its absolute location on disk.
+ * Resolve the link as a filesystem absolute path.
+ * `/abs/path/to/file.md` → checks if that literal file exists.
+ */
+const resolveByAbsolutePath = (
+  linkPath: string,
+  _config: AnalyzerConfig,
+  _currentFile: string
+): string | null => {
+  if (!isAbsolute(linkPath)) return null
+  return linkedFileExists(linkPath) ? linkPath : null
+}
+
+/**
+ * Resolve the link relative to the current file's directory.
+ * `../sibling.md` from `docs/blog/post.md` → `docs/sibling.md`
+ */
+const resolveRelativeToCurrentFile = (
+  linkPath: string,
+  config: AnalyzerConfig,
+  currentFile: string
+): string | null => {
+  if (linkPath.startsWith('/')) return null
+  const currentFileAbs = resolve(getDocsRoot(config), currentFile)
+  const abs = resolve(dirname(currentFileAbs), linkPath)
+  return linkedFileExists(abs) ? abs : null
+}
+
+/**
+ * Obsidian-style shortest-path resolution (not yet implemented).
+ */
+const resolveObsidianShortest = (
+  _linkPath: string,
+  _config: AnalyzerConfig,
+  _currentFile: string
+): string | null => null
+
+const MODE_RESOLVERS: Record<
+  ResolutionMode,
+  (link: string, cfg: AnalyzerConfig, file: string) => string | null
+> = {
+  repoRoot: resolveRepoRoot,
+  absolutePath: resolveByAbsolutePath,
+  relativeToCurrentFile: resolveRelativeToCurrentFile,
+  obsidianShortest: resolveObsidianShortest
+}
+
+/**
+ * Try each resolution mode in priority order; return the first match.
+ * Returns null when no mode can resolve the link.
+ */
+const resolveLinkMultiMode = (
+  linkPath: string,
+  config: AnalyzerConfig,
+  currentFile: string
+): string | null => {
+  for (const mode of config.resolutionModes) {
+    const resolver = MODE_RESOLVERS[mode]
+    if (!resolver) continue
+    const result = resolver(linkPath, config, currentFile)
+    if (result) return result
+  }
+  return null
+}
+
+/**
+ * Resolve the absolute path in the file system using configured resolution modes.
  *
- * @param config - The analyzer configuration
- * @param relativePath - The input path (can be absolute or relative)
- * @param currentFile - The current file path relative to project root
- * @returns The absolute path in the file system
+ * Maintains backward compatibility: when config has no resolutionModes it falls
+ * back to the legacy behavior (link with leading `/` → repo root, otherwise relative).
  */
 const resolveAbsolutePath = (
   config: AnalyzerConfig,
   relativePath: string,
   currentFile: string
 ): string => {
-  const currentFileAbsolutePath = resolve(getDocsRoot(config), currentFile)
-  // console.log('currentFileAbsolutePath', currentFileAbsolutePath)
-  // If it's an absolute path (starts with /), resolve from docs root
   const normalizedPath = normalizeLink(relativePath)
-  if (normalizedPath.startsWith('/')) {
-    return resolve(getDocsRoot(config), normalizedPath.substring(1))
-  }
 
-  // For relative paths, resolve from current file's directory
-  return resolve(dirname(currentFileAbsolutePath), normalizedPath)
+  const resolved = resolveLinkMultiMode(normalizedPath, config, currentFile)
+  if (resolved) return resolved
+
+  // Fallback: return the repoRoot attempt even if the file doesn't exist
+  // (legacy callers may need the path regardless of existence)
+  const clean = normalizedPath.startsWith('/')
+    ? normalizedPath.substring(1)
+    : normalizedPath
+  return resolve(getDocsRoot(config), clean)
 }
 
 export {
   normalizeLink,
   getDocsRoot,
   getProjectRelativePath,
-  resolveAbsolutePath
+  resolveAbsolutePath,
+  resolveLinkMultiMode
 }
