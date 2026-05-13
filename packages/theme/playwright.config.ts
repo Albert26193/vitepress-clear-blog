@@ -5,6 +5,8 @@ export default defineConfig({
   timeout: 30000,
   expect: { timeout: 10000 },
   retries: process.env.CI ? 2 : 0,
+  fullyParallel: true,
+  workers: process.env.CI ? 4 : undefined,
   reporter: [['list'], ['./e2e/coverage-reporter.ts']],
   use: {
     baseURL: 'http://localhost:4173',
@@ -12,9 +14,7 @@ export default defineConfig({
     video: 'retain-on-failure'
   },
   webServer: {
-    command: process.env.CI
-      ? 'pnpm build && pnpm exec vitepress preview packages/testbed'
-      : 'pnpm exec vitepress preview packages/testbed',
+    command: 'pnpm exec vitepress preview packages/testbed',
     cwd: '../..',
     port: 4173,
     reuseExistingServer: !process.env.CI
