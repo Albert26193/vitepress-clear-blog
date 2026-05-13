@@ -17,23 +17,31 @@ import type { PostFrontMatter } from '../../src/types/types.d'
 // Capture vue provide calls for useDarkTransition testing
 const provideCalls: Map<string, (...args: any[]) => void> = new Map()
 
-const mockIsDark = { value: false }
-const mockSite = {
-  value: {
-    themeConfig: {
-      meta: {
-        author: 'ConfigAuthor'
+const { useDataMock, mockSite, mockTheme, mockIsDark } = vi.hoisted(() => {
+  const site = {
+    value: {
+      themeConfig: {
+        meta: {
+          author: 'ConfigAuthor'
+        }
       }
     }
   }
-}
-
-const { useDataMock } = vi.hoisted(() => ({
-  useDataMock: vi.fn(() => ({
-    site: mockSite,
-    isDark: mockIsDark
-  }))
-}))
+  const theme = {
+    value: {} as Record<string, unknown>
+  }
+  const isDark = { value: false }
+  return {
+    useDataMock: vi.fn(() => ({
+      site,
+      theme,
+      isDark
+    })),
+    mockSite: site,
+    mockTheme: theme,
+    mockIsDark: isDark
+  }
+})
 
 vi.mock('vitepress', () => ({
   useData: useDataMock
@@ -157,6 +165,7 @@ describe('useAuthor', () => {
           }
         }
       },
+      theme: mockTheme,
       isDark: { value: false }
     })
   })
@@ -174,6 +183,7 @@ describe('useAuthor', () => {
   it('falls back to "Blogger" when neither frontMatter nor config has author', () => {
     useDataMock.mockReturnValue({
       site: { value: { themeConfig: {} as any } },
+      theme: mockTheme,
       isDark: { value: false }
     })
 
@@ -184,6 +194,7 @@ describe('useAuthor', () => {
   it('falls back to "Blogger" when meta is missing author', () => {
     useDataMock.mockReturnValue({
       site: { value: { themeConfig: { meta: {} } as any } },
+      theme: mockTheme,
       isDark: { value: false }
     })
 
@@ -255,6 +266,14 @@ describe('useTitle', () => {
 })
 
 describe('useTimeFormat', () => {
+  beforeEach(() => {
+    useDataMock.mockReturnValue({
+      site: mockSite,
+      theme: mockTheme,
+      isDark: mockIsDark
+    })
+  })
+
   it('formats YYYY-MM-DD date correctly', () => {
     const result = useTimeFormat('2024-06-15')
     expect(result).toBe('Jun 15, 2024')
@@ -315,6 +334,16 @@ describe('useTimeFormat', () => {
   it('returns empty string for invalid date with dashes but non-numeric content', () => {
     expect(useTimeFormat('YYYY-MM-DD')).toBe('')
     expect(useTimeFormat('2024-MM-15')).toBe('')
+  })
+
+  it('uses configured dateFormat from theme config', () => {
+    mockTheme.value.dateFormat = 'YYYY年MM月DD日'
+    expect(useTimeFormat('2024-06-15')).toBe('2024年06月15日')
+    delete mockTheme.value.dateFormat
+  })
+
+  it('falls back to MMM D, YYYY when dateFormat is not set', () => {
+    expect(useTimeFormat('2024-03-20')).toBe('Mar 20, 2024')
   })
 })
 
@@ -454,6 +483,7 @@ describe('useDarkTransition', () => {
     ;(window as any).matchMedia = vi.fn(() => ({ matches: false })) as any
     useDataMock.mockReturnValue({
       site: mockSite,
+      theme: mockTheme,
       isDark: mockIsDark
     })
 
@@ -472,6 +502,7 @@ describe('useDarkTransition', () => {
     mockIsDark.value = false
     useDataMock.mockReturnValue({
       site: mockSite,
+      theme: mockTheme,
       isDark: mockIsDark
     })
 
@@ -500,6 +531,7 @@ describe('useDarkTransition', () => {
     mockIsDark.value = true
     useDataMock.mockReturnValue({
       site: mockSite,
+      theme: mockTheme,
       isDark: mockIsDark
     })
 

@@ -274,6 +274,7 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       defaultViewMode: blog.defaultViewMode || DEFAULT_BLOG.defaultViewMode,
       timelineSortDirection:
         timeline.sortDirection || DEFAULT_TIMELINE.sortDirection,
+      dateFormat: toml?.datetime?.outputFormat || undefined,
       meta: { author: meta.author || DEFAULT_META.author }
     }
   }

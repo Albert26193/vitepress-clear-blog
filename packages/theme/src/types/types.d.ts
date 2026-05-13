@@ -43,6 +43,7 @@ export interface BlogConfig extends DefaultTheme.Config {
   pageSize?: number
   defaultViewMode?: 'card' | 'list'
   timelineSortDirection?: 'desc' | 'asc'
+  dateFormat?: string
 }
 
 /**
