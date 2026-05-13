@@ -1,7 +1,12 @@
 export { calculateWords } from './utils/wordCount'
 
 // Export types
-export type { PageLink, PageMetadata, SiteMetadata } from '../../types'
+export type {
+  ClientAPI,
+  PageLink,
+  PageMetadata,
+  SiteMetadata
+} from '../../types'
 
 export { generateVirtualModuleContent } from './virtual'
 

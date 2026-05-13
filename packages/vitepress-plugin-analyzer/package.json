@@ -33,7 +33,8 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
-    "lib"
+    "lib",
+    "types"
   ],
   "scripts": {
     "dev": "tsup --config tsup.config.ts --watch",
