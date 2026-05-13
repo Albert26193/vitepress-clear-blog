@@ -1,14 +1,10 @@
 import MarkdownIt from 'markdown-it'
 import markdownItWikilinks from 'markdown-it-wikilinks'
 import type Token from 'markdown-it/lib/token.mjs'
-import { existsSync } from 'node:fs'
+import { relative, resolve } from 'node:path'
 
 import type { AnalyzerConfig, PageLink } from '../../../types'
-import {
-  getProjectRelativePath,
-  normalizeLink,
-  resolveAbsolutePath
-} from '../utils/path'
+import { getDocsRoot, normalizeLink, resolveLinkMultiMode } from '../utils/path'
 
 // Initialize markdown-it instance with wikilink support
 const md = new MarkdownIt({
@@ -41,55 +37,23 @@ const isExternalLink = (link: string): boolean =>
   link.startsWith('tel:')
 
 /**
- * Check if a file exists at the given absolute path
- * Supports both with and without .md extension
- *
- * @param absolutePath - The absolute path to check
- * @returns True if the file exists, false otherwise
- */
-const linkedFileExists = (absolutePath: string): boolean => {
-  // console.log(absolutePath, existsSync(absolutePath))
-  // Try exact path first
-  if (existsSync(absolutePath)) {
-    return true
-  }
-
-  // If path doesn't end with .md, try with .md extension
-  if (!absolutePath.endsWith('.md')) {
-    return existsSync(absolutePath + '.md')
-  }
-
-  return false
-}
-
-/**
- * Create a link validation function
- * This function checks if:
- * 1. The link is not external
- * 2. The link is not empty after normalization
- * 3. The target file exists in the file system
- *
- * @param config - The analyzer configuration
- * @param currentFile - The current file path
- * @returns A link validation function
+ * Create a link validation function.
  */
 const createValidateLink =
   (config: AnalyzerConfig, currentFile: string) =>
   (link: string): boolean => {
-    // If it's an external link, return false
     if (isExternalLink(link)) {
       return false
     }
 
     const normalizedLink = normalizeLink(link)
 
-    // Check if the file exists
-    const absolutePath = resolveAbsolutePath(
-      config,
-      normalizedLink,
-      currentFile
-    )
-    return linkedFileExists(absolutePath)
+    if (!normalizedLink) {
+      return false
+    }
+
+    // Use multi-mode resolution — the first mode that finds the file wins
+    return resolveLinkMultiMode(normalizedLink, config, currentFile) !== null
   }
 
 /**
@@ -220,17 +184,17 @@ const processLinks = (
   config: AnalyzerConfig,
   currentFile: string
 ): PageLink[] => {
-  // First, normalize all paths to make comparison consistent
+  // Resolve every link first; derive relativePath from the resolved absolute path
+  const docsRoot = getDocsRoot(config)
   const processedLinks = links.map((link) => {
-    // Calculate normalized path (without .. segments)
-    const normalizedPath = getProjectRelativePath(
-      link.relativePath || '',
-      currentFile
-    )
+    const normalizedPath = normalizeLink(link.relativePath || '')
+    const resolved = resolveLinkMultiMode(normalizedPath, config, currentFile)
+    const abs = resolved || resolve(docsRoot, normalizedPath || '')
+    const rel = relative(docsRoot, abs).replace(/\.md$/, '')
     return {
       ...link,
-      // Store normalized path temporarily for deduplication
-      _normalizedPathForDedup: normalizedPath
+      absolutePath: abs,
+      _relativePathForDedup: rel
     }
   })
 
@@ -240,30 +204,16 @@ const processLinks = (
       (link, index, self) =>
         index ===
         self.findIndex(
-          (l) => l._normalizedPathForDedup === link._normalizedPathForDedup
-          // &&
-          // If several links have the same normalized path, keep markdown type
-          // (l.type === 'markdown' || link.type === 'markdown'
-          //   ? l.type === link.type
-          //   : true)
+          (l) => l._relativePathForDedup === link._relativePathForDedup
         )
     )
     .map((link) => {
-      // Calculate final paths
-      const processedRelativePath = link._normalizedPathForDedup
-
-      // Create the final link object without the temporary field
-      const { _normalizedPathForDedup, ...linkWithoutTemp } = link
+      const { _relativePathForDedup, ...linkWithoutTemp } = link
 
       return {
         ...linkWithoutTemp,
-        absolutePath: resolveAbsolutePath(
-          config,
-          link.relativePath || '',
-          currentFile
-        ),
-        relativePath: processedRelativePath, // Use the normalized path
-        fullUrl: `/${processedRelativePath}`.replace(/\/+/g, '/'),
+        relativePath: _relativePathForDedup,
+        fullUrl: `/${_relativePathForDedup}`.replace(/\/+/g, '/'),
         text: (link.text || '').split('/').pop() || link.text || '',
         raw: link.raw || ''
       }

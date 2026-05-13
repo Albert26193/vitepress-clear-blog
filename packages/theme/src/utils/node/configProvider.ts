@@ -3,7 +3,10 @@ import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
 import { presetIcons, presetUno, transformerDirectives } from 'unocss'
 import UnoCSS from 'unocss/vite'
-import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
+import {
+  type ResolutionMode,
+  vitePressAnalyzerPlugin
+} from 'vitepress-plugin-analyzer'
 import { calloutPlugin } from 'vitepress-plugin-callout'
 import {
   DEFAULT_BLOG,
@@ -60,7 +63,10 @@ const getThemeConfig = async (
         exclude: ['gzip-size']
       },
       plugins: [
-        vitePressAnalyzerPlugin(),
+        vitePressAnalyzerPlugin({
+          resolutionModes:
+            (toml?.links?.resolutionModes as ResolutionMode[] | undefined) ?? []
+        }),
         llmstxt(),
         generateThemePlugin(),
         UnoCSS({
