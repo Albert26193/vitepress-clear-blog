@@ -1,9 +1,9 @@
 import { resolve } from 'path'
 import type { Plugin } from 'vitepress'
 
+import { CONFIG_PATH } from './defaults'
+import { clearConfigCacheEntry, loadConfig } from './loader'
 import { generateThemeFile } from './node'
-
-const assignedConfigPath = '.vitepress/custom/config.toml'
 
 /**
  * Registers Vite hooks that keep generated theme CSS in sync with custom TOML config.
@@ -11,14 +11,13 @@ const assignedConfigPath = '.vitepress/custom/config.toml'
  * @param configPath - Location of the TOML file that drives generated theme variables.
  * @returns A VitePress plugin that updates CSS during build and local development.
  */
-const generateThemePlugin = (
-  configPath: string = assignedConfigPath
-): Plugin => {
+const generateThemePlugin = (configPath: string = CONFIG_PATH): Plugin => {
   return {
     name: 'vite-plugin-generated-theme',
     enforce: 'pre',
     async buildStart() {
-      await generateThemeFile(configPath)
+      const toml = loadConfig(configPath)
+      await generateThemeFile(toml ?? configPath)
     },
     configureServer(server) {
       const configFilePath = resolve(process.cwd(), configPath)
@@ -34,7 +33,9 @@ const generateThemePlugin = (
             `[vite-plugin-generated-theme] Config file changed: ${file}`
           )
           try {
-            await generateThemeFile(configPath)
+            clearConfigCacheEntry(configPath)
+            const toml = loadConfig(configPath)
+            await generateThemeFile(toml ?? configPath)
             console.log('[vite-plugin-generated-theme] Generated CSS updated')
             const cssModule = server.moduleGraph.getModuleById(generatedCssPath)
             if (cssModule) {

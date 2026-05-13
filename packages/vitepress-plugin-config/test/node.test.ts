@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { generateThemeFile } from '../src/node'
+import type { ValidatedConfigToml } from '../src/validate'
 
 let tmpDir: string
 let configPath: string
@@ -178,5 +179,73 @@ title = "test"
     expect(css).toContain('--vp-c-bg: #fff')
     expect(css).toContain('--vp-c-brand: #f00')
     expect(css).toContain('--vp-c-text-1: #000')
+  })
+})
+
+describe('generateThemeFile with pre-parsed config', () => {
+  it('generates CSS from ValidatedConfigToml without reading file', () => {
+    const toml: ValidatedConfigToml = {
+      meta: { title: 'Test' },
+      page: {},
+      theme: {
+        'vp-c-bg': '#fafafa',
+        'vp-c-brand': '#4259f3',
+        'vp-c-text-1': '#222'
+      }
+    }
+
+    // Should not throw — no file read needed
+    expect(() => generateThemeFile(toml)).not.toThrow()
+  })
+
+  it('uses centralized defaults for missing colors in pre-parsed config', async () => {
+    const toml: ValidatedConfigToml = {
+      meta: {},
+      page: {},
+      theme: {
+        'vp-c-brand': '#abc123'
+      }
+    }
+
+    await generateThemeFile(toml)
+    const css = readCss()
+
+    expect(css).toContain('--vp-c-brand: #abc123')
+    expect(css).toContain('--vp-c-bg: #fff') // default
+    expect(css).toContain('--vp-c-text-1: #000') // default
+  })
+
+  it('handles dark theme in pre-parsed config', async () => {
+    const toml: ValidatedConfigToml = {
+      meta: {},
+      page: {},
+      theme: {
+        'vp-c-bg': '#fff',
+        dark: {
+          'vp-c-bg': '#202127',
+          'vp-c-brand': '#00ff00'
+        }
+      }
+    }
+
+    await generateThemeFile(toml)
+    const css = readCss()
+
+    expect(css).toContain('--vp-c-bg: #fff')
+    // Dark variables are in .dark block
+    expect(css).toContain('--vp-c-bg: #202127')
+    expect(css).toContain('--vp-c-brand: #00ff00')
+  })
+
+  it('throws when pre-parsed config has empty theme', async () => {
+    const toml: ValidatedConfigToml = {
+      meta: {},
+      page: {},
+      theme: {}
+    }
+
+    await expect(generateThemeFile(toml)).rejects.toThrow(
+      'Missing theme configuration'
+    )
   })
 })

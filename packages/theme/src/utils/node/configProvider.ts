@@ -1,33 +1,22 @@
 import footnotePlugin from 'markdown-it-footnote'
 import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { parse } from 'smol-toml'
 import { presetIcons, presetUno, transformerDirectives } from 'unocss'
 import UnoCSS from 'unocss/vite'
 import { vitePressAnalyzerPlugin } from 'vitepress-plugin-analyzer'
 import { calloutPlugin } from 'vitepress-plugin-callout'
-import { generateThemePlugin } from 'vitepress-plugin-config'
-import type { ValidatedConfigToml } from 'vitepress-plugin-config'
-import { validateConfigTomlWithFallback } from 'vitepress-plugin-config'
+import {
+  DEFAULT_META,
+  DEFAULT_NAV_LABELS,
+  DEFAULT_PAGE_SIZE,
+  generateThemePlugin,
+  loadConfig
+} from 'vitepress-plugin-config'
 import { hashtagPlugin } from 'vitepress-plugin-hashtag'
 import llmstxt from 'vitepress-plugin-llms'
 import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
 import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
-
-const assignedConfigPath = '.vitepress/custom/config.toml'
-
-const readConfig = (configPath?: string): ValidatedConfigToml | null => {
-  const path = resolve(process.cwd(), configPath || assignedConfigPath)
-  try {
-    const raw = readFileSync(path, 'utf-8')
-    return validateConfigTomlWithFallback(parse(raw), path)
-  } catch {
-    return null
-  }
-}
 
 /**
  * Creates the default Clear Blog VitePress config fragment with core plugins wired in.
@@ -38,7 +27,7 @@ const readConfig = (configPath?: string): ValidatedConfigToml | null => {
 const getThemeConfig = async (
   cfg: Record<string, unknown> = {}
 ): Promise<Record<string, unknown>> => {
-  const toml = readConfig()
+  const toml = loadConfig()
   const meta = toml?.meta || {}
 
   const RSS: RSSOptions = {
@@ -46,7 +35,7 @@ const getThemeConfig = async (
     description: meta.description || '',
     baseUrl: meta.siteUrl || '',
     copyright: meta.author ? `Copyright ${meta.author}` : '',
-    author: meta.author ? { name: meta.author } : { name: 'Blogger' }
+    author: meta.author ? { name: meta.author } : { name: DEFAULT_META.author }
   }
 
   const rssValid = /^https?:\/\/.+/.test(RSS.baseUrl)
@@ -126,7 +115,7 @@ const getThemeConfig = async (
  * @returns VitePress user config object suitable for `defineConfig()`.
  */
 const createBlog = async (): Promise<Record<string, unknown>> => {
-  const toml = readConfig()
+  const toml = loadConfig()
   const meta = toml?.meta || {}
   const page = toml?.page || {}
   const mdConf = toml?.markdown || {}
@@ -135,25 +124,34 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
   const base = await getThemeConfig()
 
   const nav: { text: string; link: string }[] = [
-    { text: navLabels.home || 'Home', link: '/' },
-    { text: navLabels.tags || 'Tags', link: '/tags' },
-    { text: navLabels.timeline || 'Timeline', link: '/timeline' },
-    { text: navLabels.pages || 'Pages', link: '/pages' },
-    { text: navLabels.about || 'About', link: '/about' }
+    { text: navLabels.home || DEFAULT_NAV_LABELS.home, link: '/' },
+    { text: navLabels.tags || DEFAULT_NAV_LABELS.tags, link: '/tags' },
+    {
+      text: navLabels.timeline || DEFAULT_NAV_LABELS.timeline,
+      link: '/timeline'
+    },
+    { text: navLabels.pages || DEFAULT_NAV_LABELS.pages, link: '/pages' },
+    { text: navLabels.about || DEFAULT_NAV_LABELS.about, link: '/about' }
   ]
 
   const head: [string, Record<string, string>][] = [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
-    ['meta', { name: 'author', content: meta.author || 'Blogger' }],
+    ['meta', { name: 'author', content: meta.author || DEFAULT_META.author }],
     ['meta', { name: 'keywords', content: meta.keywords || '' }],
     ['meta', { name: 'HandheldFriendly', content: 'True' }],
     ['meta', { name: 'MobileOptimized', content: '320' }],
     [
       'meta',
-      { name: 'theme-color', content: meta['theme-color'] || '#1934e9' }
+      {
+        name: 'theme-color',
+        content: meta['theme-color'] || DEFAULT_META['theme-color']
+      }
     ],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:locale', content: meta.locale || 'zh_CN' }],
+    [
+      'meta',
+      { property: 'og:locale', content: meta.locale || DEFAULT_META.locale }
+    ],
     ['meta', { property: 'og:title', content: meta.title || 'Blog' }],
     ['meta', { property: 'og:description', content: meta.description || '' }],
     ['meta', { property: 'og:site', content: meta.siteUrl || '' }],
@@ -267,8 +265,9 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
         (mdConf as Record<string, unknown>).render_title || 'frontmatter_title',
       website: meta.siteUrl || '',
       icpNumber: meta.icpNumber || '',
-      themeLink: meta.themeLink || '',
-      pageSize: page.pageSize
+      themeLink: meta.themeLink || DEFAULT_META.themeLink,
+      pageSize: page.pageSize || DEFAULT_PAGE_SIZE,
+      meta: { author: meta.author || DEFAULT_META.author }
     }
   }
 }

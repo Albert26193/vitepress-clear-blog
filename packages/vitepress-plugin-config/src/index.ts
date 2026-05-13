@@ -10,3 +10,11 @@ export type {
   ConfigValidationIssue,
   ConfigValidationResult
 } from './validate'
+export { loadConfig, clearConfigCache, clearConfigCacheEntry } from './loader'
+export {
+  CONFIG_PATH,
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_NAV_LABELS,
+  DEFAULT_META,
+  THEME_COLOR_DEFAULTS
+} from './defaults'

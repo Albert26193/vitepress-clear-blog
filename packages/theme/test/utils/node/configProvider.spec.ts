@@ -1,21 +1,36 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { mockReadFileSync } = vi.hoisted(() => ({
-  mockReadFileSync: vi.fn()
+const { mockLoadConfig } = vi.hoisted(() => ({
+  mockLoadConfig: vi.fn()
 }))
 
-vi.mock('node:fs', () => ({
-  readFileSync: mockReadFileSync
-}))
-
-vi.mock('smol-toml', () => ({
-  parse: vi.fn()
+vi.mock('vitepress-plugin-config', () => ({
+  loadConfig: mockLoadConfig,
+  generateThemePlugin: vi.fn(() => ({ name: 'mock-plugin' })),
+  DEFAULT_NAV_LABELS: {
+    home: 'Home',
+    tags: 'Tags',
+    timeline: 'Timeline',
+    pages: 'Pages',
+    about: 'About'
+  },
+  DEFAULT_META: {
+    author: 'Blogger',
+    locale: 'zh_CN',
+    'theme-color': '#1934e9',
+    themeLink: 'https://github.com/Albert26193/vitepress-clear-blog'
+  },
+  DEFAULT_PAGE_SIZE: 10
 }))
 
 describe('getThemeConfig', async () => {
-  // Dynamic import after mocks are set up
   const { getThemeConfig } =
     await import('../../../src/utils/node/configProvider')
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockLoadConfig.mockReturnValue(null)
+  })
 
   it('returns config object with default title', async () => {
     const config = await getThemeConfig()
@@ -73,12 +88,9 @@ describe('getThemeConfig', async () => {
     expect((config as any).clearBlogConfig.extra).toBe('value')
   })
 
-  it('handles readConfig gracefully when config.toml is unreadable', async () => {
-    mockReadFileSync.mockImplementationOnce(() => {
-      throw new Error('ENOENT: no such file')
-    })
+  it('handles loadConfig returning null gracefully', async () => {
+    mockLoadConfig.mockReturnValue(null)
     const config = await getThemeConfig()
-    // Should not throw, returns default config
     expect(config).toBeDefined()
     expect(config.clearBlogConfig).toBeDefined()
     expect((config as any).clearBlogConfig.title).toBe('TTTTTTTitle')
@@ -107,12 +119,10 @@ describe('createBlog with mocked config.toml', async () => {
   }
 
   const { createBlog } = await import('../../../src/utils/node/configProvider')
-  const smolToml = await import('smol-toml')
 
   beforeEach(() => {
     vi.clearAllMocks()
-    mockReadFileSync.mockReturnValue('fake toml content')
-    ;(smolToml.parse as any).mockReturnValue(mockToml)
+    mockLoadConfig.mockReturnValue(mockToml)
   })
 
   it('creates a full VitePress config from config.toml', async () => {
@@ -187,7 +197,7 @@ describe('createBlog with mocked config.toml', async () => {
   it('sets socialLinks in themeConfig', async () => {
     const config = await createBlog()
     const tc = (config as any).themeConfig as Record<string, unknown>
-    expect(tc.socialLinks).toBeUndefined() // createBlog doesn't set socialLinks
+    expect(tc.socialLinks).toBeUndefined()
   })
 
   it('sets defaults when markdown options are missing', async () => {
@@ -196,7 +206,7 @@ describe('createBlog with mocked config.toml', async () => {
       page: {},
       theme: {}
     }
-    ;(smolToml.parse as any).mockReturnValue(sparseToml)
+    mockLoadConfig.mockReturnValue(sparseToml)
     const config = await createBlog()
     expect((config as any).title).toBe('Sparse')
     // Should use defaults for nav labels
@@ -217,14 +227,12 @@ describe('createBlog with mocked config.toml', async () => {
       },
       theme: {}
     }
-    ;(smolToml.parse as any).mockReturnValue(toml)
+    mockLoadConfig.mockReturnValue(toml)
     const config = await createBlog()
     const mdConfig = (config as any).markdown.config
     expect(typeof mdConfig).toBe('function')
-    // Create a mock md instance and call the config
     const mockMd = { use: vi.fn(), renderer: { rules: {} } }
     mdConfig(mockMd)
-    // Should have registered plugins
     expect(mockMd.use).toHaveBeenCalled()
   })
 
@@ -242,13 +250,11 @@ describe('createBlog with mocked config.toml', async () => {
       },
       theme: {}
     }
-    ;(smolToml.parse as any).mockReturnValue(toml)
+    mockLoadConfig.mockReturnValue(toml)
     const config = await createBlog()
     const mdConfig = (config as any).markdown.config
     const mockMd = { use: vi.fn(), renderer: { rules: {} } }
     mdConfig(mockMd)
-    // No plugins should be registered (all false)
-    // getFooterRefTag modifies renderer.rules, doesn't call md.use
     expect(mockMd.use).not.toHaveBeenCalled()
   })
 
@@ -263,12 +269,67 @@ describe('createBlog with mocked config.toml', async () => {
       tag: string
     ) => boolean
     expect(typeof isCustomElement).toBe('function')
-    // MathJax custom elements
     expect(isCustomElement('mjx-container')).toBe(true)
     expect(isCustomElement('math')).toBe(true)
-    // Regular HTML elements should not be custom
     expect(isCustomElement('div')).toBe(false)
     expect(isCustomElement('span')).toBe(false)
+  })
+
+  it('always sets pageSize in themeConfig', async () => {
+    const toml = {
+      meta: { title: 'No PageSize' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.pageSize).toBe(10)
+  })
+
+  it('uses toml pageSize when provided', async () => {
+    const toml = {
+      meta: { title: 'Custom PageSize' },
+      page: { pageSize: 7 },
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.pageSize).toBe(7)
+  })
+
+  it('always sets themeConfig.meta.author', async () => {
+    const toml = {
+      meta: { title: 'With Author', author: 'CustomAuthor' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.meta.author).toBe('CustomAuthor')
+  })
+
+  it('uses default author when meta.author is missing', async () => {
+    const toml = {
+      meta: { title: 'No Author' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.meta.author).toBe('Blogger')
+  })
+
+  it('uses centralized themeLink default', async () => {
+    const toml = {
+      meta: { title: 'No ThemeLink' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.themeLink).toBe(
+      'https://github.com/Albert26193/vitepress-clear-blog'
+    )
   })
 })
 
@@ -317,13 +378,11 @@ describe('getFooterRefTag', async () => {
 
   it('overridden footnote_ref falls back to id when regex does not match', () => {
     const mockMd = makeMockMd()
-    // Pre-set footnote_ref to return HTML that won't match the regex />([^<]+)<\/a>/
     mockMd.renderer.rules.footnote_ref = vi
       .fn()
       .mockReturnValue('<span>no anchor close</span>')
     getFooterRefTag(mockMd as any)
 
-    // Populate footnoteContents
     const openFn = mockMd.renderer.rules.footnote_open
     const openTokens = [
       { type: 'footnote_open', meta: { id: 'fn1' }, level: 0 },
@@ -342,7 +401,6 @@ describe('getFooterRefTag', async () => {
     const mockMd = makeMockMd()
     getFooterRefTag(mockMd as any)
 
-    // Call footnote_open to populate footnoteContents
     const openFn = mockMd.renderer.rules.footnote_open
     const openTokens = [
       { type: 'footnote_open', meta: { id: '1' }, level: 0 },
@@ -351,7 +409,6 @@ describe('getFooterRefTag', async () => {
     ]
     openFn(openTokens, 0, {}, {}, mockMd.renderer.rules)
 
-    // Call footnote_ref without originalFootnoteRef (no original ref rule)
     const refFn = mockMd.renderer.rules.footnote_ref
     const refTokens = [{ meta: { id: '1', label: '1' } }]
     const result = refFn(refTokens, 0, {}, {}, mockMd.renderer.rules)
