@@ -1,3 +1,4 @@
+// @vitest-environment node
 import MarkdownIt from 'markdown-it'
 import { describe, expect, it } from 'vitest'
 
