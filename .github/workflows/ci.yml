@@ -135,7 +135,17 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('packages/theme/package.json') }}
+          restore-keys: playwright-
+
       - run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Download build artifact
         uses: actions/download-artifact@v5
@@ -143,8 +153,8 @@ jobs:
           name: testbed-dist
           path: packages/testbed/.vitepress/dist
 
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Build workspace packages
+        run: pnpm build:packages
 
       - name: Run E2E tests
         run: pnpm test:e2e
