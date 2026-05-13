@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it'
+import markdownItWikilinks from 'markdown-it-wikilinks'
 import type Token from 'markdown-it/lib/token.mjs'
 import { existsSync } from 'node:fs'
 
@@ -9,11 +10,20 @@ import {
   resolveAbsolutePath
 } from '../utils/path'
 
-// Initialize markdown-it instance
+// Initialize markdown-it instance with wikilink support
 const md = new MarkdownIt({
   linkify: true,
-  html: true // Enable HTML tag parsing
+  html: true
 })
+md.use(
+  markdownItWikilinks({
+    baseURL: '/',
+    uriSuffix: '',
+    makeAllLinksAbsolute: true,
+    postProcessPagePath: (pagePath: string) => pagePath.trim(),
+    postProcessLabel: (label: string) => label.trim()
+  })
+)
 
 /**
  * Check if a link is an external link
@@ -71,13 +81,7 @@ const createValidateLink =
       return false
     }
 
-    // Normalize the link (remove anchor)
     const normalizedLink = normalizeLink(link)
-
-    // If the link is empty, return false
-    if (!normalizedLink) {
-      return false
-    }
 
     // Check if the file exists
     const absolutePath = resolveAbsolutePath(
@@ -107,19 +111,37 @@ const extractMarkdownLinks = (
       let currentLink: Partial<PageLink> | null = null
 
       token.children.forEach((child, index) => {
-        // Handle standard Markdown links
         if (child.type === 'link_open') {
-          const href = child.attrGet('href')
-          if (href && validateLink(href)) {
-            currentLink = {
-              relativePath: href,
-              type: 'markdown',
-              raw: ''
+          const rawHref = child.attrGet('href')
+          if (rawHref) {
+            const href = decodeURIComponent(rawHref)
+            if (validateLink(href)) {
+              currentLink = {
+                relativePath: href,
+                type: 'markdown',
+                raw: ''
+              }
             }
           }
         }
 
-        // Get link text
+        if (child.type.startsWith('regexp-')) {
+          const match = (child.meta as { match: RegExpExecArray } | undefined)
+            ?.match
+          if (match) {
+            const pagePath = match[1]
+            const label = match[3] || match[1]
+            if (validateLink(pagePath)) {
+              links.push({
+                text: label.trim(),
+                relativePath: pagePath.trim(),
+                type: 'wiki',
+                raw: match[0]
+              })
+            }
+          }
+        }
+
         if (
           currentLink &&
           child.type === 'text' &&
@@ -177,62 +199,6 @@ const extractHtmlLinks = (
           currentLink.text = child.content || ''
           links.push(currentLink)
           currentLink = null
-        }
-      })
-    }
-  })
-
-  return links
-}
-
-/**
- * Extract Wiki links from tokens, be like 3 situations:
- * 1. [[ as-short-as-possible ]] if not have same name with file name
- * 2. [[ relative-path-based-on-current-file | display text ]]
- * 3. [[ absolute-path-based-on-docs-root | display text ]]
- *
- * @param tokens - The Markdown tokens array
- * @param validateLink - The link validation function
- * @returns The extracted links array
- */
-const extractWikiLinks = (
-  tokens: Token[],
-  validateLink: (link: string) => boolean
-): Partial<PageLink>[] => {
-  const links: Partial<PageLink>[] = []
-
-  tokens.forEach((token) => {
-    if (token.type === 'inline' && token.children) {
-      token.children.forEach((child) => {
-        // Handle Wiki links [[text]] or [[text|path]]
-        if (child.type === 'text' && child.content.includes('[[')) {
-          const wikiMatches = child.content.match(/\[\[(.*?)\]\]/g)
-          if (wikiMatches && wikiMatches.length > 0) {
-            wikiMatches.forEach((match) => {
-              const content = match.slice(2, -2)
-              let text: string, path: string
-
-              if (content.includes('|')) {
-                // For links with display text: [[Target Path|Display Text]]
-                ;[text, path] = content.split('|').reverse()
-              } else {
-                // For simple links: [[Simple Link]], convert to URL-friendly format ?
-                // Not convert
-                text = content
-                path = content
-                // path = content.toLowerCase().replace(/\s+/g, '-')
-              }
-
-              if (validateLink(path)) {
-                links.push({
-                  text: text,
-                  relativePath: path,
-                  type: 'wiki',
-                  raw: match
-                })
-              }
-            })
-          }
         }
       })
     }
@@ -317,24 +283,17 @@ const extractInnerLinks = (
   config: AnalyzerConfig,
   currentFile: string
 ): PageLink[] => {
-  // If content is empty, return an empty array
   if (!content) return []
 
-  // Parse Markdown content into tokens
   const tokens = md.parse(content, {})
 
-  // Create link validation function
   const validateLink = createValidateLink(config, currentFile)
 
-  // Extract various types of links
   const markdownLinks = extractMarkdownLinks(tokens, validateLink)
   const htmlLinks = extractHtmlLinks(tokens, validateLink)
-  const wikiLinks = extractWikiLinks(tokens, validateLink)
 
-  // Merge all links
-  const allLinks = [...markdownLinks, ...htmlLinks, ...wikiLinks]
+  const allLinks = [...markdownLinks, ...htmlLinks]
 
-  // Process links, add full URLs
   return processLinks(allLinks, config, currentFile)
 }
 
