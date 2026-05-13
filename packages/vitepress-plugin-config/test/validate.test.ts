@@ -168,6 +168,62 @@ describe('blog & timeline sections', () => {
   })
 })
 
+describe('links section', () => {
+  it('accepts valid resolutionModes', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      links: {
+        resolutionModes: ['repoRoot', 'obsidianShortest']
+      }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts all valid modes', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      links: {
+        resolutionModes: [
+          'repoRoot',
+          'absolutePath',
+          'relativeToCurrentFile',
+          'obsidianShortest'
+        ]
+      }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts empty resolutionModes array', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      links: { resolutionModes: [] }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts config missing links section', () => {
+    const result = configTomlSchema.safeParse({ theme: {} })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects invalid resolution mode', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      links: { resolutionModes: ['invalidMode'] }
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-array resolutionModes', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      links: { resolutionModes: 'repoRoot' }
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
 describe('validateConfigToml', () => {
   it('returns valid for a correct config', () => {
     const result = validateConfigToml(

@@ -68,6 +68,19 @@ const timelineSchema = z.object({
   sortDirection: z.enum(['desc', 'asc']).optional()
 })
 
+const VALID_RESOLUTION_MODES = [
+  'repoRoot',
+  'absolutePath',
+  'relativeToCurrentFile',
+  'obsidianShortest'
+]
+
+const linksSchema = z.object({
+  resolutionModes: z
+    .array(z.enum(VALID_RESOLUTION_MODES as [string, ...string[]]))
+    .optional()
+})
+
 export const configTomlSchema = z.object({
   meta: metaSchema.optional().default({}),
   page: pageSchema.optional().default({}),
@@ -76,6 +89,7 @@ export const configTomlSchema = z.object({
   datetime: datetimeSchema.optional(),
   blog: blogSchema.optional(),
   timeline: timelineSchema.optional(),
+  links: linksSchema.optional(),
   theme: themeConfigSchema
 })
 

@@ -31,6 +31,10 @@ export interface TimelineConfig {
   sortDirection?: 'desc' | 'asc'
 }
 
+export interface LinksConfig {
+  resolutionModes?: string[]
+}
+
 export interface NavLabels {
   home?: string
   tags?: string
@@ -68,5 +72,6 @@ export interface ConfigToml {
   datetime?: DatetimeConfig
   blog?: BlogConfig
   timeline?: TimelineConfig
+  links?: LinksConfig
   theme: ThemeConfig
 }

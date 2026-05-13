@@ -3,6 +3,7 @@ export type {
   BlogConfig,
   ConfigToml,
   DatetimeConfig,
+  LinksConfig,
   ThemeConfig,
   TimelineConfig
 } from './types'
@@ -22,6 +23,7 @@ export {
   DEFAULT_PAGE_SIZE,
   DEFAULT_NAV_LABELS,
   DEFAULT_BLOG,
+  DEFAULT_LINKS,
   DEFAULT_META,
   DEFAULT_TIMELINE,
   THEME_COLOR_DEFAULTS
