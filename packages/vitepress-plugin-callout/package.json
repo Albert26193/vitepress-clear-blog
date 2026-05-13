@@ -35,13 +35,15 @@
     "tsup": "tsup --config tsup.config.ts",
     "tsup:watch": "tsup --config tsup.config.ts --watch -- -c",
     "clean": "rimraf lib",
-    "build": "pnpm run clean && pnpm run tsup && pnpm run copy"
+    "build": "pnpm run clean && pnpm run tsup && pnpm run copy",
+    "test:unit": "vitest run"
   },
   "dependencies": {
     "markdown-it": "^14.1.0"
   },
   "devDependencies": {
-    "@types/markdown-it": "^14.1.2"
+    "@types/markdown-it": "^14.1.2",
+    "vitest": "^4.1.2"
   },
   "engines": {
     "node": ">=22.0.0"

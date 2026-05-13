@@ -14,13 +14,42 @@ const PRESET_CALLOUTS = [
 ]
 const LETTER_RE = /^[a-zA-Z]+$/
 
+export interface CalloutTypeConfig {
+  /** Default title shown when the inline title is empty. */
+  title?: string
+}
+
+export interface CalloutPluginOptions {
+  /**
+   * Custom callout type definitions. Keys are type names (e.g. "question"),
+   * values configure the default title for that type.
+   */
+  types?: Record<string, CalloutTypeConfig>
+  /**
+   * When true, preset callout types (tip, note, info, etc.) are also
+   * processed by this plugin instead of being left to VitePress.
+   * @default false
+   */
+  overridePresets?: boolean
+}
+
 /**
- * Adds support for custom VitePress callout block types while leaving preset callouts untouched.
+ * Adds support for custom VitePress callout block types.
+ *
+ * By default, preset callouts (tip, note, info, important, warning, caution,
+ * danger) are left for VitePress to handle. Pass {@link CalloutPluginOptions}
+ * to configure default titles for custom types or to also handle preset types.
  *
  * @param md - Markdown-it instance whose token pipeline should recognize custom callouts.
- * @returns Nothing; renderer rules are registered on the provided Markdown-it instance.
+ * @param options - Optional configuration for custom type titles and preset override.
  */
-const calloutPlugin = (md: MarkdownIt): void => {
+const calloutPlugin = (
+  md: MarkdownIt,
+  options?: CalloutPluginOptions
+): void => {
+  const types = options?.types || {}
+  const overridePresets = options?.overridePresets || false
+
   md.core.ruler.after('block', 'custom-callout', (state: StateCore): void => {
     const tokens = state.tokens as Token[]
     for (let i = 0; i < tokens.length; i++) {
@@ -50,7 +79,9 @@ const calloutPlugin = (md: MarkdownIt): void => {
         if (!match) continue
 
         const type = match[1].toLowerCase()
-        if (PRESET_CALLOUTS.includes(type)) {
+        const isPreset = PRESET_CALLOUTS.includes(type)
+
+        if (isPreset && !overridePresets) {
           continue
         }
 
@@ -65,7 +96,9 @@ const calloutPlugin = (md: MarkdownIt): void => {
           continue
         }
 
-        const title = match[2].trim() || type.toUpperCase()
+        // Inline title wins, then configured title, then uppercase type name
+        const configuredTitle = types[type]?.title
+        const title = match[2].trim() || configuredTitle || type.toUpperCase()
         firstContent.content = firstContent.content
           .slice(match[0].length)
           .trimStart()
