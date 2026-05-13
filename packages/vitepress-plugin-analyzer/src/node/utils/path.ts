@@ -1,5 +1,14 @@
 import { existsSync } from 'node:fs'
-import { dirname, isAbsolute, join, normalize, resolve } from 'node:path'
+import { readdir } from 'node:fs/promises'
+import {
+  basename,
+  dirname,
+  extname,
+  isAbsolute,
+  join,
+  normalize,
+  resolve
+} from 'node:path'
 
 import type { AnalyzerConfig, ResolutionMode } from '../../../types'
 
@@ -102,13 +111,81 @@ const resolveRelativeToCurrentFile = (
 }
 
 /**
- * Obsidian-style shortest-path resolution (not yet implemented).
+ * Recursively build a filename index mapping basenames (without extension)
+ * to all absolute paths that share that basename.
+ */
+const buildFilenameIndex = async (
+  dirPath: string,
+  config: AnalyzerConfig
+): Promise<Map<string, string[]>> => {
+  const index = new Map<string, string[]>()
+
+  const walk = async (currentDir: string): Promise<void> => {
+    const entries = await readdir(currentDir, { withFileTypes: true })
+
+    const tasks = entries.map(async (entry) => {
+      if (config.excludeDirs.includes(entry.name)) return
+
+      const fullPath = resolve(currentDir, entry.name)
+
+      if (entry.isDirectory()) {
+        await walk(fullPath)
+      } else if (entry.name.endsWith('.md')) {
+        if (config.excludeFiles.some((p) => entry.name.includes(p))) return
+
+        const key = basename(entry.name, extname(entry.name))
+        const normalizedKey = config.ignoreCase ? key.toLowerCase() : key
+
+        const existing = index.get(normalizedKey) || []
+        existing.push(fullPath)
+        index.set(normalizedKey, existing)
+      }
+    })
+
+    await Promise.all(tasks)
+  }
+
+  await walk(dirPath)
+  return index
+}
+
+/**
+ * Obsidian-style shortest-path resolution.
+ *
+ * Searches the filename index for the link's basename. Unique matches resolve
+ * directly; ambiguous matches (same basename in multiple directories) produce
+ * diagnostic warnings and return null.
  */
 const resolveObsidianShortest = (
-  _linkPath: string,
-  _config: AnalyzerConfig,
+  linkPath: string,
+  config: AnalyzerConfig,
   _currentFile: string
-): string | null => null
+): string | null => {
+  if (!config.filenameIndex || config.filenameIndex.size === 0) return null
+
+  const targetName = basename(linkPath, extname(linkPath))
+  const lookupKey = config.ignoreCase ? targetName.toLowerCase() : targetName
+
+  const candidates = config.filenameIndex.get(lookupKey)
+
+  if (!candidates || candidates.length === 0) return null
+
+  if (candidates.length === 1) {
+    // Preserve .md extension only when the link explicitly includes it
+    const match = candidates[0]
+    return linkPath.endsWith('.md') ? match : match.replace(/\.md$/, '')
+  }
+
+  // Ambiguous: report diagnostic
+  if (config.diagnostics) {
+    const list = candidates.map((c) => `  - ${c}`).join('\n')
+    config.diagnostics.push(
+      `Ambiguous short link "${linkPath}" matches ${candidates.length} files:\n${list}`
+    )
+  }
+
+  return null
+}
 
 const MODE_RESOLVERS: Record<
   ResolutionMode,
@@ -167,5 +244,6 @@ export {
   getDocsRoot,
   getProjectRelativePath,
   resolveAbsolutePath,
-  resolveLinkMultiMode
+  resolveLinkMultiMode,
+  buildFilenameIndex
 }

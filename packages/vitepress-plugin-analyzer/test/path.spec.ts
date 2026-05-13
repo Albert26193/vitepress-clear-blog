@@ -1,9 +1,11 @@
 import fs from 'node:fs'
+import { mkdir, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { createConfig } from '../src/node/config'
 import {
+  buildFilenameIndex,
   getProjectRelativePath,
   resolveAbsolutePath,
   resolveLinkMultiMode
@@ -273,13 +275,262 @@ describe('Resolution with .md extension in link', () => {
 })
 
 describe('resolveLinkMultiMode — obsidianShortest', () => {
-  it('returns null (not yet implemented)', () => {
+  let sharedIndex: Map<string, string[]>
+
+  beforeAll(async () => {
+    sharedIndex = await buildFilenameIndex(testRoot, testConfig)
+  })
+
+  it('resolves a short name to a unique file anywhere in the tree', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
+    const result = resolveLinkMultiMode('doc1', config, 'index.md')
+    expect(result).toBe(path.resolve(testRoot, 'attach/doc1'))
+  })
+
+  it('resolves short name with .md extension', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
+    // Link includes .md → result preserves .md
+    const result = resolveLinkMultiMode('doc1.md', config, 'index.md')
+    expect(result).toBe(path.resolve(testRoot, 'attach/doc1.md'))
+  })
+
+  it('resolves short name with path prefix (basename only matters)', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
+    // Only the basename "doc1" is used for lookup
+    const result = resolveLinkMultiMode('some/nested/doc1', config, 'index.md')
+    expect(result).toBe(path.resolve(testRoot, 'attach/doc1'))
+  })
+
+  it('returns null for non-existent short name', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
     const result = resolveLinkMultiMode(
-      '/attach/doc1',
-      configWithModes(['obsidianShortest']),
+      'nonexistent-page-xyz',
+      config,
       'index.md'
     )
     expect(result).toBeNull()
+  })
+
+  it('returns null when no filenameIndex is set', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.diagnostics = []
+
+    const result = resolveLinkMultiMode('doc1', config, 'index.md')
+    expect(result).toBeNull()
+  })
+
+  it('returns null when filenameIndex is empty', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.filenameIndex = new Map()
+    config.diagnostics = []
+
+    const result = resolveLinkMultiMode('doc1', config, 'index.md')
+    expect(result).toBeNull()
+  })
+
+  it('reports diagnostics for ambiguous matches', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.diagnostics = []
+
+    // Create a synthetic index with two files sharing the same basename
+    config.filenameIndex = new Map([['dup', ['/a/dup.md', '/b/dup.md']]])
+
+    const result = resolveLinkMultiMode('dup', config, 'index.md')
+    expect(result).toBeNull()
+    expect(config.diagnostics.length).toBe(1)
+    expect(config.diagnostics[0]).toContain('Ambiguous short link "dup"')
+    expect(config.diagnostics[0]).toContain('/a/dup.md')
+    expect(config.diagnostics[0]).toContain('/b/dup.md')
+  })
+
+  it('does not report diagnostics for unique match', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
+    resolveLinkMultiMode('doc1', config, 'index.md')
+    expect(config.diagnostics.length).toBe(0)
+  })
+
+  it('handles ambiguous match without diagnostics array gracefully', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.filenameIndex = new Map([['dup', ['/a/dup.md', '/b/dup.md']]])
+
+    const result = resolveLinkMultiMode('dup', config, 'index.md')
+    expect(result).toBeNull()
+  })
+
+  it('respects case-insensitive matching when ignoreCase is true', () => {
+    const config = configWithModes(['obsidianShortest'])
+    config.diagnostics = []
+    config.filenameIndex = new Map([['mypage', ['/a/my-page.md']]])
+
+    const result = resolveLinkMultiMode('MyPage', config, 'index.md')
+    expect(result).toBe('/a/my-page')
+  })
+
+  it('respects case-sensitive matching when ignoreCase is false', () => {
+    const configWithCase = createConfig({
+      ...testConfig,
+      ignoreCase: false,
+      resolutionModes: ['obsidianShortest']
+    })
+    configWithCase.diagnostics = []
+    configWithCase.filenameIndex = new Map([['MyPage', ['/a/MyPage.md']]])
+
+    const result = resolveLinkMultiMode('MyPage', configWithCase, 'index.md')
+    expect(result).toBe('/a/MyPage')
+
+    const result2 = resolveLinkMultiMode('mypage', configWithCase, 'index.md')
+    expect(result2).toBeNull()
+  })
+})
+
+describe('resolveLinkMultiMode — obsidianShortest integration', () => {
+  let sharedIndex: Map<string, string[]>
+
+  beforeAll(async () => {
+    sharedIndex = await buildFilenameIndex(testRoot, testConfig)
+  })
+
+  it('falls back to obsidianShortest when earlier modes fail', () => {
+    const config = configWithModes([
+      'repoRoot',
+      'relativeToCurrentFile',
+      'obsidianShortest'
+    ])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
+    const result = resolveLinkMultiMode('doc1', config, 'index.md')
+    expect(result).toBe(path.resolve(testRoot, 'attach/doc1'))
+  })
+
+  it('obsidianShortest placed first resolves before other modes', () => {
+    const config = configWithModes(['obsidianShortest', 'repoRoot'])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
+    const result = resolveLinkMultiMode('doc1', config, 'index.md')
+    expect(result).toBe(path.resolve(testRoot, 'attach/doc1'))
+  })
+
+  it('returns null when no mode (including obsidianShortest) resolves', () => {
+    const config = configWithModes([
+      'repoRoot',
+      'absolutePath',
+      'relativeToCurrentFile',
+      'obsidianShortest'
+    ])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
+    const result = resolveLinkMultiMode(
+      'definitely-missing',
+      config,
+      'index.md'
+    )
+    expect(result).toBeNull()
+  })
+})
+
+describe('buildFilenameIndex', () => {
+  const tmpDir = path.resolve(testRoot, '_idx_test')
+
+  beforeAll(async () => {
+    await mkdir(path.join(tmpDir, 'sub'), { recursive: true })
+    await writeFile(path.join(tmpDir, 'page-a.md'), 'a')
+    await writeFile(path.join(tmpDir, 'page-b.md'), 'b')
+    await writeFile(path.join(tmpDir, 'sub', 'page-b.md'), 'b2')
+    await writeFile(path.join(tmpDir, 'sub', 'page-c.md'), 'c')
+  })
+
+  afterAll(async () => {
+    await rm(tmpDir, { recursive: true, force: true })
+  })
+
+  it('maps unique basename to single entry', async () => {
+    const idxConfig = createConfig({ ...testConfig, docsDir: tmpDir })
+    const index = await buildFilenameIndex(tmpDir, idxConfig)
+
+    expect(index.get('page-a')).toEqual([path.join(tmpDir, 'page-a.md')])
+    expect(index.get('page-c')).toEqual([path.join(tmpDir, 'sub', 'page-c.md')])
+  })
+
+  it('maps duplicate basename to multiple entries', async () => {
+    const idxConfig = createConfig({ ...testConfig, docsDir: tmpDir })
+    const index = await buildFilenameIndex(tmpDir, idxConfig)
+
+    const entries = index.get('page-b')
+    expect(entries).toHaveLength(2)
+    expect(entries).toContain(path.join(tmpDir, 'page-b.md'))
+    expect(entries).toContain(path.join(tmpDir, 'sub', 'page-b.md'))
+  })
+
+  it('uses lowercase keys when ignoreCase is true', async () => {
+    const idxConfig = createConfig({
+      ...testConfig,
+      docsDir: tmpDir,
+      ignoreCase: true
+    })
+    const index = await buildFilenameIndex(tmpDir, idxConfig)
+
+    expect(index.has('page-a')).toBe(true)
+    expect(index.has('Page-A')).toBe(false)
+  })
+
+  it('preserves original case when ignoreCase is false', async () => {
+    const idxConfig = createConfig({
+      ...testConfig,
+      docsDir: tmpDir,
+      ignoreCase: false
+    })
+    const index = await buildFilenameIndex(tmpDir, idxConfig)
+
+    expect(index.has('page-a')).toBe(true)
+  })
+
+  it('skips excluded directories', async () => {
+    const dir = path.join(tmpDir, '_ignored')
+    await mkdir(dir, { recursive: true })
+    await writeFile(path.join(dir, 'hidden.md'), 'x')
+
+    const idxConfig = createConfig({
+      ...testConfig,
+      docsDir: tmpDir,
+      excludeDirs: [...testConfig.excludeDirs, '_ignored']
+    })
+    const index = await buildFilenameIndex(tmpDir, idxConfig)
+
+    expect(index.has('hidden')).toBe(false)
+
+    await rm(dir, { recursive: true, force: true })
+  })
+
+  it('skips files matching exclude pattern', async () => {
+    await writeFile(path.join(tmpDir, 'draft-notes.md'), 'draft')
+
+    const idxConfig = createConfig({
+      ...testConfig,
+      docsDir: tmpDir,
+      excludeFiles: ['draft-']
+    })
+    const index = await buildFilenameIndex(tmpDir, idxConfig)
+
+    expect(index.has('draft-notes')).toBe(false)
+    expect(index.has('page-a')).toBe(true)
   })
 })
 
