@@ -1,5 +1,6 @@
 import type { SiteMetadata } from '../../types/types'
 import type { Post } from '../../types/types.d'
+import { resolveLinkTitle } from './resolve-title'
 
 interface WikiLinkOptions {
   base?: string
@@ -10,7 +11,9 @@ interface WikiLinkOptions {
 }
 
 const WIKI_LINK_SELECTOR = 'a.clear-wikilink'
+const INTERNAL_LINK_SELECTOR = '.vp-doc a[href], a.clear-wikilink'
 const BROKEN_WIKI_LINK_CLASS = 'clear-wikilink--broken'
+const BROKEN_LINK_CLASS = 'broken-link'
 
 const trimBase = (path: string, base = '/'): string => {
   if (!base || base === '/') return path
@@ -52,11 +55,7 @@ const getCurrentDirectory = (currentPath: string): string => {
 }
 
 /**
- * Produces normalized lookup keys for a wiki href from both absolute and page-relative contexts.
- *
- * @param href - Link href captured from rendered Markdown.
- * @param options - Base and current page context used to resolve relative wiki links.
- * @returns Candidate metadata keys that may represent the linked page.
+ * Produces normalized lookup keys for a link href from both absolute and page-relative contexts.
  */
 const getWikiLinkCandidates = (
   href: string,
@@ -92,9 +91,16 @@ const getWikiLinkCandidates = (
 const createExistingPageSet = (siteMetadata: SiteMetadata): Set<string> =>
   new Set(Object.keys(siteMetadata).map(normalizeMetadataPath))
 
+const isExternalHref = (href: string): boolean =>
+  href.startsWith('http') ||
+  href.startsWith('https') ||
+  href.startsWith('mailto:') ||
+  href.startsWith('tel:') ||
+  href.startsWith('#')
+
 /**
  * Resolves the canonical title for a wiki link target by matching against posts data.
- * Only runs client-side (needs DOM for first_heading extraction).
+ * Thin wrapper around resolveLinkTitle that preserves the legacy null-returning contract.
  */
 const resolveInlineWikiTitle = (
   relativePath: string,
@@ -143,36 +149,50 @@ const resolveInlineWikiTitle = (
 }
 
 /**
- * Marks unresolved wiki links in rendered content and optionally replaces link text
- * with the canonical page title.
+ * Marks unresolved internal links in rendered content and optionally replaces link text
+ * with the canonical page title. Handles both wiki links (a.clear-wikilink) and
+ * standard markdown links.
  *
  * @param siteMetadata - Analyzer metadata used as the source of existing pages.
  * @param options - DOM, path context, and title resolution config.
- * @returns Nothing; matching anchor elements are updated in place.
  */
-const markBrokenWikiLinks = (
+const markBrokenLinks = (
   siteMetadata: SiteMetadata,
   options: WikiLinkOptions = {}
 ): void => {
   const root = options.root || document
   const existingPages = createExistingPageSet(siteMetadata)
-  const wikiLinks = root.querySelectorAll<HTMLAnchorElement>(WIKI_LINK_SELECTOR)
+  const allLinks = root.querySelectorAll<HTMLAnchorElement>(
+    INTERNAL_LINK_SELECTOR
+  )
   const allPosts = options.allPosts || []
   const renderTitle = options.renderTitle || 'alias'
 
-  wikiLinks.forEach((link) => {
+  allLinks.forEach((link) => {
     const href = link.getAttribute('href')
-    if (!href) return
+    if (!href || isExternalHref(href)) return
 
+    const isWikiLink = link.classList.contains('clear-wikilink')
     const candidates = getWikiLinkCandidates(href, options)
     const matched = candidates.find((candidate) => existingPages.has(candidate))
     const exists = !!matched
-    link.classList.toggle(BROKEN_WIKI_LINK_CLASS, !exists)
-    link.toggleAttribute('data-wikilink-broken', !exists)
+
+    if (isWikiLink) {
+      link.classList.toggle(BROKEN_WIKI_LINK_CLASS, !exists)
+      link.toggleAttribute('data-wikilink-broken', !exists)
+    } else {
+      link.classList.toggle(BROKEN_LINK_CLASS, !exists)
+      link.toggleAttribute('data-link-broken', !exists)
+    }
 
     // Replace link text with canonical title when configured
     if (exists && matched && renderTitle !== 'alias') {
-      const title = resolveInlineWikiTitle(matched, allPosts, renderTitle)
+      const title = resolveLinkTitle(
+        matched,
+        allPosts,
+        renderTitle,
+        link.textContent || ''
+      )
       if (title) {
         link.textContent = title
       }
@@ -181,10 +201,12 @@ const markBrokenWikiLinks = (
 }
 
 export {
+  BROKEN_LINK_CLASS,
   BROKEN_WIKI_LINK_CLASS,
+  INTERNAL_LINK_SELECTOR,
   WIKI_LINK_SELECTOR,
   getWikiLinkCandidates,
-  markBrokenWikiLinks,
+  markBrokenLinks,
   resolveInlineWikiTitle
 }
 export type { WikiLinkOptions }

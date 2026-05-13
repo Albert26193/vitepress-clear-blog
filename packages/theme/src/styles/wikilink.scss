@@ -35,6 +35,18 @@
           }
         }
       }
+
+      .broken-link {
+        color: var(--vp-c-text-3);
+        text-decoration-line: underline;
+        text-decoration-style: dashed;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+
+        &:hover {
+          color: var(--vp-c-text-2);
+        }
+      }
     }
   }
 }

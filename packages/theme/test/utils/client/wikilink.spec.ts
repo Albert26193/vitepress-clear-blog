@@ -6,9 +6,11 @@ import { describe, expect, it } from 'vitest'
 import type { SiteMetadata } from '../../../src/types/types.d'
 import type { Post } from '../../../src/types/types.d'
 import {
+  BROKEN_LINK_CLASS,
   BROKEN_WIKI_LINK_CLASS,
+  INTERNAL_LINK_SELECTOR,
   getWikiLinkCandidates,
-  markBrokenWikiLinks,
+  markBrokenLinks,
   resolveInlineWikiTitle
 } from '../../../src/utils/client/wikilink'
 
@@ -111,7 +113,7 @@ describe('getWikiLinkCandidates', () => {
   })
 })
 
-describe('markBrokenWikiLinks', () => {
+describe('markBrokenLinks', () => {
   it('marks unresolved wiki links without changing existing links', () => {
     document.body.innerHTML = `
       <main>
@@ -120,7 +122,7 @@ describe('markBrokenWikiLinks', () => {
       </main>
     `
 
-    markBrokenWikiLinks(siteMetadata, {
+    markBrokenLinks(siteMetadata, {
       currentPath: '/blogs/current'
     })
 
@@ -143,10 +145,10 @@ describe('markBrokenWikiLinks', () => {
       </main>
     `
 
-    markBrokenWikiLinks(siteMetadata, {
+    markBrokenLinks(siteMetadata, {
       currentPath: '/blogs/current'
     })
-    markBrokenWikiLinks(siteMetadata, {
+    markBrokenLinks(siteMetadata, {
       currentPath: '/blogs/current'
     })
 
@@ -161,7 +163,7 @@ describe('markBrokenWikiLinks', () => {
       </main>
     `
 
-    expect(() => markBrokenWikiLinks(siteMetadata)).not.toThrow()
+    expect(() => markBrokenLinks(siteMetadata)).not.toThrow()
     expect(
       document
         .querySelector('.clear-wikilink')
@@ -189,7 +191,7 @@ describe('markBrokenWikiLinks', () => {
       }
     ]
 
-    markBrokenWikiLinks(siteMetadata, {
+    markBrokenLinks(siteMetadata, {
       currentPath: '/blogs/current',
       renderTitle: 'frontmatter_title',
       allPosts: posts
@@ -221,7 +223,7 @@ describe('markBrokenWikiLinks', () => {
       }
     ]
 
-    markBrokenWikiLinks(siteMetadata, {
+    markBrokenLinks(siteMetadata, {
       currentPath: '/blogs/current',
       renderTitle: 'alias',
       allPosts: posts
@@ -328,5 +330,136 @@ describe('resolveInlineWikiTitle', () => {
         'first_heading'
       )
     ).toBe('Only Title')
+  })
+})
+
+describe('markBrokenLinks for standard markdown links', () => {
+  it('marks broken markdown links with broken-link class', () => {
+    document.body.innerHTML = `
+      <div class="vp-doc">
+        <a href="/existing">Existing Link</a>
+        <a href="/missing">Missing Link</a>
+      </div>
+    `
+
+    markBrokenLinks(siteMetadata, {
+      currentPath: '/blogs/current'
+    })
+
+    const existing = document.querySelector<HTMLAnchorElement>(
+      'a[href="/existing"]'
+    )
+    const missing =
+      document.querySelector<HTMLAnchorElement>('a[href="/missing"]')
+
+    expect(existing?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    expect(existing?.hasAttribute('data-link-broken')).toBe(false)
+    expect(missing?.classList.contains(BROKEN_LINK_CLASS)).toBe(true)
+    expect(missing?.getAttribute('data-link-broken')).toBe('')
+  })
+
+  it('skips external links', () => {
+    document.body.innerHTML = `
+      <div class="vp-doc">
+        <a href="https://example.com">External</a>
+        <a href="mailto:test@test.com">Email</a>
+        <a href="#section">Anchor</a>
+      </div>
+    `
+
+    markBrokenLinks(siteMetadata, {
+      currentPath: '/blogs/current'
+    })
+
+    const external = document.querySelector<HTMLAnchorElement>(
+      'a[href="https://example.com"]'
+    )
+    const email = document.querySelector<HTMLAnchorElement>(
+      'a[href="mailto:test@test.com"]'
+    )
+    const anchor =
+      document.querySelector<HTMLAnchorElement>('a[href="#section"]')
+
+    expect(external?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    expect(email?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    expect(anchor?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+  })
+
+  it('replaces markdown link text with canonical title', () => {
+    document.body.innerHTML = `
+      <div class="vp-doc">
+        <a href="/blogs/existing">Old Text</a>
+      </div>
+    `
+
+    const posts: Post[] = [
+      {
+        frontMatter: {
+          title: 'Post Title',
+          date: '2024-01-01',
+          tags: [],
+          description: ''
+        },
+        regularPath: '/blogs/existing.html',
+        html: '<h1>Post Title</h1><p>Content</p>'
+      }
+    ]
+
+    markBrokenLinks(siteMetadata, {
+      currentPath: '/blogs/current',
+      renderTitle: 'frontmatter_title',
+      allPosts: posts
+    })
+
+    const link = document.querySelector<HTMLAnchorElement>(
+      'a[href="/blogs/existing"]'
+    )
+    expect(link?.textContent).toBe('Post Title')
+  })
+
+  it('wiki links still get clear-wikilink--broken class', () => {
+    document.body.innerHTML = `
+      <div class="vp-doc">
+        <a class="clear-wikilink" href="/missing">Wiki Missing</a>
+      </div>
+    `
+
+    markBrokenLinks(siteMetadata, {
+      currentPath: '/blogs/current'
+    })
+
+    const link = document.querySelector<HTMLAnchorElement>('a[href="/missing"]')
+    expect(link?.classList.contains(BROKEN_WIKI_LINK_CLASS)).toBe(true)
+    expect(link?.hasAttribute('data-wikilink-broken')).toBe(true)
+    expect(link?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+  })
+})
+
+describe('INTERNAL_LINK_SELECTOR', () => {
+  it('matches standard markdown links inside .vp-doc', () => {
+    document.body.innerHTML = `
+      <div class="vp-doc">
+        <a href="/blogs/target">Target</a>
+      </div>
+    `
+
+    const links = document.querySelectorAll<HTMLAnchorElement>(
+      INTERNAL_LINK_SELECTOR
+    )
+    expect(links.length).toBe(1)
+    expect(links[0].getAttribute('href')).toBe('/blogs/target')
+  })
+
+  it('matches wiki links outside .vp-doc', () => {
+    document.body.innerHTML = `
+      <main>
+        <a class="clear-wikilink" href="/blogs/target">Target</a>
+      </main>
+    `
+
+    const links = document.querySelectorAll<HTMLAnchorElement>(
+      INTERNAL_LINK_SELECTOR
+    )
+    expect(links.length).toBe(1)
   })
 })
