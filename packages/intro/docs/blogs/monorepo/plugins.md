@@ -88,7 +88,7 @@ export function mermaidPlugin(): Plugin {
 | `callout` | markdown-it | Obsidian 风格提示框 |
 | `codeblock-fold` | markdown-it | 代码块折叠 |
 | `details-block` | markdown-it | 折叠详情块 |
-| `hashtag` | markdown-it | 标签支持 |
+| `hashtag` | markdown-it | `#TagName` 语法自动转换为可点击标签链接，指向 `/tags?tag=` 筛选页面 |
 | `analyzer` | vite | 内容分析 |
 | `config` | utility | 配置工具 |
 
