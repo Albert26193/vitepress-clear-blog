@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises'
+import { ResultAsync, ok, okAsync } from 'neverthrow'
 import { relative, resolve } from 'node:path'
 
 import type {
@@ -7,20 +7,19 @@ import type {
   PageMetadata,
   SitePages
 } from '../../../types'
-import { buildFilenameIndex } from '../utils/path'
+import { buildFilenameIndex, diagnoseIndexWarning } from '../utils/path'
+import { type AnalyzerError, safeReadFile, safeReaddir } from '../utils/safeIO'
 import { calculateWords } from '../utils/wordCount'
 import { extractHeading } from './heading'
 import { extractInnerLinks } from './link'
 
+export type AnalysisResult = {
+  globalMetadata: Record<string, PageMetadata>
+  globalPages: SitePages
+}
+
 /**
  * Extracts metadata from one Markdown document and updates shared analyzer maps in the same pass.
- *
- * @param content - Raw Markdown content.
- * @param config - Analyzer configuration for path and link resolution.
- * @param filePath - Document path relative to the docs root.
- * @param globalMetadata - Metadata map receiving this page and backlink updates.
- * @param globalPages - Page map receiving this page record.
- * @returns Metadata for the analyzed document.
  */
 export const analyzeDocument = (
   content: string,
@@ -29,28 +28,22 @@ export const analyzeDocument = (
   globalMetadata: Record<string, PageMetadata>,
   globalPages: SitePages
 ): PageMetadata => {
-  // Extract document structure and relationships
   const headings = extractHeading(content)
   const outgoingLinks = extractInnerLinks(content, config, filePath)
   const wordCount = calculateWords(content)
 
-  // Create the metadata for this document
   const metadata: PageMetadata = {
-    firstHeading: headings[0] || '', // Get first heading or empty string
+    firstHeading: headings[0] || '',
     outgoingLinks,
     backLinks: [],
     wordCount,
     lastUpdated: Date.now()
   }
 
-  // If we have global metadata, update backlinks for target documents
   if (globalMetadata) {
     outgoingLinks.forEach((link) => {
       const targetPath = link.relativePath
-
-      // If the target document exists in our collection
       if (globalMetadata[targetPath]) {
-        // Add this document as a backlink to the target document
         globalMetadata[targetPath].backLinks.push({
           ...link,
           relativePath: filePath,
@@ -58,109 +51,104 @@ export const analyzeDocument = (
         })
       }
     })
-
-    // Add this document's metadata to the global collection
     globalMetadata[filePath] = metadata
   }
 
-  // Add pages info into globalPages map
   const currentPageInfo: Page = {
     absolutePath: resolve(config.docsDir, filePath),
     relativePath: filePath,
     metadata
   }
-
   globalPages[filePath] = currentPageInfo
 
   return metadata
 }
 
 /**
- * Reads one Markdown file from disk and analyzes it using its docs-root-relative path.
- *
- * @param filePath - Absolute path to the Markdown file.
- * @param config - Analyzer configuration for docs root and filtering.
- * @param globalMetadata - Metadata map receiving this page and backlink updates.
- * @param globalPages - Page map receiving this page record.
- * @returns Metadata for the analyzed file.
+ * Reads one Markdown file; read errors are absorbed into diagnostics so the
+ * analysis continues with the remaining files.
  */
-export const analyzeFile = async (
+export const analyzeFile = (
   filePath: string,
   config: AnalyzerConfig,
   globalMetadata: Record<string, PageMetadata>,
   globalPages: SitePages
-): Promise<PageMetadata> => {
-  const content = await readFile(filePath, 'utf-8')
-
+): ResultAsync<PageMetadata | null, AnalyzerError> => {
   const docsRoot = resolve(process.cwd(), config.docsDir)
   const relativePath = relative(docsRoot, filePath).replace(/\.md$/, '')
 
-  return analyzeDocument(
-    content,
-    config,
-    relativePath,
-    globalMetadata,
-    globalPages
-  )
+  return safeReadFile(filePath)
+    .map((content) =>
+      analyzeDocument(
+        content,
+        config,
+        relativePath,
+        globalMetadata,
+        globalPages
+      )
+    )
+    .orElse((error) => {
+      config.diagnostics.push(`[${error.type}] ${error.path}: ${error.message}`)
+      return ok(null)
+    })
 }
 
 /**
- * Walks a docs directory so analyzer metadata covers every included Markdown page.
- *
- * @param dirPath - Directory to scan recursively.
- * @param config - Analyzer configuration for directory and file filtering.
- * @param globalMetadata - Metadata map receiving analyzed pages.
- * @param globalPages - Page map receiving analyzed page records.
- * @returns Nothing; results are written into the provided maps.
+ * Walks a directory tree recursively. Individual file and subdirectory failures
+ * are logged and skipped so the scan continues.
  */
-export const scanDirectory = async (
+export const scanDirectory = (
   dirPath: string,
   config: AnalyzerConfig,
   globalMetadata: Record<string, PageMetadata>,
   globalPages: SitePages
-): Promise<void> => {
-  const entries = await readdir(dirPath, { withFileTypes: true })
+): ResultAsync<void, AnalyzerError> => {
+  return safeReaddir(dirPath)
+    .andThen((entries) => {
+      const tasks = entries.map((entry): ResultAsync<void, AnalyzerError> => {
+        if (config.excludeDirs.includes(entry.name)) {
+          return okAsync(undefined)
+        }
 
-  const tasks = entries.map(async (entry) => {
-    if (config.excludeDirs.includes(entry.name)) {
-      return
-    }
+        const fullPath = resolve(dirPath, entry.name)
 
-    const fullPath = resolve(dirPath, entry.name)
+        if (entry.isDirectory()) {
+          return scanDirectory(fullPath, config, globalMetadata, globalPages)
+        }
 
-    if (entry.isDirectory()) {
-      await scanDirectory(fullPath, config, globalMetadata, globalPages)
-    } else if (entry.name.endsWith('.md')) {
-      if (config.excludeFiles.some((pattern) => entry.name.includes(pattern))) {
-        return
-      }
+        if (entry.name.endsWith('.md')) {
+          if (config.excludeFiles.some((p) => entry.name.includes(p))) {
+            return okAsync(undefined)
+          }
+          return analyzeFile(fullPath, config, globalMetadata, globalPages).map(
+            () => undefined
+          )
+        }
 
-      await analyzeFile(fullPath, config, globalMetadata, globalPages)
-    }
-  })
+        return okAsync(undefined)
+      })
 
-  await Promise.all(tasks)
+      return ResultAsync.combine(tasks).map(() => undefined)
+    })
+    .orElse((error) => {
+      config.diagnostics.push(`[${error.type}] ${error.path}: ${error.message}`)
+      return ok(undefined)
+    })
 }
 
 /**
  * Rebuilds backlinks after all documents are known so relationships are not order-dependent.
- *
- * @param globalMetadata - Metadata map whose backlinks should mirror outgoing links.
- * @returns Nothing; backlinks are rewritten in place.
  */
 export const buildDocumentRelationships = (
   globalMetadata: Record<string, PageMetadata>
 ): void => {
-  // Reset all backlinks
   Object.values(globalMetadata).forEach((doc) => {
     doc.backLinks = []
   })
 
-  // Build new backlinks
   Object.entries(globalMetadata).forEach(([sourcePath, doc]) => {
     doc.outgoingLinks.forEach((link) => {
       const targetPath = link.relativePath
-      // Only build relationships for internal links
       if (globalMetadata[targetPath]) {
         globalMetadata[targetPath].backLinks.push({
           ...link,
@@ -173,36 +161,39 @@ export const buildDocumentRelationships = (
 }
 
 /**
- * Produces whole-site metadata used by the virtual module and graph components.
- *
- * @param config - Analyzer configuration for docs root and filtering rules.
- * @returns Analyzer metadata and page records for the complete docs tree.
+ * Produces whole-site metadata. IO failures during analysis are collected in
+ * config.diagnostics and never cause the build to abort.
  */
-export const analyzeAllDocuments = async (
+export const analyzeAllDocuments = (
   config: AnalyzerConfig
-): Promise<{
-  globalMetadata: Record<string, PageMetadata>
-  globalPages: SitePages
-}> => {
+): ResultAsync<AnalysisResult, AnalyzerError> => {
   const globalMetadata: Record<string, PageMetadata> = {}
   const globalPages: SitePages = {}
-
   const docsRoot = resolve(process.cwd(), config.docsDir)
 
-  // Build filename index for obsidianShortest path resolution
-  config.filenameIndex = await buildFilenameIndex(docsRoot, config)
   config.diagnostics = []
 
-  await scanDirectory(docsRoot, config, globalMetadata, globalPages)
+  return buildFilenameIndex(docsRoot, config)
+    .andThen((filenameIndex) => {
+      config.filenameIndex = filenameIndex
+      diagnoseIndexWarning(config)
+      return scanDirectory(docsRoot, config, globalMetadata, globalPages)
+    })
+    .map(() => {
+      buildDocumentRelationships(globalMetadata)
 
-  buildDocumentRelationships(globalMetadata)
+      if (config.diagnostics.length > 0) {
+        console.warn(
+          `[vitepress-analyzer] Issues:\n${config.diagnostics.join('\n')}`
+        )
+      }
 
-  // Log diagnostics after analysis
-  if (config.diagnostics.length > 0) {
-    console.warn(
-      `[vitepress-analyzer] Link resolution warnings:\n${config.diagnostics.join('\n')}`
-    )
-  }
-
-  return { globalMetadata, globalPages }
+      return { globalMetadata, globalPages }
+    })
+    .orElse((error) => {
+      console.error(
+        `[vitepress-analyzer] Fatal: ${error.path}: ${error.message}`
+      )
+      return ok({ globalMetadata, globalPages })
+    })
 }

@@ -8,7 +8,8 @@ const defaultConfig: AnalyzerConfig = {
   excludeFiles: [],
   // maxSearchDepth: 5,
   ignoreCase: true,
-  resolutionModes: ['repoRoot', 'absolutePath', 'relativeToCurrentFile']
+  resolutionModes: ['repoRoot', 'absolutePath', 'relativeToCurrentFile'],
+  diagnostics: []
 }
 
 /**
