@@ -1,4 +1,5 @@
-import mediumZoom from 'medium-zoom'
+import type { SlideData } from 'photoswipe'
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
 
 import { Post } from '../../types/types.d'
 
@@ -107,42 +108,103 @@ const calculateWords = (content: string): number => {
   return count
 }
 
-/**
- * Initializes medium-zoom for article images while avoiding layout artifacts from code labels.
- *
- * @returns Nothing; zoom handlers are attached to matching DOM elements.
- */
-const mediumZoomInit = () => {
-  // Select images from both main content and mermaid diagrams
-  const zoom = mediumZoom('.main img, .mermaid-diagram', {
-    background: 'var(--vp-c-bg)',
-    margin: 18,
-    scrollOffset: 80
+let photoSwipeLightbox: PhotoSwipeLightbox | null = null
+
+const restoreImageViewerSideEffects = () => {
+  document.querySelectorAll('.shiki [data-language]').forEach((el) => {
+    if (el instanceof HTMLElement) {
+      el.style.display = ''
+    }
   })
 
-  zoom.on('open', () => {
-    // Hide code language labels when zoom is open
+  document.body.style.overflow = ''
+}
+
+const getImageDimension = (
+  image: HTMLImageElement,
+  dimension: 'width' | 'height'
+): number => {
+  const naturalDimension =
+    dimension === 'width' ? image.naturalWidth : image.naturalHeight
+  if (naturalDimension > 0) return naturalDimension
+
+  const attributeValue = Number(image.getAttribute(dimension))
+  if (attributeValue > 0) return attributeValue
+
+  const rectDimension = image.getBoundingClientRect()[dimension]
+  if (rectDimension > 0) return Math.round(rectDimension)
+
+  return 1
+}
+
+const createPhotoSwipeItemData = (
+  itemData: SlideData,
+  element: HTMLElement
+): SlideData => {
+  const image = element instanceof HTMLImageElement ? element : null
+  if (!image) return itemData
+
+  const src = image.currentSrc || image.src
+  if (!src) return itemData
+
+  const isVectorSvg = src.startsWith('data:image/svg+xml')
+  const width = getImageDimension(image, 'width')
+  const height = getImageDimension(image, 'height')
+
+  // SVG data URLs have no intrinsic resolution — use rendered size so zoom works
+  if (isVectorSvg) {
+    const rect = image.getBoundingClientRect()
+    const renderedW = rect.width > 0 ? Math.round(rect.width) : 0
+    const renderedH = rect.height > 0 ? Math.round(rect.height) : 0
+
+    return {
+      ...itemData,
+      src,
+      msrc: src,
+      width: Math.max(width, renderedW, 1),
+      height: Math.max(height, renderedH, 1),
+      alt: image.alt
+    }
+  }
+
+  return {
+    ...itemData,
+    src,
+    msrc: src,
+    width,
+    height,
+    alt: image.alt
+  }
+}
+
+const photoSwipeInit = () => {
+  photoSwipeLightbox?.destroy()
+  restoreImageViewerSideEffects()
+
+  photoSwipeLightbox = new PhotoSwipeLightbox({
+    gallery: 'body',
+    children: '.main img',
+    bgOpacity: 0.92,
+    padding: { top: 18, bottom: 18, left: 18, right: 18 },
+    showHideAnimationType: 'none',
+    pswpModule: () => import('photoswipe')
+  })
+
+  photoSwipeLightbox.addFilter('domItemData', createPhotoSwipeItemData)
+
+  photoSwipeLightbox.on('beforeOpen', () => {
     document.querySelectorAll('.shiki [data-language]').forEach((el) => {
       if (el instanceof HTMLElement) {
         el.style.display = 'none'
       }
     })
 
-    // Add a class to body to prevent scrolling
     document.body.style.overflow = 'hidden'
   })
 
-  zoom.on('close', () => {
-    // Restore code language labels when zoom is closed
-    document.querySelectorAll('.shiki [data-language]').forEach((el) => {
-      if (el instanceof HTMLElement) {
-        el.style.display = ''
-      }
-    })
-
-    // Restore body scrolling
-    document.body.style.overflow = ''
-  })
+  photoSwipeLightbox.on('close', restoreImageViewerSideEffects)
+  photoSwipeLightbox.on('destroy', restoreImageViewerSideEffects)
+  photoSwipeLightbox.init()
 }
 
 export {
@@ -150,5 +212,5 @@ export {
   useYearSort,
   useMonthYearSort,
   calculateWords,
-  mediumZoomInit
+  photoSwipeInit
 }

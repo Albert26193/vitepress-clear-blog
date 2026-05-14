@@ -1,23 +1,33 @@
 /**
  * @vitest-environment jsdom
  */
-import mediumZoom from 'medium-zoom'
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Post, PostFrontMatter } from '../../../src/types/types.d'
 import {
   calculateWords,
   initTags,
-  mediumZoomInit,
+  photoSwipeInit,
   useMonthYearSort,
   useYearSort
 } from '../../../src/utils/client/posts'
 
-vi.mock('medium-zoom', () => {
-  const on = vi.fn()
-  const off = vi.fn()
-  const zoom = vi.fn(() => ({ on, off }))
-  return { default: zoom }
+const mockAddFilter = vi.fn()
+const mockOn = vi.fn()
+const mockInit = vi.fn()
+const mockDestroy = vi.fn()
+
+vi.mock('photoswipe/lightbox', () => {
+  const lightbox = vi.fn(function PhotoSwipeLightboxMock() {
+    return {
+      addFilter: mockAddFilter,
+      on: mockOn,
+      init: mockInit,
+      destroy: mockDestroy
+    }
+  })
+  return { default: lightbox }
 })
 
 function makePost(date: string, tags: string[], content: string = ''): Post {
@@ -296,73 +306,253 @@ describe('calculateWords', () => {
   })
 })
 
-describe('mediumZoomInit', () => {
+describe('photoSwipeInit', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    document.body.style.overflow = ''
+    document.body.innerHTML = ''
   })
 
-  it('initializes medium-zoom on .main img and .mermaid-diagram selectors', () => {
+  const getRegisteredFilter = () => {
+    const call = mockAddFilter.mock.calls.find(
+      (args) => args[0] === 'domItemData'
+    )
+    return call?.[1] as
+      | ((itemData: any, element: HTMLElement) => any)
+      | undefined
+  }
+
+  const getRegisteredHandler = (eventName: string) => {
+    const call = mockOn.mock.calls.find((args) => args[0] === eventName)
+    return call?.[1] as (() => void) | undefined
+  }
+
+  it('initializes PhotoSwipe on article images', () => {
     document.body.innerHTML = `
       <div class="main">
         <img src="test.png" alt="test" />
       </div>
     `
-    expect(() => mediumZoomInit()).not.toThrow()
-  })
 
-  it('calls mediumZoom with correct selector and options', () => {
-    document.body.innerHTML = '<div class="main"><img src="x.png" /></div>'
-    mediumZoomInit()
-    expect(mediumZoom).toHaveBeenCalledWith(
-      '.main img, .mermaid-diagram',
+    expect(() => photoSwipeInit()).not.toThrow()
+    expect(PhotoSwipeLightbox).toHaveBeenCalledWith(
       expect.objectContaining({
-        background: 'var(--vp-c-bg)',
-        margin: 18,
-        scrollOffset: 80
+        gallery: 'body',
+        children: '.main img',
+        pswpModule: expect.any(Function)
       })
     )
+    expect(mockInit).toHaveBeenCalledTimes(1)
   })
 
-  it('registers open and close handlers', () => {
-    document.body.innerHTML = '<div class="main"><img src="x.png" /></div>'
-    mediumZoomInit()
+  it('registers PhotoSwipe item data and lifecycle handlers', () => {
+    photoSwipeInit()
 
-    const zoomInstance = (mediumZoom as any).mock.results[0].value
-    expect(zoomInstance.on).toHaveBeenCalledWith('open', expect.any(Function))
-    expect(zoomInstance.on).toHaveBeenCalledWith('close', expect.any(Function))
+    expect(mockAddFilter).toHaveBeenCalledWith(
+      'domItemData',
+      expect.any(Function)
+    )
+    expect(mockOn).toHaveBeenCalledWith('beforeOpen', expect.any(Function))
+    expect(mockOn).toHaveBeenCalledWith('close', expect.any(Function))
+    expect(mockOn).toHaveBeenCalledWith('destroy', expect.any(Function))
   })
 
-  it('sets body overflow to hidden on zoom open', () => {
+  it('maps image elements to PhotoSwipe item data', () => {
+    document.body.innerHTML = `
+      <div class="main">
+        <img src="test.png" alt="test image" width="640" height="360" />
+      </div>
+    `
+    photoSwipeInit()
+
+    const filter = getRegisteredFilter()
+    const image = document.querySelector('img') as HTMLImageElement
+    const itemData = filter?.({}, image)
+
+    expect(itemData).toMatchObject({
+      src: expect.stringContaining('test.png'),
+      msrc: expect.stringContaining('test.png'),
+      width: 640,
+      height: 360,
+      alt: 'test image'
+    })
+  })
+
+  it('uses rendered image dimensions when natural and attribute dimensions are missing', () => {
+    document.body.innerHTML = `
+      <div class="main">
+        <img src="test.png" alt="test image" />
+      </div>
+    `
+    photoSwipeInit()
+
+    const filter = getRegisteredFilter()
+    const image = document.querySelector('img') as HTMLImageElement
+    vi.spyOn(image, 'getBoundingClientRect').mockReturnValue({
+      width: 320,
+      height: 180,
+      x: 0,
+      y: 0,
+      top: 0,
+      right: 320,
+      bottom: 180,
+      left: 0,
+      toJSON: () => ({})
+    })
+    const itemData = filter?.({}, image)
+
+    expect(itemData).toMatchObject({
+      width: 320,
+      height: 180
+    })
+  })
+
+  it('falls back to one pixel dimensions when the image has no measurable size', () => {
+    document.body.innerHTML = `
+      <div class="main">
+        <img src="test.png" alt="test image" />
+      </div>
+    `
+    photoSwipeInit()
+
+    const filter = getRegisteredFilter()
+    const image = document.querySelector('img') as HTMLImageElement
+    const itemData = filter?.({}, image)
+
+    expect(itemData).toMatchObject({
+      width: 1,
+      height: 1
+    })
+  })
+
+  it('maps Mermaid image output to PhotoSwipe item data using attribute dimensions', () => {
+    document.body.innerHTML = `
+      <div class="main">
+        <div class="mermaid-diagram">
+          <img class="mermaid-img" src="data:image/svg+xml,%3Csvg%3E%3C/svg%3E" alt="Mermaid diagram" width="800" height="400" />
+        </div>
+      </div>
+    `
+    photoSwipeInit()
+
+    const filter = getRegisteredFilter()
+    const image = document.querySelector('.mermaid-img') as HTMLImageElement
+    vi.spyOn(image, 'getBoundingClientRect').mockReturnValue({
+      width: 100,
+      height: 50,
+      x: 0,
+      y: 0,
+      top: 0,
+      right: 100,
+      bottom: 50,
+      left: 0,
+      toJSON: () => ({})
+    })
+    const itemData = filter?.({}, image)
+
+    expect(itemData).toMatchObject({
+      src: expect.stringContaining('data:image/svg+xml'),
+      msrc: expect.stringContaining('data:image/svg+xml'),
+      width: 800,
+      height: 400,
+      alt: 'Mermaid diagram'
+    })
+  })
+
+  it('uses rendered size for SVG when larger than viewBox dimensions', () => {
+    document.body.innerHTML = `
+      <div class="main">
+        <div class="mermaid-diagram">
+          <img class="mermaid-img" src="data:image/svg+xml,%3Csvg%3E%3C/svg%3E" alt="Mermaid diagram" width="111" height="174" />
+        </div>
+      </div>
+    `
+    photoSwipeInit()
+
+    const filter = getRegisteredFilter()
+    const image = document.querySelector('.mermaid-img') as HTMLImageElement
+    vi.spyOn(image, 'getBoundingClientRect').mockReturnValue({
+      width: 600,
+      height: 400,
+      x: 0,
+      y: 0,
+      top: 0,
+      right: 600,
+      bottom: 400,
+      left: 0,
+      toJSON: () => ({})
+    })
+    const itemData = filter?.({}, image)
+
+    expect(itemData).toMatchObject({
+      src: expect.stringContaining('data:image/svg+xml'),
+      msrc: expect.stringContaining('data:image/svg+xml'),
+      width: 600,
+      height: 400,
+      alt: 'Mermaid diagram'
+    })
+  })
+
+  it('keeps existing item data for non-image elements and images without a source', () => {
+    photoSwipeInit()
+
+    const filter = getRegisteredFilter()
+    const originalItemData = { html: '<p>custom</p>' }
+    expect(filter?.(originalItemData, document.createElement('div'))).toBe(
+      originalItemData
+    )
+
+    const image = document.createElement('img')
+    expect(filter?.(originalItemData, image)).toBe(originalItemData)
+  })
+
+  it('uses a lazy PhotoSwipe module import', async () => {
+    photoSwipeInit()
+
+    const options = vi.mocked(PhotoSwipeLightbox).mock.calls.at(-1)?.[0] as {
+      pswpModule: () => Promise<unknown>
+    }
+    await expect(options.pswpModule()).resolves.toBeDefined()
+  })
+
+  it('sets body overflow and hides code labels before opening', () => {
     document.body.innerHTML = `
       <div class="main"><img src="x.png" /></div>
       <span class="shiki"><span data-language="js">code</span></span>
     `
-    mediumZoomInit()
+    photoSwipeInit()
 
-    const zoomInstance = (mediumZoom as any).mock.results[0].value
-    // Simulate zoom open
-    const openHandler = zoomInstance.on.mock.calls.find(
-      (call: any[]) => call[0] === 'open'
-    )[1]
-    openHandler()
+    getRegisteredHandler('beforeOpen')?.()
+
     expect(document.body.style.overflow).toBe('hidden')
+    expect(
+      (document.querySelector('[data-language]') as HTMLElement).style.display
+    ).toBe('none')
   })
 
-  it('restores body overflow on zoom close', () => {
+  it('restores body overflow and code labels on close', () => {
     document.body.innerHTML = `
       <div class="main"><img src="x.png" /></div>
-      <span class="shiki"><span data-language="js">code</span></span>
+      <span class="shiki"><span data-language="js" style="display: none">code</span></span>
     `
-    // Set initial state simulating zoom is open
     document.body.style.overflow = 'hidden'
+    photoSwipeInit()
 
-    mediumZoomInit()
+    getRegisteredHandler('close')?.()
 
-    const zoomInstance = (mediumZoom as any).mock.results[0].value
-    const closeHandler = zoomInstance.on.mock.calls.find(
-      (call: any[]) => call[0] === 'close'
-    )[1]
-    closeHandler()
     expect(document.body.style.overflow).toBe('')
+    expect(
+      (document.querySelector('[data-language]') as HTMLElement).style.display
+    ).toBe('')
+  })
+
+  it('destroys previous PhotoSwipe instance when reinitializing', () => {
+    photoSwipeInit()
+    const destroyCallsAfterFirstInit = mockDestroy.mock.calls.length
+
+    photoSwipeInit()
+
+    expect(mockDestroy.mock.calls.length).toBe(destroyCallsAfterFirstInit + 1)
+    expect(PhotoSwipeLightbox).toHaveBeenCalledTimes(2)
   })
 })

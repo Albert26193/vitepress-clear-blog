@@ -318,14 +318,17 @@
   align-items: center;
 }
 
-/* for medium-zoom overlay fix */
-.medium-zoom-overlay,
-.medium-zoom-image--opened {
-  z-index: 9999 !important;
+/* for photoswipe overlay */
+.pswp {
+  z-index: 9999;
 }
 
-.medium-zoom-overlay {
+.pswp__bg {
   backdrop-filter: blur(4px);
+}
+
+.main img {
+  cursor: zoom-in;
 }
 
 /* for code-fold color */

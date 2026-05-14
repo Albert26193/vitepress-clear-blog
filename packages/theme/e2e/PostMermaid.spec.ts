@@ -1,33 +1,68 @@
 import { expect, test } from '@playwright/test'
 
 test.describe('PostMermaid', () => {
-  test('mermaid diagram renders SVG', async ({ page }) => {
+  test('mermaid diagram renders as an SVG image', async ({ page }) => {
     await page.goto('/blogs/test/mermaid')
-    await page.waitForTimeout(2000)
 
-    const mermaid = page.locator('.mermaid-diagram, .mermaid-img')
-    if ((await mermaid.count()) > 0) {
-      await expect(mermaid.first()).toBeVisible()
-    }
+    const mermaidImage = page.locator('.mermaid-img').first()
+    await expect(mermaidImage).toBeVisible()
+    await expect(mermaidImage).toHaveAttribute('src', /^data:image\/svg\+xml/)
   })
 
-  test('mermaid SVG has non-zero dimensions', async ({ page }) => {
+  test('mermaid SVG image has non-zero dimensions', async ({ page }) => {
     await page.goto('/blogs/test/mermaid')
-    await page.waitForTimeout(2000)
 
-    const svg = page.locator('.mermaid-diagram svg, .mermaid-img svg').first()
-    if ((await svg.count()) > 0) {
-      const box = await svg.boundingBox()
-      if (box) {
-        expect(box.width).toBeGreaterThan(0)
-        expect(box.height).toBeGreaterThan(0)
-      }
-    }
+    const mermaidImage = page.locator('.mermaid-img').first()
+    await expect(mermaidImage).toBeVisible()
+
+    const box = await mermaidImage.boundingBox()
+    expect(box?.width).toBeGreaterThan(0)
+    expect(box?.height).toBeGreaterThan(0)
+  })
+
+  test('opens PhotoSwipe for article images', async ({ page }) => {
+    await page.goto('/blogs/test/mermaid')
+
+    const articleImage = page.locator('.main img:not(.mermaid-img)').first()
+    await expect(articleImage).toBeVisible()
+    await articleImage.click()
+
+    await expect(page.locator('.pswp')).toBeVisible()
+    await expect(page.locator('.pswp.pswp--ui-visible')).toBeVisible()
+    await page.evaluate(() => {
+      const photoSwipe = (
+        window as unknown as {
+          pswp?: { close: () => void }
+        }
+      ).pswp
+      photoSwipe?.close()
+    })
+    await expect(page.locator('.pswp')).toBeHidden()
+  })
+
+  test('opens PhotoSwipe for Mermaid images', async ({ page }) => {
+    await page.goto('/blogs/test/mermaid')
+
+    const mermaidImage = page.locator('.mermaid-img').first()
+    await expect(mermaidImage).toBeVisible()
+    await expect(mermaidImage).toHaveAttribute('src', /^data:image\/svg\+xml/)
+    await mermaidImage.click()
+
+    await expect(page.locator('.pswp')).toBeVisible()
+    await expect(page.locator('.pswp.pswp--ui-visible')).toBeVisible()
+    await page.evaluate(() => {
+      const photoSwipe = (
+        window as unknown as {
+          pswp?: { close: () => void }
+        }
+      ).pswp
+      photoSwipe?.close()
+    })
+    await expect(page.locator('.pswp')).toBeHidden()
   })
 
   test('mermaid container exists on page', async ({ page }) => {
     await page.goto('/blogs/test/mermaid')
-    // Page should at minimum render without errors
     await expect(page.locator('h1').first()).toBeVisible()
   })
 })

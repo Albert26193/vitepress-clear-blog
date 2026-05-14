@@ -1,3 +1,5 @@
+// styles
+import 'photoswipe/style.css'
 import 'virtual:uno.css'
 import { siteMetadata } from 'virtual:vitepress-analyzer'
 import type { EnhanceAppContext, Theme } from 'vitepress'
@@ -22,9 +24,8 @@ import D3PageSidebar from './components/d3/D3PageSidebar.vue'
 import Homepage from './components/homepage/Homepage.vue'
 import SidebarLink from './components/sidebar/SidebarLink.vue'
 import SidebarTag from './components/sidebar/SidebarTag.vue'
-// styles
 import './styles/index.scss'
-import { mediumZoomInit } from './utils/client'
+import { photoSwipeInit } from './utils/client'
 import {
   addClassForHetiElement,
   markBrokenLinks,
@@ -119,18 +120,17 @@ export const BlogTheme: Theme = {
     const route = useRoute()
     setupCodeBlockFold()
     onMounted(() => {
-      nextTick(() => {
-        addClassForHetiElement()
-        registerHetiScript()
-      }).catch()
-      mediumZoomInit()
+      const refreshArticleEnhancements = () =>
+        nextTick(() => {
+          addClassForHetiElement()
+          registerHetiScript()
+          photoSwipeInit()
+        }).catch()
+
+      refreshArticleEnhancements()
       watch(
         () => route.path,
-        () =>
-          nextTick(() => {
-            addClassForHetiElement()
-            registerHetiScript()
-          }).catch()
+        () => refreshArticleEnhancements()
       )
     })
   }
