@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { createConfig } from '../src/node/config'
 import { extractInnerLinks } from '../src/node/parsers/link'
@@ -23,6 +23,10 @@ const readMarkdown = (fileName: string): string => {
 // Get the absolute path to the test directory for resolving test files
 const testRoot = path.resolve(__dirname)
 const getTestPath = (filePath: string) => path.resolve(testRoot, filePath)
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('Path Resolution and Validation', () => {
   /**
@@ -91,6 +95,64 @@ describe('Path Resolution and Validation', () => {
         relativePath: 'attach/doc1',
         type: 'markdown'
       })
+    })
+
+    it('should not resolve directory paths to index.md or README.md', () => {
+      const content = [
+        '[Directory Index](./directory-index/)',
+        '[Directory README](./directory-readme/)',
+        '[Absolute Directory](/attach/directory-index/)',
+        '[[directory-index]]'
+      ].join('\n')
+      const links = extractInnerLinks(content, testConfig, 'attach/test.md')
+
+      expect(links).toHaveLength(0)
+    })
+
+    it('should resolve explicit markdown index.md and README.md links', () => {
+      const content = [
+        '[Directory Index](./directory-index/index.md)',
+        '[Directory README](./directory-readme/README.md)'
+      ].join('\n')
+      const links = extractInnerLinks(content, testConfig, 'attach/test.md')
+
+      expect(links).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            absolutePath: getTestPath('attach/directory-index/index.md'),
+            relativePath: 'attach/directory-index/index',
+            type: 'markdown'
+          }),
+          expect.objectContaining({
+            absolutePath: getTestPath('attach/directory-readme/README.md'),
+            relativePath: 'attach/directory-readme/README',
+            type: 'markdown'
+          })
+        ])
+      )
+    })
+
+    it('should resolve explicit wiki index and README links', () => {
+      const content = [
+        '[[directory-index/index]]',
+        '[[directory-readme/README]]'
+      ].join('\n')
+      const links = extractInnerLinks(content, testConfig, 'attach/test.md')
+
+      expect(links).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            absolutePath: getTestPath('attach/directory-index/index'),
+            relativePath: 'attach/directory-index/index',
+            type: 'wiki'
+          }),
+          expect.objectContaining({
+            absolutePath: getTestPath('attach/directory-readme/README'),
+            relativePath: 'attach/directory-readme/README',
+            type: 'wiki'
+          })
+        ])
+      )
     })
 
     it('should handle special characters in paths', () => {
