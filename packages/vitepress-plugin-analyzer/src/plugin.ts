@@ -19,18 +19,25 @@ import {
 export function vitePressAnalyzerPlugin(
   userConfig?: Partial<AnalyzerConfig>
 ): Plugin {
-  // Create configuration
   const config = createConfig(userConfig)
 
-  // Store analysis results
   const siteMetadata: SiteMetadata = {}
   const sitePages: SitePages = {}
 
   const runAnalysis = async () => {
-    const { globalMetadata, globalPages } = await analyzeAllDocuments(config)
+    const result = await analyzeAllDocuments(config)
 
-    Object.assign(siteMetadata, globalMetadata)
-    Object.assign(sitePages, globalPages)
+    result.match(
+      ({ globalMetadata, globalPages }) => {
+        Object.assign(siteMetadata, globalMetadata)
+        Object.assign(sitePages, globalPages)
+      },
+      (error) => {
+        console.error(
+          `[vitepress-analyzer] Unexpected fatal error: ${error.message}`
+        )
+      }
+    )
   }
 
   return {

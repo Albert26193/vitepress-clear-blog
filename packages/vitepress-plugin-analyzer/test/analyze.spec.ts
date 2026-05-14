@@ -105,7 +105,9 @@ describe('Document Analyzer', () => {
       })
 
       // Analyze all documents in the test directory
-      const { globalMetadata } = await analyzeAllDocuments(testDirConfig)
+      const { globalMetadata } = (
+        await analyzeAllDocuments(testDirConfig)
+      )._unsafeUnwrap()
 
       // Check that we have metadata for doc1 and doc2
       expect(globalMetadata['doc1']).toBeDefined()
@@ -139,7 +141,9 @@ describe('Document Analyzer', () => {
         ignoreCase: true
       })
 
-      const { globalMetadata } = await analyzeAllDocuments(testDirConfig)
+      const { globalMetadata } = (
+        await analyzeAllDocuments(testDirConfig)
+      )._unsafeUnwrap()
 
       expect(globalMetadata['links-wiki'].outgoingLinks).toEqual(
         expect.arrayContaining([
@@ -191,12 +195,13 @@ describe('Document Analyzer', () => {
         excludeDirs: ['deep']
       })
 
-      await scanDirectory(
+      const result = await scanDirectory(
         resolve(__dirname, 'attach'),
         configWithExcludedDirs,
         globalMetadata,
         globalPages
       )
+      if (result.isErr()) throw result.error
 
       // Files in deep/ should not be scanned
       const deepFiles = Object.keys(globalMetadata).filter((k) =>
@@ -216,12 +221,13 @@ describe('Document Analyzer', () => {
         excludeFiles: ['doc1']
       })
 
-      await scanDirectory(
+      const result2 = await scanDirectory(
         resolve(__dirname, 'attach'),
         configWithExcludedFiles,
         globalMetadata,
         globalPages
       )
+      if (result2.isErr()) throw result2.error
 
       expect(globalMetadata['doc1']).toBeUndefined()
       expect(globalMetadata['doc2']).toBeDefined()

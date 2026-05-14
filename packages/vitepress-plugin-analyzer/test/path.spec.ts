@@ -278,7 +278,13 @@ describe('resolveLinkMultiMode — obsidianShortest', () => {
   let sharedIndex: Map<string, string[]>
 
   beforeAll(async () => {
-    sharedIndex = await buildFilenameIndex(testRoot, testConfig)
+    const result = await buildFilenameIndex(testRoot, testConfig)
+    sharedIndex = result.match(
+      (idx) => idx,
+      (e) => {
+        throw e
+      }
+    )
   })
 
   it('resolves a short name to a unique file anywhere in the tree', () => {
@@ -402,7 +408,13 @@ describe('resolveLinkMultiMode — obsidianShortest integration', () => {
   let sharedIndex: Map<string, string[]>
 
   beforeAll(async () => {
-    sharedIndex = await buildFilenameIndex(testRoot, testConfig)
+    const result = await buildFilenameIndex(testRoot, testConfig)
+    sharedIndex = result.match(
+      (idx) => idx,
+      (e) => {
+        throw e
+      }
+    )
   })
 
   it('falls back to obsidianShortest when earlier modes fail', () => {
@@ -463,7 +475,7 @@ describe('buildFilenameIndex', () => {
 
   it('maps unique basename to single entry', async () => {
     const idxConfig = createConfig({ ...testConfig, docsDir: tmpDir })
-    const index = await buildFilenameIndex(tmpDir, idxConfig)
+    const index = (await buildFilenameIndex(tmpDir, idxConfig))._unsafeUnwrap()
 
     expect(index.get('page-a')).toEqual([path.join(tmpDir, 'page-a.md')])
     expect(index.get('page-c')).toEqual([path.join(tmpDir, 'sub', 'page-c.md')])
@@ -471,7 +483,7 @@ describe('buildFilenameIndex', () => {
 
   it('maps duplicate basename to multiple entries', async () => {
     const idxConfig = createConfig({ ...testConfig, docsDir: tmpDir })
-    const index = await buildFilenameIndex(tmpDir, idxConfig)
+    const index = (await buildFilenameIndex(tmpDir, idxConfig))._unsafeUnwrap()
 
     const entries = index.get('page-b')
     expect(entries).toHaveLength(2)
@@ -485,7 +497,7 @@ describe('buildFilenameIndex', () => {
       docsDir: tmpDir,
       ignoreCase: true
     })
-    const index = await buildFilenameIndex(tmpDir, idxConfig)
+    const index = (await buildFilenameIndex(tmpDir, idxConfig))._unsafeUnwrap()
 
     expect(index.has('page-a')).toBe(true)
     expect(index.has('Page-A')).toBe(false)
@@ -497,7 +509,7 @@ describe('buildFilenameIndex', () => {
       docsDir: tmpDir,
       ignoreCase: false
     })
-    const index = await buildFilenameIndex(tmpDir, idxConfig)
+    const index = (await buildFilenameIndex(tmpDir, idxConfig))._unsafeUnwrap()
 
     expect(index.has('page-a')).toBe(true)
   })
@@ -512,7 +524,7 @@ describe('buildFilenameIndex', () => {
       docsDir: tmpDir,
       excludeDirs: [...testConfig.excludeDirs, '_ignored']
     })
-    const index = await buildFilenameIndex(tmpDir, idxConfig)
+    const index = (await buildFilenameIndex(tmpDir, idxConfig))._unsafeUnwrap()
 
     expect(index.has('hidden')).toBe(false)
 
@@ -527,7 +539,7 @@ describe('buildFilenameIndex', () => {
       docsDir: tmpDir,
       excludeFiles: ['draft-']
     })
-    const index = await buildFilenameIndex(tmpDir, idxConfig)
+    const index = (await buildFilenameIndex(tmpDir, idxConfig))._unsafeUnwrap()
 
     expect(index.has('draft-notes')).toBe(false)
     expect(index.has('page-a')).toBe(true)
