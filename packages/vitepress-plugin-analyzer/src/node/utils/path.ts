@@ -1,5 +1,5 @@
 import { ResultAsync, ok, okAsync } from 'neverthrow'
-import { existsSync } from 'node:fs'
+import { existsSync, statSync } from 'node:fs'
 import {
   basename,
   dirname,
@@ -30,8 +30,11 @@ const normalizeLink = (link: string): string => link.split('#')[0]
  * Supports both with and without .md extension.
  */
 const linkedFileExists = (absolutePath: string): boolean => {
-  if (existsSync(absolutePath)) return true
-  if (!absolutePath.endsWith('.md')) return existsSync(absolutePath + '.md')
+  if (existsSync(absolutePath) && statSync(absolutePath).isFile()) return true
+  if (!absolutePath.endsWith('.md')) {
+    const markdownPath = `${absolutePath}.md`
+    return existsSync(markdownPath) && statSync(markdownPath).isFile()
+  }
   return false
 }
 
