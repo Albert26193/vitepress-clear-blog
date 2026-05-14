@@ -42,6 +42,15 @@
     return svg
   }
 
+  const parseSize = (size: string | number | null): number | null => {
+    if (typeof size === 'number')
+      return Number.isFinite(size) && size > 0 ? size : null
+    if (!size || size.trim().endsWith('%')) return null
+
+    const parsed = Number.parseFloat(size.replace('px', ''))
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null
+  }
+
   const extractSvgDimensions = (svgString: string): SvgDimensions => {
     const parser = new DOMParser()
     const doc = parser.parseFromString(svgString, 'image/svg+xml')
@@ -51,24 +60,19 @@
       return { width: null, height: null }
     }
 
-    let width: string | number | null = svgElement.getAttribute('width')
-    let height: string | number | null = svgElement.getAttribute('height')
+    const viewBox = svgElement.getAttribute('viewBox')
+    const viewBoxSize = viewBox ? viewBox.split(' ').map(Number) : []
+    const [, , vbWidth, vbHeight] = viewBoxSize
 
-    if (!width || !height) {
-      const viewBox = svgElement.getAttribute('viewBox')
-      if (viewBox) {
-        const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number)
-        width = width || vbWidth
-        height = height || vbHeight
-      }
-    }
+    let width: string | number | null = parseSize(
+      svgElement.getAttribute('width')
+    )
+    let height: string | number | null = parseSize(
+      svgElement.getAttribute('height')
+    )
 
-    const parseSize = (size: string | number | null): number | null => {
-      if (!size) return null
-      return typeof size === 'string'
-        ? parseFloat(size.replace('px', ''))
-        : size
-    }
+    if (!width && vbWidth > 0) width = vbWidth
+    if (!height && vbHeight > 0) height = vbHeight
 
     return {
       width: parseSize(width),

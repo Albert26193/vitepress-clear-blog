@@ -209,12 +209,12 @@ importers:
       markdown-it-wikilinks:
         specifier: ^1.4.0
         version: 1.4.0
-      medium-zoom:
-        specifier: ^1.1.0
-        version: 1.1.0
       mermaid:
         specifier: ^11.12.2
         version: 11.12.2
+      photoswipe:
+        specifier: ^5.4.4
+        version: 5.4.4
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -3789,9 +3789,6 @@ packages:
   mdurl@2.0.0:
     resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
 
-  medium-zoom@1.1.0:
-    resolution: {integrity: sha512-ewyDsp7k4InCUp3jRmwHBRFGyjBimKps/AJLjRSox+2q/2H4p/PNpQf+pwONWlJiOudkBXtbdmVbFjqyybfTmQ==}
-
   mensch@0.3.4:
     resolution: {integrity: sha512-IAeFvcOnV9V0Yk+bFhYR07O3yNina9ANIN5MoXBKYJ/RLYPurd2d0yw14MDhpr9/momp0WofT1bPUh3hkzdi/g==}
 
@@ -4111,6 +4108,10 @@ packages:
 
   perfect-debounce@2.1.0:
     resolution: {integrity: sha512-LjgdTytVFXeUgtHZr9WYViYSM/g8MkcTPYDlPa3cDqMirHjKiSZPYd6DoL7pK8AJQr+uWkQvCjHNdiMqsrJs+g==}
+
+  photoswipe@5.4.4:
+    resolution: {integrity: sha512-WNFHoKrkZNnvFFhbHL93WDkW3ifwVOXSW3w1UuZZelSmgXpIGiZSNlZJq37rR8YejqME2rHs9EhH9ZvlvFH2NA==}
+    engines: {node: '>= 0.12.0'}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -6832,7 +6833,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.6(@types/node@25.5.0)(@vitest/coverage-v8@4.1.6)(happy-dom@20.9.0)(jsdom@26.1.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))
+      vitest: 4.1.6(@types/node@25.0.6)(@vitest/coverage-v8@4.1.6)(happy-dom@20.9.0)(jsdom@26.1.0)(vite@7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))
 
   '@vitest/expect@4.1.6':
     dependencies:
@@ -8721,8 +8722,6 @@ snapshots:
 
   mdurl@2.0.0: {}
 
-  medium-zoom@1.1.0: {}
-
   mensch@0.3.4: {}
 
   meow@13.2.0: {}
@@ -9140,6 +9139,8 @@ snapshots:
   perfect-debounce@1.0.0: {}
 
   perfect-debounce@2.1.0: {}
+
+  photoswipe@5.4.4: {}
 
   picocolors@1.1.1: {}
 
