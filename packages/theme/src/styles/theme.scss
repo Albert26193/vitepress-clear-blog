@@ -320,6 +320,9 @@
 
 /* for photoswipe overlay */
 .pswp {
+  --pswp-bg: var(--vp-c-bg);
+  --pswp-icon-color: var(--vp-c-text-1);
+  --pswp-icon-color-secondary: var(--vp-c-text-2);
   z-index: 9999;
 }
 
