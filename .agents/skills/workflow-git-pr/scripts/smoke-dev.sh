@@ -10,22 +10,56 @@
 set -euo pipefail
 
 LOG_FILE="$(mktemp /tmp/pnpm-dev.XXXXXX.log)"
-DEV_PID=""
+DEV_PGID=""
+
+#-----------------------------------------
+# overview: kill stale watchers left over from previous dev sessions.
+#           Targets tsup, vite, cpx, and esbuild processes still referencing
+#           this project directory.
+#-----------------------------------------
+pre_cleanup() {
+  local before after killed
+  before=$(ps aux | grep -cE "(vitepress dev|vite build --watch|tsup.*--watch|cpx.*-w)" 2>/dev/null || echo 0)
+  if [[ "${before}" -eq 0 ]]; then
+    return 0
+  fi
+
+  # Kill stale watchers still referencing this project directory
+  ps aux | grep "vitepress-clear-blog" | grep -v grep | \
+    grep -E "(pnpm|vite|tsup|cpx|vitepress|esbuild)" | \
+    awk '{print $2}' | xargs kill -9 2>/dev/null || true
+
+  after=$(ps aux | grep -cE "(vitepress dev|vite build --watch|tsup.*--watch|cpx.*-w)" 2>/dev/null || echo 0)
+  killed=$((before - after))
+  if [[ "${killed}" -gt 0 ]]; then
+    echo "Pre-cleanup: killed ${killed} stale watcher(s) (${before} → ${after})"
+  fi
+}
 
 cleanup() {
-  if [[ -n "${DEV_PID}" ]] && kill -0 "${DEV_PID}" 2>/dev/null; then
-    kill "${DEV_PID}" 2>/dev/null || true
-    wait "${DEV_PID}" 2>/dev/null || true
+  if [[ -n "${DEV_PGID}" ]]; then
+    # Kill the entire process group — pnpm dev spawns ~15-20 subprocesses
+    # (tsup watchers, vite build watchers, cpx copiers, esbuild services)
+    # and a plain kill on the top PID leaves orphans behind.
+    kill -TERM -- -"${DEV_PGID}" 2>/dev/null || true
+    sleep 1
+    # Force-kill any processes that survived SIGTERM
+    kill -KILL -- -"${DEV_PGID}" 2>/dev/null || true
+    wait 2>/dev/null || true
   fi
   rm -f "${LOG_FILE}"
 }
 trap cleanup EXIT
+
+echo "Checking for stale watchers..."
+pre_cleanup
 
 echo "Starting pnpm dev..."
 
 # Start pnpm dev in background, capturing both stdout and stderr
 pnpm dev > "${LOG_FILE}" 2>&1 &
 DEV_PID=$!
+DEV_PGID=$(ps -o pgid= -p "${DEV_PID}" 2>/dev/null | tr -d ' ')
 
 # Wait up to 60 seconds for the VitePress dev server to signal readiness.
 # VitePress prints "ready in" (or "⠏ building") and then the local URL.
