@@ -378,6 +378,10 @@ bash "$SKILL_DIR/scripts/create-pr.sh" \
 The script will:
 - Validate the current branch matches `issue-<id>-*`
 - **Validate exactly 1 commit ahead of base** (enforces the single-commit rule; rejects 0 or >1)
+- **Rebase onto latest `origin/master`** via the bundled `rebase-before-push.sh` script.
+  This fetches origin and rebases the current branch to avoid non-fast-forward
+  pushes. If a conflict is detected, the script aborts and reports the conflict
+  — resolve it manually, then re-run.
 - Push with `-u` upstream tracking
 - Create the PR via `gh pr create`
 - Print the PR URL
@@ -398,11 +402,14 @@ bash "$SKILL_DIR/scripts/smoke-dev.sh"
 ```
 
 What it does:
-1. Starts `pnpm dev` in background, capturing stdout + stderr to a temp file
-2. Waits up to 60 seconds for the VitePress dev server to print its URL
-3. If a fatal error appears or the process dies, reports it immediately
-4. On success, prints the URL, startup time, and any warnings
-5. Kills the dev process on exit (trap cleanup)
+1. **Pre-cleanup**: Kills stale watcher processes (tsup, vite, cpx, esbuild) from
+   previous dev sessions that still reference this project directory. Prevents
+   port conflicts and zombie process buildup.
+2. Starts `pnpm dev` in background, capturing stdout + stderr to a temp file
+3. Waits up to 60 seconds for the VitePress dev server to print its URL
+4. If a fatal error appears or the process dies, reports it immediately
+5. On success, prints the URL, startup time, and any warnings
+6. Kills the dev process on exit (trap cleanup)
 
 If the dev server fails to start:
 
@@ -428,8 +435,11 @@ Invoke `tool-ci-check` with the PR number from Step 6. It will:
    to Step 9
 4. If all jobs pass, continue to Step 9
 
-If CI is still `in_progress`, poll at 60-120 second intervals until all jobs
-complete. Do not proceed past this step until CI is fully green.
+If CI is still `in_progress`, poll at **120-second (2-minute) intervals**
+and expect 3–4 rounds total (~6–8 minutes) for all CI jobs to complete. If CI
+hasn't finished after 4 rounds (8 minutes), report the slow jobs and continue
+polling at the same interval. Do not proceed past this step until CI is fully
+green.
 
 If CI fails:
 
