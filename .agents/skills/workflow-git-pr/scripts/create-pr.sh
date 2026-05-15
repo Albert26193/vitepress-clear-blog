@@ -67,6 +67,14 @@ main() {
         body="Closes #${issue_id}"
     fi
 
+    # Rebase onto latest origin/master before pushing
+    local script_dir
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    if ! bash "${script_dir}/rebase-before-push.sh"; then
+        echo "error: rebase failed; fix conflicts and re-run" >&2
+        exit 1
+    fi
+
     # Push with upstream tracking
     git push -u origin "$branch"
 
