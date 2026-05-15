@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 import { calloutPlugin } from '../src/node/callout'
 import type { CalloutPluginOptions } from '../src/node/callout'
@@ -56,12 +56,9 @@ describe('calloutPlugin — custom types', () => {
   })
 
   it('rejects type names >= 20 characters', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     md.use(calloutPlugin)
     const html = render(md, '> [!abcdefghijklmnopqrst]\n> Body')
     expect(html).not.toContain('custom-block')
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('less than 20'))
-    warn.mockRestore()
   })
 })
 

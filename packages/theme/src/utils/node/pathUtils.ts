@@ -7,8 +7,6 @@ import path from 'path'
  */
 const getRootPath = () => {
   const rootPath = path.resolve(process.cwd())
-  // console.log('Current working directory:', process.cwd())
-  // console.log('Resolved root path:', rootPath)
   return rootPath
 }
 

@@ -1,4 +1,5 @@
 import { resolve } from 'path'
+import type { Logger } from 'vite'
 import type { Plugin } from 'vitepress'
 
 import { CONFIG_PATH } from './defaults'
@@ -12,9 +13,13 @@ import { generateThemeFile } from './node'
  * @returns A VitePress plugin that updates CSS during build and local development.
  */
 const generateThemePlugin = (configPath: string = CONFIG_PATH): Plugin => {
+  let vitepressLogger: Logger | undefined
+
   return {
     name: 'vite-plugin-generated-theme',
-    enforce: 'pre',
+    async configResolved(config) {
+      vitepressLogger = config.logger
+    },
     async buildStart() {
       const toml = loadConfig(configPath)
       await generateThemeFile(toml ?? configPath)
@@ -29,14 +34,16 @@ const generateThemePlugin = (configPath: string = CONFIG_PATH): Plugin => {
       server.watcher.add(configFilePath)
       server.watcher.on('change', async (file: string) => {
         if (file === configFilePath) {
-          console.log(
+          vitepressLogger?.info(
             `[vite-plugin-generated-theme] Config file changed: ${file}`
           )
           try {
             clearConfigCacheEntry(configPath)
             const toml = loadConfig(configPath)
             await generateThemeFile(toml ?? configPath)
-            console.log('[vite-plugin-generated-theme] Generated CSS updated')
+            vitepressLogger?.info(
+              '[vite-plugin-generated-theme] Generated CSS updated'
+            )
             const cssModule = server.moduleGraph.getModuleById(generatedCssPath)
             if (cssModule) {
               server.moduleGraph.invalidateModule(cssModule)
@@ -46,9 +53,8 @@ const generateThemePlugin = (configPath: string = CONFIG_PATH): Plugin => {
               path: '*'
             })
           } catch (error) {
-            console.error(
-              '[vite-plugin-generated-theme] Error generating theme:',
-              error
+            vitepressLogger?.error(
+              `[vite-plugin-generated-theme] Error generating theme: ${String(error)}`
             )
           }
         }

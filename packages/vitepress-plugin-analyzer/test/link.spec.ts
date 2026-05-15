@@ -163,7 +163,6 @@ describe('Path Resolution and Validation', () => {
         'attach/special-paths.md'
       )
 
-      console.log(links)
       expect(links.length).toBe(4)
 
       const simpleLink = links.find((link) =>
@@ -340,7 +339,6 @@ describe('Link Extraction Function Test', () => {
     )
 
     // Verify the number of extracted links
-    console.log(links)
     expect(links.length).toBe(3)
 
     // Verify link types
@@ -384,7 +382,6 @@ describe('Link Extraction Function Test', () => {
     const links = extractInnerLinks(content, testConfig, 'attach/links-wiki.md')
 
     // Verify the number of extracted links
-    console.log(links)
     expect(links.length).toBe(5)
 
     // Verify link types
@@ -404,7 +401,6 @@ describe('Link Extraction Function Test', () => {
     const content = readMarkdown('attach/links-wiki.md')
     const links = extractInnerLinks(content, testConfig, 'attach/links-wiki.md')
 
-    console.log(links)
     // Verify links in mixed paragraph
     expect(
       links.some((link) => link.text === 'fruits' && link.type === 'wiki')
@@ -427,7 +423,6 @@ describe('Link Extraction Function Test', () => {
   it('should validate file existence', () => {
     const content = `[Valid Link](./fruits.md)\n[Invalid Link](nonexistent.md)`
     const links = extractInnerLinks(content, testConfig, 'attach/test.md')
-    console.log(links)
     expect(links.some((link) => link.relativePath.includes('fruits'))).toBe(
       true
     )

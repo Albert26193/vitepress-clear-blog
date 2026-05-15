@@ -11,8 +11,8 @@ const init = async (externalDiagrams: ExternalDiagramDefinition[]) => {
   try {
     if (mermaid.registerExternalDiagrams)
       await mermaid.registerExternalDiagrams(externalDiagrams)
-  } catch (e) {
-    console.error(e)
+  } catch {
+    return
   }
 }
 

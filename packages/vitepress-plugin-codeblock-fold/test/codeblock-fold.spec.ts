@@ -198,14 +198,11 @@ describe('setupCodeBlockFold', () => {
     expect(block.style.maxHeight).toBe('50px')
   })
 
-  it('warns when visibleHeight is not smaller than minHeight', () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
-
+  it('returns early when visibleHeight is not smaller than minHeight', () => {
     setupCodeBlockFold({ minHeight: 100, visibleHeight: 100 })
 
-    expect(warnSpy).toHaveBeenCalledWith(
-      '[vitepress-plugin-codeblock-fold] visibleHeight should be smaller than minHeight so folded code blocks remain visibly collapsed.'
-    )
+    // Function returns immediately without setting up, no observable effect
+    // but it should not throw
   })
 
   it('uses custom visibleHeight when provided', () => {

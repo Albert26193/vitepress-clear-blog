@@ -1,5 +1,18 @@
-// import * as path from 'path'
-import type { AnalyzerConfig } from '../../../types'
+import type { AnalyzerConfig, AnalyzerLogLevel } from '../../../types'
+
+const normalizeLogLevel = (
+  level: string | undefined
+): AnalyzerLogLevel | undefined => {
+  if (
+    level === 'silent' ||
+    level === 'error' ||
+    level === 'warn' ||
+    level === 'info' ||
+    level === 'debug'
+  ) {
+    return level
+  }
+}
 
 const defaultConfig: AnalyzerConfig = {
   docsDir: 'docs',
@@ -9,7 +22,11 @@ const defaultConfig: AnalyzerConfig = {
   // maxSearchDepth: 5,
   ignoreCase: true,
   resolutionModes: ['repoRoot', 'absolutePath', 'relativeToCurrentFile'],
-  diagnostics: []
+  diagnostics: [],
+  logLevel:
+    normalizeLogLevel(process.env.VITEPRESS_ANALYZER_LOG_LEVEL) ??
+    normalizeLogLevel(process.env.ANALYZER_LOG_LEVEL) ??
+    (process.env.NODE_ENV === 'development' ? 'debug' : 'warn')
 }
 
 /**

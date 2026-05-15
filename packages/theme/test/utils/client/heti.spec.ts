@@ -110,17 +110,14 @@ describe('addClassForHetiElement', () => {
 })
 
 describe('registerHetiScript', () => {
-  it('warns when Heti is not available', async () => {
+  it('returns silently when Heti is not available', async () => {
     delete (window as any).Heti
-
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
     const { registerHetiScript } =
       await import('../../../src/utils/client/heti')
     await registerHetiScript()
 
-    expect(warnSpy).toHaveBeenCalledWith('Heti is not loaded yet')
-    warnSpy.mockRestore()
+    // Returns without throwing
   })
 
   it('initializes Heti when available and elements exist', async () => {

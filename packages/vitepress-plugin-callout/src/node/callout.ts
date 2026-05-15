@@ -90,9 +90,6 @@ const calloutPlugin = (
         }
 
         if (type.length >= 20) {
-          console.warn(
-            `[vitepress-plugin-callout] Invalid custom callout type: "${type}". Custom types must be less than 20 characters.`
-          )
           continue
         }
 

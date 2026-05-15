@@ -39,8 +39,12 @@ export const generateThemeFile = async (
     }
 
     const { issues } = validateConfigToml(raw, configPathOrToml)
-    for (const issue of issues) {
-      console.warn(`[config] ${issue.path}: ${issue.message}`)
+    if (issues.length > 0) {
+      throw new Error(
+        issues
+          .map((issue) => `[config] ${issue.path}: ${issue.message}`)
+          .join('\n')
+      )
     }
 
     theme = rawObj.theme as Record<string, unknown>

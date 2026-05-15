@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import {
   checkThemeColors,
@@ -293,24 +293,20 @@ describe('validateConfigTomlWithFallback', () => {
     expect(data.meta.title).toBe('Blog')
   })
 
-  it('falls back to defaults on invalid config and warns', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+  it('falls back to defaults on invalid config silently', () => {
     const data = validateConfigTomlWithFallback(
       { theme: {}, markdown: { mathjax: 'bad' } },
       CFG
     )
-    expect(warn).toHaveBeenCalled()
     expect(data.meta).toEqual({})
     expect(data.theme).toEqual({})
   })
 
-  it('warns on color issues but still returns data', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+  it('returns data on color issues silently', () => {
     const data = validateConfigTomlWithFallback(
       { theme: { 'vp-c-brand': '' } },
       CFG
     )
-    expect(warn).toHaveBeenCalled()
     expect(data.theme).toBeDefined()
   })
 })

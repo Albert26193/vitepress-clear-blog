@@ -33,7 +33,6 @@ afterEach(async () => {
  */
 const readTestFile = async (filename: string): Promise<string> => {
   const path = resolve(__dirname, 'attach', filename)
-  console.log('path', path)
   return readFile(path, 'utf-8')
 }
 
@@ -49,7 +48,6 @@ describe('Document Analyzer', () => {
         {}
       )
 
-      console.log('meta', metadata)
       expect(metadata).toMatchObject({
         firstHeading: 'Document 1',
         outgoingLinks: expect.arrayContaining([
@@ -94,7 +92,6 @@ describe('Document Analyzer', () => {
         {}
       )
 
-      console.log('metadata', metadata)
       // Doc2 has specific number of words (excluding frontmatter)
       expect(metadata.wordCount).toBe(16)
     })
@@ -182,7 +179,6 @@ describe('Document Analyzer', () => {
         {},
         {}
       )
-      console.log('metadata', metadata)
       expect(metadata.outgoingLinks).not.toContain(
         expect.objectContaining({
           text: 'Missing Document',
