@@ -47,9 +47,9 @@ test.describe('PostMermaid', () => {
     await expect(mermaidImage).toBeVisible()
     await expect(mermaidImage).toHaveAttribute('src', /^data:image\/svg\+xml/)
     await mermaidImage.click()
-
     await expect(page.locator('.pswp')).toBeVisible()
     await expect(page.locator('.pswp.pswp--ui-visible')).toBeVisible()
+    await expect(page.locator('.pswp__button--zoom')).toBeVisible()
     await page.evaluate(() => {
       const photoSwipe = (
         window as unknown as {

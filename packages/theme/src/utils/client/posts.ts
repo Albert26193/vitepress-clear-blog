@@ -110,6 +110,8 @@ const calculateWords = (content: string): number => {
 
 let photoSwipeLightbox: PhotoSwipeLightbox | null = null
 
+const SVG_SECONDARY_ZOOM_LEVEL = 2
+
 const restoreImageViewerSideEffects = () => {
   document.querySelectorAll('.shiki [data-language]').forEach((el) => {
     if (el instanceof HTMLElement) {
@@ -137,6 +139,11 @@ const getImageDimension = (
   return 1
 }
 
+const isSvgImage = (src: string): boolean => {
+  const normalizedSrc = src.split('#')[0].split('?')[0].toLowerCase()
+  return src.startsWith('data:image/svg+xml') || normalizedSrc.endsWith('.svg')
+}
+
 const createPhotoSwipeItemData = (
   itemData: SlideData,
   element: HTMLElement
@@ -147,12 +154,10 @@ const createPhotoSwipeItemData = (
   const src = image.currentSrc || image.src
   if (!src) return itemData
 
-  const isVectorSvg = src.startsWith('data:image/svg+xml')
   const width = getImageDimension(image, 'width')
   const height = getImageDimension(image, 'height')
 
-  // SVG data URLs have no intrinsic resolution — use rendered size so zoom works
-  if (isVectorSvg) {
+  if (isSvgImage(src)) {
     const rect = image.getBoundingClientRect()
     const renderedW = rect.width > 0 ? Math.round(rect.width) : 0
     const renderedH = rect.height > 0 ? Math.round(rect.height) : 0
@@ -163,6 +168,7 @@ const createPhotoSwipeItemData = (
       msrc: src,
       width: Math.max(width, renderedW, 1),
       height: Math.max(height, renderedH, 1),
+      secondaryZoomLevel: SVG_SECONDARY_ZOOM_LEVEL,
       alt: image.alt
     }
   }

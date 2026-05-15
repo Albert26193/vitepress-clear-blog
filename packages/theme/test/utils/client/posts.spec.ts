@@ -455,6 +455,7 @@ describe('photoSwipeInit', () => {
       msrc: expect.stringContaining('data:image/svg+xml'),
       width: 800,
       height: 400,
+      secondaryZoomLevel: 2,
       alt: 'Mermaid diagram'
     })
   })
@@ -489,7 +490,41 @@ describe('photoSwipeInit', () => {
       msrc: expect.stringContaining('data:image/svg+xml'),
       width: 600,
       height: 400,
+      secondaryZoomLevel: 2,
       alt: 'Mermaid diagram'
+    })
+  })
+
+  it('uses rendered size for linked SVG images', () => {
+    document.body.innerHTML = `
+      <div class="main">
+        <img src="/diagram.SVG?version=1#graph" alt="SVG diagram" width="120" height="80" />
+      </div>
+    `
+    photoSwipeInit()
+
+    const filter = getRegisteredFilter()
+    const image = document.querySelector('img') as HTMLImageElement
+    vi.spyOn(image, 'getBoundingClientRect').mockReturnValue({
+      width: 480,
+      height: 320,
+      x: 0,
+      y: 0,
+      top: 0,
+      right: 480,
+      bottom: 320,
+      left: 0,
+      toJSON: () => ({})
+    })
+    const itemData = filter?.({}, image)
+
+    expect(itemData).toMatchObject({
+      src: expect.stringContaining('/diagram.SVG'),
+      msrc: expect.stringContaining('/diagram.SVG'),
+      width: 480,
+      height: 320,
+      secondaryZoomLevel: 2,
+      alt: 'SVG diagram'
     })
   })
 

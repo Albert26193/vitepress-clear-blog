@@ -320,14 +320,19 @@
 
 /* for photoswipe overlay */
 .pswp {
-  --pswp-bg: var(--vp-c-bg);
-  --pswp-icon-color: var(--vp-c-text-1);
-  --pswp-icon-color-secondary: var(--vp-c-text-2);
+  --pswp-bg: rgba(8, 12, 20, 0.88);
+  --pswp-icon-color: rgba(255, 255, 255, 0.95);
+  --pswp-icon-color-secondary: rgba(255, 255, 255, 0.72);
   z-index: 9999;
 }
 
+.dark .pswp {
+  --pswp-bg: rgba(0, 0, 0, 0.82);
+}
+
 .pswp__bg {
-  backdrop-filter: blur(4px);
+  background: var(--pswp-bg) !important;
+  backdrop-filter: blur(8px);
 }
 
 .main img {
