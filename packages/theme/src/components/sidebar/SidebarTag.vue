@@ -88,7 +88,6 @@
     }
     // filter posts
     return posts.filter((post) => {
-      // console.log(post.regularPath, currentPath.value)
       // check if post has any of the current article's tags
       const postTags = post.frontMatter.tags || []
       // if no active tag, show all related posts

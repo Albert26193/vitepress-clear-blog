@@ -32,15 +32,13 @@ describe('init', () => {
   })
 
   it('handles errors from registerExternalDiagrams gracefully', async () => {
-    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     ;(mermaid.registerExternalDiagrams as any).mockRejectedValueOnce(
       new Error('Register failed')
     )
 
     await init([{ id: 'bad', detector: () => false } as any])
 
-    expect(errorSpy).toHaveBeenCalled()
-    errorSpy.mockRestore()
+    // Returns silently without throwing
   })
 
   it('skips call when registerExternalDiagrams is falsy', async () => {

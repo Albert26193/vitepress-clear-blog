@@ -275,9 +275,8 @@ const useHtmlPreview = (
       mainContent = mainContent.replace(/\[\^(\d+)\]/g, '')
 
       return mainContent
-    } catch (e) {
-      console.error('Error processing HTML preview:', e)
-      return html.substring(0, 200) + '...' // Fallback if DOM parsing fails
+    } catch {
+      return html.substring(0, 200) + '...'
     }
   })
 }

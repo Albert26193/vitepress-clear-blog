@@ -4,6 +4,8 @@ export type ResolutionMode =
   | 'relativeToCurrentFile'
   | 'obsidianShortest'
 
+export type AnalyzerLogLevel = 'silent' | 'error' | 'warn' | 'info' | 'debug'
+
 export interface AnalyzerConfig {
   docsDir: string
   excludeDirs: string[]
@@ -13,4 +15,5 @@ export interface AnalyzerConfig {
   resolutionModes: ResolutionMode[]
   filenameIndex?: Map<string, string[]>
   diagnostics: string[]
+  logLevel: AnalyzerLogLevel
 }

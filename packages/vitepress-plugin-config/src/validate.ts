@@ -160,26 +160,7 @@ export function validateConfigTomlWithFallback(
 ): ValidatedConfigToml {
   const result = configTomlSchema.safeParse(raw)
   if (!result.success) {
-    for (const issue of result.error.issues) {
-      const formatted = formatZodIssue(issue, sourcePath)
-      console.warn(
-        `[config] ${formatted.path}: ${formatted.message}` +
-          (formatted.expected
-            ? ` (expected ${formatted.expected}, got ${formatted.received})`
-            : '')
-      )
-    }
-    // Return best-effort fallback with defaults filled in
     return configTomlSchema.parse({ theme: {} })
-  }
-
-  // Warn about color format issues (non-fatal)
-  const colorIssues = checkThemeColors(
-    result.data.theme as Record<string, unknown> | undefined,
-    sourcePath
-  )
-  for (const issue of colorIssues) {
-    console.warn(`[config] ${issue.path}: ${issue.message}`)
   }
 
   return result.data

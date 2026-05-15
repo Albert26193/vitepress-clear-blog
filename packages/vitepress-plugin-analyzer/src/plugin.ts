@@ -4,6 +4,7 @@ import type { SiteMetadata, SitePages } from '../types'
 import type { AnalyzerConfig } from '../types'
 import { createConfig } from './node/config'
 import { analyzeAllDocuments } from './node/parsers/analyze'
+import { logger, setAnalyzerLogLevel } from './node/utils/logger'
 import {
   RESOLVED_VIRTUAL_MODULE_ID,
   VIRTUAL_MODULE_ID,
@@ -20,22 +21,28 @@ export function vitePressAnalyzerPlugin(
   userConfig?: Partial<AnalyzerConfig>
 ): Plugin {
   const config = createConfig(userConfig)
+  setAnalyzerLogLevel(config.logLevel)
 
   const siteMetadata: SiteMetadata = {}
   const sitePages: SitePages = {}
 
   const runAnalysis = async () => {
+    logger.info('Starting site analysis', { docsDir: config.docsDir })
+    const startedAt = Date.now()
     const result = await analyzeAllDocuments(config)
 
     result.match(
       ({ globalMetadata, globalPages }) => {
         Object.assign(siteMetadata, globalMetadata)
         Object.assign(sitePages, globalPages)
+        logger.info('Completed site analysis', {
+          documents: Object.keys(globalMetadata).length,
+          pages: Object.keys(globalPages).length,
+          durationMs: Date.now() - startedAt
+        })
       },
       (error) => {
-        console.error(
-          `[vitepress-analyzer] Unexpected fatal error: ${error.message}`
-        )
+        logger.error(`Unexpected fatal error: ${error.message}`)
       }
     )
   }
@@ -59,6 +66,10 @@ export function vitePressAnalyzerPlugin(
 
     load(id) {
       if (id === RESOLVED_VIRTUAL_MODULE_ID) {
+        logger.debug('Loading analyzer virtual module', {
+          documents: Object.keys(siteMetadata).length,
+          pages: Object.keys(sitePages).length
+        })
         return generateVirtualModuleContent(siteMetadata, sitePages)
       }
     }

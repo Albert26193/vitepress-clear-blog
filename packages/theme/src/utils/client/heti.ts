@@ -33,8 +33,6 @@ const addClassForHetiElement = (): void => {
     element.classList.add('heti')
     element.classList.add('heti--serif')
   })
-
-  // console.log(elements, window.Heti)
 }
 
 /**
@@ -47,7 +45,6 @@ const registerHetiScript = async () => {
   await load()
 
   if (!window.Heti) {
-    console.warn('Heti is not loaded yet')
     return
   }
 

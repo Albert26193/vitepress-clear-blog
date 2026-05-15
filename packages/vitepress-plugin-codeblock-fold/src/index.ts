@@ -69,9 +69,7 @@ export function setupCodeBlockFold(options: CodeBlockFoldOptions = {}) {
   let stopRouteWatch: WatchStopHandle | undefined
 
   if (visibleHeight >= minHeight) {
-    console.warn(
-      '[vitepress-plugin-codeblock-fold] visibleHeight should be smaller than minHeight so folded code blocks remain visibly collapsed.'
-    )
+    return
   }
 
   const updateCodeBlockState = (htmlEl: HTMLElement, state: CodeBlockState) => {

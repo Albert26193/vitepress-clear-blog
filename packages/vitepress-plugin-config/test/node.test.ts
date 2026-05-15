@@ -112,50 +112,34 @@ vp-c-bg = "white"
     expect(warn).not.toHaveBeenCalled()
   })
 
-  it('warns and falls back on empty string', async () => {
+  it('throws on empty string color values', async () => {
     writeToml(`[theme]
 vp-c-brand = ""
 `)
 
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    await generateThemeFile(configPath)
-    const css = readCss()
-
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('vp-c-brand must be a non-empty string')
+    await expect(generateThemeFile(configPath)).rejects.toThrow(
+      'vp-c-brand must be a non-empty string'
     )
-    expect(css).toContain('--vp-c-brand: #f00')
   })
 
-  it('warns but still uses malformed values (non-fatal)', async () => {
+  it('throws on malformed color values', async () => {
     writeToml(`[theme]
 vp-c-brand = "not-a-valid-color!!!"
 `)
 
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    await generateThemeFile(configPath)
-    const css = readCss()
-
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('looks malformed')
+    await expect(generateThemeFile(configPath)).rejects.toThrow(
+      'looks malformed'
     )
-    // Still writes the value (don't silently replace)
-    expect(css).toContain('--vp-c-brand: not-a-valid-color!!!')
   })
 
-  it('warns on non-string value (number) and falls back', async () => {
+  it('throws on non-string value (number)', async () => {
     writeToml(`[theme]
 vp-c-brand = 12345
 `)
 
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    await generateThemeFile(configPath)
-    const css = readCss()
-
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('expected string')
+    await expect(generateThemeFile(configPath)).rejects.toThrow(
+      'expected string'
     )
-    expect(css).toContain('--vp-c-brand: #f00')
   })
 
   it('throws when theme section is missing', async () => {

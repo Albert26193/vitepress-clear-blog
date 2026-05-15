@@ -13,21 +13,18 @@ describe('calculateWords', () => {
   it('should count Chinese characters correctly', () => {
     const content = readTestFile('word-count-zh.md')
     const wordCount = calculateWords(content)
-    console.log(wordCount)
     expect(wordCount).toBe(106)
   })
 
   it('should count English words correctly', () => {
     const content = readTestFile('word-count-en.md')
     const wordCount = calculateWords(content)
-    console.log(wordCount)
     expect(wordCount).toBe(95)
   })
 
   it('should handle mixed content correctly', () => {
     const content = '这是一个 mixed content 测试。Here are 5 characters.'
     const wordCount = calculateWords(content)
-    console.log(wordCount)
     expect(wordCount).toBe(11)
   })
 
@@ -35,7 +32,6 @@ describe('calculateWords', () => {
     const content = '```js\nconst test = "hello world";\n```\n正常文本'
     const wordCount = calculateWords(content)
     // normal text(2) + const(1) + test(1) + hello(1) + world(1) + js(1) + n(1)
-    console.log(wordCount)
     expect(wordCount).toBe(8) // Updated based on actual count
   })
 

@@ -7,6 +7,7 @@ import type {
   PageMetadata,
   SitePages
 } from '../../../types'
+import { logger } from '../utils/logger'
 import { buildFilenameIndex, diagnoseIndexWarning } from '../utils/path'
 import { type AnalyzerError, safeReadFile, safeReaddir } from '../utils/safeIO'
 import { calculateWords } from '../utils/wordCount'
@@ -61,6 +62,12 @@ export const analyzeDocument = (
   }
   globalPages[filePath] = currentPageInfo
 
+  logger.debug('Analyzed document', {
+    filePath,
+    outgoingLinks: outgoingLinks.length,
+    wordCount
+  })
+
   return metadata
 }
 
@@ -103,10 +110,16 @@ export const scanDirectory = (
   globalMetadata: Record<string, PageMetadata>,
   globalPages: SitePages
 ): ResultAsync<void, AnalyzerError> => {
+  logger.info('Starting directory scan', { dirPath })
+
   return safeReaddir(dirPath)
     .andThen((entries) => {
       const tasks = entries.map((entry): ResultAsync<void, AnalyzerError> => {
         if (config.excludeDirs.includes(entry.name)) {
+          logger.debug('Skipping excluded directory', {
+            name: entry.name,
+            dirPath
+          })
           return okAsync(undefined)
         }
 
@@ -118,6 +131,10 @@ export const scanDirectory = (
 
         if (entry.name.endsWith('.md')) {
           if (config.excludeFiles.some((p) => entry.name.includes(p))) {
+            logger.debug('Skipping excluded file', {
+              name: entry.name,
+              dirPath
+            })
             return okAsync(undefined)
           }
           return analyzeFile(fullPath, config, globalMetadata, globalPages).map(
@@ -128,7 +145,12 @@ export const scanDirectory = (
         return okAsync(undefined)
       })
 
-      return ResultAsync.combine(tasks).map(() => undefined)
+      return ResultAsync.combine(tasks).map(() => {
+        logger.info('Completed directory scan', {
+          dirPath,
+          documents: Object.keys(globalMetadata).length
+        })
+      })
     })
     .orElse((error) => {
       config.diagnostics.push(`[${error.type}] ${error.path}: ${error.message}`)
@@ -183,17 +205,13 @@ export const analyzeAllDocuments = (
       buildDocumentRelationships(globalMetadata)
 
       if (config.diagnostics.length > 0) {
-        console.warn(
-          `[vitepress-analyzer] Issues:\n${config.diagnostics.join('\n')}`
-        )
+        logger.warn(`Issues:\n${config.diagnostics.join('\n')}`)
       }
 
       return { globalMetadata, globalPages }
     })
     .orElse((error) => {
-      console.error(
-        `[vitepress-analyzer] Fatal: ${error.path}: ${error.message}`
-      )
+      logger.error(`Fatal: ${error.path}: ${error.message}`)
       return ok({ globalMetadata, globalPages })
     })
 }
