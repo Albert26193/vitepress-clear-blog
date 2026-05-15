@@ -197,3 +197,81 @@ pnpm add some-lib --filter vitepress-plugin-xxx
 ```bash
 pnpm build:packages && pnpm build:testbed && pnpm preview:testbed
 ```
+
+## Stopping dev / cleanup
+
+`pnpm dev` starts ~15-20 subprocesses (tsup watchers, vite build watchers, cpx file copiers,
+esbuild services, vitepress dev servers). A plain `kill` on the top-level PID or `Ctrl+C`
+may not propagate to the entire tree, leaving orphaned watchers that continue to consume
+file descriptors and inotify watches.
+
+### Check for stale dev processes
+
+```bash
+# Count running watchers from this project
+ps aux | grep -E "(vitepress dev|vite build --watch|tsup.*--watch|cpx.*-w)" | grep -v grep | wc -l
+
+# See the full process tree
+ps aux --forest | grep -E "(pnpm|vite|tsup|cpx|vitepress|esbuild)" | grep -v grep
+```
+
+### Kill all stale watchers
+
+```bash
+# Kill everything related to this project's dev processes
+pkill -f "vitepress dev" 2>/dev/null || true
+pkill -f "vite build --watch" 2>/dev/null || true
+pkill -f "tsup.*--watch" 2>/dev/null || true
+pkill -f "cpx.*-w" 2>/dev/null || true
+```
+
+Or target a specific worktree:
+
+```bash
+ps aux | grep "vitepress-clear-blog" | grep -v grep | \
+  grep -E "(pnpm|vite|tsup|cpx|vitepress|esbuild)" | \
+  awk '{print $2}' | xargs kill -9 2>/dev/null
+```
+
+### EMFILE troubleshooting
+
+If you see `EMFILE: too many open files` during `pnpm dev`, check for stale
+watchers **before** increasing `ulimit -n`. Accumulated orphan processes from
+previous dev sessions are the most common cause.
+
+```bash
+# Check your limit
+ulimit -n
+
+# Check inotify watch limit
+cat /proc/sys/fs/inotify/max_user_watches
+
+# See current open file count
+lsof 2>/dev/null | wc -l
+```
+
+### Safe dev workflow: pre-clean + run + post-clean
+
+Always follow the two-guard pattern: clean up stale processes **before** starting,
+then ensure everything is killed **after**.
+
+```bash
+# 1. PRE-CLEAN — kill any leftover watchers from previous sessions
+ps aux | grep "vitepress-clear-blog" | grep -v grep | \
+  grep -E "(pnpm|vite|tsup|cpx|vitepress|esbuild)" | \
+  awk '{print $2}' | xargs kill -9 2>/dev/null
+
+# 2. RUN — start dev (Ctrl+C to stop when done)
+pnpm dev
+
+# 3. POST-CLEAN — verify nothing is left behind
+ps aux | grep -E "(vitepress dev|vite build --watch|tsup.*--watch|cpx.*-w)" | grep -v grep | wc -l
+# Expected output: 0
+```
+
+If `Ctrl+C` doesn't propagate to the entire tree, kill by process group:
+
+```bash
+# Find the PGID and kill the entire tree
+ps -o pgid= -p <pnpm-dev-pid> | tr -d ' ' | xargs kill -TERM --
+```
