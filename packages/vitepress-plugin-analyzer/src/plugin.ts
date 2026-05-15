@@ -5,6 +5,7 @@ import type { AnalyzerConfig } from '../types'
 import { createConfig } from './node/config'
 import { analyzeAllDocuments } from './node/parsers/analyze'
 import { logger, setAnalyzerLogLevel } from './node/utils/logger'
+import { getDocsRoot } from './node/utils/path'
 import {
   RESOLVED_VIRTUAL_MODULE_ID,
   VIRTUAL_MODULE_ID,
@@ -26,7 +27,10 @@ export function vitePressAnalyzerPlugin(
   const siteMetadata: SiteMetadata = {}
   const sitePages: SitePages = {}
 
+  let cachedModuleContent: string | null = null
+
   const runAnalysis = async () => {
+    cachedModuleContent = null
     logger.info('Starting site analysis', { docsDir: config.docsDir })
     const startedAt = Date.now()
     const result = await analyzeAllDocuments(config)
@@ -35,6 +39,10 @@ export function vitePressAnalyzerPlugin(
       ({ globalMetadata, globalPages }) => {
         Object.assign(siteMetadata, globalMetadata)
         Object.assign(sitePages, globalPages)
+        cachedModuleContent = generateVirtualModuleContent(
+          siteMetadata,
+          sitePages
+        )
         logger.info('Completed site analysis', {
           documents: Object.keys(globalMetadata).length,
           pages: Object.keys(globalPages).length,
@@ -52,6 +60,14 @@ export function vitePressAnalyzerPlugin(
 
     async configureServer(server) {
       await runAnalysis()
+
+      const docsRoot = getDocsRoot(config)
+      server.watcher.on('all', (_event, path) => {
+        if (path.startsWith(docsRoot) && path.endsWith('.md')) {
+          logger.debug('File change detected, re-running analysis', { path })
+          runAnalysis()
+        }
+      })
     },
 
     async buildStart() {
@@ -66,11 +82,15 @@ export function vitePressAnalyzerPlugin(
 
     load(id) {
       if (id === RESOLVED_VIRTUAL_MODULE_ID) {
+        const content =
+          cachedModuleContent ??
+          generateVirtualModuleContent(siteMetadata, sitePages)
         logger.debug('Loading analyzer virtual module', {
           documents: Object.keys(siteMetadata).length,
-          pages: Object.keys(sitePages).length
+          pages: Object.keys(sitePages).length,
+          cached: cachedModuleContent !== null
         })
-        return generateVirtualModuleContent(siteMetadata, sitePages)
+        return content
       }
     }
   }
