@@ -11,8 +11,9 @@
 </template>
 
 <script setup lang="ts">
-  import mermaid from 'mermaid'
   import { type PropType, onMounted, ref } from 'vue'
+
+  import { render } from '../../utils/client/mermaid'
 
   interface SvgDimensions {
     width: number | null
@@ -35,12 +36,6 @@
       required: true
     }
   })
-
-  const render = async (id: string, code: string): Promise<string> => {
-    mermaid.initialize({ startOnLoad: false })
-    const { svg } = await mermaid.render(id, code)
-    return svg
-  }
 
   const parseSize = (size: string | number | null): number | null => {
     if (typeof size === 'number')
