@@ -1,10 +1,15 @@
 /**
  * @vitest-environment jsdom
  */
+import { renderMermaidSVG } from 'beautiful-mermaid'
 import mermaid from 'mermaid'
 import { describe, expect, it, vi } from 'vitest'
 
 import { init } from '../../../src/utils/client/mermaid'
+
+vi.mock('beautiful-mermaid', () => ({
+  renderMermaidSVG: vi.fn(() => '<svg>beautiful</svg>')
+}))
 
 vi.mock('mermaid', () => {
   const registerExternalDiagrams = vi.fn()
@@ -37,8 +42,6 @@ describe('init', () => {
     )
 
     await init([{ id: 'bad', detector: () => false } as any])
-
-    // Returns silently without throwing
   })
 
   it('skips call when registerExternalDiagrams is falsy', async () => {
@@ -51,7 +54,6 @@ describe('init', () => {
       await import('../../../src/utils/client/mermaid')
     await initFresh([])
 
-    // Should not throw and should not log errors (falsy branch is taken)
     expect(errorSpy).not.toHaveBeenCalled()
 
     errorSpy.mockRestore()
@@ -59,30 +61,70 @@ describe('init', () => {
   })
 })
 
-describe('render (mocked)', () => {
-  it('initializes mermaid and returns SVG', async () => {
-    ;(mermaid.render as any).mockResolvedValueOnce({ svg: '<svg>test</svg>' })
-
-    const { render: testRender } =
+describe('selectMermaidRenderer', () => {
+  it.each([
+    ['graph TD\nA-->B'],
+    ['flowchart LR\nA-->B'],
+    ['stateDiagram-v2\n[*] --> Idle'],
+    ['sequenceDiagram\nAlice->>Bob: Hi'],
+    ['classDiagram\nAnimal <|-- Duck'],
+    ['erDiagram\nCUSTOMER ||--o{ ORDER : places'],
+    ['xychart-beta\nx-axis [A, B]\nbar [1, 2]'],
+    ['%% comment\nflowchart TD\nA-->B']
+  ])('uses beautiful-mermaid for supported diagrams', async (code) => {
+    const { selectMermaidRenderer } =
       await import('../../../src/utils/client/mermaid')
-    const result = await testRender('test-id', 'graph TD; A-->B;', {})
 
-    expect(result).toBe('<svg>test</svg>')
-    expect(mermaid.initialize).toHaveBeenCalledWith({})
-    expect(mermaid.render).toHaveBeenCalledWith('test-id', 'graph TD; A-->B;')
+    expect(selectMermaidRenderer(code)).toBe('beautiful')
   })
 
-  it('passes custom config to mermaid.initialize', async () => {
+  it.each([
+    ['gantt\ntitle Roadmap'],
+    ['pie\ntitle Pets'],
+    ['mindmap\n  root((mindmap))'],
+    ['timeline\ntitle History'],
+    ['journey\ntitle User journey'],
+    ['']
+  ])('uses mermaid for unsupported diagrams', async (code) => {
+    const { selectMermaidRenderer } =
+      await import('../../../src/utils/client/mermaid')
+
+    expect(selectMermaidRenderer(code)).toBe('mermaid')
+  })
+})
+
+describe('render', () => {
+  it('renders supported diagrams with beautiful-mermaid', async () => {
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    const result = await testRender('test-id', 'graph TD\nA-->B')
+
+    expect(result).toBe('<svg>beautiful</svg>')
+    expect(renderMermaidSVG).toHaveBeenCalledWith('graph TD\nA-->B', {
+      bg: 'var(--vp-c-bg)',
+      fg: 'var(--vp-c-text-1)',
+      accent: 'var(--vp-c-brand-1)',
+      transparent: true
+    })
+    expect(mermaid.initialize).not.toHaveBeenCalled()
+  })
+
+  it('renders unsupported diagrams with mermaid', async () => {
     ;(mermaid.render as any).mockResolvedValueOnce({
-      svg: '<svg>custom</svg>'
+      svg: '<svg>mermaid</svg>'
     })
 
     const { render: testRender } =
       await import('../../../src/utils/client/mermaid')
-    await testRender('custom-id', 'flowchart LR\nA-->B', {
+    const result = await testRender('test-id', 'gantt\ntitle Roadmap', {
       theme: 'dark'
     } as any)
 
+    expect(result).toBe('<svg>mermaid</svg>')
     expect(mermaid.initialize).toHaveBeenCalledWith({ theme: 'dark' })
+    expect(mermaid.render).toHaveBeenCalledWith(
+      'test-id',
+      'gantt\ntitle Roadmap'
+    )
   })
 })
