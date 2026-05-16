@@ -37,6 +37,16 @@ These are defined in the root `package.json` and work from the repo root.
 
 ### Development
 
+> **Monorepo requirement**: Always run `pnpm build` before the first `pnpm dev`.
+> This project has 11 interdependent packages — testbed needs the theme's `lib/`
+> output, plugins reference each other's types, and `tsup --watch` only rebuilds
+> on changes, not on initial startup. Skipping the initial build causes missing
+> module errors and broken imports.
+>
+> ```bash
+> pnpm build && pnpm dev
+> ```
+
 | Task | Command | What it does |
 |---|---|---|
 | Dev all | `pnpm dev` | Starts packages (watch mode) + testbed dev server in parallel |
@@ -168,14 +178,19 @@ pnpm -r <script>
 
 ## Common workflows
 
-**Start developing:**
+**Start developing (first time or after clean):**
+```bash
+pnpm build && pnpm dev
+```
+
+**Start developing (already built, just need watch):**
 ```bash
 pnpm dev
 ```
 
-**After changing plugin code — verify it builds:**
+**After changing plugin code — rebuild before re-entering dev:**
 ```bash
-pnpm build:packages
+pnpm build:packages && pnpm dev
 ```
 
 **Quick local validation before commit:**
