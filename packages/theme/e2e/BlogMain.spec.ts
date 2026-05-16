@@ -32,4 +32,19 @@ test.describe('BlogMain', () => {
       await expect(toggle.first()).toBeVisible()
     }
   })
+
+  test('card/list toggle switches to list view', async ({ page }) => {
+    await page.goto('/pages')
+    const listToggle = page.locator('button[aria-label="List View"]')
+    if ((await listToggle.count()) === 0) return
+
+    await listToggle.click()
+    // Wait for the crossfade animation to complete
+    await page.waitForTimeout(800)
+    // The list pagination container should be visible after switching
+    const listPagination = page.locator('.blog-list-pagination')
+    if ((await listPagination.count()) > 0) {
+      await expect(listPagination).toBeVisible()
+    }
+  })
 })

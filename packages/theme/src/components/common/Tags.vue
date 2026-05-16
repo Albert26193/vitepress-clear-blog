@@ -27,10 +27,11 @@
         </span>
       </span>
     </div>
-    <div class="slide-enter-content mt-2">
+    <div ref="tagListContainerRef" class="slide-enter-content mt-2">
       <div
-        v-for="(article, index) in filteredArticles"
-        :key="index"
+        v-for="article in filteredArticles"
+        :key="article.regularPath"
+        :data-flip-key="article.regularPath"
         class="tag-post-item"
       >
         <div
@@ -52,12 +53,22 @@
   import { useRouter, withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
 
+  import { useLayoutAnimation } from '../../composables/useLayoutAnimation'
   import { useTimeFormat, useTitle } from '../../composables/useMeta'
   import { Post } from '../../types/types'
   import { initTags } from '../../utils/client/'
   import { data as allPostsData } from '../../utils/node/posts.data.js'
 
   const router = useRouter()
+
+  const tagListContainerRef = ref<HTMLElement>()
+  const { updateLayout } = useLayoutAnimation(tagListContainerRef, {
+    childSelector: '.tag-post-item',
+    duration: 300,
+    ease: 'inOut(3.5)',
+    enterFrom: { transform: 'translateY(10px)', opacity: 0 },
+    leaveTo: { transform: 'translateY(-10px)', opacity: 0 }
+  })
   const tagsList = computed(() => (allPostsData ? initTags(allPostsData) : {}))
 
   // sort tag according to dict order
@@ -84,19 +95,19 @@
   })
 
   const toggleTag = (tag: string) => {
-    if (selectedTag.value === tag) {
-      selectedTag.value = ''
-      // Remove tag from URL
-      const url = new URL(window.location.href)
-      url.searchParams.delete('tag')
-      history.pushState({}, '', url)
-    } else {
-      selectedTag.value = tag
-      // Add tag to URL
-      const url = new URL(window.location.href)
-      url.searchParams.set('tag', tag)
-      history.pushState({}, '', url)
-    }
+    updateLayout(() => {
+      if (selectedTag.value === tag) {
+        selectedTag.value = ''
+        const url = new URL(window.location.href)
+        url.searchParams.delete('tag')
+        history.pushState({}, '', url)
+      } else {
+        selectedTag.value = tag
+        const url = new URL(window.location.href)
+        url.searchParams.set('tag', tag)
+        history.pushState({}, '', url)
+      }
+    })
   }
 
   const filteredArticles = computed(() => {

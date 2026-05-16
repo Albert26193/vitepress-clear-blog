@@ -1,7 +1,11 @@
 <template>
   <div class="blog-card-pagination">
-    <div class="card-container slide-enter-content">
-      <div v-for="post in currentPagePosts" :key="post.regularPath">
+    <div ref="cardContainerRef" class="card-container slide-enter-content">
+      <div
+        v-for="post in currentPagePosts"
+        :key="post.regularPath"
+        :data-flip-key="post.regularPath"
+      >
         <BlogCardItem :post="post"></BlogCardItem>
       </div>
     </div>
@@ -24,12 +28,22 @@
   import { useData } from 'vitepress'
   import { computed, ref } from 'vue'
 
+  import { useLayoutAnimation } from '../../composables/useLayoutAnimation'
   import { data as allPostsData } from '../../utils/node/posts.data'
   import BlogCardItem from './BlogCardItem.vue'
 
   const { theme } = useData()
   const pageSize = theme.value.pageSize || 9
   const pageCurrent = ref(1)
+
+  const cardContainerRef = ref<HTMLElement>()
+  const { updateLayout } = useLayoutAnimation(cardContainerRef, {
+    childSelector: ':scope > div',
+    duration: 350,
+    ease: 'inOut(3.5)',
+    enterFrom: { transform: 'translateY(15px)', opacity: 0 },
+    leaveTo: { transform: 'translateY(-15px)', opacity: 0 }
+  })
 
   // Current page posts
   const currentPagePosts = computed(() => {
@@ -48,7 +62,9 @@
 
   const handlePageChange = (page: number) => {
     if (page === pageCurrent.value) return
-    pageCurrent.value = page
+    updateLayout(() => {
+      pageCurrent.value = page
+    })
   }
 
   // No URL parameter handling needed, only localStorage

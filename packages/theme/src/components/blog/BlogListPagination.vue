@@ -1,7 +1,11 @@
 <template>
   <div class="blog-list-pagination">
-    <div class="list-container slide-enter-content">
-      <div v-for="(post, index) in currentPagePosts" :key="post.regularPath">
+    <div ref="listContainerRef" class="list-container slide-enter-content">
+      <div
+        v-for="(post, index) in currentPagePosts"
+        :key="post.regularPath"
+        :data-flip-key="post.regularPath"
+      >
         <BlogListItem
           :post="post"
           :is-first="index === 0"
@@ -29,12 +33,22 @@
   import { useData } from 'vitepress'
   import { computed, ref } from 'vue'
 
+  import { useLayoutAnimation } from '../../composables/useLayoutAnimation'
   import { data as allPostsData } from '../../utils/node/posts.data'
   import BlogListItem from './BlogListItem.vue'
 
   const { theme } = useData()
   const pageSize = theme.value.pageSize || 4
   const pageCurrent = ref(1)
+
+  const listContainerRef = ref<HTMLElement>()
+  const { updateLayout } = useLayoutAnimation(listContainerRef, {
+    childSelector: ':scope > div',
+    duration: 350,
+    ease: 'inOut(3.5)',
+    enterFrom: { transform: 'translateX(20px)', opacity: 0 },
+    leaveTo: { transform: 'translateX(-20px)', opacity: 0 }
+  })
 
   // Current page posts
   const currentPagePosts = computed(() => {
@@ -53,7 +67,9 @@
 
   const handlePageChange = (page: number) => {
     if (page === pageCurrent.value) return
-    pageCurrent.value = page
+    updateLayout(() => {
+      pageCurrent.value = page
+    })
   }
 
   // No URL parameter handling needed, only localStorage

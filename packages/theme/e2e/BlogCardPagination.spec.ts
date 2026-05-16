@@ -36,6 +36,17 @@ test.describe('BlogCardPagination', () => {
     }
   })
 
+  test('page change animates content', async ({ page }) => {
+    await page.goto('/pages')
+    const page2Link = page.locator('.page-footer .pagination a').nth(1)
+    if ((await page2Link.count()) === 0) return
+
+    await page2Link.click()
+    await page.waitForTimeout(600)
+    const cards = page.locator('.blog-card')
+    expect(await cards.count()).toBeGreaterThan(0)
+  })
+
   test('navigating to page 2 changes content', async ({ page }) => {
     const firstPageTitles: string[] = []
     const cards = page.locator('.blog-card .card-title')

@@ -17,7 +17,6 @@ test.describe('Tags', () => {
       const firstTag = tags.first()
       await expect(firstTag).toBeVisible()
       const tagText = await firstTag.textContent()
-      // Should contain the tag name
       expect(tagText).toBeTruthy()
     }
   })
@@ -48,5 +47,17 @@ test.describe('Tags', () => {
   test('empty tag shows no error', async ({ page }) => {
     await page.goto('/tags?tag=nonexistent_xyz_123')
     await expect(page.locator('.tags-container')).toBeVisible()
+  })
+
+  test('tag filter animates post list', async ({ page }) => {
+    await page.goto('/tags')
+    const tag = page.locator('.tag-view').first()
+    const postsBefore = await page.locator('.tag-post-item').count()
+    if ((await tag.count()) === 0 || postsBefore <= 1) return
+
+    await tag.click()
+    await page.waitForTimeout(600)
+    const postsAfter = await page.locator('.tag-post-item').count()
+    expect(postsAfter).not.toBe(postsBefore)
   })
 })

@@ -2,15 +2,16 @@
   <div class="custom-page-layout timeline-page">
     <div class="controls-container">
       <IconToggleButton
-        v-model="sortDirection"
+        :model-value="sortDirection"
         :icons="[
           { value: 'asc', iconClass: 'i-carbon-arrow-up', tooltip: '升序' },
           { value: 'desc', iconClass: 'i-carbon-arrow-down', tooltip: '降序' }
         ]"
         size="sm"
+        @update:model-value="handleSortChange"
       />
       <IconToggleButton
-        v-model="expandStatus"
+        :model-value="expandStatus"
         :icons="[
           {
             value: 'expand',
@@ -24,9 +25,10 @@
           }
         ]"
         size="sm"
+        @update:model-value="handleExpandChange"
       />
     </div>
-    <div class="timeline-container">
+    <div ref="timelineContainerRef" class="timeline-container">
       <div
         v-for="curYearPostList in sortedDataByYear"
         :key="getYear(curYearPostList)"
@@ -88,8 +90,9 @@
             <div class="timeline-month-line"></div>
             <div class="slide-enter-content">
               <div
-                v-for="(article, index) in monthList"
-                :key="index"
+                v-for="article in monthList"
+                :key="article.regularPath"
+                :data-flip-key="article.regularPath"
                 class="posts-wrapper"
               >
                 <a
@@ -111,8 +114,9 @@
 
 <script lang="ts" setup>
   import { useData, withBase } from 'vitepress'
-  import { computed, reactive, ref, watch } from 'vue'
+  import { computed, reactive, ref } from 'vue'
 
+  import { useLayoutAnimation } from '../composables/useLayoutAnimation'
   import { useTitle } from '../composables/useMeta'
   import type { Post } from '../types/types.d'
   import { useMonthYearSort, useYearSort } from '../utils/client/'
@@ -129,6 +133,15 @@
     (theme.value.timelineSortDirection as 'asc' | 'desc') || 'desc'
   )
   const expandStatus = ref<'expand' | 'collapse'>('expand')
+
+  const timelineContainerRef = ref<HTMLElement>()
+  const { updateLayout } = useLayoutAnimation(timelineContainerRef, {
+    childSelector: '.posts-wrapper',
+    duration: 400,
+    ease: 'inOut(3.5)',
+    enterFrom: { transform: 'translateY(8px)', opacity: 0 },
+    leaveTo: { transform: 'translateY(-8px)', opacity: 0 }
+  })
 
   const dataByYear = computed(() => useYearSort(allPostsData || []))
   const dataByYearMonth = computed(() => useMonthYearSort(allPostsData || []))
@@ -168,13 +181,22 @@
     return result
   })
 
-  watch(expandStatus, (newValue: 'expand' | 'collapse') => {
-    if (newValue === 'expand') {
-      expandAll()
-    } else if (newValue === 'collapse') {
-      collapseAll()
-    }
-  })
+  const handleSortChange = (direction: 'asc' | 'desc') => {
+    updateLayout(() => {
+      sortDirection.value = direction
+    })
+  }
+
+  const handleExpandChange = (status: 'expand' | 'collapse') => {
+    updateLayout(() => {
+      expandStatus.value = status
+      if (status === 'expand') {
+        expandAll()
+      } else {
+        collapseAll()
+      }
+    })
+  }
 
   const displayStatus: DisplayStatus = reactive({
     years: {},
@@ -198,12 +220,16 @@
   initDisplayStatus()
 
   const toggleYear = (year: string | number) => {
-    displayStatus.years[year] = !displayStatus.years[year]
+    updateLayout(() => {
+      displayStatus.years[year] = !displayStatus.years[year]
+    })
   }
 
   const toggleMonth = (year: string, month: string) => {
     const key = `${year}-${month}`
-    displayStatus.months[key] = !displayStatus.months[key]
+    updateLayout(() => {
+      displayStatus.months[key] = !displayStatus.months[key]
+    })
   }
 
   const expandAll = () => {

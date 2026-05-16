@@ -1,8 +1,8 @@
 <template>
-  <div class="blog-main">
+  <div ref="blogMainRef" class="blog-main">
     <header class="pagination-header">
       <IconToggleButton
-        v-model="currentViewType"
+        :model-value="currentViewType"
         :icons="[
           {
             value: 'ListType',
@@ -15,6 +15,7 @@
             tooltip: 'Card View'
           }
         ]"
+        @update:model-value="handleViewToggle"
       />
     </header>
 
@@ -25,8 +26,9 @@
 
 <script lang="ts" setup>
   import { useLocalStorage } from '@vueuse/core'
+  import { createTimeline } from 'animejs'
   import { useData } from 'vitepress'
-  import { ref, watch } from 'vue'
+  import { nextTick, ref } from 'vue'
 
   import IconToggleButton from '../common/IconToggleButton.vue'
   import BlogCardPagination from './BlogCardPagination.vue'
@@ -43,13 +45,48 @@
     configDefaultMode
   )
 
-  // Use localStorage value directly
   const currentViewType = ref<PageType>(storedViewType.value)
+  const blogMainRef = ref<HTMLElement>()
 
-  // Watch for changes and sync with localStorage
-  watch(currentViewType, (newValue) => {
-    storedViewType.value = newValue
-  })
+  const handleViewToggle = async (viewType: PageType) => {
+    if (viewType === currentViewType.value) return
+
+    const container = blogMainRef.value
+    if (!container) {
+      currentViewType.value = viewType
+      storedViewType.value = viewType
+      return
+    }
+
+    // Animate out
+    const outTimeline = createTimeline([
+      {
+        targets: container,
+        opacity: [1, 0],
+        scale: [1, 0.97],
+        duration: 150,
+        ease: 'out(2)'
+      }
+    ])
+
+    await outTimeline.then(() => {})
+
+    // Swap view
+    currentViewType.value = viewType
+    storedViewType.value = viewType
+    await nextTick()
+
+    // Animate in
+    createTimeline([
+      {
+        targets: container,
+        opacity: [0, 1],
+        scale: [0.97, 1],
+        duration: 250,
+        ease: 'out(3)'
+      }
+    ])
+  }
 </script>
 
 <style scoped>
