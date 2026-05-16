@@ -1,8 +1,5 @@
-import { type AsciiRenderOptions, renderMermaidASCII } from 'beautiful-mermaid'
-import mermaid, {
-  type ExternalDiagramDefinition,
-  type MermaidConfig
-} from 'mermaid'
+import type { AsciiRenderOptions } from 'beautiful-mermaid/ascii'
+import type { ExternalDiagramDefinition, MermaidConfig } from 'mermaid'
 
 type MermaidRenderer = 'ascii' | 'mermaid'
 
@@ -40,8 +37,9 @@ const selectMermaidRenderer = (code: string): MermaidRenderer => {
 
 const init = async (externalDiagrams: ExternalDiagramDefinition[]) => {
   try {
-    if (mermaid.registerExternalDiagrams)
-      await mermaid.registerExternalDiagrams(externalDiagrams)
+    const mermaid = await import('mermaid')
+    if (mermaid.default.registerExternalDiagrams)
+      await mermaid.default.registerExternalDiagrams(externalDiagrams)
   } catch {
     return
   }
@@ -52,8 +50,9 @@ const renderWithMermaid = async (
   code: string,
   config: MermaidConfig
 ): Promise<MermaidRenderResult> => {
-  mermaid.initialize(config)
-  const { svg } = await mermaid.render(id, code)
+  const mermaid = await import('mermaid')
+  mermaid.default.initialize(config)
+  const { svg } = await mermaid.default.render(id, code)
   return { type: 'svg', content: svg }
 }
 
@@ -63,6 +62,7 @@ const render = async (
   config: MermaidConfig = { startOnLoad: false }
 ): Promise<MermaidRenderResult> => {
   if (selectMermaidRenderer(code) === 'ascii') {
+    const { renderMermaidASCII } = await import('beautiful-mermaid/ascii')
     return {
       type: 'ascii',
       content: renderMermaidASCII(code, BEAUTIFUL_MERMAID_ASCII_OPTIONS)

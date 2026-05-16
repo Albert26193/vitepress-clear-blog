@@ -246,5 +246,3 @@ export function setupCodeBlockFold(options: CodeBlockFoldOptions = {}) {
     cleanupAll()
   })
 }
-
-export default setupCodeBlockFold

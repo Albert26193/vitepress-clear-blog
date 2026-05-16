@@ -1,13 +1,13 @@
 /**
  * @vitest-environment jsdom
  */
-import { renderMermaidASCII } from 'beautiful-mermaid'
+import { renderMermaidASCII } from 'beautiful-mermaid/ascii'
 import mermaid from 'mermaid'
 import { describe, expect, it, vi } from 'vitest'
 
 import { init } from '../../../src/utils/client/mermaid'
 
-vi.mock('beautiful-mermaid', () => ({
+vi.mock('beautiful-mermaid/ascii', () => ({
   renderMermaidASCII: vi.fn(() => '+---+ +---+\n| A | | B |\n+---+ +---+')
 }))
 
