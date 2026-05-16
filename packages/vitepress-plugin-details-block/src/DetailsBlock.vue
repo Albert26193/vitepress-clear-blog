@@ -7,7 +7,7 @@
      */
     summary: {
       type: String,
-      default: 'Click to view details'
+      default: 'Details'
     },
     /**
      * Initial expansion state for pages that should reveal details by default.
@@ -43,7 +43,23 @@
         class="collapse-block-icon"
         :class="{ 'is-open': isOpen }"
         aria-hidden="true"
-      />
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7 5L11 9L7 13"
+            stroke="currentColor"
+            stroke-width="1.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
       <slot name="summary">{{ summary }}</slot>
     </p>
     <div
@@ -62,26 +78,20 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    color: var(--vp-c-text-1);
     user-select: none;
   }
 
   .collapse-block-icon {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     width: 18px;
     height: 18px;
     margin-right: 8px;
-    transition: transform 0.2s ease;
-  }
-
-  .collapse-block-icon::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    transform: rotate(-45deg) translateY(-2px);
+    color: var(--vp-c-text-1);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .collapse-block-icon.is-open {

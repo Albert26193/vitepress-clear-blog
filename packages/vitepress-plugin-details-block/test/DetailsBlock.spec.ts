@@ -21,9 +21,7 @@ describe('DetailsBlock', () => {
 
     it('renders default summary text', () => {
       const wrapper = mount(DetailsBlock)
-      expect(wrapper.find('.collapse-block-title').text()).toBe(
-        'Click to view details'
-      )
+      expect(wrapper.find('.collapse-block-title').text()).toBe('Details')
     })
 
     it('renders custom summary prop', () => {
