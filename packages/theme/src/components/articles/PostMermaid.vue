@@ -1,9 +1,15 @@
 <template>
   <div class="mermaid-diagram">
+    <pre
+      v-if="asciiContent"
+      class="mermaid-ascii"
+      :aria-label="diagramLabel"
+    ><code>{{ asciiContent }}</code></pre>
     <img
+      v-else-if="imgSrc"
       class="mermaid-img"
       :src="imgSrc"
-      :alt="`Mermaid diagram: ${props.id}`"
+      :alt="diagramLabel"
       :width="svgWidth"
       :height="svgHeight"
     />
@@ -11,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-  import { type PropType, onMounted, ref } from 'vue'
+  import { type PropType, computed, onMounted, shallowRef } from 'vue'
 
-  import { render } from '../../utils/client/mermaid'
+  import { type MermaidRenderResult, render } from '../../utils/client/mermaid'
 
   interface SvgDimensions {
     width: number | null
@@ -80,19 +86,31 @@
     return `data:image/svg+xml,${encodedSvg}`
   }
 
-  onMounted(async (): Promise<void> => {
-    const svgString = await render(props.id, decodeURIComponent(props.code))
-
+  const applySvgResult = (svgString: string): void => {
     const { width, height } = extractSvgDimensions(svgString)
     svgWidth.value = width
     svgHeight.value = height
-
     imgSrc.value = createSvgDataUrl(svgString)
+  }
+
+  const applyRenderResult = (result: MermaidRenderResult): void => {
+    if (result.type === 'ascii') {
+      asciiContent.value = result.content
+      return
+    }
+
+    applySvgResult(result.content)
+  }
+
+  onMounted(async (): Promise<void> => {
+    applyRenderResult(await render(props.id, decodeURIComponent(props.code)))
   })
 
-  const imgSrc = ref<string>('')
-  const svgWidth = ref<number | null>(null)
-  const svgHeight = ref<number | null>(null)
+  const diagramLabel = computed(() => `Mermaid diagram: ${props.id}`)
+  const asciiContent = shallowRef<string>('')
+  const imgSrc = shallowRef<string>('')
+  const svgWidth = shallowRef<number | null>(null)
+  const svgHeight = shallowRef<number | null>(null)
 </script>
 
 <style scoped>
@@ -103,6 +121,28 @@
     overflow-x: auto;
   }
 
+  .mermaid-ascii {
+    @apply mx-auto block;
+    width: fit-content;
+    min-width: 400px;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 1rem;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 8px;
+    background: var(--vp-c-bg-soft);
+    color: var(--vp-c-text-1);
+    font-family: var(--vp-font-family-mono);
+    font-size: 0.875rem;
+    line-height: 1.2;
+    text-align: left;
+    white-space: pre;
+  }
+
+  .mermaid-ascii code {
+    font-family: inherit;
+  }
+
   .mermaid-img {
     min-width: 400px;
     max-width: 100%;
@@ -111,11 +151,10 @@
     display: block;
   }
 
-  /* Scale up small diagrams */
   @media (min-width: 768px) {
+    .mermaid-ascii,
     .mermaid-img {
       min-width: 600px;
-      transform-origin: center;
     }
   }
 </style>
