@@ -1,6 +1,6 @@
 ---
 name: workflow-git-pr
-description: Full git workflow from unstaged changes to a merged PR. Use this skill whenever the user wants to turn current changes into a GitHub issue, proper branch, commit, quality gate, and pull request — especially when they say things like "提交并提 PR", "create an issue and PR for these changes", "按照改动建 issue 提 pr", "push these changes with a proper issue", or any request that involves creating an issue and PR from working-tree changes. This skill orchestrates the tool-git-issues, tool-git-commit, and tool-test-check skills into a single correct workflow.
+description: Full git workflow from unstaged changes to a merged PR. Use this skill whenever the user wants to turn current changes into a GitHub issue, proper branch, commit, quality gate, and pull request — especially when they say things like "提交并提 PR", "create an issue and PR for these changes", "按照改动建 issue 提 pr", "push these changes with a proper issue", or any request that involves creating an issue and PR from working-tree changes. This skill orchestrates the tool-git-issues, tool-git-commit, tool-test-check, and CI skills into a single workflow, and it must bring in std-antfu-vue when PR changes touch Vue SFCs, theme Vue components, NewLayout.vue, Composition API, props/emits, composables, or Vue UI refactors.
 ---
 
 # Git Issue-to-PR Workflow
@@ -29,6 +29,7 @@ verification — to `tool-git-issues`, `tool-git-commit`, `tool-test-check`,
 |------|-------------|--------------|
 | Analyze + create issue | **tool-git-issues** | Reads templates, picks type/labels, crafts title+body, calls `gh api` |
 | Analyze + write commit | **tool-git-commit** | Gathers context, determines type/scope, writes Conventional Commits message, validates with checker |
+| Vue coding standard | **std-antfu-vue** | Required when changes touch Vue SFCs, theme Vue components, `NewLayout.vue`, Composition API, props/emits, composables, or Vue UI refactors |
 | Pre-PR quality gate | **tool-test-check** | Runs the local/CI-aligned quality checks and blocks PR creation on failures |
 | Start dev server | **tool-pnpm** | Provides the `pnpm dev` command; the bundled `smoke-dev.sh` script runs it |
 | Post-PR CI verification | **tool-ci-check** | Detects PR, polls CI status, fetches all job logs, generates report; blocks final report until all CI jobs pass |
@@ -190,6 +191,30 @@ context warrants (e.g., a `fix` tag on what is clearly a `feat`).
 
 The script handles the scope/package-label mapping for all known packages in this
 monorepo. Root-level file changes produce `scope: null` and `package_label: "package:root"`.
+
+#### Step 1a: Vue changes → invoke `std-antfu-vue`
+
+After diff analysis, inspect the changed file list and diff. If any current
+change touches Vue SFCs or Vue architecture, invoke **std-antfu-vue** before
+creating the issue, writing commit text, or running quality gates.
+
+Trigger this delegation for any of these signals:
+
+- `*.vue` files, especially under `packages/theme/src/components/`
+- `packages/theme/src/components/NewLayout.vue`
+- Vue Composition API logic (`ref`, `computed`, `watch`, `watchEffect`, lifecycle hooks)
+- props/emits/model contracts, slots, provide/inject, or component data flow
+- composables under `packages/theme/src/composables/`
+- route/page/layout/sidebar/navigation UI behavior
+- Vue component refactors or component boundary decisions
+
+Pass `std-antfu-vue` the changed paths and a short diff summary. Use its guidance
+for component boundaries, composables, Vue data flow, and E2E expectations while
+preserving this workflow's issue, branch, commit, and PR rules.
+
+Do not invoke `std-antfu-vue` for non-Vue-only changes such as Markdown docs,
+package metadata, CI config, or Node-only plugin code unless the diff also affects
+Vue UI behavior.
 
 ### Step 2: Create the issue — invoke `tool-git-issues` → PATH A only
 
