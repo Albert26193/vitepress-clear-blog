@@ -23,8 +23,17 @@ export interface DatetimeConfig {
   outputFormat?: string
 }
 
+export interface HomepageConfig {
+  title?: string
+  description?: string
+}
+
 export interface BlogConfig {
   defaultViewMode?: 'card' | 'list'
+}
+
+export interface OutlineConfig {
+  title?: string
 }
 
 export interface TimelineConfig {
@@ -56,6 +65,7 @@ export interface ConfigToml {
     icpNumber?: string
     themeLink?: string
   }
+  homepage?: HomepageConfig
   page: {
     pageSize?: number
   }
@@ -71,6 +81,7 @@ export interface ConfigToml {
   }
   datetime?: DatetimeConfig
   blog?: BlogConfig
+  outline?: OutlineConfig
   timeline?: TimelineConfig
   links?: LinksConfig
   theme: ThemeConfig

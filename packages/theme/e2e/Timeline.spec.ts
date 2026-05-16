@@ -45,8 +45,8 @@ test.describe('Timeline', () => {
 
   test('sort toggle changes year order', async ({ page }) => {
     // Find the sort toggle buttons
-    const ascBtn = page.locator('button[aria-label="升序"]')
-    const descBtn = page.locator('button[aria-label="降序"]')
+    const ascBtn = page.locator('button[aria-label="Ascending"]')
+    const descBtn = page.locator('button[aria-label="Descending"]')
 
     if ((await ascBtn.count()) === 0 || (await descBtn.count()) === 0) return
 
@@ -75,7 +75,7 @@ test.describe('Timeline', () => {
   test('ascending sort shows months oldest-first within each year', async ({
     page
   }) => {
-    const ascBtn = page.locator('button[aria-label="升序"]')
+    const ascBtn = page.locator('button[aria-label="Ascending"]')
     if ((await ascBtn.count()) === 0) return
 
     // Click ascending
@@ -91,12 +91,12 @@ test.describe('Timeline', () => {
   })
 
   test('posts within same month reorder on sort toggle', async ({ page }) => {
-    const ascBtn = page.locator('button[aria-label="升序"]')
-    const descBtn = page.locator('button[aria-label="降序"]')
+    const ascBtn = page.locator('button[aria-label="Ascending"]')
+    const descBtn = page.locator('button[aria-label="Descending"]')
     if ((await ascBtn.count()) === 0 || (await descBtn.count()) === 0) return
 
     // Expand all to ensure posts are visible
-    const expandBtn = page.locator('button[aria-label="展开全部"]')
+    const expandBtn = page.locator('button[aria-label="Expand All"]')
     if ((await expandBtn.count()) > 0) {
       await expandBtn.click()
       await page.waitForTimeout(300)

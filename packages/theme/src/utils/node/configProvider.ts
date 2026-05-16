@@ -10,8 +10,10 @@ import {
 import { calloutPlugin } from 'vitepress-plugin-callout'
 import {
   DEFAULT_BLOG,
+  DEFAULT_HOMEPAGE,
   DEFAULT_META,
   DEFAULT_NAV_LABELS,
+  DEFAULT_OUTLINE,
   DEFAULT_PAGE_SIZE,
   DEFAULT_TIMELINE,
   generateThemePlugin,
@@ -128,9 +130,11 @@ const getThemeConfig = async (
 const createBlog = async (): Promise<Record<string, unknown>> => {
   const toml = loadConfig()
   const meta = toml?.meta || {}
+  const homepage = toml?.homepage || {}
   const page = toml?.page || {}
   const mdConf = toml?.markdown || {}
   const navLabels = toml?.nav || {}
+  const outline = toml?.outline || {}
   const blog = toml?.blog || {}
   const timeline = toml?.timeline || {}
 
@@ -273,12 +277,19 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       sidebar: [{ text: '', items: [] }],
       search: { provider: 'local' },
       outline: [2, 3],
-      outlineTitle: 'Table of Contents',
+      outlineTitle: outline.title || DEFAULT_OUTLINE.title,
       wikiRenderTitle:
         (mdConf as Record<string, unknown>).render_title || 'frontmatter_title',
       website: meta.siteUrl || '',
       icpNumber: meta.icpNumber || '',
       themeLink: meta.themeLink || DEFAULT_META.themeLink,
+      homepage: {
+        title: homepage.title || meta.title || DEFAULT_HOMEPAGE.title,
+        description:
+          homepage.description ||
+          meta.description ||
+          DEFAULT_HOMEPAGE.description
+      },
       pageSize: page.pageSize || DEFAULT_PAGE_SIZE,
       defaultViewMode: blog.defaultViewMode || DEFAULT_BLOG.defaultViewMode,
       timelineSortDirection:
