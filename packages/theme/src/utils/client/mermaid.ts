@@ -1,16 +1,18 @@
-import { type RenderOptions, renderMermaidSVG } from 'beautiful-mermaid'
+import { type AsciiRenderOptions, renderMermaidASCII } from 'beautiful-mermaid'
 import mermaid, {
   type ExternalDiagramDefinition,
   type MermaidConfig
 } from 'mermaid'
 
-type MermaidRenderer = 'beautiful' | 'mermaid'
+type MermaidRenderer = 'ascii' | 'mermaid'
 
-const BEAUTIFUL_MERMAID_OPTIONS: RenderOptions = {
-  bg: 'var(--vp-c-bg)',
-  fg: 'var(--vp-c-text-1)',
-  accent: 'var(--vp-c-brand-1)',
-  transparent: true
+type MermaidRenderResult =
+  | { type: 'ascii'; content: string }
+  | { type: 'svg'; content: string }
+
+const BEAUTIFUL_MERMAID_ASCII_OPTIONS: AsciiRenderOptions = {
+  useAscii: true,
+  colorMode: 'none'
 }
 
 const getFirstMermaidLine = (code: string): string => {
@@ -25,14 +27,13 @@ const getFirstMermaidLine = (code: string): string => {
 const selectMermaidRenderer = (code: string): MermaidRenderer => {
   const firstLine = getFirstMermaidLine(code)
 
-  if (/^(graph|flowchart)\s+(TD|TB|LR|BT|RL)\b/i.test(firstLine))
-    return 'beautiful'
+  if (/^(graph|flowchart)\s+(TD|TB|LR|BT|RL)\b/i.test(firstLine)) return 'ascii'
 
-  if (/^stateDiagram(-v2)?\b/i.test(firstLine)) return 'beautiful'
-  if (/^sequenceDiagram\b/i.test(firstLine)) return 'beautiful'
-  if (/^classDiagram\b/i.test(firstLine)) return 'beautiful'
-  if (/^erDiagram\b/i.test(firstLine)) return 'beautiful'
-  if (/^xychart(-beta)?\b/i.test(firstLine)) return 'beautiful'
+  if (/^stateDiagram(-v2)?\b/i.test(firstLine)) return 'ascii'
+  if (/^sequenceDiagram\b/i.test(firstLine)) return 'ascii'
+  if (/^classDiagram\b/i.test(firstLine)) return 'ascii'
+  if (/^erDiagram\b/i.test(firstLine)) return 'ascii'
+  if (/^xychart(-beta)?\b/i.test(firstLine)) return 'ascii'
 
   return 'mermaid'
 }
@@ -50,23 +51,26 @@ const renderWithMermaid = async (
   id: string,
   code: string,
   config: MermaidConfig
-): Promise<string> => {
+): Promise<MermaidRenderResult> => {
   mermaid.initialize(config)
   const { svg } = await mermaid.render(id, code)
-  return svg
+  return { type: 'svg', content: svg }
 }
 
 const render = async (
   id: string,
   code: string,
   config: MermaidConfig = { startOnLoad: false }
-): Promise<string> => {
-  if (selectMermaidRenderer(code) === 'beautiful') {
-    return renderMermaidSVG(code, BEAUTIFUL_MERMAID_OPTIONS)
+): Promise<MermaidRenderResult> => {
+  if (selectMermaidRenderer(code) === 'ascii') {
+    return {
+      type: 'ascii',
+      content: renderMermaidASCII(code, BEAUTIFUL_MERMAID_ASCII_OPTIONS)
+    }
   }
 
   return renderWithMermaid(id, code, config)
 }
 
 export { init, render, selectMermaidRenderer }
-export type { MermaidRenderer }
+export type { MermaidRenderer, MermaidRenderResult }

@@ -1,14 +1,14 @@
 /**
  * @vitest-environment jsdom
  */
-import { renderMermaidSVG } from 'beautiful-mermaid'
+import { renderMermaidASCII } from 'beautiful-mermaid'
 import mermaid from 'mermaid'
 import { describe, expect, it, vi } from 'vitest'
 
 import { init } from '../../../src/utils/client/mermaid'
 
 vi.mock('beautiful-mermaid', () => ({
-  renderMermaidSVG: vi.fn(() => '<svg>beautiful</svg>')
+  renderMermaidASCII: vi.fn(() => '+---+ +---+\n| A | | B |\n+---+ +---+')
 }))
 
 vi.mock('mermaid', () => {
@@ -71,11 +71,11 @@ describe('selectMermaidRenderer', () => {
     ['erDiagram\nCUSTOMER ||--o{ ORDER : places'],
     ['xychart-beta\nx-axis [A, B]\nbar [1, 2]'],
     ['%% comment\nflowchart TD\nA-->B']
-  ])('uses beautiful-mermaid for supported diagrams', async (code) => {
+  ])('uses ascii renderer for supported diagrams', async (code) => {
     const { selectMermaidRenderer } =
       await import('../../../src/utils/client/mermaid')
 
-    expect(selectMermaidRenderer(code)).toBe('beautiful')
+    expect(selectMermaidRenderer(code)).toBe('ascii')
   })
 
   it.each([
@@ -94,22 +94,23 @@ describe('selectMermaidRenderer', () => {
 })
 
 describe('render', () => {
-  it('renders supported diagrams with beautiful-mermaid', async () => {
+  it('renders supported diagrams as ascii text', async () => {
     const { render: testRender } =
       await import('../../../src/utils/client/mermaid')
     const result = await testRender('test-id', 'graph TD\nA-->B')
 
-    expect(result).toBe('<svg>beautiful</svg>')
-    expect(renderMermaidSVG).toHaveBeenCalledWith('graph TD\nA-->B', {
-      bg: 'var(--vp-c-bg)',
-      fg: 'var(--vp-c-text-1)',
-      accent: 'var(--vp-c-brand-1)',
-      transparent: true
+    expect(result).toEqual({
+      type: 'ascii',
+      content: '+---+ +---+\n| A | | B |\n+---+ +---+'
+    })
+    expect(renderMermaidASCII).toHaveBeenCalledWith('graph TD\nA-->B', {
+      useAscii: true,
+      colorMode: 'none'
     })
     expect(mermaid.initialize).not.toHaveBeenCalled()
   })
 
-  it('renders unsupported diagrams with mermaid', async () => {
+  it('renders unsupported diagrams with mermaid svg', async () => {
     ;(mermaid.render as any).mockResolvedValueOnce({
       svg: '<svg>mermaid</svg>'
     })
@@ -120,7 +121,7 @@ describe('render', () => {
       theme: 'dark'
     } as any)
 
-    expect(result).toBe('<svg>mermaid</svg>')
+    expect(result).toEqual({ type: 'svg', content: '<svg>mermaid</svg>' })
     expect(mermaid.initialize).toHaveBeenCalledWith({ theme: 'dark' })
     expect(mermaid.render).toHaveBeenCalledWith(
       'test-id',
