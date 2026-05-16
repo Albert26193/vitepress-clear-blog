@@ -4,8 +4,16 @@
       <IconToggleButton
         v-model="sortDirection"
         :icons="[
-          { value: 'asc', iconClass: 'i-carbon-arrow-up', tooltip: '升序' },
-          { value: 'desc', iconClass: 'i-carbon-arrow-down', tooltip: '降序' }
+          {
+            value: 'asc',
+            iconClass: 'i-carbon-arrow-up',
+            tooltip: 'Ascending'
+          },
+          {
+            value: 'desc',
+            iconClass: 'i-carbon-arrow-down',
+            tooltip: 'Descending'
+          }
         ]"
         size="sm"
       />
@@ -15,12 +23,12 @@
           {
             value: 'expand',
             iconClass: 'i-carbon-expand-all',
-            tooltip: '展开全部'
+            tooltip: 'Expand All'
           },
           {
             value: 'collapse',
             iconClass: 'i-carbon-collapse-all',
-            tooltip: '折叠全部'
+            tooltip: 'Collapse All'
           }
         ]"
         size="sm"

@@ -10,6 +10,10 @@ export const DEFAULT_TIMELINE = {
   sortDirection: 'desc'
 } as const
 
+export const DEFAULT_OUTLINE = {
+  title: 'Table of Contents'
+} as const
+
 export const DEFAULT_LINKS = {
   resolutionModes: [
     'repoRoot',
@@ -17,6 +21,11 @@ export const DEFAULT_LINKS = {
     'relativeToCurrentFile',
     'obsidianShortest'
   ]
+} as const
+
+export const DEFAULT_HOMEPAGE = {
+  title: 'Blog',
+  description: ''
 } as const
 
 export const DEFAULT_NAV_LABELS = {

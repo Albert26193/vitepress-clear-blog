@@ -40,6 +40,10 @@ export interface BlogConfig extends DefaultTheme.Config {
   website: string
   icpNumber?: string
   themeLink?: string
+  homepage?: {
+    title?: string
+    description?: string
+  }
   pageSize?: number
   defaultViewMode?: 'card' | 'list'
   timelineSortDirection?: 'desc' | 'asc'

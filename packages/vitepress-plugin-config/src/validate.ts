@@ -56,12 +56,21 @@ const datetimeSchema = z.object({
   outputFormat: z.string().optional()
 })
 
+const homepageSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional()
+})
+
 const pageSchema = z.object({
   pageSize: z.number().int().positive().optional()
 })
 
 const blogSchema = z.object({
   defaultViewMode: z.enum(['card', 'list']).optional()
+})
+
+const outlineSchema = z.object({
+  title: z.string().optional()
 })
 
 const timelineSchema = z.object({
@@ -83,11 +92,13 @@ const linksSchema = z.object({
 
 export const configTomlSchema = z.object({
   meta: metaSchema.optional().default({}),
+  homepage: homepageSchema.optional(),
   page: pageSchema.optional().default({}),
   nav: navLabelsSchema.optional(),
   markdown: markdownSchema.optional(),
   datetime: datetimeSchema.optional(),
   blog: blogSchema.optional(),
+  outline: outlineSchema.optional(),
   timeline: timelineSchema.optional(),
   links: linksSchema.optional(),
   theme: themeConfigSchema

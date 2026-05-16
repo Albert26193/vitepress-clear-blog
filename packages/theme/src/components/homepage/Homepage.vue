@@ -1,9 +1,9 @@
 <template>
   <section class="homepage-container">
-    <h1 class="text"> Albert's Blog</h1>
+    <h1 class="text">{{ homepageTitle }}</h1>
     <div class="homepage-second-line">
       <div class="homepage-describe">
-        <p class="font-700 font-serif">能纵棹，惯乘流，长江白浪不曾忧</p>
+        <p class="font-700 font-serif">{{ homepageDescription }}</p>
       </div>
       <div class="homepage-go" @click="router.go(withBase('/pages/'))">
         <span class="i-carbon-arrow-right dark:text-black"></span>
@@ -83,10 +83,20 @@
 
 <script setup lang="ts">
   import { useWindowSize } from '@vueuse/core'
-  import { useRouter, withBase } from 'vitepress'
+  import { useData, useRouter, withBase } from 'vitepress'
+  import { computed } from 'vue'
 
+  import type { BlogConfig } from '../../types/types'
   import D3FullScreen from '../d3/D3FullScreen.vue'
 
   const router = useRouter()
-  const { width, height } = useWindowSize()
+  const { site, theme } = useData<BlogConfig>()
+  const { width } = useWindowSize()
+
+  const homepageTitle = computed(
+    () => theme.value.homepage?.title || site.value.title
+  )
+  const homepageDescription = computed(
+    () => theme.value.homepage?.description || site.value.description
+  )
 </script>

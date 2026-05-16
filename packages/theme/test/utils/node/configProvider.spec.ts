@@ -15,6 +15,7 @@ vi.mock('vitepress-plugin-config', () => ({
     pages: 'Pages',
     about: 'About'
   },
+  DEFAULT_OUTLINE: { title: 'Table of Contents' },
   DEFAULT_META: {
     author: 'Blogger',
     locale: 'zh_CN',
@@ -22,6 +23,7 @@ vi.mock('vitepress-plugin-config', () => ({
     themeLink: 'https://github.com/Albert26193/vitepress-clear-blog'
   },
   DEFAULT_PAGE_SIZE: 10,
+  DEFAULT_HOMEPAGE: { title: 'Blog', description: '' },
   DEFAULT_BLOG: { defaultViewMode: 'card' },
   DEFAULT_TIMELINE: { sortDirection: 'desc' }
 }))
@@ -178,6 +180,29 @@ describe('createBlog with mocked config.toml', async () => {
     expect((config as any).themeConfig.outlineTitle).toBe('Table of Contents')
   })
 
+  it('sets outline title from outline section', async () => {
+    const toml = {
+      meta: { title: 'Outline' },
+      outline: { title: 'On This Page' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.outlineTitle).toBe('On This Page')
+  })
+
+  it('uses default outline title when outline section is missing', async () => {
+    const toml = {
+      meta: { title: 'No Outline' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.outlineTitle).toBe('Table of Contents')
+  })
+
   it('includes vite define for render_title', async () => {
     const config = await createBlog()
     const vite = (config as any).vite as Record<string, unknown>
@@ -276,6 +301,38 @@ describe('createBlog with mocked config.toml', async () => {
     expect(isCustomElement('math')).toBe(true)
     expect(isCustomElement('div')).toBe(false)
     expect(isCustomElement('span')).toBe(false)
+  })
+
+  it('sets homepage config from homepage section', async () => {
+    const toml = {
+      meta: { title: 'Site Title', description: 'Site Description' },
+      homepage: {
+        title: 'Homepage Title',
+        description: 'Homepage Description'
+      },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.homepage).toEqual({
+      title: 'Homepage Title',
+      description: 'Homepage Description'
+    })
+  })
+
+  it('falls back homepage config to site metadata', async () => {
+    const toml = {
+      meta: { title: 'Site Title', description: 'Site Description' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(toml)
+    const config = await createBlog()
+    expect((config as any).themeConfig.homepage).toEqual({
+      title: 'Site Title',
+      description: 'Site Description'
+    })
   })
 
   it('always sets pageSize in themeConfig', async () => {

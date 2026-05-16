@@ -10,6 +10,10 @@ theme-color = "#42b983"
 icpNumber = ""
 themeLink = ""
 
+[homepage]
+title = "Albert's Blog"
+description = "能纵棹，惯乘流，长江白浪不曾忧"
+
 [nav]
 home = "Home"
 tags = "Tags"
