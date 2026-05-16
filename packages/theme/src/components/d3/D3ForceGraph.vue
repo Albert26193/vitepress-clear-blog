@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
   import * as d3 from 'd3'
-  import lodash from 'lodash'
+  import debounce from 'lodash/debounce'
   import { useRouter, withBase } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
 
@@ -34,8 +34,6 @@
     updateNodeHighlight
   } from '../../utils/client/d3Interaction'
   import { calculateNodeRatios } from '../../utils/client/d3Utils'
-
-  const { debounce } = lodash
 
   const router = useRouter()
   const svgRef = ref<SVGSVGElement | null>(null)

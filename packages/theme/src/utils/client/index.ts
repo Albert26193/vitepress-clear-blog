@@ -5,5 +5,3 @@ export * from './heti'
 export * from './wikilink'
 
 export * from './posts'
-
-export * from './mermaid'

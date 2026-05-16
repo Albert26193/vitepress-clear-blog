@@ -46,7 +46,7 @@
 <script setup lang="ts">
   import { useData, useRoute } from 'vitepress'
   import DefaultTheme from 'vitepress/theme'
-  import { computed, watchEffect } from 'vue'
+  import { computed, defineAsyncComponent, watchEffect } from 'vue'
 
   import { useDarkTransition } from '../composables/useMeta'
   import Collections from './Collections.vue'
@@ -56,9 +56,12 @@
   import Copyright from './common/Copyright.vue'
   import HideSidebarButton from './common/HideSidebarButton.vue'
   import Tags from './common/Tags.vue'
-  import D3PageSidebar from './d3/D3PageSidebar.vue'
   import SidebarLink from './sidebar/SidebarLink.vue'
   import SidebarTag from './sidebar/SidebarTag.vue'
+
+  const D3PageSidebar = defineAsyncComponent(
+    () => import('./d3/D3PageSidebar.vue')
+  )
 
   useDarkTransition()
   const { Layout } = DefaultTheme

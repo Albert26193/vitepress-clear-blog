@@ -1,0 +1,38 @@
+diff --git a/package.json b/package.json
+index 6749b8d6478aff4d2c2845592787992c1cbd0745..0af4492eab2b230d0643d095fec8653e96a9ad96 100644
+--- a/package.json
++++ b/package.json
+@@ -11,6 +11,11 @@
+       "bun": "./src/index.ts",
+       "import": "./dist/index.js",
+       "types": "./dist/index.d.ts"
++    },
++    "./ascii": {
++      "bun": "./src/ascii/index.ts",
++      "import": "./src/ascii/index.ts",
++      "types": "./src/ascii/index.ts"
+     }
+   },
+   "repository": {
+@@ -36,7 +41,12 @@
+     "theming"
+   ],
+   "author": "Craft Docs",
+-  "files": ["src/", "dist/", "LICENSE", "README.md"],
++  "files": [
++    "src/",
++    "dist/",
++    "LICENSE",
++    "README.md"
++  ],
+   "scripts": {
+     "test": "bun test src/__tests__/",
+     "samples": "bun run index.ts",
+@@ -57,5 +67,6 @@
+     "shiki": "^3.19.0",
+     "tsup": "^8.5.1",
+     "typescript": "^5.9.3"
+-  }
++  },
++  "sideEffects": false
+ }
