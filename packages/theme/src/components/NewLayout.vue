@@ -46,12 +46,16 @@
 <script setup lang="ts">
   import { useData, useRoute } from 'vitepress'
   import DefaultTheme from 'vitepress/theme'
-  import { computed, defineAsyncComponent, watchEffect } from 'vue'
+  import { computed, watchEffect } from 'vue'
 
   import { useDarkTransition } from '../composables/useMeta'
+  import Collections from './Collections.vue'
+  import Timeline from './Timeline.vue'
   import DocBanner from './articles/DocBanner.vue'
+  import BlogMain from './blog/BlogMain.vue'
   import Copyright from './common/Copyright.vue'
   import HideSidebarButton from './common/HideSidebarButton.vue'
+  import Tags from './common/Tags.vue'
   import D3PageSidebar from './d3/D3PageSidebar.vue'
   import SidebarLink from './sidebar/SidebarLink.vue'
   import SidebarTag from './sidebar/SidebarTag.vue'
@@ -69,10 +73,10 @@
   })
 
   const ROUTE_COMPONENTS = {
-    timeline: defineAsyncComponent(() => import('./Timeline.vue')),
-    tags: defineAsyncComponent(() => import('./common/Tags.vue')),
-    collections: defineAsyncComponent(() => import('./Collections.vue')),
-    pages: defineAsyncComponent(() => import('./blog/BlogMain.vue'))
+    timeline: Timeline,
+    tags: Tags,
+    collections: Collections,
+    pages: BlogMain
   } as const
 
   const currentComponent = computed(() => {
