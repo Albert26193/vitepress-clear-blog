@@ -55,7 +55,7 @@
 
   const { site } = useData()
   const renderTitle =
-    (site.value.themeConfig as Record<string, unknown>)?.wikiRenderTitle ||
+    (site.value.themeConfig as Record<string, unknown>)?.renderTitle ||
     'frontmatter_title'
 
   const route = useRoute()

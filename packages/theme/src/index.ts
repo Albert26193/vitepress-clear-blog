@@ -32,7 +32,8 @@ import { data as allPostsData } from './utils/node/posts.data'
 /**
  * Extends VitePress with Clear Blog layout, global components, and client-only enhancements.
  */
-declare const __WIKI_RENDER_TITLE__: string
+declare const __RENDER_TITLE__: string
+declare const __LINK_STYLE__: string
 
 export const BlogTheme: Theme = {
   ...DefaultTheme,
@@ -69,6 +70,9 @@ export const BlogTheme: Theme = {
     app.component('Badge', VPBadge)
 
     if (typeof window !== 'undefined') {
+      document.documentElement.dataset.linkStyle =
+        typeof __LINK_STYLE__ !== 'undefined' ? __LINK_STYLE__ : 'origin'
+
       let wikiLinkRefreshTimer: number | undefined
       let wikiLinkObserver: MutationObserver | undefined
       const getBaseFromLocation = () => {
@@ -94,8 +98,8 @@ export const BlogTheme: Theme = {
             base: getBaseFromLocation(),
             currentPath: router.route.data.relativePath,
             renderTitle:
-              typeof __WIKI_RENDER_TITLE__ !== 'undefined'
-                ? __WIKI_RENDER_TITLE__
+              typeof __RENDER_TITLE__ !== 'undefined'
+                ? __RENDER_TITLE__
                 : 'frontmatter_title',
             allPosts: allPostsData
           })

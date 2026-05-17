@@ -7,7 +7,6 @@ import type { SiteMetadata } from '../../../src/types/types.d'
 import type { Post } from '../../../src/types/types.d'
 import {
   BROKEN_LINK_CLASS,
-  BROKEN_WIKI_LINK_CLASS,
   INTERNAL_LINK_SELECTOR,
   getWikiLinkCandidates,
   markBrokenLinks,
@@ -114,7 +113,7 @@ describe('getWikiLinkCandidates', () => {
 })
 
 describe('markBrokenLinks', () => {
-  it('marks unresolved wiki links without changing existing links', () => {
+  it('marks unresolved wiki links with unified broken-link class', () => {
     document.body.innerHTML = `
       <main>
         <a class="clear-wikilink" href="/existing">Existing</a>
@@ -132,16 +131,20 @@ describe('markBrokenLinks', () => {
     const missing =
       document.querySelector<HTMLAnchorElement>('a[href="/missing"]')
 
-    expect(existing?.classList.contains(BROKEN_WIKI_LINK_CLASS)).toBe(false)
+    expect(existing?.getAttribute('data-link-internal')).toBe('')
+    expect(existing?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    expect(existing?.hasAttribute('data-link-broken')).toBe(false)
     expect(existing?.hasAttribute('data-wikilink-broken')).toBe(false)
-    expect(missing?.classList.contains(BROKEN_WIKI_LINK_CLASS)).toBe(true)
+    expect(missing?.getAttribute('data-link-internal')).toBe('')
+    expect(missing?.classList.contains(BROKEN_LINK_CLASS)).toBe(true)
+    expect(missing?.getAttribute('data-link-broken')).toBe('')
     expect(missing?.getAttribute('data-wikilink-broken')).toBe('')
   })
 
   it('is idempotent when called after route changes', () => {
     document.body.innerHTML = `
       <main>
-        <a class="clear-wikilink clear-wikilink--broken" href="/root">Root</a>
+        <a class="clear-wikilink broken-link" href="/root" data-link-broken data-wikilink-broken>Root</a>
       </main>
     `
 
@@ -153,22 +156,35 @@ describe('markBrokenLinks', () => {
     })
 
     const root = document.querySelector<HTMLAnchorElement>('a[href="/root"]')
-    expect(root?.classList.contains(BROKEN_WIKI_LINK_CLASS)).toBe(false)
+    expect(root?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    expect(root?.hasAttribute('data-link-broken')).toBe(false)
+    expect(root?.hasAttribute('data-wikilink-broken')).toBe(false)
+    expect(root?.getAttribute('data-link-internal')).toBe('')
   })
 
-  it('ignores wiki links without hrefs', () => {
+  it('clears stale broken state for skipped links', () => {
     document.body.innerHTML = `
-      <main>
-        <a class="clear-wikilink">No target</a>
-      </main>
+      <div class="vp-doc">
+        <a class="broken-link" href="https://example.com" data-link-internal data-link-broken>External</a>
+        <a class="clear-wikilink broken-link" data-link-internal data-link-broken data-wikilink-broken>No target</a>
+      </div>
     `
 
-    expect(() => markBrokenLinks(siteMetadata)).not.toThrow()
-    expect(
-      document
-        .querySelector('.clear-wikilink')
-        ?.classList.contains(BROKEN_WIKI_LINK_CLASS)
-    ).toBe(false)
+    markBrokenLinks(siteMetadata)
+
+    const external = document.querySelector<HTMLAnchorElement>(
+      'a[href="https://example.com"]'
+    )
+    const noTarget = document.querySelector<HTMLAnchorElement>(
+      'a.clear-wikilink:not([href])'
+    )
+
+    expect(external?.hasAttribute('data-link-internal')).toBe(false)
+    expect(external?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    expect(external?.hasAttribute('data-link-broken')).toBe(false)
+    expect(noTarget?.hasAttribute('data-link-internal')).toBe(false)
+    expect(noTarget?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    expect(noTarget?.hasAttribute('data-wikilink-broken')).toBe(false)
   })
 
   it('replaces link text with canonical title when renderTitle is set', () => {
@@ -352,17 +368,20 @@ describe('markBrokenLinks for standard markdown links', () => {
     const missing =
       document.querySelector<HTMLAnchorElement>('a[href="/missing"]')
 
+    expect(existing?.getAttribute('data-link-internal')).toBe('')
     expect(existing?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
     expect(existing?.hasAttribute('data-link-broken')).toBe(false)
+    expect(missing?.getAttribute('data-link-internal')).toBe('')
     expect(missing?.classList.contains(BROKEN_LINK_CLASS)).toBe(true)
     expect(missing?.getAttribute('data-link-broken')).toBe('')
   })
 
-  it('skips external links', () => {
+  it('skips external and non-page links without internal markers', () => {
     document.body.innerHTML = `
       <div class="vp-doc">
         <a href="https://example.com">External</a>
         <a href="mailto:test@test.com">Email</a>
+        <a href="tel:123456">Phone</a>
         <a href="#section">Anchor</a>
       </div>
     `
@@ -371,18 +390,13 @@ describe('markBrokenLinks for standard markdown links', () => {
       currentPath: '/blogs/current'
     })
 
-    const external = document.querySelector<HTMLAnchorElement>(
-      'a[href="https://example.com"]'
-    )
-    const email = document.querySelector<HTMLAnchorElement>(
-      'a[href="mailto:test@test.com"]'
-    )
-    const anchor =
-      document.querySelector<HTMLAnchorElement>('a[href="#section"]')
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('a'))
 
-    expect(external?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
-    expect(email?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
-    expect(anchor?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    for (const link of links) {
+      expect(link.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+      expect(link.hasAttribute('data-link-internal')).toBe(false)
+      expect(link.hasAttribute('data-link-broken')).toBe(false)
+    }
   })
 
   it('replaces markdown link text with canonical title', () => {
@@ -417,7 +431,7 @@ describe('markBrokenLinks for standard markdown links', () => {
     expect(link?.textContent).toBe('Post Title')
   })
 
-  it('wiki links still get clear-wikilink--broken class', () => {
+  it('wiki links get unified broken-link class', () => {
     document.body.innerHTML = `
       <div class="vp-doc">
         <a class="clear-wikilink" href="/missing">Wiki Missing</a>
@@ -429,9 +443,9 @@ describe('markBrokenLinks for standard markdown links', () => {
     })
 
     const link = document.querySelector<HTMLAnchorElement>('a[href="/missing"]')
-    expect(link?.classList.contains(BROKEN_WIKI_LINK_CLASS)).toBe(true)
+    expect(link?.classList.contains(BROKEN_LINK_CLASS)).toBe(true)
+    expect(link?.hasAttribute('data-link-broken')).toBe(true)
     expect(link?.hasAttribute('data-wikilink-broken')).toBe(true)
-    expect(link?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
   })
 })
 

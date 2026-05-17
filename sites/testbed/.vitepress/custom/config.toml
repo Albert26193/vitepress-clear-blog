@@ -49,6 +49,7 @@ hashtag = true
 mermaid = true
 callout = true
 render_title = "frontmatter_title"
+link_style = "wiki"
 
 [theme]
 vp-c-bg = "#fafafa"

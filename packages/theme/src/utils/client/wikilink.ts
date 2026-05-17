@@ -12,7 +12,6 @@ interface WikiLinkOptions {
 
 const WIKI_LINK_SELECTOR = 'a.clear-wikilink'
 const INTERNAL_LINK_SELECTOR = '.vp-doc a[href], a.clear-wikilink'
-const BROKEN_WIKI_LINK_CLASS = 'clear-wikilink--broken'
 const BROKEN_LINK_CLASS = 'broken-link'
 
 const trimBase = (path: string, base = '/'): string => {
@@ -170,22 +169,24 @@ const markBrokenLinks = (
 
   allLinks.forEach((link) => {
     const href = link.getAttribute('href')
-    if (!href || isExternalHref(href)) return
+    if (!href || isExternalHref(href)) {
+      link.removeAttribute('data-link-internal')
+      link.classList.remove(BROKEN_LINK_CLASS)
+      link.removeAttribute('data-link-broken')
+      link.removeAttribute('data-wikilink-broken')
+      return
+    }
 
     const isWikiLink = link.classList.contains('clear-wikilink')
     const candidates = getWikiLinkCandidates(href, options)
     const matched = candidates.find((candidate) => existingPages.has(candidate))
     const exists = !!matched
 
-    if (isWikiLink) {
-      link.classList.toggle(BROKEN_WIKI_LINK_CLASS, !exists)
-      link.toggleAttribute('data-wikilink-broken', !exists)
-    } else {
-      link.classList.toggle(BROKEN_LINK_CLASS, !exists)
-      link.toggleAttribute('data-link-broken', !exists)
-    }
+    link.toggleAttribute('data-link-internal', true)
+    link.classList.toggle(BROKEN_LINK_CLASS, !exists)
+    link.toggleAttribute('data-link-broken', !exists)
+    link.toggleAttribute('data-wikilink-broken', isWikiLink && !exists)
 
-    // Replace link text with canonical title when configured
     if (exists && matched && renderTitle !== 'alias') {
       const title = resolveLinkTitle(
         matched,
@@ -202,7 +203,6 @@ const markBrokenLinks = (
 
 export {
   BROKEN_LINK_CLASS,
-  BROKEN_WIKI_LINK_CLASS,
   INTERNAL_LINK_SELECTOR,
   WIKI_LINK_SELECTOR,
   getWikiLinkCandidates,

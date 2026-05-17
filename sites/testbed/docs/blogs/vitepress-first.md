@@ -38,6 +38,8 @@ console.log('hello world')
 
 [test](./111.md)
 
+[external test](https://example.com)
+
 <a href="./111.md">111</a>
 
 <a href="./111">1111test</a>

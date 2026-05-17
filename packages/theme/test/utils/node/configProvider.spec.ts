@@ -118,7 +118,8 @@ describe('createBlog with mocked config.toml', async () => {
       mathjax: true,
       wikilinks: true,
       footnote: false,
-      render_title: 'frontmatter_title'
+      render_title: 'frontmatter_title',
+      link_style: 'wiki'
     },
     theme: { 'vp-c-brand': '#ff0000', dark: { 'vp-c-brand': '#00ff00' } }
   }
@@ -139,10 +140,16 @@ describe('createBlog with mocked config.toml', async () => {
     expect((config as any).srcDir).toBe('./docs')
   })
 
-  it('sets wikiRenderTitle in themeConfig', async () => {
+  it('sets renderTitle in themeConfig', async () => {
     const config = await createBlog()
     const tc = (config as any).themeConfig
-    expect(tc.wikiRenderTitle).toBe('frontmatter_title')
+    expect(tc.renderTitle).toBe('frontmatter_title')
+  })
+
+  it('sets linkStyle in themeConfig', async () => {
+    const config = await createBlog()
+    const tc = (config as any).themeConfig
+    expect(tc.linkStyle).toBe('wiki')
   })
 
   it('creates navigation from toml nav labels', async () => {
@@ -203,12 +210,36 @@ describe('createBlog with mocked config.toml', async () => {
     expect((config as any).themeConfig.outlineTitle).toBe('Table of Contents')
   })
 
-  it('includes vite define for render_title', async () => {
+  it('includes vite defines for render_title and link_style', async () => {
     const config = await createBlog()
     const vite = (config as any).vite as Record<string, unknown>
     expect(vite.define).toBeDefined()
-    expect((vite.define as Record<string, string>).__WIKI_RENDER_TITLE__).toBe(
+    expect((vite.define as Record<string, string>).__RENDER_TITLE__).toBe(
       '"frontmatter_title"'
+    )
+    expect((vite.define as Record<string, string>).__LINK_STYLE__).toBe(
+      '"wiki"'
+    )
+  })
+
+  it('uses default renderTitle and linkStyle when markdown options are missing', async () => {
+    const sparseToml = {
+      meta: { title: 'Sparse Markdown' },
+      page: {},
+      theme: {}
+    }
+    mockLoadConfig.mockReturnValue(sparseToml)
+    const config = await createBlog()
+    const tc = (config as any).themeConfig
+    const vite = (config as any).vite as Record<string, unknown>
+
+    expect(tc.renderTitle).toBe('frontmatter_title')
+    expect(tc.linkStyle).toBe('origin')
+    expect((vite.define as Record<string, string>).__RENDER_TITLE__).toBe(
+      '"frontmatter_title"'
+    )
+    expect((vite.define as Record<string, string>).__LINK_STYLE__).toBe(
+      '"origin"'
     )
   })
 

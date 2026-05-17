@@ -34,7 +34,9 @@ describe('configTomlSchema', () => {
         footnote: true,
         hashtag: true,
         mermaid: true,
-        callout: true
+        callout: true,
+        render_title: 'frontmatter_title',
+        link_style: 'wiki'
       },
       nav: {
         home: 'Home',
@@ -92,6 +94,48 @@ describe('configTomlSchema', () => {
     const result = configTomlSchema.safeParse({
       theme: {},
       page: { pageSize: 3.5 }
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('markdown link_style', () => {
+  it('accepts link_style = "wiki"', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { link_style: 'wiki' }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts link_style = "origin"', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { link_style: 'origin' }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts config missing link_style', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { render_title: 'frontmatter_title' }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects invalid link_style values', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { link_style: 'invalid' }
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-string link_style values', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { link_style: true }
     })
     expect(result.success).toBe(false)
   })
