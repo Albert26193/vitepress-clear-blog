@@ -8,6 +8,8 @@ import { setupCodeBlockFold } from 'vitepress-plugin-codeblock-fold'
 import 'vitepress-plugin-codeblock-fold/style.css'
 import { DetailsBlock } from 'vitepress-plugin-details-block'
 import 'vitepress-plugin-details-block/dist/index.css'
+import { HashtagTag } from 'vitepress-plugin-hashtag/client'
+import 'vitepress-plugin-hashtag/client.css'
 import DefaultTheme from 'vitepress/theme'
 import { VPBadge } from 'vitepress/theme'
 import { defineAsyncComponent, nextTick, onMounted, watch } from 'vue'
@@ -45,6 +47,7 @@ export const BlogTheme: Theme = {
     app.component('BlogMain', BlogMain)
     app.component('SidebarTag', SidebarTag)
     app.component('SidebarLink', SidebarLink)
+    app.component('HashtagTag', HashtagTag)
     app.component(
       'D3PageSidebar',
       defineAsyncComponent(() => import('./components/d3/D3PageSidebar.vue'))

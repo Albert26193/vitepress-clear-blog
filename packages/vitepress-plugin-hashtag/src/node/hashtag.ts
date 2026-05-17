@@ -18,11 +18,11 @@ const hashtagPlugin = (md: MarkdownIt): void => {
 
   md.renderer.rules.hashtag_open = function (tokens, idx) {
     const tagName = tokens[idx].content.toLowerCase()
-    return `<a href='/tags?tag=${tagName}' class='blog-tag'>`
+    return `<HashtagTag tag="${md.utils.escapeHtml(tagName)}">`
   }
 
   md.renderer.rules.hashtag_close = function () {
-    return '</a>'
+    return '</HashtagTag>'
   }
 }
 

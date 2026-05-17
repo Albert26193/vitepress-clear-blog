@@ -19,8 +19,8 @@ describe('hashtagPlugin', () => {
       {} as any
     )
     expect(result).toContain('vuejs')
-    expect(result).toContain("class='blog-tag'")
-    expect(result).toContain("href='/tags?tag=")
+    expect(result).toContain('<HashtagTag')
+    expect(result).toContain('tag="vuejs"')
   })
 
   it('renders hashtag_text with # prefix', () => {
@@ -40,7 +40,7 @@ describe('hashtagPlugin', () => {
     expect(result).toBe('#MyTag')
   })
 
-  it('renders hashtag_close as closing anchor tag', () => {
+  it('renders hashtag_close as closing component tag', () => {
     const md = new MarkdownIt()
     hashtagPlugin(md)
 
@@ -48,7 +48,7 @@ describe('hashtagPlugin', () => {
     expect(closeRule).toBeDefined()
 
     const result = closeRule!([], 0, {}, {}, {} as any)
-    expect(result).toBe('</a>')
+    expect(result).toBe('</HashtagTag>')
   })
 
   it('handles tags with special characters', () => {

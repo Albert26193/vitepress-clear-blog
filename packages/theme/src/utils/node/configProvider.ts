@@ -1,3 +1,4 @@
+import type MarkdownIt from 'markdown-it'
 import footnotePlugin from 'markdown-it-footnote'
 import mathjax3 from 'markdown-it-mathjax3'
 import wikilinks from 'markdown-it-wikilinks'
@@ -24,6 +25,17 @@ import llmstxt from 'vitepress-plugin-llms'
 import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
 import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
+
+const isLinkStyleTargetHref = (href: string): boolean => {
+  if (!href) return false
+  return !(
+    href.startsWith('http') ||
+    href.startsWith('https') ||
+    href.startsWith('mailto:') ||
+    href.startsWith('tel:') ||
+    href.startsWith('#')
+  )
+}
 
 /**
  * Creates the default Clear Blog VitePress config fragment with core plugins wired in.
@@ -177,14 +189,30 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
 
   const markdown = {
     theme: { light: 'github-light', dark: 'ayu-dark' },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    config: (md: any) => {
+    config: (md: MarkdownIt) => {
+      const defaultLinkOpen =
+        md.renderer.rules.link_open ||
+        ((tokens, idx, options, _env, self) =>
+          self.renderToken(tokens, idx, options))
+
+      md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+        const token = tokens[idx]
+        const href = token.attrGet('href')
+        if (isLinkStyleTargetHref(href || '')) {
+          token.attrSet('data-link-style-target', '')
+        }
+        return defaultLinkOpen(tokens, idx, options, env, self)
+      }
+
       if (mdConf.mathjax !== false) md.use(mathjax3)
       if (mdConf.wikilinks !== false) {
         md.use(
           wikilinks({
             baseURL: '/',
-            htmlAttributes: { class: 'clear-wikilink' }
+            htmlAttributes: {
+              class: 'clear-wikilink',
+              'data-link-style-target': ''
+            }
           })
         )
       }

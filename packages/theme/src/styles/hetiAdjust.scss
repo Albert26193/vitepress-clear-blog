@@ -10,7 +10,6 @@
 
 .VPDoc {
   .main {
-
     /* Restore standard underline for markdown content links */
     &.heti .vp-doc a:hover {
       padding-block-end: unset;
@@ -54,7 +53,7 @@
         background-color: var(--vp-c-divider);
       }
 
-      a.blog-tag {
+      .blog-tag {
         text-decoration: none;
 
         &:hover {
