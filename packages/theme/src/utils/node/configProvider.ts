@@ -259,9 +259,12 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
           string,
           string
         >) || {}),
-        __WIKI_RENDER_TITLE__: JSON.stringify(
+        __RENDER_TITLE__: JSON.stringify(
           (mdConf as Record<string, unknown>).render_title ||
             'frontmatter_title'
+        ),
+        __LINK_STYLE__: JSON.stringify(
+          (mdConf as Record<string, unknown>).link_style || 'origin'
         )
       }
     },
@@ -278,8 +281,9 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       search: { provider: 'local' },
       outline: [2, 3],
       outlineTitle: outline.title || DEFAULT_OUTLINE.title,
-      wikiRenderTitle:
+      renderTitle:
         (mdConf as Record<string, unknown>).render_title || 'frontmatter_title',
+      linkStyle: (mdConf as Record<string, unknown>).link_style || 'origin',
       website: meta.siteUrl || '',
       icpNumber: meta.icpNumber || '',
       themeLink: meta.themeLink || DEFAULT_META.themeLink,

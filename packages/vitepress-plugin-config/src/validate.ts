@@ -34,7 +34,8 @@ const markdownSchema = z.object({
   callout: z.boolean().optional(),
   render_title: z
     .enum(['frontmatter_title', 'first_heading', 'alias', 'file_name'])
-    .optional()
+    .optional(),
+  link_style: z.enum(['wiki', 'origin']).optional()
 })
 
 const metaSchema = z.object({

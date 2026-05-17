@@ -80,6 +80,7 @@ export interface ConfigToml {
     mermaid?: boolean
     callout?: boolean
     render_title?: 'frontmatter_title' | 'first_heading' | 'alias' | 'file_name'
+    link_style?: 'wiki' | 'origin'
   }
   datetime?: DatetimeConfig
   blog?: BlogConfig

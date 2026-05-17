@@ -101,6 +101,9 @@ about = "About"
 #   • first_heading      — use the first H1 in the target file
 #   • alias              — use the link alias (the text after | in [[…|alias]])
 #   • file_name          — derive from the file name
+# link_style — visual style for internal links.
+#   • origin — keep native markdown link style
+#   • wiki   — render internal links with [[ ]] decoration
 # ---------------------------------------------------------------------------
 [markdown]
 mathjax = true
@@ -110,6 +113,7 @@ hashtag = true
 mermaid = true
 callout = true
 render_title = "frontmatter_title"
+link_style = "origin"
 
 # ---------------------------------------------------------------------------
 # CSS variable overrides (light mode)

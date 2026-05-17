@@ -1,37 +1,27 @@
 .VPDoc {
   .main {
     .vp-doc {
-      .clear-wikilink {
-        color: var(--vp-c-brand-1);
-        white-space: normal;
-        padding: 0 2px;
-        // position: relative;
+      html[data-link-style='wiki'] & {
+        .clear-wikilink:not(.broken-link),
+        a[data-link-internal]:not(.broken-link) {
+          color: var(--vp-c-brand-1);
+          white-space: normal;
+          padding: 0 2px;
+          padding-inline-start: 3px;
+          padding-inline-end: 3px;
 
-        &::before {
-          content: '[[';
-          padding-right: 2px;
-        }
+          &::before {
+            content: '[[';
+            padding-right: 2px;
+          }
 
-        &::after {
-          content: ']]';
-          padding-left: 2px;
-        }
-        padding-inline-start: 3px;
-        padding-inline-end: 3px;
-
-        &:hover {
-          padding-block-end: 3px;
-        }
-
-        &.clear-wikilink--broken {
-          color: var(--vp-c-text-3);
-          text-decoration-line: underline;
-          text-decoration-style: dashed;
-          text-decoration-thickness: 1px;
-          text-underline-offset: 3px;
+          &::after {
+            content: ']]';
+            padding-left: 2px;
+          }
 
           &:hover {
-            color: var(--vp-c-text-2);
+            padding-block-end: 3px;
           }
         }
       }
