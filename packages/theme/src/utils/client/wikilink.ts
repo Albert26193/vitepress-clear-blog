@@ -173,11 +173,9 @@ const markBrokenLinks = (
       link.removeAttribute('data-link-internal')
       link.classList.remove(BROKEN_LINK_CLASS)
       link.removeAttribute('data-link-broken')
-      link.removeAttribute('data-wikilink-broken')
       return
     }
 
-    const isWikiLink = link.classList.contains('clear-wikilink')
     const candidates = getWikiLinkCandidates(href, options)
     const matched = candidates.find((candidate) => existingPages.has(candidate))
     const exists = !!matched
@@ -185,7 +183,6 @@ const markBrokenLinks = (
     link.toggleAttribute('data-link-internal', true)
     link.classList.toggle(BROKEN_LINK_CLASS, !exists)
     link.toggleAttribute('data-link-broken', !exists)
-    link.toggleAttribute('data-wikilink-broken', isWikiLink && !exists)
 
     if (exists && matched && renderTitle !== 'alias') {
       const title = resolveLinkTitle(

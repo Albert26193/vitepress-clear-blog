@@ -2,8 +2,7 @@
   .main {
     .vp-doc {
       html[data-link-style='wiki'] & {
-        .clear-wikilink:not(.broken-link),
-        a[data-link-internal]:not(.broken-link) {
+        a[data-link-style-target]:not(.broken-link) {
           color: var(--vp-c-brand-1);
           white-space: normal;
           padding: 0 2px;

@@ -1,0 +1,16 @@
+.blog-tag {
+  color: var(--vp-c-text-1);
+  font-size: 12px;
+  border: 1px solid var(--vp-c-text-1);
+  border-radius: 9999px;
+  padding: 4px 11px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 200ms, color 200ms;
+}
+
+.blog-tag:hover {
+  border: 1px solid var(--vp-c-brand);
+  color: var(--vp-c-brand);
+  text-decoration: none;
+}

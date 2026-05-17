@@ -1,4 +1,5 @@
 // @vitest-environment node
+import MarkdownIt from 'markdown-it'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { mockLoadConfig } = vi.hoisted(() => ({
@@ -241,6 +242,23 @@ describe('createBlog with mocked config.toml', async () => {
     expect((vite.define as Record<string, string>).__LINK_STYLE__).toBe(
       '"origin"'
     )
+  })
+
+  it('marks only markdown content links as link style targets', async () => {
+    const config = await createBlog()
+    const md = new MarkdownIt()
+    ;(config as any).markdown.config(md)
+
+    const html = md.render(
+      '[Internal](/blogs/existing) [External](https://example.com) #VueJS'
+    )
+
+    expect(html).toContain('href="/blogs/existing" data-link-style-target=""')
+    expect(html).toContain('href="https://example.com"')
+    expect(html).not.toContain(
+      'href="https://example.com" data-link-style-target'
+    )
+    expect(html).toContain('<HashtagTag tag="vuejs">#VueJS</HashtagTag>')
   })
 
   it('includes og meta tags', async () => {

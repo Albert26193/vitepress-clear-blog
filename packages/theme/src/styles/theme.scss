@@ -106,18 +106,6 @@
       text-decoration: none;
     }
 
-    a.blog-tag {
-      color: var(--vp-c-text-1);
-      font-size: 12px;
-      border: 1px solid var(--vp-c-text-1);
-      border-radius: 9999px;
-      padding: 4px 11px;
-      &:hover {
-        border: 1px solid var(--vp-c-brand);
-        color: var(--vp-c-brand);
-      }
-    }
-
     pre,
     ol,
     ul,

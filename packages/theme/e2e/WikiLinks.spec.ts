@@ -24,7 +24,6 @@ test.describe('WikiLinks', () => {
     await expect(missing).toBeVisible()
     await expect(missing).toHaveClass(/broken-link/)
     await expect(missing).toHaveAttribute('data-link-broken', '')
-    await expect(missing).toHaveAttribute('data-wikilink-broken', '')
 
     const textDecorationStyle = await missing.evaluate(
       (element) => getComputedStyle(element).textDecorationStyle
@@ -32,7 +31,9 @@ test.describe('WikiLinks', () => {
     expect(textDecorationStyle).toBe('dashed')
   })
 
-  test('applies wiki link style only to internal links', async ({ page }) => {
+  test('applies wiki link style only to markdown content links', async ({
+    page
+  }) => {
     await expect(page.locator('html')).toHaveAttribute(
       'data-link-style',
       'wiki'
@@ -42,7 +43,7 @@ test.describe('WikiLinks', () => {
       .locator('a.clear-wikilink', { hasText: '111' })
       .first()
     const markdownInternalLink = page
-      .locator('.vp-doc a[href$="111.html"]')
+      .locator('.vp-doc a[href$="111.html"][data-link-style-target]')
       .filter({ hasNot: page.locator('.clear-wikilink') })
       .first()
     const externalImageLink = page
@@ -50,7 +51,12 @@ test.describe('WikiLinks', () => {
       .first()
 
     await expect(wikiLink).toHaveAttribute('data-link-internal', '')
+    await expect(wikiLink).toHaveAttribute('data-link-style-target', '')
     await expect(markdownInternalLink).toHaveAttribute('data-link-internal', '')
+    await expect(markdownInternalLink).toHaveAttribute(
+      'data-link-style-target',
+      ''
+    )
     await expect(externalImageLink).not.toHaveAttribute(
       'data-link-internal',
       ''
@@ -69,6 +75,48 @@ test.describe('WikiLinks', () => {
     expect(wikiBefore).toContain('[[')
     expect(markdownBefore).toContain('[[')
     expect(externalBefore).not.toContain('[[')
+  })
+
+  test('does not apply wiki decoration to timeline post links', async ({
+    page
+  }) => {
+    await page.goto('/timeline')
+    await page.waitForLoadState('networkidle')
+
+    const timelinePostLink = page
+      .locator('.timeline-page .post-item', { hasText: 'Test title' })
+      .first()
+
+    await expect(timelinePostLink).toBeVisible()
+    await expect(timelinePostLink).not.toHaveAttribute(
+      'data-link-style-target',
+      ''
+    )
+
+    const before = await timelinePostLink.evaluate(
+      (element) => getComputedStyle(element, '::before').content
+    )
+    expect(before).not.toContain('[[')
+  })
+
+  test('renders hashtag tags without anchor wiki decoration', async ({
+    page
+  }) => {
+    await page.goto('/blogs/some-doc')
+    await page.waitForLoadState('networkidle')
+
+    const hashtagTag = page
+      .locator('.vp-doc .blog-tag', { hasText: '#aaa' })
+      .first()
+
+    await expect(hashtagTag).toBeVisible()
+    await expect(hashtagTag).not.toHaveJSProperty('tagName', 'A')
+    await expect(hashtagTag).not.toHaveAttribute('data-link-style-target', '')
+
+    const before = await hashtagTag.evaluate(
+      (element) => getComputedStyle(element, '::before').content
+    )
+    expect(before).not.toContain('[[')
   })
 
   test('does not render wiki decoration for broken links', async ({ page }) => {
