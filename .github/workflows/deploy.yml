@@ -45,39 +45,7 @@ jobs:
           mkdir -p _deploy/demo _deploy/testbed
           cp -r sites/demo/.vitepress/dist/* _deploy/demo/
           cp -r sites/testbed/.vitepress/dist/* _deploy/testbed/
-          cat > _deploy/index.html <<'INDEXEOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>VitePress Clear Blog</title>
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: system-ui, -apple-system, sans-serif; background: #1e1e1e; color: #e0e0e0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-            .card { background: #2d2d2d; border-radius: 12px; padding: 48px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
-            h1 { font-size: 1.5rem; margin-bottom: 8px; color: #fff; }
-            p { color: #888; margin-bottom: 32px; font-size: 0.95rem; }
-            .links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-            a { display: block; padding: 14px 36px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
-            .demo { background: #3b82f6; color: #fff; }
-            .demo:hover { background: #2563eb; }
-            .testbed { background: #10b981; color: #fff; }
-            .testbed:hover { background: #059669; }
-          </style>
-          </head>
-          <body>
-          <div class="card">
-            <h1>VitePress Clear Blog</h1>
-            <p>A clean, customizable VitePress blog theme</p>
-            <div class="links">
-              <a class="demo" href="/vitepress-clear-blog/demo/">Demo Site</a>
-              <a class="testbed" href="/vitepress-clear-blog/testbed/">Testbed</a>
-            </div>
-          </div>
-          </body>
-          </html>
-          INDEXEOF
+          cp .github/workflows/index.html _deploy/index.html
 
       - uses: actions/upload-pages-artifact@v4
         with:
