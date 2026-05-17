@@ -27,7 +27,7 @@
   import BlogListItem from './BlogListItem.vue'
 
   const { theme } = useData()
-  const pageSize = theme.value.pageSize || 4
+  const pageSize = theme.value.pageSizeList || theme.value.pageSize || 4
   const pageCurrent = ref(1)
 
   // Current page posts
