@@ -8,17 +8,18 @@
       </div>
       <!-- current article's tag list -->
       <div v-if="currentTags.length" class="current-tags">
-        <div
+        <BlogTagItem
           v-for="tag in currentTags"
           :key="tag"
-          :class="[
-            'tag sidebar-tag heti heti--serif',
-            { 'side-tag-active': activeTag === tag }
-          ]"
+          :text="tag"
+          :active="activeTag === tag"
+          bordered
+          :py="0.5"
+          :px="2"
+          :font-size="12"
+          class="sidebar-tag heti heti--serif"
           @click="toggleTagFilter(tag)"
-        >
-          {{ tag }}
-        </div>
+        />
       </div>
       <!-- related posts -->
       <div v-if="filteredRelatedPosts.length" class="related-posts">
@@ -27,14 +28,14 @@
           v-for="post in filteredRelatedPosts"
           :key="post.regularPath"
           :href="isCurrentPage(post) ? undefined : withBase(post.regularPath)"
-          :title="useTitle(post.frontMatter, post.html || '')"
+          :title="useTitle(post.frontMatter, post.html)"
           :class="[
             'page-link slide-enter',
             { 'current-page': isCurrentPage(post) }
           ]"
           @click="isCurrentPage(post) && $event.preventDefault()"
         >
-          {{ useTitle(post.frontMatter, post.html || '') }}
+          {{ useTitle(post.frontMatter, post.html) }}
         </a>
       </div>
       <!-- if no related posts -->
@@ -50,6 +51,7 @@
   import { useTitle } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
   import { data as allPostsData } from '../../utils/node/posts.data.js'
+  import BlogTagItem from '../common/BlogTagItem.vue'
 
   const { frontmatter } = useData()
   const route = useRoute()
@@ -125,22 +127,6 @@
     @apply flex flex-wrap gap-x-1 gap-y-[6px] pb-4;
     @apply border-b-dashed border-b-1;
     @apply border-gray-300 dark:border-gray-700/60;
-  }
-
-  .sidebar-tag {
-    @apply inline-block px-[0.5rem] py-[3px];
-    @apply text-[11px] font-normal;
-  }
-
-  .sidebar-tag::after {
-    content: attr(data-text);
-    @apply hidden h-0 overflow-hidden font-semibold;
-  }
-
-  .side-tag-active {
-    @apply box-border;
-    @apply color-[var(--vp-c-brand)] border-[var(--vp-c-brand)];
-    @apply ring-0.5px ring-[var(--vp-c-brand)];
   }
 
   .related-posts {

@@ -6,7 +6,7 @@ export default defineConfig({
   expect: { timeout: 10000 },
   retries: process.env.CI ? 2 : 0,
   fullyParallel: true,
-  workers: process.env.CI ? 4 : undefined,
+  workers: 4,
   reporter: [['list'], ['./e2e/coverage-reporter.ts']],
   use: {
     baseURL: 'http://localhost:4173',

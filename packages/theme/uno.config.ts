@@ -86,6 +86,7 @@ export default defineConfig({
       'tag-active',
       'tag border-[var(--vp-c-brand)] bg-[var(--vp-c-brand)] text-white'
     ],
-    ['custom-page-layout', 'w-full h-full mx-auto']
+    ['custom-page-layout', 'w-full h-full mx-auto'],
+    ['border-debug', 'border-1 border-solid border-red']
   ]
 })

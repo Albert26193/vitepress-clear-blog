@@ -24,7 +24,7 @@ const getTitleFromPost = (link: PageLink, allPosts: Post[]): string => {
   })
 
   if (matchedPost) {
-    const title = useTitle(matchedPost.frontMatter, matchedPost.html || '')
+    const title = useTitle(matchedPost.frontMatter, matchedPost.html)
     return (
       title ||
       matchedPost.regularPath

@@ -1,16 +1,17 @@
 <template>
   <div class="custom-page-layout max-w-880px">
     <div class="tags-container slide-enter">
-      <span
-        @click="toggleTag(String(key))"
+      <BlogTagItem
         v-for="(_, key) in sortTags(tagsList)"
         :key="key"
+        :text="String(key)"
+        :active="selectedTag === String(key)"
+        :count="tagsList[key].length"
+        :px="3"
+        :font-size="13"
         class="tag-view tag heti heti--serif font-bold"
-        :class="{ active: selectedTag === String(key) }"
-      >
-        {{ key }}
-        <span class="count">{{ tagsList[key].length }}</span>
-      </span>
+        @click="toggleTag(String(key))"
+      />
     </div>
     <div class="tag-header">
       <span class="i-carbon-tag-group text-xl" />
@@ -38,7 +39,7 @@
           @click="router.go(withBase(article.regularPath))"
         >
           <div class="post-dot"></div>
-          {{ useTitle(article.frontMatter, article.html || '') }}
+          {{ useTitle(article.frontMatter, article.html) }}
         </div>
         <div class="date font-serif">
           {{ useTimeFormat(article.frontMatter.date) }}
@@ -56,6 +57,7 @@
   import { Post } from '../../types/types'
   import { initTags } from '../../utils/client/'
   import { data as allPostsData } from '../../utils/node/posts.data.js'
+  import BlogTagItem from './BlogTagItem.vue'
 
   const router = useRouter()
   const tagsList = computed(() => (allPostsData ? initTags(allPostsData) : {}))
@@ -117,30 +119,13 @@
     @apply md:mx-0 md:p-4;
   }
 
-  /* Count */
-  .count {
-    @apply color-[var(--vp-c-brand)] ml-2;
-  }
-
-  /* Tag View */
+  /* Tag View — overrides base BlogTagItem for tags-page look */
   .tag-view {
-    @apply inline-block cursor-pointer rounded-full transition-all duration-300;
-    @apply font-500 px-2 py-[2px] text-[11px];
-    @apply md:px-3 md:text-[13px];
+    transition: all 300ms;
   }
 
-  /* Tag View Active */
   .tag-view.active {
-    @apply box-border border-[var(--vp-c-brand)] text-[var(--vp-c-brand)];
-    @apply ring-0.5px ring-[var(--vp-c-brand)] transition-all duration-300;
-  }
-
-  .tag-view.active .count {
-    @apply transition-colors duration-300;
-  }
-
-  .tag-view:hover .count {
-    @apply color-[var(--tag-hover-color)];
+    border-color: var(--vp-c-brand);
   }
 
   /* Tag Header */

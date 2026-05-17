@@ -14,6 +14,26 @@ themeLink = ""
 title = "Albert's Blog"
 description = "能纵棹，惯乘流，长江白浪不曾忧"
 
+[page]
+pageSize = 10
+
+[datetime]
+frontmatterFields = ["date", "created", "createdAt", "published", "publishedAt"]
+formats = ["YYYY-MM-DD", "YYYY/MM/DD", "YYYY-MM-DD HH:mm:ss", "YYYY/MM/DD HH:mm:ss", "YYYY-MM-DDTHH:mm:ssZ"]
+outputFormat = "YYYY/MM/DD"
+
+[blog]
+defaultViewMode = "card"
+
+[outline]
+title = "Table of Contents"
+
+[timeline]
+sortDirection = "desc"
+
+[links]
+resolutionModes = ["repoRoot", "absolutePath", "relativeToCurrentFile", "obsidianShortest"]
+
 [nav]
 home = "Home"
 tags = "Tags"
@@ -28,9 +48,7 @@ footnote = true
 hashtag = true
 mermaid = true
 callout = true
-
-[page]
-pageSize = 10
+render_title = "frontmatter_title"
 
 [theme]
 vp-c-bg = "#fafafa"

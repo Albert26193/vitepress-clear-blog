@@ -50,3 +50,10 @@ cache
 .cursor
 .ai_dev*
 packages/vitepress-plugin-analyzer/coverage/
+
+# local bookmark
+**/*/bookmarks.json
+**/*/bookmark.json
+
+# local
+.local_*

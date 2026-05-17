@@ -5,18 +5,11 @@
         <BlogCardItem :post="post"></BlogCardItem>
       </div>
     </div>
-    <footer class="page-footer">
-      <div class="pagination">
-        <a
-          v-for="i in pagesNum"
-          :key="i"
-          class="link ml-1"
-          :class="{ active: pageCurrent === i }"
-          @click="handlePageChange(i)"
-          >{{ i }}</a
-        >
-      </div>
-    </footer>
+    <PaginationFooter
+      :pages-num="pagesNum"
+      :page-current="pageCurrent"
+      @page-change="handlePageChange"
+    />
   </div>
 </template>
 
@@ -25,6 +18,7 @@
   import { computed, ref } from 'vue'
 
   import { data as allPostsData } from '../../utils/node/posts.data'
+  import PaginationFooter from '../common/PaginationFooter.vue'
   import BlogCardItem from './BlogCardItem.vue'
 
   const { theme } = useData()
@@ -62,27 +56,10 @@
   }
 
   .card-container {
-    @apply mx-auto grid flex-1 grid-cols-1 content-start gap-x-6 gap-y-4;
-    @apply sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3;
+    @apply mx-auto grid w-full flex-1 grid-cols-1 content-start gap-x-6 gap-y-4;
+    @apply md:grid-cols-2 xl:grid-cols-3;
     @apply max-w-[1280px] self-stretch;
-  }
-
-  .page-footer {
-    @apply mt-auto shrink-0 border-t border-gray-200 px-3 pt-6 pb-2;
-    @apply dark:border-[var(--vp-c-divider)] dark:text-gray-400;
-  }
-
-  .pagination {
-    @apply flex justify-center;
-  }
-
-  .pagination .link {
-    @apply flex h-6 w-6 cursor-pointer items-center justify-center rounded-md;
-    @apply text-gray-600 dark:text-gray-400;
-  }
-
-  .pagination .link.active {
-    @apply bg-[var(--vp-c-brand)] text-gray-100 shadow-xl;
+    @apply sm:w-full md:w-[90%];
   }
 </style>
 

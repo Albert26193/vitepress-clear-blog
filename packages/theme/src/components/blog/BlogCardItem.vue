@@ -3,7 +3,7 @@
     <div class="card-header">
       <h2 class="card-title mb-1 text-xl font-semibold">
         <span class="text-color-[var(--vp-c-brand)]">
-          {{ useTitle(post.frontMatter, post.html || '') }}
+          {{ useTitle(post.frontMatter, post.html) }}
         </span>
       </h2>
     </div>
@@ -25,15 +25,13 @@
       </div>
       <!-- tags -->
       <div class="card-tags">
-        <span
+        <BlogTagItem
           v-for="item in partedTags"
           :key="item + 'key'"
-          class="tag-wrapper"
-        >
-          <a @click.stop :href="withBase(`/tags.html?tag=${item}`)" class="tag"
-            >{{ item }}
-          </a>
-        </span>
+          :text="item"
+          :href="`/tags.html?tag=${item}`"
+          bordered
+        />
       </div>
     </div>
   </div>
@@ -50,6 +48,7 @@
     useTruncatedDescription
   } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
+  import BlogTagItem from '../common/BlogTagItem.vue'
 
   const props = defineProps({
     /**
@@ -66,7 +65,7 @@
     window.location.href = withBase(props.post.regularPath)
   }
 
-  const preview = useHtmlPreview(props.post.html || '', {
+  const preview = useHtmlPreview(props.post.html, {
     maxChineseLength: 60,
     maxEnglishWords: 60
   })
@@ -74,9 +73,9 @@
 
 <style scoped>
   .blog-card {
-    @apply relative flex flex-col justify-start overflow-hidden rounded-xl bg-white;
+    @apply relative mx-auto flex;
+    @apply h-[200px] w-full max-w-[360px] min-w-[min(240px,100%)] flex-col justify-start overflow-hidden rounded-xl bg-white;
     @apply px-5 pt-4 pb-5 shadow-sm;
-    @apply min-h-[200px];
     @apply cursor-pointer;
     @apply dark:bg-[var(--vp-c-bg)];
   }
@@ -103,7 +102,7 @@
   }
 
   .card-title {
-    @apply mt-0 mb-1 border-none pb-0 text-lg;
+    @apply mt-0 mb-1 line-clamp-2 border-none pb-0 text-lg;
     margin-left: 0 !important;
     margin-right: 0 !important;
     text-decoration: none !important;
@@ -114,8 +113,8 @@
   }
 
   .describe {
-    @apply mt-1 text-sm leading-relaxed text-gray-700;
-    @apply mb-2 indent-2;
+    @apply mt-1 mb-2 line-clamp-3 overflow-hidden text-sm leading-relaxed text-gray-700;
+    @apply indent-2;
     @apply dark:text-gray-300/90;
   }
 
@@ -137,36 +136,17 @@
     @apply flex flex-wrap gap-1;
   }
 
-  .tag-wrapper {
-    @apply inline-block;
-  }
-
-  .tag {
-    @apply inline-flex cursor-pointer items-center rounded-full border border-gray-600 px-2 py-1 text-[11px] leading-4;
-    @apply text-gray-900 no-underline transition-colors duration-200 dark:text-gray-100;
-  }
-
-  .tag:hover,
-  .tag:focus,
-  .tag:active {
-    @apply no-underline;
-    border-color: var(--vp-c-brand);
-    color: var(--vp-c-brand);
-    padding-block-end: 0.25rem;
-    text-decoration: none;
-  }
-
   @media screen and (max-width: 768px) {
     .card-header {
       @apply flex items-center justify-between;
     }
 
     .card-title {
-      @apply w-44 truncate text-base font-normal;
+      @apply text-base font-normal;
     }
 
     .describe {
-      @apply my-2 truncate text-sm;
+      @apply my-2 text-sm;
     }
   }
 </style>

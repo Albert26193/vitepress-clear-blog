@@ -10,6 +10,14 @@
 
 .VPDoc {
   .main {
+
+    /* Restore standard underline for markdown content links */
+    &.heti .vp-doc a:hover {
+      padding-block-end: unset;
+      border-block-end: unset;
+      text-decoration: unset;
+    }
+
     &.heti .meta-des {
       a {
         text-decoration: none;
@@ -98,5 +106,11 @@
       'Iosevka', consolas, 'Liberation Mono', menlo, courier, monospace,
       'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     font-size: 0.875em;
+  }
+
+  .heti .vp-doc [class*='language-'] pre,
+  .heti .vp-doc [class*='language-'] code {
+    margin-inline-start: 0;
+    margin-inline-end: 0;
   }
 }

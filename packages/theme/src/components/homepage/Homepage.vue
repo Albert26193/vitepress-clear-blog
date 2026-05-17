@@ -1,28 +1,31 @@
 <template>
   <section class="homepage-container">
-    <h1 class="text">{{ homepageTitle }}</h1>
-    <div class="homepage-second-line">
-      <div class="homepage-describe">
-        <p class="font-700 font-serif">{{ homepageDescription }}</p>
-      </div>
-      <div class="homepage-go" @click="router.go(withBase('/pages/'))">
-        <span class="i-carbon-arrow-right dark:text-black"></span>
+    <div class="pt-2">
+      <h1 class="text">{{ homepageTitle }}</h1>
+      <div class="homepage-second-line">
+        <div class="homepage-describe">
+          <p class="font-700 font-serif">{{ homepageDescription }}</p>
+        </div>
+        <div class="homepage-go" @click="router.go(withBase('/pages/'))">
+          <span class="i-carbon-arrow-right dark:text-black"></span>
+        </div>
       </div>
     </div>
 
-    <D3FullScreen
-      :width="Math.min(width * 0.75, 1000)"
-      :height="Math.min(width * 0.5, 600)"
-      :zoom-level="0.7"
-      class="mt-6 border-1 border-solid"
-    ></D3FullScreen>
+    <div class="home-d3-container">
+      <D3FullScreen
+        :width="Math.min(width * 0.78, 850)"
+        :height="Math.min(width * 0.75, 800)"
+        :zoom-level="0.7"
+      ></D3FullScreen
+    ></div>
   </section>
 </template>
 
 <style lang="scss" scoped>
   .homepage-container {
-    @apply flex flex-col items-center;
-    @apply mt-10 px-4;
+    @apply flex flex-col items-center justify-evenly px-4;
+    min-height: calc(100vh - var(--vp-nav-height) - 2rem);
   }
 
   .homepage-container .text {
@@ -48,10 +51,9 @@
 
   .homepage-container .homepage-go {
     @apply relative cursor-pointer overflow-hidden;
-    @apply flex items-center;
+    @apply ml-4 flex items-center;
     @apply bg-[var(--main-page-text)] text-white;
-    @apply ml-3 ml-4;
-    @apply rounded-xl px-4 py-1 text-sm font-bold;
+    @apply rounded-xl px-4 py-[6px] text-sm font-bold;
     @apply transition-all duration-300;
     @apply dark:bg-gray-300/90;
   }
@@ -78,6 +80,10 @@
   .homepage-second-line {
     @apply flex items-center justify-center;
     @apply mt-2;
+  }
+
+  .home-d3-container {
+    @apply border-1 border-solid;
   }
 </style>
 
