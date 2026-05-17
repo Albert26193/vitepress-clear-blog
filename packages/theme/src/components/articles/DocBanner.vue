@@ -2,14 +2,15 @@
   <div class="meta-des" id="hack-article-des" ref="$des">
     <!-- tags -->
     <div class="tags-container" v-if="frontmatter.tags">
-      <span v-for="item in frontmatter.tags" :key="item" class="tag-wrapper">
-        <span
-          class="tag"
-          @click="router.go(withBase(`/tags.html?tag=${item}`))"
-        >
-          {{ item }}
-        </span>
-      </span>
+      <BlogTagItem
+        v-for="item in frontmatter.tags"
+        :key="item"
+        :text="item"
+        :href="`/tags.html?tag=${item}`"
+        :px="2.4"
+        :font-size="12"
+        class="tag"
+      />
     </div>
     <div class="mt-1 flex items-center">
       <!-- time -->
@@ -39,6 +40,7 @@
   import { useAuthor, useTimeFormat } from '../../composables/useMeta'
   import type { PostFrontMatter } from '../../types/types.d'
   import { calculateWords } from '../../utils/client/'
+  import BlogTagItem from '../common/BlogTagItem.vue'
 
   const { frontmatter } = useData()
   const router = useRouter()
@@ -93,18 +95,6 @@
   /* Tags Container */
   .tags-container {
     @apply mt-2 flex grow flex-wrap gap-x-2 gap-y-2;
-  }
-
-  /* Tag Wrapper */
-  .tag-wrapper {
-    @apply inline-block;
-  }
-
-  /* Tag */
-  .tag {
-    @apply inline-block cursor-pointer text-xs whitespace-nowrap;
-    @apply hover:text-[var(--vp-c-brand)];
-    @apply md:text-sm;
   }
 
   /* Tag On Page */

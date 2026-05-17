@@ -138,7 +138,7 @@ const useDarkTransition = () => {
  * @returns A computed ref containing the processed HTML preview
  */
 const useHtmlPreview = (
-  html: string,
+  html = '',
   options: {
     maxChineseLength?: number
     maxEnglishWords?: number
@@ -288,15 +288,13 @@ const useHtmlPreview = (
  * @param html - Rendered post HTML used to find a heading fallback.
  * @returns Display title for post cards and lists.
  */
-const useTitle = (frontMatter: PostFrontMatter, html: string) => {
-  // 1. first use title from frontmatter
+const useTitle = (frontMatter: PostFrontMatter, html = '') => {
   if (frontMatter.title) {
     return frontMatter.title
   }
-  if (typeof document === 'undefined') {
+  if (typeof document === 'undefined' || !html) {
     return ''
   }
-  // 2. otherwise use first heading of the page
   const div = document.createElement('div')
   div.innerHTML = html
   const headings = div.querySelectorAll('h1, h2, h3, h4, h5, h6')

@@ -104,7 +104,7 @@
                   class="post-item heti heti--classic"
                   :href="withBase(article.regularPath)"
                 >
-                  {{ useTitle(article.frontMatter, article.html || '') }}
+                  {{ useTitle(article.frontMatter, article.html) }}
                 </a>
                 <div class="post-divider"></div>
                 <div class="post-date">{{ getDay(article) }}</div>

@@ -17,26 +17,27 @@
           </a>
         </div>
         <div class="list-header">
-          <h2 class="list-title">
-            <a :href="withBase(post.regularPath)" class="title-link">
-              {{ useTitle(post.frontMatter, post.html || '') }}
-            </a>
-          </h2>
+          <div class="list-title">
+            <span
+              class="title-link"
+              role="link"
+              tabindex="0"
+              @click="handleTitleClick"
+              @keydown.enter="handleTitleClick"
+              @keydown.space.prevent="handleTitleClick"
+            >
+              {{ useTitle(post.frontMatter, post.html) }}
+            </span>
+          </div>
         </div>
         <div class="tags-container">
-          <span
+          <BlogTagItem
             v-for="item in partedTags"
             :key="item + 'key'"
-            class="tag-wrapper"
-          >
-            <a
-              @click.stop
-              :href="withBase(`/tags.html?tag=${item}`)"
-              class="tag"
-            >
-              {{ item }}
-            </a>
-          </span>
+            :text="item"
+            :href="`/tags.html?tag=${item}`"
+            bordered
+          />
         </div>
       </div>
 
@@ -47,32 +48,24 @@
 
       <!-- Column 2: Content (Description) -->
       <div class="column-content">
-        <p
-          v-if="post.frontMatter.description"
-          class="describe heti heti--serif"
-        >
-          {{
-            useTruncatedDescription(post.frontMatter.description as string, {
-              maxChineseChars: 90,
-              maxEnglishWords: 50
-            }).value
-          }}
-        </p>
-        <div v-else class="describe">
-          <div v-html="preview" class="heti heti--serif" />
+        <div class="describe heti heti--serif">
+          <template v-if="post.frontMatter.description">
+            {{
+              useTruncatedDescription(post.frontMatter.description as string, {
+                maxChineseChars: 90,
+                maxEnglishWords: 50
+              }).value
+            }}
+          </template>
+          <div v-else v-html="preview" />
         </div>
       </div>
-
-      <!-- Divider 2 -->
-      <!-- <div class="custom-divider">
-        <span class="divider-extensions"></span>
-      </div> -->
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { withBase } from 'vitepress'
+  import { useRouter, withBase } from 'vitepress'
   import { PropType } from 'vue'
 
   import {
@@ -83,25 +76,22 @@
     useTruncatedDescription
   } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
+  import BlogTagItem from '../common/BlogTagItem.vue'
 
   const props = defineProps({
-    /**
-     * Post data rendered in the timeline-style list row.
-     */
+    // Post data rendered in the timeline-style list row.
     post: {
       type: Object as PropType<Post>,
       required: true
     },
-    /**
-     * Marks the first row so connector styling can start cleanly.
-     */
+
+    // Marks the first row so connector styling can start cleanly.
     isFirst: {
       type: Boolean,
       default: false
     },
-    /**
-     * Marks the final row so connector styling can end cleanly.
-     */
+
+    // Marks the final row so connector styling can end cleanly.
     isLast: {
       type: Boolean,
       default: false
@@ -112,10 +102,16 @@
 
   const author = useAuthor(props.post.frontMatter) || 'Blogger'
 
-  const preview = useHtmlPreview(props.post.html || '', {
+  const preview = useHtmlPreview(props.post.html, {
     maxChineseLength: 120,
     maxEnglishWords: 60
   })
+
+  const router = useRouter()
+
+  function handleTitleClick() {
+    router.go(withBase(props.post.regularPath))
+  }
 </script>
 
 <style scoped lang="scss">
@@ -187,6 +183,7 @@
   /* Meta Link */
   .meta-link {
     @apply meta-text hover:underline hover:underline-offset-4;
+    @apply ml-[1px];
   }
 
   /* List Header */
@@ -204,34 +201,13 @@
   .title-link {
     @apply text-color-[var(--vp-c-brand)] break-words transition-all duration-200;
     @apply hover:underline hover:underline-offset-6;
+    @apply cursor-pointer;
   }
 
   /* Tags Container */
   .tags-container {
     @apply mt-2 mr-0 mb-3 flex flex-wrap justify-start gap-x-2 gap-y-[6px];
     @apply md:mr-4 md:mb-4;
-  }
-
-  /* Tag Wrapper */
-  .tag-wrapper {
-    @apply inline-block;
-  }
-
-  /* Tag */
-  .tag {
-    @apply inline-flex cursor-pointer items-center rounded-full border border-gray-600 px-2 py-1 text-[11px] leading-4;
-    @apply text-gray-900 no-underline transition-colors duration-200 dark:text-gray-100;
-    @apply md:text-[12px];
-  }
-
-  .tag:hover,
-  .tag:focus,
-  .tag:active {
-    @apply no-underline;
-    border-color: var(--vp-c-brand);
-    color: var(--vp-c-brand);
-    padding-block-end: 0.25rem;
-    text-decoration: none;
   }
 
   /* Custom Divider */

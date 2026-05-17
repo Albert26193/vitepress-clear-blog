@@ -38,7 +38,7 @@
     </template>
 
     <template #layout-bottom>
-      <Copyright />
+      <Copyright v-if="showCopyright" />
     </template>
   </Layout>
 </template>
@@ -65,7 +65,7 @@
 
   useDarkTransition()
   const { Layout } = DefaultTheme
-  const { frontmatter, site } = useData()
+  const { frontmatter, page, site } = useData()
   const route = useRoute()
   const layout = computed(() => frontmatter.value.layout)
 
@@ -89,6 +89,8 @@
       ? ROUTE_COMPONENTS[match[1] as keyof typeof ROUTE_COMPONENTS]
       : null
   })
+
+  const showCopyright = computed(() => page.value.relativePath === 'index.md')
 
   const showSidebarButton = computed(() => {
     return (

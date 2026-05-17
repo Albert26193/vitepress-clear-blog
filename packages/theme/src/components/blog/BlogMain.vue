@@ -54,16 +54,36 @@
 
 <style scoped>
   .blog-main {
-    /* One column stretching to the visible viewport so card grid + pager feel grounded */
-    @apply mx-auto flex w-full max-w-[min(96rem,calc(100%-1.5rem))] flex-col px-3;
-    /* Breathing room under nav without the old oversized gap */
-    @apply pt-5 pb-8 md:pt-7 md:pb-10;
+    @apply mx-auto flex w-full flex-col px-3;
+    @apply md:w-[min(100%,80vw)];
+    @apply md:-pb-4 pt-5 pb-3 md:pt-7;
     min-height: calc(100vh - var(--vp-nav-height) - 3rem);
-    min-height: calc(100dvh - var(--vp-nav-height) - 3rem);
   }
 
   .pagination-header {
     @apply position-relative mx-auto mt-0 flex shrink-0;
     @apply w-full max-w-[min(96rem,calc(100%-1.5rem))] px-3 pb-1;
+  }
+</style>
+
+<style>
+  /* Override VPDoc max-width so both card and list views can expand */
+  .VPDoc:not(.has-sidebar):has(.blog-main) .content {
+    max-width: min(1280px, 100%);
+    padding-bottom: 0;
+  }
+
+  .VPDoc:not(.has-sidebar):has(.blog-main) .content-container {
+    max-width: none;
+  }
+
+  .VPDoc:not(.has-sidebar):has(.blog-main) .container {
+    max-width: min(100%, 100vw - 32px);
+  }
+
+  @media (min-width: 768px) {
+    .VPDoc:not(.has-sidebar):has(.blog-main) .container {
+      max-width: 85%;
+    }
   }
 </style>
