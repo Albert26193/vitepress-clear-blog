@@ -116,7 +116,7 @@ jobs:
       - uses: actions/upload-artifact@v5
         with:
           name: testbed-dist
-          path: packages/testbed/.vitepress/dist
+          path: sites/testbed/.vitepress/dist
           retention-days: 7
 
   e2e:
@@ -151,7 +151,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: testbed-dist
-          path: packages/testbed/.vitepress/dist
+          path: sites/testbed/.vitepress/dist
 
       - name: Build workspace packages
         run: pnpm build:packages
