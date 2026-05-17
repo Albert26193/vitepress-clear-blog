@@ -62,7 +62,9 @@ const homepageSchema = z.object({
 })
 
 const pageSchema = z.object({
-  pageSize: z.number().int().positive().optional()
+  pageSize: z.number().int().positive().optional(),
+  pageSizeCard: z.number().int().positive().optional(),
+  pageSizeList: z.number().int().positive().optional()
 })
 
 const blogSchema = z.object({

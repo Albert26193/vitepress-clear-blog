@@ -22,7 +22,7 @@
   import BlogCardItem from './BlogCardItem.vue'
 
   const { theme } = useData()
-  const pageSize = theme.value.pageSize || 9
+  const pageSize = theme.value.pageSizeCard || theme.value.pageSize || 9
   const pageCurrent = ref(1)
 
   // Current page posts

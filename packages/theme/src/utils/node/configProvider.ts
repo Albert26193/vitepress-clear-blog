@@ -291,6 +291,8 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
           DEFAULT_HOMEPAGE.description
       },
       pageSize: page.pageSize || DEFAULT_PAGE_SIZE,
+      pageSizeCard: page.pageSizeCard || undefined,
+      pageSizeList: page.pageSizeList || undefined,
       defaultViewMode: blog.defaultViewMode || DEFAULT_BLOG.defaultViewMode,
       timelineSortDirection:
         timeline.sortDirection || DEFAULT_TIMELINE.sortDirection,

@@ -68,6 +68,8 @@ export interface ConfigToml {
   homepage?: HomepageConfig
   page: {
     pageSize?: number
+    pageSizeCard?: number
+    pageSizeList?: number
   }
   nav?: NavLabels
   markdown?: {

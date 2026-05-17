@@ -1,3 +1,12 @@
+# =============================================================================
+# VitePress Clear Blog — Configuration
+# =============================================================================
+# This file controls every aspect of your blog.  See the README or source
+# defaults for further details.
+
+# ---------------------------------------------------------------------------
+# Site metadata (head tags, RSS, Open Graph)
+# ---------------------------------------------------------------------------
 [meta]
 title = "My Blog"
 description = "A personal blog powered by VitePress Clear Blog"
@@ -8,25 +17,75 @@ lang = "zh-CN"
 siteUrl = "https://your-blog.github.io"
 theme-color = "#4259f3"
 
+# Optional: ICP filing number displayed in the footer.
+# icpNumber = ""
+
+# Optional: link to the theme homepage shown in the footer.
+# themeLink = "https://github.com/Albert26193/vitepress-clear-blog"
+
+# ---------------------------------------------------------------------------
+# Homepage hero text
+# ---------------------------------------------------------------------------
 [homepage]
 title = "My Blog"
-description = "A personal blog powered by VitePress Clear Blog"
+description = "Welcome to my blog"
 
+# ---------------------------------------------------------------------------
+# Pagination — /pages route
+# ---------------------------------------------------------------------------
+# pageSizeCard — posts per page in card (grid) view.
+# pageSizeList — posts per page in list view.
 [page]
-pageSize = 10
+pageSizeCard = 10
+pageSizeList = 5
 
-# Optional: configure outline title
-# [outline]
-# title = "Table of Contents"
+# ---------------------------------------------------------------------------
+# Date / time parsing
+# ---------------------------------------------------------------------------
+# frontmatterFields — which frontmatter keys are checked for post dates.
+# formats          — input format hints (parsed by moment).
+# outputFormat     — how dates appear in post listings.
+# ---------------------------------------------------------------------------
+[datetime]
+frontmatterFields = ["date", "created", "createdAt", "published", "publishedAt"]
+formats = ["YYYY-MM-DD", "YYYY/MM/DD", "YYYY-MM-DD HH:mm:ss", "YYYY/MM/DD HH:mm:ss", "YYYY-MM-DDTHH:mm:ssZ"]
+outputFormat = "YYYY/MM/DD"
 
-# Optional: configure blog listing defaults
-# [blog]
-# defaultViewMode = "card"    # "card" or "list"
+# ---------------------------------------------------------------------------
+# Blog listing defaults
+# ---------------------------------------------------------------------------
+[blog]
+defaultViewMode = "card"    # "card" or "list"
 
-# Optional: configure timeline defaults
-# [timeline]
-# sortDirection = "desc"      # "desc" or "asc"
+# ---------------------------------------------------------------------------
+# Outline (right-hand table of contents)
+# ---------------------------------------------------------------------------
+[outline]
+title = "Table of Contents"
 
+# ---------------------------------------------------------------------------
+# Timeline page
+# ---------------------------------------------------------------------------
+[timeline]
+sortDirection = "desc"      # "desc" or "asc"
+
+# ---------------------------------------------------------------------------
+# Wiki-link resolution
+# ---------------------------------------------------------------------------
+# Controls how [[wikilinks]] are resolved to real URLs.  The array order
+# matters — earlier modes are tried first.
+#
+#   • repoRoot              — resolve relative to the repo root
+#   • absolutePath          — treat the link as an absolute path
+#   • relativeToCurrentFile — resolve relative to the source markdown file
+#   • obsidianShortest      — Obsidian-style shortest-path matching
+# ---------------------------------------------------------------------------
+[links]
+resolutionModes = ["repoRoot", "absolutePath", "relativeToCurrentFile", "obsidianShortest"]
+
+# ---------------------------------------------------------------------------
+# Navigation bar labels
+# ---------------------------------------------------------------------------
 [nav]
 home = "Home"
 tags = "Tags"
@@ -34,6 +93,15 @@ timeline = "Timeline"
 pages = "Pages"
 about = "About"
 
+# ---------------------------------------------------------------------------
+# Markdown features
+# ---------------------------------------------------------------------------
+# render_title — which strategy to use for displaying [[wikilink]] titles.
+#   • frontmatter_title  — use the target page's frontmatter title
+#   • first_heading      — use the first H1 in the target file
+#   • alias              — use the link alias (the text after | in [[…|alias]])
+#   • file_name          — derive from the file name
+# ---------------------------------------------------------------------------
 [markdown]
 mathjax = true
 wikilinks = true
@@ -41,7 +109,11 @@ footnote = true
 hashtag = true
 mermaid = true
 callout = true
+render_title = "frontmatter_title"
 
+# ---------------------------------------------------------------------------
+# CSS variable overrides (light mode)
+# ---------------------------------------------------------------------------
 [theme]
 vp-c-bg = "#fafafa"
 vp-c-brand = "#4259f3"
@@ -53,11 +125,14 @@ c-text-strong = "#f00"
 c-text-em = "#0000ff"
 vp-sidebar-bg-color = "#f3f3f3"
 
+# ---------------------------------------------------------------------------
+# CSS variable overrides (dark mode)
+# ---------------------------------------------------------------------------
 [theme.dark]
 vp-c-bg = "#202127"
-vp-c-brand = "#94fe00ff"
-vp-c-brand-1 = "#fb9300ff"
-vp-c-text-1 = "#ccccccff"
+vp-c-brand = "#94fe00"
+vp-c-brand-1 = "#fb9300"
+vp-c-text-1 = "#cccccc"
 vp-button-brand-bg = "#f2b983"
 c-text-code = "#00ff00"
 c-text-strong = "#ff0000"
