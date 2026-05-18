@@ -323,7 +323,8 @@ describe('createBlog with mocked config.toml', async () => {
         footnote: false,
         hashtag: false,
         mermaid: false,
-        callout: false
+        callout: false,
+        image_dimension: false
       },
       theme: {}
     }
@@ -333,6 +334,45 @@ describe('createBlog with mocked config.toml', async () => {
     const mockMd = { use: vi.fn(), renderer: { rules: {} } }
     mdConfig(mockMd)
     expect(mockMd.use).not.toHaveBeenCalled()
+  })
+
+  it('registers image dimension plugin by default and allows disabling it', async () => {
+    mockLoadConfig.mockReturnValue({
+      meta: { title: 'Images', siteUrl: '' },
+      page: {},
+      markdown: {
+        mathjax: false,
+        wikilinks: false,
+        footnote: false,
+        hashtag: false,
+        mermaid: false,
+        callout: false
+      },
+      theme: {}
+    })
+    const enabledConfig = await createBlog()
+    const enabledMd = { use: vi.fn(), renderer: { rules: {} } }
+    ;(enabledConfig as any).markdown.config(enabledMd)
+    expect(enabledMd.use).toHaveBeenCalledTimes(1)
+
+    mockLoadConfig.mockReturnValue({
+      meta: { title: 'Images', siteUrl: '' },
+      page: {},
+      markdown: {
+        mathjax: false,
+        wikilinks: false,
+        footnote: false,
+        hashtag: false,
+        mermaid: false,
+        callout: false,
+        image_dimension: false
+      },
+      theme: {}
+    })
+    const disabledConfig = await createBlog()
+    const disabledMd = { use: vi.fn(), renderer: { rules: {} } }
+    ;(disabledConfig as any).markdown.config(disabledMd)
+    expect(disabledMd.use).not.toHaveBeenCalled()
   })
 
   it('includes vue template compilerOptions with isCustomElement', async () => {

@@ -21,10 +21,47 @@ import {
   loadConfig
 } from 'vitepress-plugin-config'
 import { hashtagPlugin } from 'vitepress-plugin-hashtag'
+import { imageDimensionPlugin } from 'vitepress-plugin-image-dimension'
+import type { ImageDimensionPluginOptions } from 'vitepress-plugin-image-dimension'
 import llmstxt from 'vitepress-plugin-llms'
 import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
 import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
+
+type ImageDimensionTomlConfig = {
+  enabled?: boolean
+  alt_preset?: boolean
+  github_title_suffix?: boolean
+  pandoc_attr_list?: boolean
+  obsidian_bare_size?: boolean
+  obsidian_pixel_size?: boolean
+  url_query_params?: boolean
+  html_title_size?: boolean
+  strip_dimension_query?: boolean
+  presets?: ImageDimensionPluginOptions['presets']
+}
+
+const resolveImageDimensionOptions = (
+  config: boolean | ImageDimensionTomlConfig | undefined
+): ImageDimensionPluginOptions | false => {
+  if (config === false) return false
+  if (config === true || config === undefined) return {}
+  if (config.enabled === false) return false
+
+  return {
+    conventions: {
+      altPreset: config.alt_preset,
+      githubTitleSuffix: config.github_title_suffix,
+      pandocAttrList: config.pandoc_attr_list,
+      obsidianBareSize: config.obsidian_bare_size,
+      obsidianPixelSize: config.obsidian_pixel_size,
+      urlQueryParams: config.url_query_params,
+      htmlTitleSize: config.html_title_size
+    },
+    presets: config.presets,
+    stripDimensionQuery: config.strip_dimension_query
+  }
+}
 
 const isLinkStyleTargetHref = (href: string): boolean => {
   if (!href) return false
@@ -220,6 +257,12 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       if (mdConf.hashtag !== false) md.use(hashtagPlugin)
       if (mdConf.mermaid !== false) md.use(mermaidPlugin)
       if (mdConf.callout !== false) md.use(calloutPlugin)
+      const imageDimensionOptions = resolveImageDimensionOptions(
+        mdConf.image_dimension
+      )
+      if (imageDimensionOptions !== false) {
+        md.use(imageDimensionPlugin, imageDimensionOptions)
+      }
       getFooterRefTag(md)
     }
   }

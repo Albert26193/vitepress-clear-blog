@@ -1,0 +1,51 @@
+{
+  "name": "vitepress-plugin-image-dimension",
+  "version": "0.1.0",
+  "description": "Markdown-it plugin for normalizing image dimensions",
+  "author": "Albert26193",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "vitepress",
+    "plugin",
+    "markdown-it",
+    "image"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/node/index.d.ts",
+      "import": "./lib/node/index.js",
+      "require": "./lib/node/index.cjs"
+    }
+  },
+  "main": "lib/node/index.cjs",
+  "module": "lib/node/index.js",
+  "types": "lib/node/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "dev": "pnpm '/(tsup):watch/'",
+    "tsup": "tsup --config tsup.config.ts",
+    "tsup:watch": "tsup --config tsup.config.ts --watch -- -c",
+    "clean": "rimraf lib",
+    "build": "pnpm run clean && pnpm run tsup",
+    "prepare": "pnpm run tsup",
+    "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "vitest": "^4.1.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
