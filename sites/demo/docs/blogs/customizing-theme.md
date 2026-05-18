@@ -52,3 +52,12 @@ footnote = true
 ```
 
 All configuration is hot-reloaded during development.
+
+## 延伸阅读
+
+- [[theme/dark-mode-customization|暗色模式定制]]
+- [[theme/color-scheme-config|主题颜色方案配置]]
+- [[theme/typography-and-fonts|排版与字体]]
+- [[theme/rss-seo-and-sitemap|RSS、SEO 与站点地图]]
+- [[navigation/nav-bar-configuration|导航栏配置指南]]
+- [[navigation/sidebar-and-outline|侧边栏与目录大纲]]
