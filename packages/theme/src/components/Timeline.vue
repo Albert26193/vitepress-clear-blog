@@ -100,12 +100,18 @@
                 :key="index"
                 class="posts-wrapper"
               >
-                <a
+                <span
                   class="post-item heti heti--classic"
-                  :href="withBase(article.regularPath)"
+                  role="link"
+                  tabindex="0"
+                  @click="handlePostClick(article.regularPath)"
+                  @keydown.enter="handlePostKeydown(article.regularPath)"
+                  @keydown.space.prevent="
+                    handlePostKeydown(article.regularPath)
+                  "
                 >
                   {{ useTitle(article.frontMatter, article.html) }}
-                </a>
+                </span>
                 <div class="post-divider"></div>
                 <div class="post-date">{{ getDay(article) }}</div>
               </div>
@@ -118,9 +124,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { useData, withBase } from 'vitepress'
+  import { useData } from 'vitepress'
   import { computed, reactive, ref, watch } from 'vue'
 
+  import { useClickAble } from '../composables/useClickAble'
   import { useTitle } from '../composables/useMeta'
   import type { Post } from '../types/types.d'
   import { useMonthYearSort, useYearSort } from '../utils/client/'
@@ -133,6 +140,8 @@
   }
 
   const { theme } = useData()
+  const { handleClick: handlePostClick, handleKeydown: handlePostKeydown } =
+    useClickAble()
   const sortDirection = ref<'asc' | 'desc'>(
     (theme.value.timelineSortDirection as 'asc' | 'desc') || 'desc'
   )
@@ -342,7 +351,7 @@
 
   /* Post Item */
   .post-item {
-    @apply h-auto min-w-0 flex-shrink text-sm break-words;
+    @apply h-auto min-w-0 flex-shrink cursor-pointer text-sm break-words;
     @apply hover:text-[var(--vp-c-brand)] hover:no-underline;
     @apply md:h-6 md:text-base;
   }

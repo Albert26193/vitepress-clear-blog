@@ -6,7 +6,14 @@
         <div class="homepage-describe">
           <p class="font-700 font-serif">{{ homepageDescription }}</p>
         </div>
-        <div class="homepage-go" @click="router.go(withBase('/pages/'))">
+        <div
+          class="homepage-go"
+          role="link"
+          tabindex="0"
+          @click="handlePagesClick"
+          @keydown.enter="handlePagesKeydown"
+          @keydown.space.prevent="handlePagesKeydown"
+        >
           <span class="i-carbon-arrow-right dark:text-black"></span>
         </div>
       </div>
@@ -89,15 +96,17 @@
 
 <script setup lang="ts">
   import { useWindowSize } from '@vueuse/core'
-  import { useData, useRouter, withBase } from 'vitepress'
+  import { useData } from 'vitepress'
   import { computed } from 'vue'
 
+  import { useClickAble } from '../../composables/useClickAble'
   import type { BlogConfig } from '../../types/types'
   import D3FullScreen from '../d3/D3FullScreen.vue'
 
-  const router = useRouter()
   const { site, theme } = useData<BlogConfig>()
   const { width } = useWindowSize()
+  const { handleClick: handlePagesClick, handleKeydown: handlePagesKeydown } =
+    useClickAble('/pages/')
 
   const homepageTitle = computed(
     () => theme.value.homepage?.title || site.value.title

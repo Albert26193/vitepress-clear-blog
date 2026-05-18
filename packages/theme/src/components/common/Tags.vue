@@ -36,7 +36,11 @@
       >
         <div
           class="heti heti--serif post-item-title"
-          @click="router.go(withBase(article.regularPath))"
+          role="link"
+          tabindex="0"
+          @click="handleArticleClick(article.regularPath)"
+          @keydown.enter="handleArticleKeydown(article.regularPath)"
+          @keydown.space.prevent="handleArticleKeydown(article.regularPath)"
         >
           <div class="post-dot"></div>
           {{ useTitle(article.frontMatter, article.html) }}
@@ -50,17 +54,20 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRouter, withBase } from 'vitepress'
   import { computed, onMounted, ref } from 'vue'
 
+  import { useClickAble } from '../../composables/useClickAble'
   import { useTimeFormat, useTitle } from '../../composables/useMeta'
   import { Post } from '../../types/types'
   import { initTags } from '../../utils/client/'
   import { data as allPostsData } from '../../utils/node/posts.data.js'
   import BlogTagItem from './BlogTagItem.vue'
 
-  const router = useRouter()
   const tagsList = computed(() => (allPostsData ? initTags(allPostsData) : {}))
+  const {
+    handleClick: handleArticleClick,
+    handleKeydown: handleArticleKeydown
+  } = useClickAble()
 
   // sort tag according to dict order
   const sortTags = (tags: Record<string, Post[]>) => {
