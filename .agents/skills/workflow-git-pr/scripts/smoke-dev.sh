@@ -24,10 +24,16 @@ pre_cleanup() {
     return 0
   fi
 
-  # Kill stale watchers still referencing this project directory
-  ps aux | grep "vitepress-clear-blog" | grep -v grep | \
+  # Gather PIDs first, then kill — avoids pipefail interacting with
+  # grep returning 1 when no match is found, and xargs running
+  # kill without arguments when awk produces no output.
+  local pids
+  pids=$(ps aux | grep "vitepress-clear-blog" | grep -v grep | \
     grep -E "(pnpm|vite|tsup|cpx|vitepress|esbuild)" | \
-    awk '{print $2}' | xargs kill -9 2>/dev/null || true
+    awk '{print $2}' || true)
+  if [[ -n "${pids}" ]]; then
+    echo "${pids}" | xargs kill -9 2>/dev/null || true
+  fi
 
   after=$(ps aux | grep -cE "(vitepress dev|vite build --watch|tsup.*--watch|cpx.*-w)" 2>/dev/null || echo 0)
   killed=$((before - after))
