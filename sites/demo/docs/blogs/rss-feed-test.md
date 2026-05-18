@@ -51,3 +51,10 @@ $$
 
 If you can read all of this in the RSS reader, the feed is working correctly
 with full-text content rendering.
+
+## 延伸阅读
+
+- [[theme/rss-seo-and-sitemap|RSS、SEO 与站点地图]]
+- [[deployment-guide|部署指南]]
+- [[getting-started|入门教程]]
+- [[basics/code-and-syntax-highlight|代码块与语法高亮]]

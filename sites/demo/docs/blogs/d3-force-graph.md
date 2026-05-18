@@ -24,3 +24,10 @@ Each node represents a blog post, and edges connect posts that share tags or col
 ## Configuration
 
 The graph behavior can be tuned through the theme configuration, adjusting forces like charge strength, link distance, and collision radius.
+
+## 延伸阅读
+
+- [[../getting-started|入门教程]]
+- [[navigation/page-layouts-overview|页面布局总览]]
+- [[extensions/mermaid-diagrams-comprehensive|Mermaid 图表大全]]
+- [[theme/dark-mode-customization|暗色模式]]

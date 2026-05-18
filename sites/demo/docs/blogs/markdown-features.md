@@ -47,3 +47,19 @@ graph TD
 
 > [!NOTE]
 > This is a note callout with important information.
+
+## 扩展阅读
+
+每项功能都有详细的专题文档：
+
+- [[basics/text-formatting|文本格式化全解]]
+- [[basics/code-and-syntax-highlight|代码块与语法高亮]]
+- [[basics/tables-lists-images|表格、列表与图片]]
+- [[extensions/mathjax-showcase|MathJax 数学公式全展示]]
+- [[extensions/mermaid-diagrams-comprehensive|Mermaid 图表类型大全]]
+- [[extensions/footnote-system|脚注系统详解]]
+- [[extensions/callout-types|Callout 提示块类型全览]]
+- [[extensions/hashtag-discovery|Hashtag 标签发现]]
+- [[extensions/details-block-fold|可折叠详情块]]
+- [[wikilinks/wikilinks-basic-guide|Wiki Links 基础入门]]
+- [[wikilinks/wikilinks-advanced-techniques|Wiki Links 高级技巧]]

@@ -15,6 +15,23 @@ description = "A personal blog powered by VitePress Clear Blog"
 [page]
 pageSize = 10
 
+[datetime]
+frontmatterFields = ["date", "created", "createdAt", "published", "publishedAt"]
+formats = ["YYYY-MM-DD", "YYYY/MM/DD", "YYYY-MM-DD HH:mm:ss", "YYYY/MM/DD HH:mm:ss", "YYYY-MM-DDTHH:mm:ssZ"]
+outputFormat = "YYYY/MM/DD"
+
+[blog]
+defaultViewMode = "card"
+
+[outline]
+title = "Table of Contents"
+
+[timeline]
+sortDirection = "desc"
+
+[links]
+resolutionModes = ["repoRoot", "absolutePath", "relativeToCurrentFile", "obsidianShortest"]
+
 [nav]
 home = "Home"
 tags = "Tags"
@@ -29,6 +46,8 @@ footnote = true
 hashtag = true
 mermaid = true
 callout = true
+render_title = "frontmatter_title"
+link_style = "wiki"
 
 [theme]
 vp-c-bg = "#fafafa"

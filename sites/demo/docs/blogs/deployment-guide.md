@@ -46,3 +46,10 @@ Add a `CNAME` file to your `docs/public/` directory with your custom domain.
 ## Build Optimization
 
 The theme automatically handles asset optimization, code splitting, and cache busting through VitePress.
+
+## 延伸阅读
+
+- [[theme/rss-seo-and-sitemap|RSS、SEO 与站点地图]]
+- [[../collections/operations/ci-cd-pipeline-setup|CI/CD 流水线配置]]
+- [[../collections/operations/部署与运维实践|部署与运维实践]]
+- [[navigation/nav-bar-configuration|导航栏配置]]
