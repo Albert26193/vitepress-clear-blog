@@ -25,6 +25,27 @@ const navLabelsSchema = z.object({
   about: z.string().optional()
 })
 
+const dimensionPresetSchema = z.union([
+  z.number().int().positive(),
+  z.object({
+    width: z.number().int().positive().optional(),
+    height: z.number().int().positive().optional()
+  })
+])
+
+const imageDimensionSchema = z.object({
+  enabled: z.boolean().optional(),
+  alt_preset: z.boolean().optional(),
+  github_title_suffix: z.boolean().optional(),
+  pandoc_attr_list: z.boolean().optional(),
+  obsidian_bare_size: z.boolean().optional(),
+  obsidian_pixel_size: z.boolean().optional(),
+  url_query_params: z.boolean().optional(),
+  html_title_size: z.boolean().optional(),
+  strip_dimension_query: z.boolean().optional(),
+  presets: z.record(z.string(), dimensionPresetSchema).optional()
+})
+
 const markdownSchema = z.object({
   mathjax: z.boolean().optional(),
   wikilinks: z.boolean().optional(),
@@ -32,6 +53,7 @@ const markdownSchema = z.object({
   hashtag: z.boolean().optional(),
   mermaid: z.boolean().optional(),
   callout: z.boolean().optional(),
+  image_dimension: z.union([z.boolean(), imageDimensionSchema]).optional(),
   render_title: z
     .enum(['frontmatter_title', 'first_heading', 'alias', 'file_name'])
     .optional(),

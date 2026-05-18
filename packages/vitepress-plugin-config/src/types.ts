@@ -44,6 +44,24 @@ export interface LinksConfig {
   resolutionModes?: string[]
 }
 
+export interface ImageDimensionTomlPreset {
+  width?: number
+  height?: number
+}
+
+export interface ImageDimensionTomlConfig {
+  enabled?: boolean
+  alt_preset?: boolean
+  github_title_suffix?: boolean
+  pandoc_attr_list?: boolean
+  obsidian_bare_size?: boolean
+  obsidian_pixel_size?: boolean
+  url_query_params?: boolean
+  html_title_size?: boolean
+  strip_dimension_query?: boolean
+  presets?: Record<string, number | ImageDimensionTomlPreset>
+}
+
 export interface NavLabels {
   home?: string
   tags?: string
@@ -79,6 +97,7 @@ export interface ConfigToml {
     hashtag?: boolean
     mermaid?: boolean
     callout?: boolean
+    image_dimension?: boolean | ImageDimensionTomlConfig
     render_title?: 'frontmatter_title' | 'first_heading' | 'alias' | 'file_name'
     link_style?: 'wiki' | 'origin'
   }

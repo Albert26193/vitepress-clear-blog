@@ -68,26 +68,6 @@
       max-width: 600px;
       object-fit: contain;
       margin: 1.5px auto;
-
-      &[alt*='|xs'] {
-        width: 300px;
-      }
-
-      &[alt*='|s'] {
-        width: 400px;
-      }
-
-      &[alt*='|m'] {
-        width: 500px;
-      }
-
-      &[alt*='|l'] {
-        width: 600px;
-      }
-
-      &[alt*='|xl'] {
-        width: 800px;
-      }
     }
   }
 
