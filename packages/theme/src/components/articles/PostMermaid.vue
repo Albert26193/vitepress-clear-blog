@@ -10,8 +10,8 @@
       class="mermaid-img"
       :src="imgSrc"
       :alt="diagramLabel"
-      :width="svgWidth"
-      :height="svgHeight"
+      :width="svgWidth || undefined"
+      :height="svgHeight || undefined"
     />
   </div>
 </template>

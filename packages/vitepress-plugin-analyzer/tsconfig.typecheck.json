@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": ".",
+    "outDir": "../../.tsbuild/types/vitepress-plugin-analyzer",
+    "tsBuildInfoFile": "../../.tsbuild/vitepress-plugin-analyzer.tsbuildinfo",
+    "noUnusedLocals": false
+  },
+  "include": [
+    "../../types/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "types/**/*.d.ts"
+  ],
+  "exclude": ["node_modules", "lib", "dist", "test-results", "coverage"]
+}

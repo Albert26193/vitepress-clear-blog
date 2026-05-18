@@ -1,0 +1,63 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "jsx": "preserve",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["vite/client", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [".vitepress/*"],
+      "~/*": ["./*"],
+      "vitepress-clear-blog": ["./packages/theme/src/index.ts"],
+      "vitepress-clear-blog/node": ["./packages/theme/src/utils/node/index.ts"],
+      "vitepress-clear-blog/styles": ["./packages/theme/src/styles/index.scss"],
+      "vitepress-clear-blog/uno.config": ["./packages/theme/uno.config.ts"],
+      "vitepress-clear-blog/*": ["./packages/theme/src/*"],
+      "vitepress-plugin-analyzer": [
+        "./packages/vitepress-plugin-analyzer/src/node/index.ts"
+      ],
+      "vitepress-plugin-analyzer/client": [
+        "./packages/vitepress-plugin-analyzer/src/client/index.ts"
+      ],
+      "vitepress-plugin-analyzer/types": [
+        "./packages/vitepress-plugin-analyzer/types/index.d.ts"
+      ],
+      "vitepress-plugin-callout": [
+        "./packages/vitepress-plugin-callout/src/node/index.ts"
+      ],
+      "vitepress-plugin-callout/styles": [
+        "./packages/vitepress-plugin-callout/src/styles/index.css"
+      ],
+      "vitepress-plugin-codeblock-fold": [
+        "./packages/vitepress-plugin-codeblock-fold/src/index.ts"
+      ],
+      "vitepress-plugin-codeblock-fold/style.css": [
+        "./packages/vitepress-plugin-codeblock-fold/src/style.css"
+      ],
+      "vitepress-plugin-config": [
+        "./packages/vitepress-plugin-config/src/index.ts"
+      ],
+      "vitepress-plugin-details-block": [
+        "./packages/vitepress-plugin-details-block/src/index.ts"
+      ],
+      "vitepress-plugin-hashtag": [
+        "./packages/vitepress-plugin-hashtag/src/node/index.ts"
+      ],
+      "vitepress-plugin-hashtag/client": [
+        "./packages/vitepress-plugin-hashtag/src/client/index.ts"
+      ],
+      "vitepress-plugin-hashtag/client.css": [
+        "./packages/vitepress-plugin-hashtag/src/client/hashtag.css"
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": ".",
+    "outDir": "../../.tsbuild/types/vitepress-plugin-callout",
+    "tsBuildInfoFile": "../../.tsbuild/vitepress-plugin-callout.tsbuildinfo"
+  },
+  "include": [
+    "../../types/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": ["node_modules", "lib", "dist", "test-results", "coverage"]
+}

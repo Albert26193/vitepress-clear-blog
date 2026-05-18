@@ -30,8 +30,7 @@
   import {
     createDrag,
     createHover,
-    createZoom,
-    updateNodeHighlight
+    createZoom
   } from '../../utils/client/d3Interaction'
   import { calculateNodeRatios } from '../../utils/client/d3Utils'
 
@@ -145,7 +144,7 @@
 
     // create links
     const link = g
-      .selectAll('.d3-force-link')
+      .selectAll<SVGLineElement, D3Link>('.d3-force-link')
       .data(links)
       .join('line')
       .attr('class', 'd3-force-link')
