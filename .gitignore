@@ -9,6 +9,8 @@ dist-ssr
 **/dist.tar.gz
 lib
 **/*/lib
+.tsbuild
+*.tsbuildinfo
 
 # IDE and OS files
 .DS_Store

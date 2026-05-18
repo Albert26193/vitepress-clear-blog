@@ -12,9 +12,9 @@
           :key="link.relativePath"
           :href="withBase(link.fullUrl)"
           class="page-link slide-enter"
-          :title="resolveLinkTitle(link, allPostsData || [], renderTitle)"
+          :title="getResolvedLinkTitle(link)"
         >
-          {{ resolveLinkTitle(link, allPostsData || [], renderTitle) }}
+          {{ getResolvedLinkTitle(link) }}
         </a>
       </div>
       <!-- if no links -->
@@ -29,9 +29,9 @@
           :key="link.relativePath"
           :href="withBase(link.fullUrl)"
           class="page-link slide-enter"
-          :title="resolveLinkTitle(link, allPostsData || [], renderTitle)"
+          :title="getResolvedLinkTitle(link)"
         >
-          {{ resolveLinkTitle(link, allPostsData || [], renderTitle) }}
+          {{ getResolvedLinkTitle(link) }}
         </a>
       </div>
       <div v-else class="no-links">No Back Links</div>
@@ -54,9 +54,14 @@
   import { data as allPostsData } from '../../utils/node/posts.data'
 
   const { site } = useData()
-  const renderTitle =
-    (site.value.themeConfig as Record<string, unknown>)?.renderTitle ||
-    'frontmatter_title'
+  const renderTitle = computed(() => {
+    const value = (site.value.themeConfig as Record<string, unknown>)
+      ?.renderTitle
+    return typeof value === 'string' ? value : 'frontmatter_title'
+  })
+
+  const getResolvedLinkTitle = (link: PageLink): string =>
+    resolveLinkTitle(link, allPostsData || [], renderTitle.value)
 
   const route = useRoute()
   const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))

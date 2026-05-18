@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": ".",
+    "outDir": "../../.tsbuild/types/create-blog-template",
+    "tsBuildInfoFile": "../../.tsbuild/create-blog-template.tsbuildinfo"
+  },
+  "include": [
+    "../../types/**/*.d.ts",
+    "src/**/*.ts",
+    "public/template/.vitepress/**/*.ts"
+  ],
+  "exclude": ["node_modules", "lib", "dist", "test-results", "coverage"],
+  "references": [{ "path": "../theme/tsconfig.typecheck.json" }]
+}

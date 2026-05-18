@@ -1,5 +1,5 @@
 import wikilinks from 'markdown-it-wikilinks'
-import { defineConfig } from 'vitepress'
+import { type UserConfig, defineConfig } from 'vitepress'
 import {
   getThemeConfig,
   mermaidPlugin,
@@ -22,7 +22,7 @@ const wikilinksOptions = {
 const blogTheme = await getThemeConfig()
 
 export default defineConfig({
-  extends: blogTheme.clearBlogConfig,
+  extends: blogTheme.clearBlogConfig as UserConfig,
   markdown: {
     config: (md) => {
       md.use(wikilinks(wikilinksOptions))

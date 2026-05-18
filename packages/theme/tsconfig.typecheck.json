@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": ".",
+    "outDir": "../../.tsbuild/types/theme",
+    "tsBuildInfoFile": "../../.tsbuild/theme.tsbuildinfo"
+  },
+  "include": [
+    "../../types/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "test/**/*.ts",
+    "uno.config.ts",
+    "vitest.config.ts"
+  ],
+  "exclude": ["node_modules", "lib", "dist", "test-results", "coverage"],
+  "references": [
+    { "path": "../vitepress-plugin-analyzer/tsconfig.typecheck.json" },
+    { "path": "../vitepress-plugin-callout/tsconfig.typecheck.json" },
+    { "path": "../vitepress-plugin-codeblock-fold/tsconfig.typecheck.json" },
+    { "path": "../vitepress-plugin-config/tsconfig.typecheck.json" },
+    { "path": "../vitepress-plugin-details-block/tsconfig.typecheck.json" },
+    { "path": "../vitepress-plugin-hashtag/tsconfig.typecheck.json" }
+  ]
+}

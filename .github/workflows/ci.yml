@@ -90,8 +90,6 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm build:packages
-
       - run: pnpm test:unit
 
   build:
@@ -115,8 +113,11 @@ jobs:
 
       - uses: actions/upload-artifact@v5
         with:
-          name: testbed-dist
-          path: sites/testbed/.vitepress/dist
+          name: build-artifacts
+          path: |
+            packages/**/lib
+            packages/vitepress-plugin-details-block/dist
+            sites/testbed/.vitepress/dist
           retention-days: 7
 
   e2e:
@@ -150,11 +151,8 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v5
         with:
-          name: testbed-dist
-          path: sites/testbed/.vitepress/dist
-
-      - name: Build workspace packages
-        run: pnpm build:packages
+          name: build-artifacts
+          path: .
 
       - name: Run E2E tests
         run: pnpm test:e2e
