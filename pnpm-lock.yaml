@@ -103,6 +103,9 @@ importers:
       unocss:
         specifier: 66.6.7
         version: 66.6.7(@emnapi/core@1.9.1)(@emnapi/runtime@1.8.1)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))
+      vite:
+        specifier: 7.3.1
+        version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3)
       vitest:
         specifier: ^4.1.6
         version: 4.1.6(@types/node@25.5.0)(@vitest/coverage-v8@4.1.6)(happy-dom@20.9.0)(jsdom@26.1.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3))
@@ -118,6 +121,9 @@ importers:
       rimraf:
         specifier: ^5.0.1
         version: 5.0.10
+      vitepress:
+        specifier: ^1.6.4
+        version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2)
 
   packages/theme:
     dependencies:
@@ -4121,10 +4127,6 @@ packages:
   picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
-
-  picomatch@4.0.3:
-    resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
-    engines: {node: '>=12'}
 
   picomatch@4.0.4:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
@@ -9045,8 +9047,6 @@ snapshots:
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
-
-  picomatch@4.0.3: {}
 
   picomatch@4.0.4: {}
 
