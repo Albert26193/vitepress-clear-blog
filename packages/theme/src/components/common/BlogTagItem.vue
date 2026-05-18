@@ -8,9 +8,9 @@
     ]"
     :style="tagStyle"
     :tabindex="clickable ? 0 : undefined"
-    role="button"
-    @keydown.enter="handleClick"
-    @keydown.space.prevent="handleClick"
+    :role="href ? 'link' : 'button'"
+    @keydown.enter.stop="handleKeydown"
+    @keydown.space.prevent.stop="handleKeydown"
     @click.stop="handleClick"
   >
     <slot>{{ text }}</slot>
@@ -19,8 +19,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRouter, withBase } from 'vitepress'
   import { computed } from 'vue'
+
+  import { useClickAble } from '../../composables/useClickAble'
 
   const props = withDefaults(
     defineProps<{
@@ -43,7 +44,6 @@
   )
 
   const emit = defineEmits<{ click: [] }>()
-  const router = useRouter()
 
   const tagStyle = computed(() => ({
     '--bv-tag-py': `${props.py * 0.25}rem`,
@@ -51,12 +51,19 @@
     '--bv-tag-font-size': `${props.fontSize}px`
   }))
 
+  const { handleClick: navigate, handleKeydown: navigateWithKeyboard } =
+    useClickAble(() => props.href, {
+      onClick: () => emit('click')
+    })
+
   function handleClick() {
     if (!props.clickable) return
-    emit('click')
-    if (props.href) {
-      router.go(withBase(props.href))
-    }
+    navigate()
+  }
+
+  function handleKeydown() {
+    if (!props.clickable) return
+    navigateWithKeyboard()
   }
 </script>
 

@@ -1,5 +1,12 @@
 <template>
-  <div class="blog-card" @click="navigateToPost">
+  <div
+    class="blog-card"
+    role="link"
+    tabindex="0"
+    @click="handleClick"
+    @keydown.enter="handleKeydown"
+    @keydown.space.prevent="handleKeydown"
+  >
     <div class="card-header">
       <h2 class="card-title mb-1 text-xl font-semibold">
         <span class="text-color-[var(--vp-c-brand)]">
@@ -38,9 +45,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { withBase } from 'vitepress'
   import { PropType } from 'vue'
 
+  import { useClickAble } from '../../composables/useClickAble'
   import {
     useHtmlPreview,
     useTimeFormat,
@@ -61,9 +68,7 @@
   })
 
   const partedTags = props.post.frontMatter.tags?.slice(0, 1) ?? []
-  const navigateToPost = (event: MouseEvent) => {
-    window.location.href = withBase(props.post.regularPath)
-  }
+  const { handleClick, handleKeydown } = useClickAble(props.post.regularPath)
 
   const preview = useHtmlPreview(props.post.html, {
     maxChineseLength: 60,

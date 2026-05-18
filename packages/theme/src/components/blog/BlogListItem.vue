@@ -23,8 +23,8 @@
               role="link"
               tabindex="0"
               @click="handleTitleClick"
-              @keydown.enter="handleTitleClick"
-              @keydown.space.prevent="handleTitleClick"
+              @keydown.enter="handleTitleKeydown"
+              @keydown.space.prevent="handleTitleKeydown"
             >
               {{ useTitle(post.frontMatter, post.html) }}
             </span>
@@ -65,9 +65,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRouter, withBase } from 'vitepress'
+  import { withBase } from 'vitepress'
   import { PropType } from 'vue'
 
+  import { useClickAble } from '../../composables/useClickAble'
   import {
     useAuthor,
     useHtmlPreview,
@@ -107,11 +108,8 @@
     maxEnglishWords: 60
   })
 
-  const router = useRouter()
-
-  function handleTitleClick() {
-    router.go(withBase(props.post.regularPath))
-  }
+  const { handleClick: handleTitleClick, handleKeydown: handleTitleKeydown } =
+    useClickAble(props.post.regularPath)
 </script>
 
 <style scoped lang="scss">

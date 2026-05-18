@@ -25,7 +25,11 @@
       <div class="i-carbon-user ml-3" />
       <span
         class="hover:text-color-[var(--vp-c-brand)] ml-1 align-middle text-sm hover:cursor-pointer"
-        @click="router.go(withBase('/about.html'))"
+        role="link"
+        tabindex="0"
+        @click="handleAuthorClick"
+        @keydown.enter="handleAuthorKeydown"
+        @keydown.space.prevent="handleAuthorKeydown"
       >
         {{ author }}
       </span>
@@ -34,16 +38,18 @@
 </template>
 
 <script setup lang="ts">
-  import { useData, useRouter, withBase } from 'vitepress'
+  import { useData } from 'vitepress'
   import { onMounted, ref } from 'vue'
 
+  import { useClickAble } from '../../composables/useClickAble'
   import { useAuthor, useTimeFormat } from '../../composables/useMeta'
   import type { PostFrontMatter } from '../../types/types.d'
   import { calculateWords } from '../../utils/client/'
   import BlogTagItem from '../common/BlogTagItem.vue'
 
   const { frontmatter } = useData()
-  const router = useRouter()
+  const { handleClick: handleAuthorClick, handleKeydown: handleAuthorKeydown } =
+    useClickAble('/about.html')
 
   const $des = ref<HTMLDivElement>()
 
