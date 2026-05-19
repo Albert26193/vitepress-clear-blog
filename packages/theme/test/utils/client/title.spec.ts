@@ -272,7 +272,7 @@ describe('getTitleFromPost extended', () => {
     expect(getTitleFromPost(link, posts)).toBe('Post Title')
   })
 
-  it('returns heading when frontmatter has no title', () => {
+  it('returns filename when frontmatter has no title in default mode', () => {
     const posts: Post[] = [
       {
         frontMatter: { title: '', date: '', tags: [], description: '' },
@@ -288,7 +288,7 @@ describe('getTitleFromPost extended', () => {
       type: 'wiki',
       raw: '[[my-post|alias]]'
     }
-    expect(getTitleFromPost(link, posts)).toBe('Heading Text')
+    expect(getTitleFromPost(link, posts)).toBe('my-post')
   })
 
   it('handles relativePath with .md extension', () => {
@@ -329,23 +329,76 @@ describe('getTitleFromPost extended', () => {
     expect(getTitleFromPost(link, posts)).toBe('my-post')
   })
 
-  it('uses link.text when no posts match', () => {
+  it('respects file_name render title mode', () => {
     const posts: Post[] = [
       {
-        frontMatter: { title: 'Other', date: '', tags: [], description: '' },
-        regularPath: '/blogs/other.html',
-        html: ''
+        frontMatter: {
+          title: 'Post Title',
+          date: '',
+          tags: [],
+          description: ''
+        },
+        regularPath: '/blogs/my-post.html',
+        html: '<h1>Heading</h1>'
       }
     ]
     const link: PageLink = {
       absolutePath: '',
-      text: 'my text',
+      text: 'alias',
       relativePath: 'blogs/my-post',
       fullUrl: '/blogs/my-post',
       type: 'wiki',
-      raw: '[[my-post|my text]]'
+      raw: '[[my-post|alias]]'
     }
-    expect(getTitleFromPost(link, posts)).toBe('my text')
+    expect(getTitleFromPost(link, posts, 'file_name')).toBe('my-post')
+  })
+
+  it('respects alias render title mode', () => {
+    const posts: Post[] = [
+      {
+        frontMatter: {
+          title: 'Post Title',
+          date: '',
+          tags: [],
+          description: ''
+        },
+        regularPath: '/blogs/my-post.html',
+        html: '<h1>Heading</h1>'
+      }
+    ]
+    const link: PageLink = {
+      absolutePath: '',
+      text: 'alias',
+      relativePath: 'blogs/my-post',
+      fullUrl: '/blogs/my-post',
+      type: 'wiki',
+      raw: '[[my-post|alias]]'
+    }
+    expect(getTitleFromPost(link, posts, 'alias')).toBe('alias')
+  })
+
+  it('respects first_heading render title mode', () => {
+    const posts: Post[] = [
+      {
+        frontMatter: {
+          title: 'Post Title',
+          date: '',
+          tags: [],
+          description: ''
+        },
+        regularPath: '/blogs/my-post.html',
+        html: '<h1>Heading Text</h1>'
+      }
+    ]
+    const link: PageLink = {
+      absolutePath: '',
+      text: 'alias',
+      relativePath: 'blogs/my-post',
+      fullUrl: '/blogs/my-post',
+      type: 'wiki',
+      raw: '[[my-post|alias]]'
+    }
+    expect(getTitleFromPost(link, posts, 'first_heading')).toBe('Heading Text')
   })
 })
 

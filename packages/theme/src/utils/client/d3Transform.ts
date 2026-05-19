@@ -10,6 +10,11 @@ import { getTitleFromPost } from './title'
 
 type PageGraphLink = SiteMetadata[string]['outgoingLinks'][number]
 
+declare const __RENDER_TITLE__: string
+
+const getRenderTitle = (): string =>
+  typeof __RENDER_TITLE__ === 'string' ? __RENDER_TITLE__ : 'frontmatter_title'
+
 const normalizeMetadataKey = (path: string): string =>
   path.replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/')
 
@@ -72,7 +77,8 @@ const transformPageD3Data = (
         type: 'markdown',
         raw: currentPath
       },
-      allPostsData || []
+      allPostsData || [],
+      getRenderTitle()
     ),
     type: 'page',
     inDegree: backLinks.length,
@@ -197,7 +203,18 @@ const transformSiteD3Data = (siteMetadata: SiteMetadata): D3Data => {
     // Add current page as a node
     getOrCreateNode(
       path,
-      path.split('/').pop() || path,
+      getTitleFromPost(
+        {
+          relativePath: path,
+          fullUrl: '/' + path,
+          text: path.split('/').pop() || path,
+          absolutePath: path,
+          type: 'markdown',
+          raw: path
+        },
+        allPostsData || [],
+        getRenderTitle()
+      ),
       '/' + path,
       'page',
       0,

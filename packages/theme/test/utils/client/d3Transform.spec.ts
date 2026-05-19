@@ -1,17 +1,25 @@
 /**
  * @vitest-environment happy-dom
  */
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import type { SiteMetadata } from '../../../src/types/types.d'
+import type { Post, SiteMetadata } from '../../../src/types/types.d'
 import {
   transformPageD3Data,
   transformSiteD3Data
 } from '../../../src/utils/client/d3Transform'
 
-vi.mock('../../../src/utils/node/posts.data', () => ({
-  data: []
+const { mockPosts } = vi.hoisted(() => ({
+  mockPosts: [] as Post[]
 }))
+
+vi.mock('../../../src/utils/node/posts.data', () => ({
+  data: mockPosts
+}))
+
+afterEach(() => {
+  mockPosts.length = 0
+})
 
 const emptyMetadata: SiteMetadata = {}
 
@@ -253,6 +261,64 @@ describe('transformSiteD3Data', () => {
     const result = transformSiteD3Data(emptyMetadata)
     expect(result.nodes).toEqual([])
     expect(result.links).toEqual([])
+  })
+
+  it('uses post title for site graph page node labels', () => {
+    mockPosts.push({
+      frontMatter: {
+        title: 'Actual Page Title',
+        date: '',
+        tags: [],
+        description: ''
+      },
+      regularPath: '/blogs/d3-force-graph.html',
+      html: '<h1>Heading Title</h1>'
+    })
+
+    const metadata: SiteMetadata = {
+      '/blogs/d3-force-graph': {
+        outgoingLinks: [],
+        backLinks: [],
+        wordCount: 1,
+        firstHeading: 'Heading Title',
+        lastUpdated: 1
+      }
+    }
+
+    const result = transformSiteD3Data(metadata)
+    const pageNode = result.nodes.find((n) => n.id === 'blogs/d3-force-graph')
+
+    expect(pageNode?.name).toBe('Actual Page Title')
+  })
+
+  it('uses same post title for page and site graph labels', () => {
+    mockPosts.push({
+      frontMatter: {
+        title: 'Shared Node Title',
+        date: '',
+        tags: [],
+        description: ''
+      },
+      regularPath: '/blogs/shared.html',
+      html: '<h1>Shared Heading</h1>'
+    })
+
+    const metadata: SiteMetadata = {
+      '/blogs/shared': {
+        outgoingLinks: [],
+        backLinks: [],
+        wordCount: 1,
+        firstHeading: 'Shared Heading',
+        lastUpdated: 1
+      }
+    }
+
+    const pageResult = transformPageD3Data('/blogs/shared', metadata)
+    const siteResult = transformSiteD3Data(metadata)
+    const pageNode = pageResult.nodes.find((n) => n.id === '/blogs/shared')
+    const siteNode = siteResult.nodes.find((n) => n.id === 'blogs/shared')
+
+    expect(siteNode?.name).toBe(pageNode?.name)
   })
 
   it('creates nodes for all pages in metadata', () => {
