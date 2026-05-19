@@ -5,6 +5,10 @@
       class="mermaid-ascii"
       :aria-label="diagramLabel"
     ><code>{{ asciiContent }}</code></pre>
+    <div v-else-if="renderError" class="mermaid-error" role="alert">
+      <p class="mermaid-error-title">Mermaid diagram failed to render.</p>
+      <p class="mermaid-error-code">{{ renderError.code }}</p>
+    </div>
     <img
       v-else-if="imgSrc"
       class="mermaid-img"
@@ -25,6 +29,8 @@
     width: number | null
     height: number | null
   }
+
+  type MermaidRenderError = Extract<MermaidRenderResult, { type: 'error' }>
 
   const props = defineProps({
     /**
@@ -94,6 +100,13 @@
   }
 
   const applyRenderResult = (result: MermaidRenderResult): void => {
+    if (result.type === 'error') {
+      renderError.value = result
+      return
+    }
+
+    renderError.value = null
+
     if (result.type === 'ascii') {
       asciiContent.value = result.content
       return
@@ -109,6 +122,7 @@
   const diagramLabel = computed(() => `Mermaid diagram: ${props.id}`)
   const asciiContent = shallowRef<string>('')
   const imgSrc = shallowRef<string>('')
+  const renderError = shallowRef<MermaidRenderError | null>(null)
   const svgWidth = shallowRef<number | null>(null)
   const svgHeight = shallowRef<number | null>(null)
 </script>
@@ -141,6 +155,27 @@
 
   .mermaid-ascii code {
     font-family: inherit;
+  }
+
+  .mermaid-error {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 1rem;
+    border: 1px solid var(--vp-c-danger-2);
+    border-radius: 8px;
+    background: var(--vp-c-danger-soft);
+    color: var(--vp-c-danger-1);
+  }
+
+  .mermaid-error-title {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .mermaid-error-code {
+    margin: 0.5rem 0 0;
+    font-family: var(--vp-font-family-mono);
+    font-size: 0.875rem;
   }
 
   .mermaid-img {

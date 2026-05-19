@@ -128,4 +128,46 @@ describe('render', () => {
       'gantt\ntitle Roadmap'
     )
   })
+
+  it('returns an error result when mermaid returns an error svg', async () => {
+    ;(mermaid.render as any).mockResolvedValueOnce({
+      svg: '<svg><path class="error-icon"></path><text class="error-text">Syntax error in text</text></svg>'
+    })
+
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    const result = await testRender('test-id', 'C4Context\ninvalid')
+
+    expect(result).toEqual({
+      type: 'error',
+      code: 'MERMAID_RENDER_FAILED',
+      message: 'Mermaid returned an error SVG'
+    })
+  })
+
+  it('keeps normal mermaid svg that only defines error styles', async () => {
+    const svg =
+      '<svg><style>#id .error-icon{fill:#552222;}</style><g></g></svg>'
+    ;(mermaid.render as any).mockResolvedValueOnce({ svg })
+
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    const result = await testRender('test-id', 'gantt\ntitle Roadmap')
+
+    expect(result).toEqual({ type: 'svg', content: svg })
+  })
+
+  it('returns an error result when mermaid rendering fails', async () => {
+    ;(mermaid.render as any).mockRejectedValueOnce(new Error('Invalid syntax'))
+
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    const result = await testRender('test-id', 'gantt\ninvalid')
+
+    expect(result).toEqual({
+      type: 'error',
+      code: 'MERMAID_RENDER_FAILED',
+      message: 'Invalid syntax'
+    })
+  })
 })
