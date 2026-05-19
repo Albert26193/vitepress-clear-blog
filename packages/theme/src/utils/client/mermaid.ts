@@ -68,6 +68,10 @@ const toSvgRenderResult = (svg: string): MermaidRenderResult => {
   return { type: 'svg', content: svg }
 }
 
+const cleanupMermaidRenderContainer = (id: string): void => {
+  document.getElementById(`d${id}`)?.remove()
+}
+
 const renderWithMermaid = async (
   id: string,
   code: string,
@@ -77,12 +81,19 @@ const renderWithMermaid = async (
   mermaid.default.initialize(config)
   return mermaid.default
     .render(id, code)
-    .then(({ svg }) => toSvgRenderResult(svg))
-    .catch((error) => ({
-      type: 'error',
-      code: 'MERMAID_RENDER_FAILED',
-      message: error instanceof Error ? error.message : 'Mermaid render failed'
-    }))
+    .then(({ svg }) => {
+      cleanupMermaidRenderContainer(id)
+      return toSvgRenderResult(svg)
+    })
+    .catch((error) => {
+      cleanupMermaidRenderContainer(id)
+      return {
+        type: 'error',
+        code: 'MERMAID_RENDER_FAILED',
+        message:
+          error instanceof Error ? error.message : 'Mermaid render failed'
+      }
+    })
 }
 
 const render = async (
