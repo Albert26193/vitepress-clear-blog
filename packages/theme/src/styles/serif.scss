@@ -25,6 +25,23 @@
   }
 }
 
+:root {
+  --vp-local-search-font-family:
+    'Heti Song', 'Times New Roman', Times, ui-serif, Georgia, Cambria, serif;
+}
+
+.VPLocalSearchBox {
+  font-family: var(--vp-local-search-font-family);
+
+  .search-input#localsearch-input,
+  .results,
+  .result,
+  .excerpt,
+  .no-results {
+    font-family: var(--vp-local-search-font-family);
+  }
+}
+
 .VPLocalNav {
   .VPLocalNavOutlineDropdown {
     .items {
