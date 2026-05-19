@@ -157,6 +157,30 @@ describe('render', () => {
     expect(result).toEqual({ type: 'svg', content: svg })
   })
 
+  it('removes mermaid temporary render container after svg rendering', async () => {
+    document.body.innerHTML = '<div id="dtest-id"><svg></svg></div>'
+    ;(mermaid.render as any).mockResolvedValueOnce({
+      svg: '<svg>mermaid</svg>'
+    })
+
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    await testRender('test-id', 'gantt\ntitle Roadmap')
+
+    expect(document.getElementById('dtest-id')).toBeNull()
+  })
+
+  it('removes mermaid temporary render container after rendering fails', async () => {
+    document.body.innerHTML = '<div id="dtest-id"><svg></svg></div>'
+    ;(mermaid.render as any).mockRejectedValueOnce(new Error('Invalid syntax'))
+
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    await testRender('test-id', 'gantt\ninvalid')
+
+    expect(document.getElementById('dtest-id')).toBeNull()
+  })
+
   it('returns an error result when mermaid rendering fails', async () => {
     ;(mermaid.render as any).mockRejectedValueOnce(new Error('Invalid syntax'))
 
