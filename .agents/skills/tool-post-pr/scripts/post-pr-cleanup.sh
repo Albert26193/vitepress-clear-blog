@@ -161,6 +161,8 @@ function pull_fast_forward {
 #-----------------------------------------
 function branch_merged_state {
   local previous_branch="$1"
+  local pr_state merge_commit
+
   if [[ -z "$previous_branch" || "$previous_branch" == "$BASE_BRANCH" ]]; then
     echo "unknown"
     return 0
@@ -171,9 +173,21 @@ function branch_merged_state {
   fi
   if git merge-base --is-ancestor "$previous_branch" HEAD; then
     echo "yes"
-  else
-    echo "no"
+    return 0
   fi
+
+  if command -v gh >/dev/null 2>&1; then
+    pr_state="$(gh pr view "$previous_branch" --json state --jq '.state' 2>/dev/null || true)"
+    if [[ "$pr_state" == "MERGED" ]]; then
+      merge_commit="$(gh pr view "$previous_branch" --json mergeCommit --jq '.mergeCommit.oid // empty' 2>/dev/null || true)"
+      if [[ -z "$merge_commit" ]] || git merge-base --is-ancestor "$merge_commit" HEAD; then
+        echo "yes"
+        return 0
+      fi
+    fi
+  fi
+
+  echo "no"
 }
 
 #-----------------------------------------
@@ -186,7 +200,7 @@ function branch_merged_state {
 function list_cleanup_candidates {
   local repo_root="$1"
   ps -eo pid=,args= | awk -v root="$repo_root" '
-    $0 ~ root && $0 ~ /(pnpm|vitepress|vite|tsup|cpx|esbuild|playwright)/ && $0 !~ /post-pr-cleanup\.sh/ && $0 !~ /awk -v root/ {
+    $0 ~ root && $0 ~ /(build_preview\.sh|vitepress preview|pnpm[^[:space:]]* preview:testbed|pnpm|vitepress|vite|tsup|cpx|esbuild|playwright)/ && $0 !~ /post-pr-cleanup\.sh/ && $0 !~ /awk -v root/ {
       pid=$1
       sub(/^[[:space:]]*[0-9]+[[:space:]]+/, "", $0)
       print pid "\t" $0
