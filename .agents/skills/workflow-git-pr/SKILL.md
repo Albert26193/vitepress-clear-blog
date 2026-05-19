@@ -19,7 +19,7 @@ commands work regardless of the current working directory.
 
 Orchestrates the complete path from unstaged changes to a PR with all CI
 checks passing. This skill delegates the specialized steps — issue creation,
-commit message generation, local quality gate, dev smoke test, and CI
+commit message generation, local quality gate, build preview, and CI
 verification — to `tool-git-issues`, `tool-git-commit`, `tool-test-check`,
 `tool-pnpm`, and `tool-ci-check` rather than duplicating their logic.
 
@@ -31,7 +31,7 @@ verification — to `tool-git-issues`, `tool-git-commit`, `tool-test-check`,
 | Analyze + write commit | **tool-git-commit** | Gathers context, determines type/scope, writes Conventional Commits message, validates with checker |
 | Vue coding standard | **std-antfu-vue** | Required when changes touch Vue SFCs, theme Vue components, `NewLayout.vue`, Composition API, props/emits, composables, or Vue UI refactors |
 | Pre-PR quality gate | **tool-test-check** | Runs the local/CI-aligned quality checks and blocks PR creation on failures |
-| Start dev server | **tool-pnpm** | Provides the `pnpm dev` command; the bundled `smoke-dev.sh` script runs it |
+| Build preview | **tool-pnpm** | Runs `build_preview.sh` so humans inspect built VitePress output, not watcher-based `pnpm dev` |
 | Post-PR CI verification | **tool-ci-check** | Detects PR, polls CI status, fetches all job logs, generates report; blocks final report until all CI jobs pass |
 | Everything else | This skill | Auth check, branch naming, staging, git operations, push, PR creation |
 
@@ -383,6 +383,10 @@ cat > /tmp/pr-body.md <<'PREOF'
 
 Closes #<N>
 
+## Preview
+- Standard entry: `<route reviewers should inspect>`
+- Local build preview: run `bash .agents/skills/tool-pnpm/scripts/build_preview.sh`
+
 ## Test plan
 - [ ] <verification steps>
 
@@ -413,38 +417,41 @@ The script will:
 
 The PR title should match the commit subject line.
 
-### Step 7: Local dev smoke test — invoke `tool-pnpm` + `smoke-dev.sh`
+### Step 7: Build preview — invoke `tool-pnpm` + `build_preview.sh`
 
-After push, start the dev server locally to verify it boots without errors.
-This catches bundler / config / import issues that typecheck and build may
-miss, and provides fast feedback while CI is still queued.
+After push, start a production-build preview and leave it running as the local
+human-review entry point for this PR. This intentionally uses built VitePress
+output instead of watcher-based `pnpm dev`, and the exposed local port is meant
+for a human reviewer to open in a browser before the PR is merged or abandoned.
 
-**Invoke the tool-pnpm skill** to confirm the dev command, then run the
-bundled script:
+**Invoke the tool-pnpm skill** to confirm the build preview command, then run:
 
 ```bash
-bash "$SKILL_DIR/scripts/smoke-dev.sh"
+bash .agents/skills/tool-pnpm/scripts/build_preview.sh
 ```
 
 What it does:
-1. **Pre-cleanup**: Kills stale watcher processes (tsup, vite, cpx, esbuild) from
-   previous dev sessions that still reference this project directory. Prevents
-   port conflicts and zombie process buildup.
-2. Starts `pnpm dev` in background, capturing stdout + stderr to a temp file
-3. Waits up to 60 seconds for the VitePress dev server to print its URL
-4. If a fatal error appears or the process dies, reports it immediately
-5. On success, prints the URL, startup time, and any warnings
-6. Kills the dev process on exit (trap cleanup)
+1. Runs `pnpm build:testbed` by default.
+2. Starts `pnpm preview:testbed` against the built output on `0.0.0.0:4173` by default.
+3. Waits up to 60 seconds for the preview server URL.
+4. Prints a compact table with the local preview URL, startup time, and log file.
+5. Keeps the preview server running for human browser review.
 
-If the dev server fails to start:
+Keep this local preview alive until the PR is merged, abandoned, or no longer needs visual inspection. The post-PR cleanup workflow is responsible for stopping the repo-scoped preview process.
 
-1. Diagnose the error from the captured log output.
+If the build preview fails:
+
+1. Diagnose the build or preview error from the captured log output.
 2. Fix the issue locally.
 3. Amend the commit: `git add <fixed-files> && git commit --amend --no-edit`.
 4. Force-push: `git push --force-with-lease`.
 5. Re-run Step 7.
 
-The dev server must start cleanly before proceeding to CI verification.
+The build preview must be running and accessible for human review before proceeding to CI verification.
+
+When writing the PR body and final report, distinguish clearly between:
+- **Local build preview**: a running local server from `build_preview.sh` for human browser inspection.
+- **Standard preview entry**: the built testbed route reviewers should inspect, for example `/blogs/test/mermaid.html` for Mermaid changes or `/` for broad theme changes.
 
 ### Step 8: CI verification — invoke `tool-ci-check`
 
@@ -485,7 +492,7 @@ directly:
 | Issue | https://github.com/Albert26193/vitepress-clear-blog/issues/N |
 | Branch | `issue-<id>-<slug>` |
 | Quality gate | Passed — `<tool-test-check summary>` |
-| Dev server | Started — `<VitePress URL> (<N>s)` or Skipped |
+| Build preview | Started — `<local preview URL> (<N>s)`; standard entry `<route>` |
 | Commit | `<hash>` — subject |
 | PR | https://github.com/Albert26193/vitepress-clear-blog/pull/M |
 | CI | Passed — `<ci-status-summary>` |

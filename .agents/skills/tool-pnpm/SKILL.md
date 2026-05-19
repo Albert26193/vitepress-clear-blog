@@ -93,6 +93,7 @@ These are defined in the root `package.json` and work from the repo root.
 | Task | Command |
 |---|---|
 | Preview built testbed | `pnpm preview:testbed` |
+| Build preview testbed | `bash .agents/skills/tool-pnpm/scripts/build_preview.sh` |
 | Generate changelog | `pnpm changelog` |
 
 ## Dependency management
@@ -210,8 +211,10 @@ pnpm add some-lib --filter vitepress-plugin-xxx
 
 **Rebuild and preview testbed after theme changes:**
 ```bash
-pnpm build:packages && pnpm build:testbed && pnpm preview:testbed
+bash .agents/skills/tool-pnpm/scripts/build_preview.sh
 ```
+
+Use this for human-facing local verification because it previews the built VitePress output and keeps the preview server running for browser review. The preview is intentionally long-lived; stop it through the post-PR cleanup workflow when the PR is merged, abandoned, or no longer needs visual inspection.
 
 ## Stopping dev / cleanup
 
