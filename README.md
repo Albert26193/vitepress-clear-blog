@@ -11,17 +11,16 @@ Forked from [vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure)
 
 ## Quick Start
 
-Create a new blog project with the scaffold tool:
+Scaffold a new blog with one command:
 
 ```bash
-# Create a new blog (npm / pnpm / yarn / bun)
-pnpm create blog-template my-blog
-
-# Or use dlx
-pnpm dlx create-blog-template my-blog
+npm create blog-template@latest my-blog   # npm
+pnpm create blog-template@latest my-blog  # pnpm
+yarn create blog-template my-blog         # yarn
+bun create blog-template@latest my-blog   # bun
 ```
 
-Then start writing:
+Then install dependencies and start the dev server:
 
 ```bash
 cd my-blog
@@ -29,8 +28,9 @@ pnpm install
 pnpm dev
 ```
 
-> **Tip**: the `create-blog-template` package scaffolds a working VitePress blog with the theme
-> and plugins pre-configured — just add your markdown posts under `posts/`.
+> **Tip**: The scaffold auto-detects your package manager and prints the exact
+> commands to run. Add `.md` files under `docs/` — see `docs/example.md` for a
+> minimal post with frontmatter.
 
 ## Features
 

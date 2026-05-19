@@ -104,6 +104,23 @@ about = "About"
 # link_style — visual style for internal links.
 #   • origin — keep native markdown link style
 #   • wiki   — render internal links with [[ ]] decoration
+# image_dimension — control how image dimensions (width/height) are parsed.
+#   • true                  — enable with default conventions
+#   • false                 — disable entirely
+#   • Object form (sub-fields are all optional):
+#       [markdown.image_dimension]
+#       enabled = true
+#       alt_preset = true
+#       github_title_suffix = true
+#       pandoc_attr_list = true
+#       obsidian_bare_size = true
+#       obsidian_pixel_size = true
+#       url_query_params = true
+#       html_title_size = true
+#       strip_dimension_query = false
+#       [markdown.image_dimension.presets]
+#       small  = 480
+#       medium = 800
 # ---------------------------------------------------------------------------
 [markdown]
 mathjax = true
@@ -112,6 +129,7 @@ footnote = true
 hashtag = true
 mermaid = true
 callout = true
+image_dimension = true
 render_title = "frontmatter_title"
 link_style = "origin"
 
