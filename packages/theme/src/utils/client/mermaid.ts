@@ -3,9 +3,12 @@ import type { ExternalDiagramDefinition, MermaidConfig } from 'mermaid'
 
 type MermaidRenderer = 'ascii' | 'mermaid'
 
+type MermaidRenderErrorCode = 'MERMAID_RENDER_FAILED'
+
 type MermaidRenderResult =
   | { type: 'ascii'; content: string }
   | { type: 'svg'; content: string }
+  | { type: 'error'; code: MermaidRenderErrorCode; message: string }
 
 const BEAUTIFUL_MERMAID_ASCII_OPTIONS: AsciiRenderOptions = {
   useAscii: true,
@@ -45,6 +48,26 @@ const init = async (externalDiagrams: ExternalDiagramDefinition[]) => {
   }
 }
 
+const isMermaidErrorSvg = (svg: string): boolean => {
+  return (
+    /class=(['"])(?:[^'"]*\s)?error-(?:icon|text)(?:\s[^'"]*)?\1/u.test(svg) ||
+    svg.includes('Syntax error in text') ||
+    svg.includes('mermaid version')
+  )
+}
+
+const toSvgRenderResult = (svg: string): MermaidRenderResult => {
+  if (isMermaidErrorSvg(svg)) {
+    return {
+      type: 'error',
+      code: 'MERMAID_RENDER_FAILED',
+      message: 'Mermaid returned an error SVG'
+    }
+  }
+
+  return { type: 'svg', content: svg }
+}
+
 const renderWithMermaid = async (
   id: string,
   code: string,
@@ -52,8 +75,14 @@ const renderWithMermaid = async (
 ): Promise<MermaidRenderResult> => {
   const mermaid = await import('mermaid')
   mermaid.default.initialize(config)
-  const { svg } = await mermaid.default.render(id, code)
-  return { type: 'svg', content: svg }
+  return mermaid.default
+    .render(id, code)
+    .then(({ svg }) => toSvgRenderResult(svg))
+    .catch((error) => ({
+      type: 'error',
+      code: 'MERMAID_RENDER_FAILED',
+      message: error instanceof Error ? error.message : 'Mermaid render failed'
+    }))
 }
 
 const render = async (
