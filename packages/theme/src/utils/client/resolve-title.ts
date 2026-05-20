@@ -1,5 +1,4 @@
-import type { PageLink } from 'vitepress-plugin-analyzer/types'
-
+import type { PageLink } from '../../types/analyzer'
 import type { Post } from '../../types/types'
 
 /**

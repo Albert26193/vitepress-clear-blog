@@ -42,14 +42,9 @@
 <script setup lang="ts">
   import { siteMetadata } from 'virtual:vitepress-analyzer'
   import { useData, useRoute, withBase } from 'vitepress'
-  import {
-    getPageBackLinks,
-    // getPageMetadata,
-    getPageOutgoingLinks
-  } from 'vitepress-plugin-analyzer/client'
-  import type { PageLink } from 'vitepress-plugin-analyzer/types'
   import { computed, ref, watch } from 'vue'
 
+  import type { PageLink } from '../../types/analyzer'
   import { resolveLinkTitle } from '../../utils/client/title'
   import { data as allPostsData } from '../../utils/node/posts.data'
 
@@ -67,11 +62,11 @@
   const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))
 
   const outgoingLinks = computed<PageLink[]>(() => {
-    return getPageOutgoingLinks(siteMetadata, currentPath.value) || []
+    return siteMetadata[currentPath.value]?.outgoingLinks ?? []
   })
 
   const backLinks = computed<PageLink[]>(() => {
-    return getPageBackLinks(siteMetadata, currentPath.value) || []
+    return siteMetadata[currentPath.value]?.backLinks ?? []
   })
 
   watch(
