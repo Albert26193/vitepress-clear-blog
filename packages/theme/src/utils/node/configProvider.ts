@@ -1,7 +1,6 @@
 import type MarkdownIt from 'markdown-it'
 import footnotePlugin from 'markdown-it-footnote'
 import mathjax3 from 'markdown-it-mathjax3'
-import wikilinks from 'markdown-it-wikilinks'
 import { presetIcons, presetUno, transformerDirectives } from 'unocss'
 import UnoCSS from 'unocss/vite'
 import {
@@ -27,6 +26,7 @@ import llmstxt from 'vitepress-plugin-llms'
 import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
 import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
+import { createWikilinkPlugin } from './wikilinkPlugin'
 
 type ImageDimensionTomlConfig = {
   enabled?: boolean
@@ -200,6 +200,13 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
     { text: navLabels.about || DEFAULT_NAV_LABELS.about, link: '/about' }
   ]
 
+  const wikiLinkPlugin =
+    mdConf.wikilinks !== false
+      ? await createWikilinkPlugin(
+          toml?.links?.resolutionModes as ResolutionMode[] | undefined
+        )
+      : null
+
   const head: [string, Record<string, string>][] = [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
     ['meta', { name: 'author', content: meta.author || DEFAULT_META.author }],
@@ -242,16 +249,8 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
       }
 
       if (mdConf.mathjax !== false) md.use(mathjax3)
-      if (mdConf.wikilinks !== false) {
-        md.use(
-          wikilinks({
-            baseURL: '/',
-            htmlAttributes: {
-              class: 'clear-wikilink',
-              'data-link-style-target': ''
-            }
-          })
-        )
+      if (mdConf.wikilinks !== false && wikiLinkPlugin) {
+        md.use(wikiLinkPlugin)
       }
       if (mdConf.footnote !== false) md.use(footnotePlugin)
       if (mdConf.hashtag !== false) md.use(hashtagPlugin)
