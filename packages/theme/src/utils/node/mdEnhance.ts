@@ -58,11 +58,18 @@ const getFooterRefTag = (md: MarkdownIt) => {
   md.renderer.rules.footnote_ref = (tokens, idx, options, env, self) => {
     const id = tokens[idx].meta?.id || idx
     let refLabel: string
+    let referenceId = `fnref${id}`
+    let targetId = `fn${id}`
 
     if (originalFootnoteRef) {
       const originalHTML = originalFootnoteRef(tokens, idx, options, env, self)
-      const match = originalHTML.match(/>([^<]+)<\/a>/)
-      refLabel = match ? match[1] : `${id}`
+      const labelMatch = originalHTML.match(/>([^<]+)<\/a>/)
+      const idMatch = originalHTML.match(/\sid="([^"]+)"/)
+      const hrefMatch = originalHTML.match(/\shref="#([^"]+)"/)
+
+      refLabel = labelMatch ? labelMatch[1] : `${id}`
+      referenceId = idMatch ? idMatch[1] : referenceId
+      targetId = hrefMatch ? hrefMatch[1] : targetId
     } else {
       refLabel = tokens[idx].meta?.label || `${id}`
     }
@@ -71,7 +78,7 @@ const getFooterRefTag = (md: MarkdownIt) => {
 
     const cleanLabel = refLabel.replace(/\[|\]/g, '')
 
-    return `<FooterRef content="${content}" text="${cleanLabel}" id="${id}" />`
+    return `<FooterRef content="${content}" text="${cleanLabel}" id="${id}" reference-id="${referenceId}" target-id="${targetId}" />`
   }
 }
 

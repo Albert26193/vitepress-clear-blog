@@ -1,8 +1,8 @@
 <template>
   <sup class="footnote-ref">
     <a
-      :href="`#fn${props.id}`"
-      :id="`fnref${props.id}`"
+      :href="`#${resolvedTargetId}`"
+      :id="resolvedReferenceId"
       class="footnote-badge-link"
       ref="footnoteRef"
     >
@@ -19,13 +19,21 @@
 
 <script setup lang="ts">
   import { useElementHover } from '@vueuse/core'
-  import { ref } from 'vue'
+  import { computed, ref } from 'vue'
 
   const props = defineProps({
     // Footnote id shared by the inline reference and target anchor.
     id: {
       type: [String, Number],
       required: true
+    },
+    referenceId: {
+      type: String,
+      default: undefined
+    },
+    targetId: {
+      type: String,
+      default: undefined
     },
     // Short inline label shown inside the footnote badge.
     text: {
@@ -38,6 +46,11 @@
       default: ''
     }
   })
+
+  const resolvedReferenceId = computed(
+    () => props.referenceId || `fnref${props.id}`
+  )
+  const resolvedTargetId = computed(() => props.targetId || `fn${props.id}`)
 
   const footnoteRef = ref(null)
   const isHovered = useElementHover(footnoteRef, {

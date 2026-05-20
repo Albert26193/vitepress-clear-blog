@@ -35,6 +35,19 @@ test.describe('FooterRef', () => {
     }
   })
 
+  test('repeated footnote backlinks target unique references', async ({
+    page
+  }) => {
+    const repeatedRef = page.locator('#fnref4\\:3')
+    await expect(repeatedRef).toHaveCount(1)
+
+    const backlink = page.locator('a[href="#fnref4:3"]').first()
+    await expect(backlink).toBeVisible()
+
+    await backlink.click()
+    await expect(repeatedRef).toBeVisible()
+  })
+
   test('tooltip disappears on mouse leave', async ({ page }) => {
     const ref = page.locator('.footnote-ref').first()
     if ((await ref.count()) === 0) return
