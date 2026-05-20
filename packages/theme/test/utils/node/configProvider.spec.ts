@@ -1,5 +1,6 @@
 // @vitest-environment node
 import MarkdownIt from 'markdown-it'
+import footnotePlugin from 'markdown-it-footnote'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { mockLoadConfig } = vi.hoisted(() => ({
@@ -593,22 +594,20 @@ describe('getFooterRefTag', async () => {
     expect(result).toContain('FooterRef')
   })
 
-  it('overridden footnote_ref uses else branch when no originalFootnoteRef exists', () => {
-    const mockMd = makeMockMd()
-    getFooterRefTag(mockMd as any)
+  it('renders footnote reference with content during normal markdown render', () => {
+    const md = new MarkdownIt({ html: true })
+    md.use(footnotePlugin)
+    getFooterRefTag(md)
 
-    const openFn = mockMd.renderer.rules.footnote_open
-    const openTokens = [
-      { type: 'footnote_open', meta: { id: '1' }, level: 0 },
-      { type: 'inline', content: 'Footnote text', children: null },
-      { type: 'footnote_close', level: 0 }
-    ]
-    openFn(openTokens, 0, {}, {}, mockMd.renderer.rules)
+    const html = md.render(
+      'Footnote ref[^1].\n\n[^1]: Tooltip **content** with "quotes".'
+    )
 
-    const refFn = mockMd.renderer.rules.footnote_ref
-    const refTokens = [{ meta: { id: '1', label: '1' } }]
-    const result = refFn(refTokens, 0, {}, {}, mockMd.renderer.rules)
-    expect(result).toContain('FooterRef')
-    expect(result).toContain('1')
+    expect(html).toContain('<FooterRef')
+    expect(html).toContain(':content=')
+    expect(html).toContain(
+      'Tooltip <strong>content</strong> with &quot;quotes&quot;.'
+    )
+    expect(html).not.toContain('content=""')
   })
 })

@@ -34,8 +34,8 @@ export function useClickAble(
     }
   }
 
-  const handleKeydown = (nextTarget?: ClickTarget) => {
-    handleClick(nextTarget)
+  const handleKeydown = (_nextTarget?: ClickTarget) => {
+    handleClick()
   }
 
   return {

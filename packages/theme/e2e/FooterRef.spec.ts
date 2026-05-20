@@ -7,32 +7,24 @@ test.describe('FooterRef', () => {
 
   test('footnote references are rendered', async ({ page }) => {
     const refs = page.locator('.footnote-ref')
-    const count = await refs.count()
-    if (count > 0) {
-      await expect(refs.first()).toBeVisible()
-    }
+    await expect(refs.first()).toBeVisible()
   })
 
   test('footnote badge has text', async ({ page }) => {
     const badge = page.locator('.footnote-badge').first()
-    if ((await badge.count()) > 0) {
-      await expect(badge).toBeVisible()
-      const text = await badge.textContent()
-      expect(text).toBeTruthy()
-    }
+    await expect(badge).toBeVisible()
+    await expect(badge).not.toHaveText('')
   })
 
-  test('hover reveals tooltip', async ({ page }) => {
+  test('hover reveals tooltip with footnote content', async ({ page }) => {
     const ref = page.locator('.footnote-ref').first()
-    if ((await ref.count()) === 0) return
+    await expect(ref).toBeVisible()
 
     await ref.hover()
-    await page.waitForTimeout(500)
 
-    const tooltip = page.locator('.footnote-tooltip')
-    if ((await tooltip.count()) > 0) {
-      await expect(tooltip).toBeVisible()
-    }
+    const tooltip = page.locator('.footnote-tooltip').first()
+    await expect(tooltip).toBeVisible()
+    await expect(tooltip).toContainText('这是第一个脚注')
   })
 
   test('repeated footnote backlinks target unique references', async ({
@@ -50,16 +42,13 @@ test.describe('FooterRef', () => {
 
   test('tooltip disappears on mouse leave', async ({ page }) => {
     const ref = page.locator('.footnote-ref').first()
-    if ((await ref.count()) === 0) return
+    await expect(ref).toBeVisible()
 
     await ref.hover()
-    await page.waitForTimeout(500)
-    await page.mouse.move(0, 0)
-    await page.waitForTimeout(300)
+    const tooltip = page.locator('.footnote-tooltip').first()
+    await expect(tooltip).toBeVisible()
 
-    const tooltip = page.locator('.footnote-tooltip')
-    if ((await tooltip.count()) > 0) {
-      await expect(tooltip).not.toBeVisible()
-    }
+    await page.mouse.move(0, 0)
+    await expect(tooltip).not.toBeVisible()
   })
 })
