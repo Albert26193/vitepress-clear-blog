@@ -7,7 +7,7 @@ import {
   validateConfigTomlWithFallback
 } from '../src/validate'
 
-const CFG = '.vitepress/custom/config.toml'
+const CFG = '.vitepress/config.toml'
 
 describe('configTomlSchema', () => {
   it('accepts a minimal valid config (theme only)', () => {

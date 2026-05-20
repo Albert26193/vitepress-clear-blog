@@ -15,10 +15,9 @@ beforeEach(() => {
     tmpdir(),
     `vitepress-config-test-${Date.now()}-${Math.random().toString(36).slice(2)}`
   )
-  mkdirSync(tmpDir, { recursive: true })
-  mkdirSync(join(tmpDir, '.vitepress/custom'), { recursive: true })
+  mkdirSync(join(tmpDir, '.vitepress'), { recursive: true })
   mkdirSync(join(tmpDir, '.vitepress/theme/styles'), { recursive: true })
-  configPath = join(tmpDir, '.vitepress/custom/config.toml')
+  configPath = join(tmpDir, '.vitepress/config.toml')
   cssPath = join(tmpDir, '.vitepress/theme/styles/generated.css')
 
   vi.spyOn(process, 'cwd').mockReturnValue(tmpDir)
