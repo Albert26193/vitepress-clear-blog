@@ -15,6 +15,13 @@ export default defineConfig({
     'node:os',
     'unocss'
   ],
+  noExternal: [
+    'vitepress-plugin-analyzer',
+    'vitepress-plugin-callout',
+    'vitepress-plugin-config',
+    'vitepress-plugin-image-dimension',
+    'vitepress-plugin-llms'
+  ],
   silent: true,
   clean: true,
   outExtension: ({ format }) => ({
