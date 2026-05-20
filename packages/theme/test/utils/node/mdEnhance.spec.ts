@@ -158,7 +158,7 @@ describe('getFooterRefTag', () => {
 
     const result = md.render('test')
     expect(result).toContain('<FooterRef')
-    expect(result).toContain('text="1"')
+    expect(result).toContain(':text=\'"1"\'')
   })
 
   it('renders footnote without originalFootnoteRef using meta.label fallback', () => {
@@ -173,8 +173,8 @@ describe('getFooterRefTag', () => {
     getFooterRefTag(md)
 
     const result = md.render('test')
-    expect(result).toContain('text="99"')
-    expect(result).toContain('id="99"')
+    expect(result).toContain(':text=\'"99"\'')
+    expect(result).toContain(':id=\'"99"\'')
   })
 
   it('renders footnote with idx fallback when no id or label', () => {
@@ -191,7 +191,33 @@ describe('getFooterRefTag', () => {
     const result = md.render('test')
     expect(result).toContain('<FooterRef')
     // id defaults to idx within the token array (3 in this case: paragraph_open, inline, footnote_ref)
-    expect(result).toContain('id="3"')
+    expect(result).toContain(':id=\'"3"\'')
+  })
+
+  it('renders empty content when a footnote definition is missing', () => {
+    const md = new MarkdownIt()
+    md.use((md) => {
+      md.core.ruler.push('footnote_missing_open_test', (state) => {
+        const refToken = new state.Token('footnote_ref', '', 0)
+        refToken.meta = { id: 'missing', label: '[missing]' }
+        state.tokens.push(refToken)
+      })
+    })
+    getFooterRefTag(md)
+
+    const result = md.render('test')
+    expect(result).toContain(':content=\'""\'')
+  })
+
+  it('escapes special characters in FooterRef dynamic props', async () => {
+    const md = new MarkdownIt({ html: true })
+    const footnotePlugin = (await import('markdown-it-footnote')).default
+    md.use(footnotePlugin)
+    getFooterRefTag(md)
+
+    const result = md.render("Text[^1]\n\n[^1]: Fish & chips and Bob's note")
+
+    expect(result).toContain('Fish &amp;amp; chips and Bob&#39;s note')
   })
 
   it('renders with footnote_open capturing inline content', async () => {
