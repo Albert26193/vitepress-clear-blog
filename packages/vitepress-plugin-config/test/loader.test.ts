@@ -17,9 +17,8 @@ beforeEach(() => {
     tmpdir(),
     `vitepress-loader-test-${Date.now()}-${Math.random().toString(36).slice(2)}`
   )
-  mkdirSync(tmpDir, { recursive: true })
-  mkdirSync(join(tmpDir, '.vitepress/custom'), { recursive: true })
-  configPath = join(tmpDir, '.vitepress/custom/config.toml')
+  mkdirSync(join(tmpDir, '.vitepress'), { recursive: true })
+  configPath = join(tmpDir, '.vitepress/config.toml')
 
   vi.spyOn(process, 'cwd').mockReturnValue(tmpDir)
   clearConfigCache()
@@ -70,36 +69,24 @@ vp-c-brand = "#fff"
     expect(second!.meta.title).toBe('First')
   })
 
-  it('returns null when file does not exist', () => {
-    // configPath was never written, so it doesn't exist
-    const config = loadConfig(configPath)
+  it('returns null when .vitepress/config.toml does not exist', () => {
+    const config = loadConfig()
     expect(config).toBeNull()
   })
 
   it('caches null result for missing file', () => {
-    const first = loadConfig(configPath)
+    const first = loadConfig()
     expect(first).toBeNull()
 
-    // Second call should also return null (cached)
-    const second = loadConfig(configPath)
-    expect(second).toBeNull()
-  })
-
-  it('respects custom config path', () => {
-    const customPath = join(tmpDir, 'custom-config.toml')
-    writeFileSync(
-      customPath,
-      `[meta]
-title = "Custom"
+    writeToml(`[meta]
+title = "Created Later"
 
 [theme]
-vp-c-brand = "#abc"
-`,
-      'utf-8'
-    )
-    const config = loadConfig(customPath)
-    expect(config).not.toBeNull()
-    expect(config!.meta.title).toBe('Custom')
+vp-c-brand = "#000"
+`)
+
+    const second = loadConfig()
+    expect(second).toBeNull()
   })
 
   it('returns empty defaults for empty TOML with theme section', () => {
@@ -137,44 +124,25 @@ vp-c-brand = "#fff"
 })
 
 describe('clearConfigCacheEntry', () => {
-  it('invalidates only the specified path', () => {
-    const customPath = join(tmpDir, 'custom-config.toml')
-    writeFileSync(
-      customPath,
-      `[meta]
-title = "Custom"
-
-[theme]
-vp-c-brand = "#abc"
-`,
-      'utf-8'
-    )
+  it('clears the cached config so next call re-reads', () => {
     writeToml(`[meta]
-title = "Default"
+title = "Before"
 
 [theme]
 vp-c-brand = "#000"
 `)
-
-    const defaultFirst = loadConfig()
-    const customFirst = loadConfig(customPath)
-
+    const first = loadConfig()
     clearConfigCacheEntry()
 
     writeToml(`[meta]
-title = "Default Updated"
+title = "After"
 
 [theme]
 vp-c-brand = "#fff"
 `)
+    const second = loadConfig()
 
-    const defaultSecond = loadConfig()
-    const customSecond = loadConfig(customPath)
-
-    // Default was cleared, should be re-read
-    expect(defaultSecond).not.toBe(defaultFirst)
-    expect(defaultSecond!.meta.title).toBe('Default Updated')
-    // Custom was not cleared, should still be cached
-    expect(customSecond).toBe(customFirst)
+    expect(second).not.toBe(first)
+    expect(second!.meta.title).toBe('After')
   })
 })

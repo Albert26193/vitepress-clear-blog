@@ -181,6 +181,10 @@ describe('normalizePostDate', () => {
       createDate: '2024/06/15'
     })
     expect(result).toBe('2024-06-15')
+    expect(readFileSync).toHaveBeenCalledWith(
+      expect.stringContaining('.vitepress/config.toml'),
+      'utf-8'
+    )
   })
 
   it('uses cached config on subsequent calls', () => {

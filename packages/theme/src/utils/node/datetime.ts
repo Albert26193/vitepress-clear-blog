@@ -4,7 +4,7 @@ import { resolve } from 'node:path'
 import { parse } from 'smol-toml'
 import type { DatetimeConfig } from 'vitepress-plugin-config'
 
-const CONFIG_PATH = '.vitepress/custom/config.toml'
+const CONFIG_PATH = '.vitepress/config.toml'
 
 export const DEFAULT_FIELDS = ['date']
 export const DEFAULT_FORMATS = ['YYYY-MM-DD']

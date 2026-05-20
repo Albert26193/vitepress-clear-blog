@@ -1,6 +1,6 @@
 # vitepress-plugin-config
 
-A VitePress plugin that generates theme CSS variables from a TOML config file,
+A VitePress plugin that generates theme CSS variables from `.vitepress/config.toml`,
 enabling theme customization without editing source styles.
 
 ## Installation
@@ -22,15 +22,9 @@ export default {
 }
 ```
 
-By default it reads `config.toml` from the project root. Pass a custom path:
-
-```ts
-generateThemePlugin('custom/config.toml')
-```
-
 ## Config File
 
-Create a `config.toml` in your project root:
+Create `.vitepress/config.toml` in your VitePress site:
 
 ```toml
 [theme]
@@ -57,8 +51,8 @@ The plugin watches for changes during development and hot-reloads the theme CSS.
 ```ts
 import { loadConfig, clearConfigCache, validateConfigToml } from 'vitepress-plugin-config'
 
-// Load and validate a TOML config
-const config = loadConfig('config.toml')
+// Load and validate .vitepress/config.toml
+const config = loadConfig()
 
 // Clear the config cache (useful for tests)
 clearConfigCache()

@@ -7,12 +7,11 @@ import { clearConfigCacheEntry, loadConfig } from './loader'
 import { generateThemeFile } from './node'
 
 /**
- * Registers Vite hooks that keep generated theme CSS in sync with custom TOML config.
+ * Registers Vite hooks that keep generated theme CSS in sync with the TOML config.
  *
- * @param configPath - Location of the TOML file that drives generated theme variables.
  * @returns A VitePress plugin that updates CSS during build and local development.
  */
-const generateThemePlugin = (configPath: string = CONFIG_PATH): Plugin => {
+const generateThemePlugin = (): Plugin => {
   let vitepressLogger: Logger | undefined
 
   return {
@@ -21,11 +20,11 @@ const generateThemePlugin = (configPath: string = CONFIG_PATH): Plugin => {
       vitepressLogger = config.logger
     },
     async buildStart() {
-      const toml = loadConfig(configPath)
-      await generateThemeFile(toml ?? configPath)
+      const toml = loadConfig()
+      await generateThemeFile(toml ?? CONFIG_PATH)
     },
     configureServer(server) {
-      const configFilePath = resolve(process.cwd(), configPath)
+      const configFilePath = resolve(process.cwd(), CONFIG_PATH)
       const generatedCssPath = resolve(
         process.cwd(),
         '.vitepress/theme/styles/generated.css'
@@ -38,9 +37,9 @@ const generateThemePlugin = (configPath: string = CONFIG_PATH): Plugin => {
             `[vite-plugin-generated-theme] Config file changed: ${file}`
           )
           try {
-            clearConfigCacheEntry(configPath)
-            const toml = loadConfig(configPath)
-            await generateThemeFile(toml ?? configPath)
+            clearConfigCacheEntry()
+            const toml = loadConfig()
+            await generateThemeFile(toml ?? CONFIG_PATH)
             vitepressLogger?.info(
               '[vite-plugin-generated-theme] Generated CSS updated'
             )

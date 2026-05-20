@@ -1,4 +1,4 @@
-export const CONFIG_PATH = '.vitepress/custom/config.toml'
+export const CONFIG_PATH = '.vitepress/config.toml'
 
 export const DEFAULT_PAGE_SIZE = 10
 
