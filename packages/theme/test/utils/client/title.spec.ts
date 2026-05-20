@@ -1,9 +1,9 @@
 /**
  * @vitest-environment happy-dom
  */
-import type { PageLink } from 'vitepress-plugin-analyzer/types'
 import { describe, expect, it } from 'vitest'
 
+import type { PageLink } from '../../../src/types/analyzer'
 import type { Post } from '../../../src/types/types'
 import {
   getTitleFromPost,
