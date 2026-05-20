@@ -1,7 +1,18 @@
+export {
+  buildFilenameIndex,
+  getDocsRoot,
+  normalizeLink,
+  resolveInternalLink,
+  resolveLinkMultiMode
+} from './utils/path'
+export type { ResolvedInternalLink } from './utils/path'
+
+export { createConfig } from './config'
 export { calculateWords } from './utils/wordCount'
 
 // Export types
 export type {
+  AnalyzerConfig,
   ClientAPI,
   PageLink,
   PageMetadata,

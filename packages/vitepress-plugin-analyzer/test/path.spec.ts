@@ -439,10 +439,8 @@ describe('resolveLinkMultiMode — obsidianShortest integration', () => {
     expect(result).toBe(path.resolve(testRoot, 'attach/doc1'))
   })
 
-  it('returns null when no mode (including obsidianShortest) resolves', () => {
+  it('does not fall back to obsidianShortest for explicit relative paths', () => {
     const config = configWithModes([
-      'repoRoot',
-      'absolutePath',
       'relativeToCurrentFile',
       'obsidianShortest'
     ])
@@ -450,9 +448,9 @@ describe('resolveLinkMultiMode — obsidianShortest integration', () => {
     config.diagnostics = []
 
     const result = resolveLinkMultiMode(
-      'definitely-missing',
+      '../missing/doc1',
       config,
-      'index.md'
+      'attach/test.md'
     )
     expect(result).toBeNull()
   })

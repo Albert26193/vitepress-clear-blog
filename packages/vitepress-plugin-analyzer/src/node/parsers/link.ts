@@ -1,10 +1,9 @@
 import MarkdownIt from 'markdown-it'
 import markdownItWikilinks from 'markdown-it-wikilinks'
 import type Token from 'markdown-it/lib/token.mjs'
-import { relative, resolve } from 'node:path'
 
 import type { AnalyzerConfig, PageLink } from '../../../types'
-import { getDocsRoot, normalizeLink, resolveLinkMultiMode } from '../utils/path'
+import { normalizeLink, resolveInternalLink } from '../utils/path'
 
 // Initialize markdown-it instance with wikilink support
 const md = new MarkdownIt({
@@ -53,7 +52,7 @@ const createValidateLink =
     }
 
     // Use multi-mode resolution — the first mode that finds the file wins
-    return resolveLinkMultiMode(normalizedLink, config, currentFile) !== null
+    return resolveInternalLink(normalizedLink, config, currentFile) !== null
   }
 
 /**
@@ -184,18 +183,23 @@ const processLinks = (
   config: AnalyzerConfig,
   currentFile: string
 ): PageLink[] => {
-  // Resolve every link first; derive relativePath from the resolved absolute path
-  const docsRoot = getDocsRoot(config)
-  const processedLinks = links.map((link) => {
-    const normalizedPath = normalizeLink(link.relativePath || '')
-    const resolved = resolveLinkMultiMode(normalizedPath, config, currentFile)
-    const abs = resolved || resolve(docsRoot, normalizedPath || '')
-    const rel = relative(docsRoot, abs).replace(/\.md$/, '')
-    return {
-      ...link,
-      absolutePath: abs,
-      _relativePathForDedup: rel
-    }
+  const processedLinks = links.flatMap((link) => {
+    const resolved = resolveInternalLink(
+      link.relativePath || '',
+      config,
+      currentFile
+    )
+
+    if (!resolved) return []
+
+    return [
+      {
+        ...link,
+        absolutePath: resolved.absolutePath,
+        _relativePathForDedup: resolved.relativePath,
+        _fullUrl: resolved.fullUrl
+      }
+    ]
   })
 
   // Remove duplicates
@@ -208,12 +212,12 @@ const processLinks = (
         )
     )
     .map((link) => {
-      const { _relativePathForDedup, ...linkWithoutTemp } = link
+      const { _relativePathForDedup, _fullUrl, ...linkWithoutTemp } = link
 
       return {
         ...linkWithoutTemp,
         relativePath: _relativePathForDedup,
-        fullUrl: `/${_relativePathForDedup}`.replace(/\/+/g, '/'),
+        fullUrl: _fullUrl,
         text: (link.text || '').split('/').pop() || link.text || '',
         raw: link.raw || ''
       }

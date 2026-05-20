@@ -155,6 +155,26 @@ describe('Path Resolution and Validation', () => {
       )
     })
 
+    it('should not recover broken explicit relative paths with obsidian shortest mode', async () => {
+      const { buildFilenameIndex } = await import('../src/node/utils/path')
+      const config = createConfig({
+        ...testConfig,
+        resolutionModes: ['relativeToCurrentFile', 'obsidianShortest']
+      })
+      const indexResult = await buildFilenameIndex(testRoot, config)
+      config.filenameIndex = indexResult.match(
+        (index) => index,
+        (error) => {
+          throw error
+        }
+      )
+
+      const content = '[[../missing/doc1|Doc 1]]'
+      const links = extractInnerLinks(content, config, 'attach/test.md')
+
+      expect(links).toEqual([])
+    })
+
     it('should handle special characters in paths', () => {
       const content = readMarkdown('attach/special-paths.md')
       const links = extractInnerLinks(

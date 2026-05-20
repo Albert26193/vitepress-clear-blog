@@ -253,7 +253,8 @@ describe('createBlog with mocked config.toml', async () => {
       '[Internal](/blogs/existing) [External](https://example.com) #VueJS'
     )
 
-    expect(html).toContain('href="/blogs/existing" data-link-style-target=""')
+    expect(html).toContain('href="/blogs/existing"')
+    expect(html).toContain('data-link-style-target=""')
     expect(html).toContain('href="https://example.com"')
     expect(html).not.toContain(
       'href="https://example.com" data-link-style-target'

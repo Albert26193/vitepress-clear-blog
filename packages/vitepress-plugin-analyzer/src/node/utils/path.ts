@@ -25,6 +25,18 @@ const getDocsRoot = (config: AnalyzerConfig): string => {
  */
 const normalizeLink = (link: string): string => link.split('#')[0]
 
+const isExplicitRelativeLink = (linkPath: string): boolean =>
+  linkPath.startsWith('./') ||
+  linkPath.startsWith('../') ||
+  linkPath.includes('/../') ||
+  linkPath.includes('/./')
+
+export type ResolvedInternalLink = {
+  absolutePath: string
+  relativePath: string
+  fullUrl: string
+}
+
 /**
  * Check if a file exists at the given absolute path.
  * Supports both with and without .md extension.
@@ -142,13 +154,40 @@ const resolveLinkMultiMode = (
   config: AnalyzerConfig,
   currentFile: string
 ): string | null => {
+  const explicitRelative = isExplicitRelativeLink(linkPath)
+
   for (const mode of config.resolutionModes) {
+    if (explicitRelative && mode === 'obsidianShortest') continue
+
     const resolver = MODE_RESOLVERS[mode]
     if (!resolver) continue
     const result = resolver(linkPath, config, currentFile)
     if (result) return result
   }
   return null
+}
+
+const resolveInternalLink = (
+  linkPath: string,
+  config: AnalyzerConfig,
+  currentFile: string
+): ResolvedInternalLink | null => {
+  const normalizedPath = normalizeLink(linkPath)
+  const resolved = resolveLinkMultiMode(normalizedPath, config, currentFile)
+
+  if (!resolved) return null
+
+  const relativePath = getProjectRelativePath(
+    resolved,
+    currentFile,
+    getDocsRoot(config)
+  )
+
+  return {
+    absolutePath: resolved,
+    relativePath,
+    fullUrl: `/${relativePath}`.replace(/\/+/g, '/')
+  }
 }
 
 const resolveAbsolutePath = (
@@ -242,5 +281,6 @@ export {
   getDocsRoot,
   getProjectRelativePath,
   resolveAbsolutePath,
+  resolveInternalLink,
   resolveLinkMultiMode
 }
