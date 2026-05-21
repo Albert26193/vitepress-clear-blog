@@ -40,6 +40,16 @@ console.log('hello world')
 
 [external test](https://example.com)
 
+[PDF resource](./manual.pdf)
+
+[Image resource](../assets/diagram.png?raw#preview)
+
+[Protocol relative asset](//cdn.example.com/lib.js)
+
+[Local hash](#bb)
+
+[Missing page candidate](../missing/target-page)
+
 <a href="./111.md">111</a>
 
 <a href="./111">1111test</a>

@@ -251,7 +251,7 @@ describe('createBlog with mocked config.toml', async () => {
     ;(config as any).markdown.config(md)
 
     const html = md.render(
-      '[Internal](/blogs/existing) [External](https://example.com) #VueJS'
+      '[Internal](/blogs/existing) [External](https://example.com) [PDF](./manual.pdf) [CDN](//cdn.example.com/lib.js) #VueJS'
     )
 
     expect(html).toContain('href="/blogs/existing"')
@@ -259,6 +259,12 @@ describe('createBlog with mocked config.toml', async () => {
     expect(html).toContain('href="https://example.com"')
     expect(html).not.toContain(
       'href="https://example.com" data-link-style-target'
+    )
+    expect(html).toContain('href="./manual.pdf"')
+    expect(html).not.toContain('href="./manual.pdf" data-link-style-target')
+    expect(html).toContain('href="//cdn.example.com/lib.js"')
+    expect(html).not.toContain(
+      'href="//cdn.example.com/lib.js" data-link-style-target'
     )
     expect(html).toContain('<HashtagTag tag="vuejs">#VueJS</HashtagTag>')
   })

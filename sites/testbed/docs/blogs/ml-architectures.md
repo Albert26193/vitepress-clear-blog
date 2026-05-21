@@ -39,6 +39,9 @@ For visual processing tasks, specialized architectures include:
 ### Natural Language Processing
 
 See our detailed guide on [Enterprise AI Implementation](enterprise-ai-guide.md) for practical applications.
+See our detailed guide on [Enterprise AI Implementation](./enterprise-ai-guide.md) for practical applications.
+See our detailed guide on [Enterprise AI Implementation](../blogs/enterprise-ai-guide.md) for practical applications.
+See our detailed guide on [enterprise-ai-guide|some] for practical applications.
 
 ## Future Architectures
 

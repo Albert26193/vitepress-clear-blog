@@ -12,6 +12,7 @@ import {
   markBrokenLinks,
   resolveInlineWikiTitle
 } from '../../../src/utils/client/wikilink'
+import { classifyHref } from '../../../src/utils/linkKind'
 
 const siteMetadata: SiteMetadata = {
   'blogs/existing': {
@@ -29,6 +30,20 @@ const siteMetadata: SiteMetadata = {
     lastUpdated: 1
   }
 }
+
+describe('classifyHref', () => {
+  it.each([
+    ['#heading', 'hash'],
+    ['https://example.com', 'external'],
+    ['mailto:test@example.com', 'external'],
+    ['//cdn.example.com/lib.js', 'protocolRelative'],
+    ['./img/a.png?raw#x', 'asset'],
+    ['./target-page', 'pageCandidate'],
+    ['/blogs/post.md#section', 'pageCandidate']
+  ] as const)('classifies %s as %s', (href, expected) => {
+    expect(classifyHref(href)).toBe(expected)
+  })
+})
 
 describe('getWikiLinkCandidates', () => {
   it('checks direct and current-page-relative candidates', () => {
@@ -393,6 +408,48 @@ describe('markBrokenLinks for standard markdown links', () => {
       expect(link.hasAttribute('data-link-internal')).toBe(false)
       expect(link.hasAttribute('data-link-broken')).toBe(false)
     }
+  })
+
+  it('skips asset and protocol-relative links without internal markers', () => {
+    document.body.innerHTML = `
+      <div class="vp-doc">
+        <a href="./manual.pdf">PDF</a>
+        <a href="../images/diagram.png?raw#preview">Image</a>
+        <a href="//cdn.example.com/lib.js">CDN</a>
+      </div>
+    `
+
+    markBrokenLinks(siteMetadata, {
+      currentPath: '/blogs/current'
+    })
+
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('a'))
+
+    for (const link of links) {
+      expect(link.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+      expect(link.hasAttribute('data-link-internal')).toBe(false)
+      expect(link.hasAttribute('data-link-broken')).toBe(false)
+    }
+  })
+
+  it('clears stale broken state from skipped asset links', () => {
+    document.body.innerHTML = `
+      <div class="vp-doc">
+        <a class="broken-link" href="./manual.pdf" data-link-internal data-link-broken>PDF</a>
+      </div>
+    `
+
+    markBrokenLinks(siteMetadata, {
+      currentPath: '/blogs/current'
+    })
+
+    const pdf = document.querySelector<HTMLAnchorElement>(
+      'a[href="./manual.pdf"]'
+    )
+
+    expect(pdf?.classList.contains(BROKEN_LINK_CLASS)).toBe(false)
+    expect(pdf?.hasAttribute('data-link-internal')).toBe(false)
+    expect(pdf?.hasAttribute('data-link-broken')).toBe(false)
   })
 
   it('replaces markdown link text with canonical title', () => {
