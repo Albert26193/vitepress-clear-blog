@@ -167,6 +167,12 @@ git diff --cached --stat
 
 If nothing is modified, stop and tell the user.
 
+Install dependencies to ensure workspace packages are built and resolvable:
+
+```bash
+pnpm install
+```
+
 Run the **entry point detection** (see "Entry point detection" above). Use the
 bundled script:
 
