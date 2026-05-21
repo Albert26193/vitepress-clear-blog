@@ -15,7 +15,8 @@ Use this skill after finishing PR work: once a PR is created, merged, abandoned,
 4. Pull with `git pull --ff-only` so local history is never rewritten and merge commits are not created accidentally.
 5. Confirm whether the just-finished PR branch is already merged into the base branch.
 6. Clean stale repository-scoped dev/watch processes, especially `pnpm dev`, Vite/VitePress preview, `tsup --watch`, `cpx -w`, `esbuild`, and Playwright preview processes.
-7. Report exactly what changed and what was left untouched.
+7. Run `pnpm install` to rebuild workspace package links and `prepare` hooks so the base branch is ready for development.
+8. Report exactly what changed and what was left untouched.
 
 ## Safety rules
 

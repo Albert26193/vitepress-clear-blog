@@ -368,6 +368,7 @@ function main {
   pull_output="$(pull_fast_forward 2>&1)"
   merged_state="$(branch_merged_state "$previous_branch")"
   process_output="$(cleanup_processes "$repo_root" "$KILL_MODE")"
+  pnpm install >&2 2>/dev/null || true
 
   cat <<EOF
 | Item | Result |
