@@ -144,7 +144,7 @@ describe('createWikilinkPlugin', () => {
       relativePath: 'test/utils/node/source-page.md'
     })
 
-    expect(html).toContain('href="../missing/target-page"')
+    expect(html).toContain('href="../missing/target-page.html"')
     expect(html).toContain('broken-link')
     expect(html).toContain('data-link-broken')
   })
@@ -154,9 +154,33 @@ describe('createWikilinkPlugin', () => {
       relativePath: 'test/utils/node/source-page.md'
     })
 
-    expect(html).toContain('href="/../missing/target-page"')
+    expect(html).toContain('href="../missing/target-page.html"')
     expect(html).toContain('broken-link')
     expect(html).toContain('data-link-broken')
+  })
+
+  it('formats broken markdown links and wikilinks consistently', async () => {
+    const html = await render(
+      '[[../missing/target-page|Broken Wiki]] [Broken Markdown](../missing/target-page)',
+      { relativePath: 'test/utils/node/source-page.md' }
+    )
+
+    expect(html.match(/href="\.\.\/missing\/target-page\.html"/g)).toHaveLength(
+      2
+    )
+    expect(html.match(/data-link-broken/g)).toHaveLength(2)
+  })
+
+  it('preserves clean URLs and suffixes on broken page candidates', async () => {
+    const html = await render(
+      '[[../missing/target-page?from=wiki#part|Broken Wiki]] [Broken Markdown](../missing/target-page?from=md#part)',
+      { relativePath: 'test/utils/node/source-page.md' },
+      { cleanUrls: true }
+    )
+
+    expect(html).toContain('href="../missing/target-page?from=wiki#part"')
+    expect(html).toContain('href="../missing/target-page?from=md#part"')
+    expect(html).not.toContain('target-page.html')
   })
 
   it('leaves non-wikilink text unchanged', async () => {
@@ -171,7 +195,7 @@ describe('createWikilinkPlugin', () => {
   it('marks links as broken when current file is unavailable', async () => {
     const html = await render('[[target-page]]', {})
 
-    expect(html).toContain('href="/target-page"')
+    expect(html).toContain('href="target-page.html"')
     expect(html).toContain('broken-link')
   })
 

@@ -22,6 +22,10 @@ test.describe('WikiLinks', () => {
     await expect(existing).toHaveAttribute('data-link-internal', '')
     await expect(existing).not.toHaveAttribute('data-link-broken', '')
     await expect(missing).toBeVisible()
+    await expect(missing).toHaveAttribute(
+      'href',
+      'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.html'
+    )
     await expect(missing).toHaveClass(/broken-link/)
     await expect(missing).toHaveAttribute('data-link-broken', '')
 

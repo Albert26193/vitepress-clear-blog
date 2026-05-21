@@ -79,6 +79,66 @@ const formatBasePageHref = (
   return `${siteBase}${pagePath.replace(/^\/+/, '')}`
 }
 
+const formatBrokenPagePath = (
+  path: string,
+  { cleanUrls = false }: Pick<WikilinkPluginOptions, 'cleanUrls'>
+): string => {
+  const [pathname, suffix] = splitHashAndQuery(path)
+  const htmlPath =
+    cleanUrls || !pathname || pathname === '/' || pathname.endsWith('.html')
+      ? pathname
+      : `${pathname}.html`
+
+  return `${htmlPath}${suffix}`
+}
+
+const formatBrokenPageHref = (
+  path: string,
+  options: WikilinkPluginOptions,
+  withBase: boolean
+): string => {
+  if (!isPageCandidateHref(path)) return path
+
+  const pagePath = formatBrokenPagePath(path, options)
+
+  return withBase && pagePath.startsWith('/')
+    ? formatBasePageHref(pagePath, options)
+    : pagePath
+}
+
+type PageCandidateHrefResult = {
+  href: string
+  broken: boolean
+}
+
+const resolvePageCandidateHref = (
+  href: string,
+  config: AnalyzerConfig,
+  currentFile: string,
+  options: WikilinkPluginOptions,
+  withBase: boolean
+): PageCandidateHrefResult => {
+  const [hrefPath, hrefSuffix] = splitHashAndQuery(href)
+  const resolved = currentFile
+    ? resolveInternalLink(hrefPath, config, currentFile)
+    : null
+
+  if (resolved) {
+    const resolvedPath = `${resolved.fullUrl}${hrefSuffix}`
+    return {
+      href: withBase
+        ? formatBasePageHref(resolvedPath, options)
+        : formatInternalPagePath(resolvedPath, options),
+      broken: false
+    }
+  }
+
+  return {
+    href: formatBrokenPageHref(href, options, withBase),
+    broken: true
+  }
+}
+
 export const createWikilinkPlugin = async (
   resolutionModes?: ResolutionMode[],
   configOverrides: Partial<AnalyzerConfig> = {},
@@ -106,29 +166,29 @@ export const createWikilinkPlugin = async (
       if (silent) return true
 
       const rawTarget = match[1].trim()
-      const [targetPath, targetSuffix] = splitHashAndQuery(rawTarget)
       const label = (match[2] || rawTarget).trim()
       const currentFile = getCurrentFile(state.env || {}, docsRoot)
-      const resolved = currentFile
-        ? resolveInternalLink(targetPath, config, currentFile)
-        : null
+      const hrefResult = currentFile
+        ? resolvePageCandidateHref(
+            rawTarget,
+            config,
+            currentFile,
+            pluginOptions,
+            true
+          )
+        : {
+            href: formatBrokenPageHref(rawTarget, pluginOptions, true),
+            broken: true
+          }
 
       const token = state.push('wikilink_open', 'a', 1)
       token.attrs = [
-        [
-          'href',
-          resolved
-            ? formatBasePageHref(
-                `${resolved.fullUrl}${targetSuffix}`,
-                pluginOptions
-              )
-            : normalizeHref(rawTarget)
-        ],
+        ['href', hrefResult.href],
         ['class', 'clear-wikilink'],
         ['data-link-style-target', '']
       ]
 
-      if (!resolved) {
+      if (hrefResult.broken) {
         token.attrSet('data-link-broken', '')
         token.attrJoin('class', 'broken-link')
       }
@@ -157,20 +217,22 @@ export const createWikilinkPlugin = async (
           (env || {}) as Record<string, unknown>,
           docsRoot
         )
-        const [hrefPath, hrefSuffix] = splitHashAndQuery(href)
-        const resolved = currentFile
-          ? resolveInternalLink(hrefPath, config, currentFile)
-          : null
-
-        if (resolved) {
-          token.attrSet(
-            'href',
-            formatInternalPagePath(
-              `${resolved.fullUrl}${hrefSuffix}`,
-              pluginOptions
+        const hrefResult = currentFile
+          ? resolvePageCandidateHref(
+              href,
+              config,
+              currentFile,
+              pluginOptions,
+              false
             )
-          )
-        } else {
+          : {
+              href,
+              broken: true
+            }
+
+        token.attrSet('href', hrefResult.href)
+
+        if (hrefResult.broken) {
           token.attrSet('data-link-broken', '')
           token.attrJoin('class', 'broken-link')
         }
