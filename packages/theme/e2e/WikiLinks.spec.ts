@@ -77,6 +77,25 @@ test.describe('WikiLinks', () => {
     expect(externalBefore).not.toContain('[[')
   })
 
+  test('renders inline wiki and markdown links with matching page hrefs', async ({
+    page
+  }) => {
+    const wikiLink = page
+      .locator('a.clear-wikilink', { hasText: '111' })
+      .first()
+    const markdownInternalLink = page
+      .locator('.vp-doc a[href="/blogs/111.html"][data-link-style-target]')
+      .filter({ hasNot: page.locator('.clear-wikilink') })
+      .first()
+
+    await expect(wikiLink).toHaveAttribute('href', '/blogs/111.html')
+    await expect(markdownInternalLink).toBeVisible()
+    await expect(markdownInternalLink).toHaveAttribute(
+      'href',
+      '/blogs/111.html'
+    )
+  })
+
   test('does not apply wiki decoration to timeline post links', async ({
     page
   }) => {

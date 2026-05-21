@@ -176,7 +176,9 @@ const getThemeConfig = async (
  *
  * @returns VitePress user config object suitable for `defineConfig()`.
  */
-const createBlog = async (): Promise<Record<string, unknown>> => {
+const createBlog = async (
+  cfg: Record<string, unknown> = {}
+): Promise<Record<string, unknown>> => {
   const toml = loadConfig()
   const meta = toml?.meta || {}
   const homepage = toml?.homepage || {}
@@ -187,7 +189,7 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
   const blog = toml?.blog || {}
   const timeline = toml?.timeline || {}
 
-  const base = await getThemeConfig()
+  const base = await getThemeConfig(cfg)
 
   const nav: { text: string; link: string }[] = [
     { text: navLabels.home || DEFAULT_NAV_LABELS.home, link: '/' },
@@ -200,10 +202,15 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
     { text: navLabels.about || DEFAULT_NAV_LABELS.about, link: '/about' }
   ]
 
+  const vitePressBase = process.env.VITEPRESS_BASE || '/'
+  const cleanUrls = cfg.cleanUrls === true
+
   const wikiLinkPlugin =
     mdConf.wikilinks !== false
       ? await createWikilinkPlugin(
-          toml?.links?.resolutionModes as ResolutionMode[] | undefined
+          toml?.links?.resolutionModes as ResolutionMode[] | undefined,
+          {},
+          { base: vitePressBase, cleanUrls }
         )
       : null
 
@@ -314,7 +321,7 @@ const createBlog = async (): Promise<Record<string, unknown>> => {
 
   return {
     extends: base.clearBlogConfig,
-    base: process.env.VITEPRESS_BASE || '/',
+    base: vitePressBase,
     srcDir: './docs',
     srcExclude: ['README.md'],
     ignoreDeadLinks: true,

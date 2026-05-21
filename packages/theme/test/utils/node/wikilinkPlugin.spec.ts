@@ -11,12 +11,20 @@ const docsDir = resolve(
   '../../fixtures/wikilinks'
 )
 
-const render = async (source: string, env: Record<string, unknown>) => {
+const render = async (
+  source: string,
+  env: Record<string, unknown>,
+  options: Parameters<typeof createWikilinkPlugin>[2] = {}
+) => {
   const md = new MarkdownIt({ html: true })
   md.use(
-    await createWikilinkPlugin(['relativeToCurrentFile', 'obsidianShortest'], {
-      docsDir
-    })
+    await createWikilinkPlugin(
+      ['relativeToCurrentFile', 'obsidianShortest'],
+      {
+        docsDir
+      },
+      options
+    )
   )
   return md.render(source, env)
 }
@@ -44,7 +52,7 @@ describe('createWikilinkPlugin', () => {
       relativePath: 'test/utils/node/source-page.md'
     })
 
-    expect(html).toContain('href="/src/utils/node/target-page"')
+    expect(html).toContain('href="/src/utils/node/target-page.html"')
     expect(html).toContain('class="clear-wikilink"')
     expect(html).toContain('Target page')
   })
@@ -54,8 +62,48 @@ describe('createWikilinkPlugin', () => {
       relativePath: 'test/utils/node/source-page.md'
     })
 
-    expect(html).toContain('href="/src/utils/node/target-page"')
+    expect(html).toContain('href="/src/utils/node/target-page.html"')
     expect(html).toContain('Target')
+  })
+
+  it('applies VitePress base to resolved internal links', async () => {
+    const html = await render(
+      '[[target-page|Target page]] [Target](target-page)',
+      { relativePath: 'test/utils/node/source-page.md' },
+      { base: '/vitepress-clear-blog/testbed/' }
+    )
+
+    expect(html).toContain(
+      'href="/vitepress-clear-blog/testbed/src/utils/node/target-page.html"'
+    )
+  })
+
+  it('omits html suffix when cleanUrls is enabled', async () => {
+    const html = await render(
+      '[[target-page|Target page]] [Target](target-page)',
+      { relativePath: 'test/utils/node/source-page.md' },
+      { base: '/vitepress-clear-blog/testbed/', cleanUrls: true }
+    )
+
+    expect(html).toContain(
+      'href="/vitepress-clear-blog/testbed/src/utils/node/target-page"'
+    )
+    expect(html).not.toContain('target-page.html')
+  })
+
+  it('preserves hash and query suffixes on resolved links', async () => {
+    const html = await render(
+      '[[target-page?from=wiki#part|Target page]] [Target](target-page?from=md#part)',
+      { relativePath: 'test/utils/node/source-page.md' },
+      { base: 'docs' }
+    )
+
+    expect(html).toContain(
+      'href="/docs/src/utils/node/target-page.html?from=wiki#part"'
+    )
+    expect(html).toContain(
+      'href="/docs/src/utils/node/target-page.html?from=md#part"'
+    )
   })
 
   it('does not rewrite external or hash markdown links', async () => {
@@ -115,7 +163,7 @@ describe('createWikilinkPlugin', () => {
       realPath: resolve(docsDir, 'test/utils/node/source-page.md')
     })
 
-    expect(html).toContain('href="/test/utils/node/source-page"')
+    expect(html).toContain('href="/test/utils/node/source-page.html"')
     expect(html).toContain('Source')
   })
 })

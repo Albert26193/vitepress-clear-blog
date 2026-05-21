@@ -32,6 +32,14 @@ test.describe('SidebarLink', () => {
     }
   })
 
+  test('renders page links with VitePress page hrefs', async ({ page }) => {
+    const targetLink = page
+      .locator('.page-links a', { hasText: '111111111' })
+      .first()
+
+    await expect(targetLink).toHaveAttribute('href', '/blogs/111.html')
+  })
+
   test('sidebar visible across multiple posts', async ({ page }) => {
     const routes = ['/blogs/vitepress-first', '/blogs/mysql']
     for (const route of routes) {

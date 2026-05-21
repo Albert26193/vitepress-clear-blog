@@ -10,7 +10,7 @@
         <a
           v-for="link in outgoingLinks"
           :key="link.relativePath"
-          :href="withBase(link.fullUrl)"
+          :href="formatPageHref(link.fullUrl)"
           class="page-link slide-enter"
           :title="getResolvedLinkTitle(link)"
         >
@@ -27,7 +27,7 @@
         <a
           v-for="link in backLinks"
           :key="link.relativePath"
-          :href="withBase(link.fullUrl)"
+          :href="formatPageHref(link.fullUrl)"
           class="page-link slide-enter"
           :title="getResolvedLinkTitle(link)"
         >
@@ -57,6 +57,23 @@
 
   const getResolvedLinkTitle = (link: PageLink): string =>
     resolveLinkTitle(link, allPostsData || [], renderTitle.value)
+
+  const formatPageHref = (fullUrl: string): string => {
+    const suffixIndex = fullUrl.search(/[?#]/)
+    const pathname =
+      suffixIndex === -1 ? fullUrl : fullUrl.slice(0, suffixIndex)
+    const suffix = suffixIndex === -1 ? '' : fullUrl.slice(suffixIndex)
+
+    if (
+      site.value.cleanUrls ||
+      pathname === '/' ||
+      pathname.endsWith('.html')
+    ) {
+      return withBase(`${pathname}${suffix}`)
+    }
+
+    return withBase(`${pathname}.html${suffix}`)
+  }
 
   const route = useRoute()
   const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))
