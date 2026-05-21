@@ -11,6 +11,11 @@ import {
   resolveInternalLink
 } from 'vitepress-plugin-analyzer'
 
+type WikilinkPluginOptions = {
+  base?: string
+  cleanUrls?: boolean
+}
+
 const WIKILINK_RE = /^\[\[([^|\]\n]+)(?:\|([^\]\n]+))?\]\]/
 const INTERNAL_LINK_RE = /^(?![a-z][a-z0-9+.-]*:)(?!#)(?!\/\/).+/i
 
@@ -38,10 +43,38 @@ const normalizeHref = (path: string): string => {
   return path.startsWith('/') ? path : `/${path}`
 }
 
+const normalizeBase = (base: string | undefined): string => {
+  if (!base || base === '/') return '/'
+  const prefixed = base.startsWith('/') ? base : `/${base}`
+  return prefixed.endsWith('/') ? prefixed : `${prefixed}/`
+}
+
+const splitHashAndQuery = (path: string): [string, string] => {
+  const index = path.search(/[?#]/)
+  return index === -1 ? [path, ''] : [path.slice(0, index), path.slice(index)]
+}
+
+const formatInternalHref = (
+  path: string,
+  { base, cleanUrls = false }: WikilinkPluginOptions
+): string => {
+  const normalized = normalizeHref(path)
+  const [pathname, suffix] = splitHashAndQuery(normalized)
+  const htmlPath =
+    cleanUrls || pathname === '/' || pathname.endsWith('.html')
+      ? pathname
+      : `${pathname}.html`
+  const siteBase = normalizeBase(base)
+
+  return `${siteBase}${htmlPath.replace(/^\/+/, '')}${suffix}`
+}
+
 export const createWikilinkPlugin = async (
   resolutionModes?: ResolutionMode[],
-  configOverrides: Partial<AnalyzerConfig> = {}
+  configOverrides: Partial<AnalyzerConfig> = {},
+  options: WikilinkPluginOptions = {}
 ): Promise<(md: MarkdownIt) => void> => {
+  const pluginOptions = options
   const config = createConfig({
     ...configOverrides,
     ...(resolutionModes?.length ? { resolutionModes } : {})
@@ -63,15 +96,24 @@ export const createWikilinkPlugin = async (
       if (silent) return true
 
       const rawTarget = match[1].trim()
+      const [targetPath, targetSuffix] = splitHashAndQuery(rawTarget)
       const label = (match[2] || rawTarget).trim()
       const currentFile = getCurrentFile(state.env || {}, docsRoot)
       const resolved = currentFile
-        ? resolveInternalLink(rawTarget, config, currentFile)
+        ? resolveInternalLink(targetPath, config, currentFile)
         : null
 
       const token = state.push('wikilink_open', 'a', 1)
       token.attrs = [
-        ['href', normalizeHref(resolved?.fullUrl || rawTarget)],
+        [
+          'href',
+          resolved
+            ? formatInternalHref(
+                `${resolved.fullUrl}${targetSuffix}`,
+                pluginOptions
+              )
+            : normalizeHref(rawTarget)
+        ],
         ['class', 'clear-wikilink'],
         ['data-link-style-target', '']
       ]
@@ -105,12 +147,19 @@ export const createWikilinkPlugin = async (
           (env || {}) as Record<string, unknown>,
           docsRoot
         )
+        const [hrefPath, hrefSuffix] = splitHashAndQuery(href)
         const resolved = currentFile
-          ? resolveInternalLink(href, config, currentFile)
+          ? resolveInternalLink(hrefPath, config, currentFile)
           : null
 
         if (resolved) {
-          token.attrSet('href', normalizeHref(resolved.fullUrl))
+          token.attrSet(
+            'href',
+            formatInternalHref(
+              `${resolved.fullUrl}${hrefSuffix}`,
+              pluginOptions
+            )
+          )
         } else {
           token.attrSet('data-link-broken', '')
           token.attrJoin('class', 'broken-link')
