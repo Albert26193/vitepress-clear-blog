@@ -197,15 +197,82 @@ function branch_merged_state {
 # @output: tab-separated pid and command lines
 # @return: 0 always
 #-----------------------------------------
+function list_cleanup_roots {
+  local repo_root="$1"
+  local repo_parent repo_name repo_prefix
+
+  repo_parent="$(dirname "$repo_root")"
+  repo_name="$(basename "$repo_root")"
+  repo_prefix="${repo_name%-[0-9][0-9]}"
+
+  printf "%s\n" "$repo_root"
+  git worktree list --porcelain 2>/dev/null | awk '
+    /^worktree / { print substr($0, 10) }
+  ' | grep -Fvx "$repo_root" || true
+
+  if [[ "$repo_prefix" != "$repo_name" ]]; then
+    find "$repo_parent" -maxdepth 1 -type d -name "$repo_prefix-[0-9][0-9]" 2>/dev/null | grep -Fvx "$repo_root" || true
+  fi
+}
+
+function cwd_is_cleanup_scoped {
+  local cwd="$1"
+  local roots="$2"
+  local root
+
+  while IFS= read -r root; do
+    [[ -n "$root" ]] || continue
+    [[ "$cwd" == "$root" || "$cwd" == "$root"/* ]] && return 0
+  done <<< "$roots"
+
+  return 1
+}
+
 function list_cleanup_candidates {
   local repo_root="$1"
-  ps -eo pid=,args= | awk -v root="$repo_root" '
-    $0 ~ root && $0 ~ /(build_preview\.sh|vitepress preview|pnpm[^[:space:]]* preview:testbed|pnpm|vitepress|vite|tsup|cpx|esbuild|playwright)/ && $0 !~ /post-pr-cleanup\.sh/ && $0 !~ /awk -v root/ {
-      pid=$1
-      sub(/^[[:space:]]*[0-9]+[[:space:]]+/, "", $0)
-      print pid "\t" $0
-    }
-  '
+  local pid stat args cwd roots
+
+  roots="$(list_cleanup_roots "$repo_root")"
+
+  ps -eo pid=,stat=,args= | while read -r pid stat args; do
+    [[ -n "$pid" && -n "$stat" && -n "$args" ]] || continue
+    [[ "$stat" != *Z* ]] || continue
+    [[ "$args" =~ (build_preview\.sh|vitepress.*[[:space:]]+(dev|preview)|pnpm[^[:space:]]*.*(dev|preview:testbed|vitepress[[:space:]]+preview)|vite[[:space:]]+build[[:space:]]+--watch|tsup.*--watch|cpx.*-w|esbuild|playwright.*preview) ]] || continue
+    [[ "$args" != *post-pr-cleanup.sh* && "$args" != *"/usr/bin/zsh -c"* ]] || continue
+
+    cwd="$(readlink "/proc/$pid/cwd" 2>/dev/null || true)"
+    cwd_is_cleanup_scoped "$cwd" "$roots" || continue
+
+    printf "%s\t%s\n" "$pid" "$args"
+  done
+}
+
+function pid_is_alive {
+  local pid="$1"
+
+  kill -0 "$pid" 2>/dev/null || return 1
+  ! ps -o stat= -p "$pid" 2>/dev/null | grep -q Z
+}
+
+function wait_for_pids_to_exit {
+  local pids="$1"
+  local attempts=0
+  local pid alive
+
+  while [[ $attempts -lt 5 ]]; do
+    alive=""
+    for pid in $pids; do
+      if pid_is_alive "$pid"; then
+        alive+="$pid "
+      fi
+    done
+
+    [[ -z "$alive" ]] && return 0
+    sleep 1
+    attempts=$((attempts + 1))
+  done
+
+  return 1
 }
 
 #-----------------------------------------
@@ -219,7 +286,7 @@ function list_cleanup_candidates {
 function cleanup_processes {
   local repo_root="$1"
   local mode="$2"
-  local candidates count pids
+  local candidates count pids pgids remaining_pids killed_count pgid
 
   if [[ "$mode" == "none" ]]; then
     echo "process_cleanup=skipped"
@@ -236,15 +303,51 @@ function cleanup_processes {
   echo "process_candidates=$count"
   printf "%s\n" "$candidates"
 
+  pids="$(printf "%s\n" "$candidates" | cut -f1 | tr '\n' ' ')"
+
   if [[ "$mode" == "dry-run" ]]; then
-    echo "process_cleanup=dry-run"
+    echo "process_cleanup=dry-run:$count pids=$pids"
     return 0
   fi
 
-  pids="$(printf "%s\n" "$candidates" | cut -f1 | tr '\n' ' ')"
+  pgids=""
+  for pid in $pids; do
+    pgid="$(ps -o pgid= -p "$pid" 2>/dev/null | tr -d ' ' || true)"
+    [[ -n "$pgid" ]] || continue
+    [[ " $pgids " == *" $pgid "* ]] || pgids+="$pgid "
+  done
+
+  for pgid in $pgids; do
+    kill -TERM -- "-$pgid" 2>/dev/null || true
+  done
   # shellcheck disable=SC2086
   kill -TERM $pids 2>/dev/null || true
-  echo "process_cleanup=killed:$count"
+  wait_for_pids_to_exit "$pids" || true
+
+  remaining_pids=""
+  for pid in $pids; do
+    if pid_is_alive "$pid"; then
+      remaining_pids+="$pid "
+    fi
+  done
+
+  if [[ -n "$remaining_pids" ]]; then
+    for pgid in $pgids; do
+      kill -KILL -- "-$pgid" 2>/dev/null || true
+    done
+    # shellcheck disable=SC2086
+    kill -KILL $remaining_pids 2>/dev/null || true
+    wait_for_pids_to_exit "$pids" || true
+  fi
+
+  killed_count=0
+  for pid in $pids; do
+    if ! pid_is_alive "$pid"; then
+      killed_count=$((killed_count + 1))
+    fi
+  done
+
+  echo "process_cleanup=killed:$killed_count pids=$pids"
 }
 
 #-----------------------------------------
