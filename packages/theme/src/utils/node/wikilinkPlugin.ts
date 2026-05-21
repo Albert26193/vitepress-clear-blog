@@ -11,16 +11,17 @@ import {
   resolveInternalLink
 } from 'vitepress-plugin-analyzer'
 
+import { classifyHref } from '../linkKind'
+
 type WikilinkPluginOptions = {
   base?: string
   cleanUrls?: boolean
 }
 
 const WIKILINK_RE = /^\[\[([^|\]\n]+)(?:\|([^\]\n]+))?\]\]/
-const INTERNAL_LINK_RE = /^(?![a-z][a-z0-9+.-]*:)(?!#)(?!\/\/).+/i
 
-const isInternalPageHref = (href: string): boolean =>
-  INTERNAL_LINK_RE.test(href)
+const isPageCandidateHref = (href: string): boolean =>
+  classifyHref(href) === 'pageCandidate'
 
 const getCurrentFile = (
   env: Record<string, unknown>,
@@ -54,9 +55,9 @@ const splitHashAndQuery = (path: string): [string, string] => {
   return index === -1 ? [path, ''] : [path.slice(0, index), path.slice(index)]
 }
 
-const formatInternalHref = (
+const formatInternalPagePath = (
   path: string,
-  { base, cleanUrls = false }: WikilinkPluginOptions
+  { cleanUrls = false }: Pick<WikilinkPluginOptions, 'cleanUrls'>
 ): string => {
   const normalized = normalizeHref(path)
   const [pathname, suffix] = splitHashAndQuery(normalized)
@@ -64,9 +65,18 @@ const formatInternalHref = (
     cleanUrls || pathname === '/' || pathname.endsWith('.html')
       ? pathname
       : `${pathname}.html`
+
+  return `${htmlPath}${suffix}`
+}
+
+const formatBasePageHref = (
+  path: string,
+  { base, cleanUrls = false }: WikilinkPluginOptions
+): string => {
+  const pagePath = formatInternalPagePath(path, { cleanUrls })
   const siteBase = normalizeBase(base)
 
-  return `${siteBase}${htmlPath.replace(/^\/+/, '')}${suffix}`
+  return `${siteBase}${pagePath.replace(/^\/+/, '')}`
 }
 
 export const createWikilinkPlugin = async (
@@ -108,7 +118,7 @@ export const createWikilinkPlugin = async (
         [
           'href',
           resolved
-            ? formatInternalHref(
+            ? formatBasePageHref(
                 `${resolved.fullUrl}${targetSuffix}`,
                 pluginOptions
               )
@@ -142,7 +152,7 @@ export const createWikilinkPlugin = async (
       const token = tokens[idx]
       const href = token.attrGet('href')
 
-      if (href && isInternalPageHref(href)) {
+      if (href && isPageCandidateHref(href)) {
         const currentFile = getCurrentFile(
           (env || {}) as Record<string, unknown>,
           docsRoot
@@ -155,7 +165,7 @@ export const createWikilinkPlugin = async (
         if (resolved) {
           token.attrSet(
             'href',
-            formatInternalHref(
+            formatInternalPagePath(
               `${resolved.fullUrl}${hrefSuffix}`,
               pluginOptions
             )

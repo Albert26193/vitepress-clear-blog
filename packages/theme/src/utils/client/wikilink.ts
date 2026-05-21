@@ -1,5 +1,6 @@
 import type { SiteMetadata } from '../../types/types'
 import type { Post } from '../../types/types.d'
+import { classifyHref } from '../linkKind'
 import { resolveLinkTitle } from './resolve-title'
 
 interface WikiLinkOptions {
@@ -90,12 +91,8 @@ const getWikiLinkCandidates = (
 const createExistingPageSet = (siteMetadata: SiteMetadata): Set<string> =>
   new Set(Object.keys(siteMetadata).map(normalizeMetadataPath))
 
-const isExternalHref = (href: string): boolean =>
-  href.startsWith('http') ||
-  href.startsWith('https') ||
-  href.startsWith('mailto:') ||
-  href.startsWith('tel:') ||
-  href.startsWith('#')
+const isPageCandidateHref = (href: string): boolean =>
+  classifyHref(href) === 'pageCandidate'
 
 /**
  * Resolves the canonical title for a wiki link target by matching against posts data.
@@ -169,7 +166,7 @@ const markBrokenLinks = (
 
   allLinks.forEach((link) => {
     const href = link.getAttribute('href')
-    if (!href || isExternalHref(href)) {
+    if (!href || !isPageCandidateHref(href)) {
       link.removeAttribute('data-link-internal')
       link.classList.remove(BROKEN_LINK_CLASS)
       link.removeAttribute('data-link-broken')

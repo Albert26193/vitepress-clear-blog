@@ -25,6 +25,7 @@ import type { ImageDimensionPluginOptions } from 'vitepress-plugin-image-dimensi
 import llmstxt from 'vitepress-plugin-llms'
 import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
+import { classifyHref } from '../linkKind'
 import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
 import { createWikilinkPlugin } from './wikilinkPlugin'
 
@@ -63,16 +64,8 @@ const resolveImageDimensionOptions = (
   }
 }
 
-const isLinkStyleTargetHref = (href: string): boolean => {
-  if (!href) return false
-  return !(
-    href.startsWith('http') ||
-    href.startsWith('https') ||
-    href.startsWith('mailto:') ||
-    href.startsWith('tel:') ||
-    href.startsWith('#')
-  )
-}
+const isLinkStyleTargetHref = (href: string): boolean =>
+  classifyHref(href) === 'pageCandidate'
 
 /**
  * Creates the default Clear Blog VitePress config fragment with core plugins wired in.

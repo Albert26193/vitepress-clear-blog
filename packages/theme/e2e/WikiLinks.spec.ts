@@ -96,6 +96,59 @@ test.describe('WikiLinks', () => {
     )
   })
 
+  test('classifies markdown links by target type', async ({ page }) => {
+    const pdfLink = page.locator('.vp-doc a', { hasText: 'PDF resource' })
+    const imageLink = page.locator('.vp-doc a', { hasText: 'Image resource' })
+    const protocolRelativeLink = page.locator('.vp-doc a', {
+      hasText: 'Protocol relative asset'
+    })
+    const hashLink = page.locator('.vp-doc a', { hasText: 'Local hash' })
+    const missingPageLink = page.locator('.vp-doc a', {
+      hasText: 'Missing page candidate'
+    })
+
+    await expect(pdfLink).toHaveAttribute('href', './manual.pdf')
+    await expect(pdfLink).not.toHaveClass(/broken-link/)
+    await expect(pdfLink).not.toHaveAttribute('data-link-internal', '')
+    await expect(pdfLink).not.toHaveAttribute('data-link-style-target', '')
+
+    await expect(imageLink).toHaveAttribute(
+      'href',
+      '../assets/diagram.png?raw#preview'
+    )
+    await expect(imageLink).not.toHaveClass(/broken-link/)
+    await expect(imageLink).not.toHaveAttribute('data-link-internal', '')
+    await expect(imageLink).not.toHaveAttribute('data-link-style-target', '')
+
+    await expect(protocolRelativeLink).toHaveAttribute(
+      'href',
+      '//cdn.example.com/lib.js'
+    )
+    await expect(protocolRelativeLink).not.toHaveClass(/broken-link/)
+    await expect(protocolRelativeLink).not.toHaveAttribute(
+      'data-link-internal',
+      ''
+    )
+    await expect(protocolRelativeLink).not.toHaveAttribute(
+      'data-link-style-target',
+      ''
+    )
+
+    await expect(hashLink).toHaveAttribute('href', '#bb')
+    await expect(hashLink).not.toHaveClass(/broken-link/)
+    await expect(hashLink).not.toHaveAttribute('data-link-internal', '')
+    await expect(hashLink).not.toHaveAttribute('data-link-style-target', '')
+
+    await expect(missingPageLink).toHaveAttribute(
+      'href',
+      './../missing/target-page.html'
+    )
+    await expect(missingPageLink).toHaveClass(/broken-link/)
+    await expect(missingPageLink).toHaveAttribute('data-link-internal', '')
+    await expect(missingPageLink).toHaveAttribute('data-link-broken', '')
+    await expect(missingPageLink).toHaveAttribute('data-link-style-target', '')
+  })
+
   test('does not apply wiki decoration to timeline post links', async ({
     page
   }) => {

@@ -66,7 +66,7 @@ describe('createWikilinkPlugin', () => {
     expect(html).toContain('Target')
   })
 
-  it('applies VitePress base to resolved internal links', async () => {
+  it('applies VitePress base only to custom wikilinks', async () => {
     const html = await render(
       '[[target-page|Target page]] [Target](target-page)',
       { relativePath: 'test/utils/node/source-page.md' },
@@ -75,6 +75,10 @@ describe('createWikilinkPlugin', () => {
 
     expect(html).toContain(
       'href="/vitepress-clear-blog/testbed/src/utils/node/target-page.html"'
+    )
+    expect(html).toContain('href="/src/utils/node/target-page.html"')
+    expect(html).not.toContain(
+      '/vitepress-clear-blog/testbed/vitepress-clear-blog/testbed/'
     )
   })
 
@@ -88,6 +92,7 @@ describe('createWikilinkPlugin', () => {
     expect(html).toContain(
       'href="/vitepress-clear-blog/testbed/src/utils/node/target-page"'
     )
+    expect(html).toContain('href="/src/utils/node/target-page"')
     expect(html).not.toContain('target-page.html')
   })
 
@@ -102,7 +107,7 @@ describe('createWikilinkPlugin', () => {
       'href="/docs/src/utils/node/target-page.html?from=wiki#part"'
     )
     expect(html).toContain(
-      'href="/docs/src/utils/node/target-page.html?from=md#part"'
+      'href="/src/utils/node/target-page.html?from=md#part"'
     )
   })
 
@@ -117,6 +122,21 @@ describe('createWikilinkPlugin', () => {
     expect(html).toContain('href="https://example.com"')
     expect(html).toContain('href="#section"')
     expect(html).not.toContain('broken-link')
+  })
+
+  it('does not rewrite or mark non-page markdown links as broken', async () => {
+    const html = await render(
+      '[PDF](./manual.pdf) [Image](../assets/diagram.png?raw#preview) [CDN](//cdn.example.com/lib.js)',
+      {
+        relativePath: 'test/utils/node/source-page.md'
+      }
+    )
+
+    expect(html).toContain('href="./manual.pdf"')
+    expect(html).toContain('href="../assets/diagram.png?raw#preview"')
+    expect(html).toContain('href="//cdn.example.com/lib.js"')
+    expect(html).not.toContain('broken-link')
+    expect(html).not.toContain('data-link-broken')
   })
 
   it('marks broken regular markdown internal links', async () => {
