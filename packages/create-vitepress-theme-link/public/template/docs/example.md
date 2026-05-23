@@ -8,7 +8,7 @@ tags:
 
 # Example Post
 
-This is an example blog post. Write your content in Markdown — VitePress Clear Blog will handle the rest.
+This is an example blog post. Write your content in Markdown — VitePress Theme Link will handle the rest.
 
 ## Code blocks
 

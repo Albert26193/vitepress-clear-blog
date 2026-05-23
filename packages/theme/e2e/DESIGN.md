@@ -1,4 +1,4 @@
-# E2E Test Design — vitepress-clear-blog Theme
+# E2E Test Design — vitepress-theme-link Theme
 
 One spec file per component. 25 components = 25 spec files.
 

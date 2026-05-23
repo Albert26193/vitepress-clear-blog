@@ -1,14 +1,14 @@
 ---
-title: Getting Started with VitePress Clear Blog
+title: Getting Started with VitePress Theme Link
 date: 2026-05-01
 tags:
   - vitepress
   - tutorial
 ---
 
-# Getting Started with VitePress Clear Blog
+# Getting Started with VitePress Theme Link
 
-VitePress Clear Blog is a clean, customizable blog theme built on top of VitePress. It provides everything you need to start writing.
+VitePress Theme Link is a clean, customizable blog theme built on top of VitePress. It provides everything you need to start writing.
 
 ## Features
 
@@ -22,7 +22,7 @@ VitePress Clear Blog is a clean, customizable blog theme built on top of VitePre
 ## Quick Start
 
 ```bash
-pnpm create blog-template my-blog
+pnpm create vitepress-theme-link my-blog
 cd my-blog
 pnpm install
 pnpm dev

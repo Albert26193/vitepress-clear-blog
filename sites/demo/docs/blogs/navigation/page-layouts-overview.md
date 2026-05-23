@@ -10,7 +10,7 @@ description: home、page、blog post 三种页面布局的区别与使用场景
 
 # 页面布局类型总览
 
-VitePress Clear Blog 支持三种页面布局类型，通过 frontmatter 控制。
+VitePress Theme Link 支持三种页面布局类型，通过 frontmatter 控制。
 
 ## 1. 首页布局（home）
 
@@ -21,7 +21,7 @@ config.toml 中的 `[homepage]` 区块控制首页内容：
 ```toml
 [homepage]
 title = "My Blog"
-description = "A personal blog powered by VitePress Clear Blog"
+description = "A personal blog powered by VitePress Theme Link"
 ```
 
 首页适合展示站点概览、D3 知识图谱、导航入口。

@@ -102,7 +102,7 @@ the JSON output is parseable.
 ## Plugin Behavior
 
 ```bash
-# Check for callout elements (vitepress-plugin-callout)
+# Check for callout elements (vitepress-plugin-callouts)
 --code "document.querySelectorAll('.callout, [class*=\"callout\"]').length"
 
 # Check for code fold buttons (vitepress-plugin-codeblock-fold)

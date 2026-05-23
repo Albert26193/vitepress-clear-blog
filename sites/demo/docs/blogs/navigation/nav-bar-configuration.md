@@ -10,7 +10,7 @@ description: 通过 config.toml 的 [nav] 区块自定义顶部导航栏标签�
 
 # 导航栏配置完全指南
 
-VitePress Clear Blog 通过 `config.toml` 中的 `[nav]` 区块提供导航栏文案的集中管理。
+VitePress Theme Link 通过 `config.toml` 中的 `[nav]` 区块提供导航栏文案的集中管理。
 
 ## [nav] 配置
 

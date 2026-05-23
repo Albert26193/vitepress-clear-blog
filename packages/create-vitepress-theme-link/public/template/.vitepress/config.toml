@@ -1,5 +1,5 @@
 # =============================================================================
-# VitePress Clear Blog — Configuration
+# VitePress Theme Link — Configuration
 # =============================================================================
 # This file controls every aspect of your blog.  See the README or source
 # defaults for further details.
@@ -9,7 +9,7 @@
 # ---------------------------------------------------------------------------
 [meta]
 title = "My Blog"
-description = "A personal blog powered by VitePress Clear Blog"
+description = "A personal blog powered by VitePress Theme Link"
 author = "Blogger"
 keywords = "blog, vitepress, static-site"
 locale = "zh_CN"
@@ -21,7 +21,7 @@ theme-color = "#8a5cf5"
 # icpNumber = ""
 
 # Optional: link to the theme homepage shown in the footer.
-# themeLink = "https://github.com/Albert26193/vitepress-clear-blog"
+# themeLink = "https://github.com/Albert26193/vitepress-theme-link"
 
 # ---------------------------------------------------------------------------
 # Homepage hero text

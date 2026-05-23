@@ -5,7 +5,7 @@
       "id": 1,
       "name": "blog-component-related-e2e",
       "prompt": "我改了 packages/theme/src/components/blog/BlogMain.vue，帮我本地跑一下该跑的测试；unit 全量跑，e2e 只跑相关的。",
-      "expected_output": "Should choose quick local mode, run or propose `pnpm test:unit`, then select `pnpm -F vitepress-clear-blog test:e2e -- e2e/BlogMain.spec.ts`, and mention CI-aligned checks are still needed before PR.",
+      "expected_output": "Should choose quick local mode, run or propose `pnpm test:unit`, then select `pnpm -F vitepress-theme-link test:e2e -- e2e/BlogMain.spec.ts`, and mention CI-aligned checks are still needed before PR.",
       "files": []
     },
     {
@@ -40,7 +40,7 @@
       "id": 6,
       "name": "pr-ci-aligned-full-check",
       "prompt": "准备提 PR 了，按 CI 门禁帮我列一下本地要跑哪些检查，lint 和 typecheck 也得过。",
-      "expected_output": "Should choose PR/CI-aligned mode and include `pnpm lint; git diff --exit-code`, `bash scripts/check-e2e-coverage.sh`, `pnpm typecheck`, `pnpm test:unit`, `pnpm build`, and targeted related E2E via `pnpm -F vitepress-clear-blog test:e2e -- e2e/<Spec>.spec.ts` rather than naked `pnpm test:e2e`, plus note the commit check if validating the current commit.",
+      "expected_output": "Should choose PR/CI-aligned mode and include `pnpm lint; git diff --exit-code`, `bash scripts/check-e2e-coverage.sh`, `pnpm typecheck`, `pnpm test:unit`, `pnpm build`, and targeted related E2E via `pnpm -F vitepress-theme-link test:e2e -- e2e/<Spec>.spec.ts` rather than naked `pnpm test:e2e`, plus note the commit check if validating the current commit.",
       "files": []
     },
     {

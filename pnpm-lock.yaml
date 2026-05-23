@@ -111,7 +111,7 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2(typescript@5.7.3)
 
-  packages/create-blog-template:
+  packages/create-vitepress-theme-link:
     devDependencies:
       rimraf:
         specifier: ^5.0.1
@@ -255,9 +255,9 @@ importers:
       vitepress-plugin-analyzer:
         specifier: workspace:*
         version: link:../vitepress-plugin-analyzer
-      vitepress-plugin-callout:
+      vitepress-plugin-callouts:
         specifier: workspace:*
-        version: link:../vitepress-plugin-callout
+        version: link:../vitepress-plugin-callouts
       vitepress-plugin-config:
         specifier: workspace:*
         version: link:../vitepress-plugin-config
@@ -296,7 +296,7 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass@1.97.2)(yaml@2.8.3)
 
-  packages/vitepress-plugin-callout:
+  packages/vitepress-plugin-callouts:
     dependencies:
       markdown-it:
         specifier: ^14.1.0
@@ -419,7 +419,7 @@ importers:
       vitepress:
         specifier: ^1.6.4
         version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2)
-      vitepress-clear-blog:
+      vitepress-theme-link:
         specifier: workspace:*
         version: link:../../packages/theme
 
@@ -428,15 +428,15 @@ importers:
       vitepress:
         specifier: ^1.6.4
         version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2)
-      vitepress-clear-blog:
+      vitepress-plugin-callouts:
         specifier: workspace:*
-        version: link:../../packages/theme
-      vitepress-plugin-callout:
-        specifier: workspace:*
-        version: link:../../packages/vitepress-plugin-callout
+        version: link:../../packages/vitepress-plugin-callouts
       vitepress-plugin-config:
         specifier: workspace:*
         version: link:../../packages/vitepress-plugin-config
+      vitepress-theme-link:
+        specifier: workspace:*
+        version: link:../../packages/theme
 
   sites/testbed:
     dependencies:
@@ -452,15 +452,12 @@ importers:
       vitepress:
         specifier: ^1.6.4
         version: 1.6.4(@algolia/client-search@5.46.2)(@types/node@25.5.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(sass@1.97.2)(search-insights@2.17.3)(typescript@6.0.2)
-      vitepress-clear-blog:
-        specifier: workspace:*
-        version: link:../../packages/theme
       vitepress-plugin-analyzer:
         specifier: workspace:*
         version: link:../../packages/vitepress-plugin-analyzer
-      vitepress-plugin-callout:
+      vitepress-plugin-callouts:
         specifier: workspace:*
-        version: link:../../packages/vitepress-plugin-callout
+        version: link:../../packages/vitepress-plugin-callouts
       vitepress-plugin-config:
         specifier: workspace:*
         version: link:../../packages/vitepress-plugin-config
@@ -473,6 +470,9 @@ importers:
       vitepress-sidebar:
         specifier: ^1.33.1
         version: 1.33.1
+      vitepress-theme-link:
+        specifier: workspace:*
+        version: link:../../packages/theme
 
 packages:
 

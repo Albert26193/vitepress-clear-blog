@@ -496,12 +496,12 @@ directly:
 
 | Step | Result |
 |------|--------|
-| Issue | https://github.com/Albert26193/vitepress-clear-blog/issues/N |
+| Issue | https://github.com/Albert26193/vitepress-theme-link/issues/N |
 | Branch | `issue-<id>-<slug>` |
 | Quality gate | Passed — `<tool-test-check summary>` |
 | Build preview | Started — `<local preview URL> (<N>s)`; standard entry `<route>` |
 | Commit | `<hash>` — subject |
-| PR | https://github.com/Albert26193/vitepress-clear-blog/pull/M |
+| PR | https://github.com/Albert26193/vitepress-theme-link/pull/M |
 | CI | Passed — `<ci-status-summary>` |
 
 Do not wrap the URL in a markdown link or prefix it with `#N` — just paste

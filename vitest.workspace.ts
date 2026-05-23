@@ -7,6 +7,6 @@ export default defineWorkspace([
   'packages/vitepress-plugin-config/vitest.config.ts',
   'packages/vitepress-plugin-hashtag/vitest.config.ts',
   'packages/vitepress-plugin-details-block/vitest.config.ts',
-  'packages/vitepress-plugin-callout/vitest.config.ts',
+  'packages/vitepress-plugin-callouts/vitest.config.ts',
   'packages/vitepress-plugin-image-dimension/vitest.config.ts'
 ])

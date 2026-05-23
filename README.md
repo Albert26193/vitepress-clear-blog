@@ -1,7 +1,7 @@
-# vitepress-clear-blog
+# vitepress-theme-link
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![CI](https://github.com/Albert26193/vitepress-clear-blog/actions/workflows/ci.yml/badge.svg)](https://github.com/Albert26193/vitepress-clear-blog/actions/workflows/ci.yml)
+[![CI](https://github.com/Albert26193/vitepress-theme-link/actions/workflows/ci.yml/badge.svg)](https://github.com/Albert26193/vitepress-theme-link/actions/workflows/ci.yml)
 [![Node](https://img.shields.io/badge/node-%3E%3D22.0.0-brightgreen.svg)](https://nodejs.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-%3E%3D9.0.0-orange.svg)](https://pnpm.io/)
 
@@ -45,15 +45,15 @@ pnpm dev
 ## Project Structure
 
 ```text
-vitepress-clear-blog/
+vitepress-theme-link/
 ├── packages/
-│   ├── create-blog-template/            # Project scaffold CLI
-│   ├── theme/                           # VitePress blog theme (vitepress-clear-blog)
+│   ├── create-vitepress-theme-link/            # Project scaffold CLI
+│   ├── theme/                           # VitePress blog theme (vitepress-theme-link)
 │   ├── testbed/                         # Theme demo and development site
 │   ├── demo/                            # Public demo site
 │   ├── intro/                           # Project introduction and docs site
 │   ├── vitepress-plugin-analyzer/       # Content analysis and graph data
-│   ├── vitepress-plugin-callout/        # Markdown callout blocks
+│   ├── vitepress-plugin-callouts/        # Markdown callout blocks
 │   ├── vitepress-plugin-codeblock-fold/ # Foldable code blocks
 │   ├── vitepress-plugin-config/         # Shared config utilities
 │   ├── vitepress-plugin-details-block/  # Details/summary blocks

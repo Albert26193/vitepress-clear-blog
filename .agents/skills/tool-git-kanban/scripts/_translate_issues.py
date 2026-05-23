@@ -292,7 +292,7 @@ def main():
 
         # Update remote GitHub issue
         if args.apply:
-            ok = update_remote_issue("Albert26193", "vitepress-clear-blog", issue_number, en_title, en_body)
+            ok = update_remote_issue("Albert26193", "vitepress-theme-link", issue_number, en_title, en_body)
             if ok:
                 results["remote_updated"] += 1
             else:

@@ -6,7 +6,7 @@
     "paths": {
       "@/*": [".vitepress/*"],
       "~/*": ["./*"],
-      "vitepress-clear-blog/*": ["./packages/theme/src/*"]
+      "vitepress-theme-link/*": ["./packages/theme/src/*"]
     }
   },
   "include": [

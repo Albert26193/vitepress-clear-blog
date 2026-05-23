@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "vitepress": "^1.6.4",
-    "vitepress-clear-blog": "workspace:*",
-    "vitepress-plugin-callout": "workspace:*",
+    "vitepress-theme-link": "workspace:*",
+    "vitepress-plugin-callouts": "workspace:*",
     "vitepress-plugin-config": "workspace:*"
   },
   "engines": {

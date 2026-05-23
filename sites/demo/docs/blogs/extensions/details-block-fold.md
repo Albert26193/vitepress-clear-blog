@@ -10,7 +10,7 @@ description: 使用 DetailsBlock 组件实现内容折叠与渐进式信息披�
 
 # 可折叠详情块 DetailsBlock
 
-DetailsBlock 是 VitePress Clear Blog 内置的折叠组件，用于渐进式信息披露。
+DetailsBlock 是 VitePress Theme Link 内置的折叠组件，用于渐进式信息披露。
 
 ## 基础用法
 

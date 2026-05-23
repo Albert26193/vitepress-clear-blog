@@ -31,8 +31,8 @@ packages:
 ```json
 {
   "dependencies": {
-    "vitepress-clear-blog": "workspace:*",
-    "vitepress-plugin-callout": "workspace:*"
+    "vitepress-theme-link": "workspace:*",
+    "vitepress-plugin-callouts": "workspace:*"
   }
 }
 ```
@@ -54,10 +54,10 @@ packages:
 pnpm add -D typescript -w
 
 # 添加到指定包
-pnpm add lodash --filter vitepress-clear-blog
+pnpm add lodash --filter vitepress-theme-link
 
 # 添加内部依赖
-pnpm add vitepress-plugin-callout --filter testbed --workspace
+pnpm add vitepress-plugin-callouts --filter testbed --workspace
 ```
 
 ### 依赖提升

@@ -68,7 +68,7 @@ const getThemeConfig = async (cfg = {}): Promise<any> => {
 生成的 `llms.txt` 包含以下信息：
 
 ```markdown
-# Project: vitepress-clear-blog
+# Project: vitepress-theme-link
 
 ## Overview
 A VitePress-based blog theme with Obsidian-style features.

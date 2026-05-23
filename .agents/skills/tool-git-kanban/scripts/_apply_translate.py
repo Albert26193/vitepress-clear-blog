@@ -106,7 +106,7 @@ def update_remote_issue(issue_number, title, body):
     try:
         cmd = [
             "gh", "issue", "edit", str(issue_number),
-            "--repo", "Albert26193/vitepress-clear-blog",
+            "--repo", "Albert26193/vitepress-theme-link",
             "--title", title,
             "--body", body,
         ]

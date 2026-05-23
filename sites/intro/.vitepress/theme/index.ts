@@ -1,7 +1,7 @@
 import 'virtual:uno.css'
-import { BlogTheme } from 'vitepress-clear-blog'
-import 'vitepress-clear-blog/styles'
-import 'vitepress-plugin-callout/styles'
+import 'vitepress-plugin-callouts/styles'
+import { BlogTheme } from 'vitepress-theme-link'
+import 'vitepress-theme-link/styles'
 
 import './styles/generated.css'
 

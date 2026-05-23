@@ -22,7 +22,7 @@ vi.mock('vitepress-plugin-config', () => ({
     author: 'Blogger',
     locale: 'zh_CN',
     'theme-color': '#1934e9',
-    themeLink: 'https://github.com/Albert26193/vitepress-clear-blog'
+    themeLink: 'https://github.com/Albert26193/vitepress-theme-link'
   },
   DEFAULT_PAGE_SIZE: 10,
   DEFAULT_HOMEPAGE: { title: 'Blog', description: '' },
@@ -476,7 +476,7 @@ describe('createBlog with mocked config.toml', async () => {
     mockLoadConfig.mockReturnValue(toml)
     const config = await createBlog()
     expect((config as any).themeConfig.themeLink).toBe(
-      'https://github.com/Albert26193/vitepress-clear-blog'
+      'https://github.com/Albert26193/vitepress-theme-link'
     )
   })
 

@@ -70,15 +70,15 @@ describe('createWikilinkPlugin', () => {
     const html = await render(
       '[[target-page|Target page]] [Target](target-page)',
       { relativePath: 'test/utils/node/source-page.md' },
-      { base: '/vitepress-clear-blog/testbed/' }
+      { base: '/vitepress-theme-link/testbed/' }
     )
 
     expect(html).toContain(
-      'href="/vitepress-clear-blog/testbed/src/utils/node/target-page.html"'
+      'href="/vitepress-theme-link/testbed/src/utils/node/target-page.html"'
     )
     expect(html).toContain('href="/src/utils/node/target-page.html"')
     expect(html).not.toContain(
-      '/vitepress-clear-blog/testbed/vitepress-clear-blog/testbed/'
+      '/vitepress-theme-link/testbed/vitepress-theme-link/testbed/'
     )
   })
 
@@ -86,11 +86,11 @@ describe('createWikilinkPlugin', () => {
     const html = await render(
       '[[target-page|Target page]] [Target](target-page)',
       { relativePath: 'test/utils/node/source-page.md' },
-      { base: '/vitepress-clear-blog/testbed/', cleanUrls: true }
+      { base: '/vitepress-theme-link/testbed/', cleanUrls: true }
     )
 
     expect(html).toContain(
-      'href="/vitepress-clear-blog/testbed/src/utils/node/target-page"'
+      'href="/vitepress-theme-link/testbed/src/utils/node/target-page"'
     )
     expect(html).toContain('href="/src/utils/node/target-page"')
     expect(html).not.toContain('target-page.html')

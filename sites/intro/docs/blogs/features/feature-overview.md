@@ -13,7 +13,7 @@ description: 项目全部功能的完整清单与实现状态
 
 > 📋 项目全部功能的完整清单
 
-本文档详细列出了 vitepress-clear-blog 项目的所有功能实现状态，从基础的 Markdown 渲染到高级的可视化特性。
+本文档详细列出了 vitepress-theme-link 项目的所有功能实现状态，从基础的 Markdown 渲染到高级的可视化特性。
 
 ---
 

@@ -10,7 +10,7 @@ description: 基础 Wikilinks 语法：[[target]]、[[target|别名]]、与标�
 
 # Wiki Links 基础入门
 
-Wikilinks 是 Obsidian 风格的内部链接语法。VitePress Clear Blog 内置了 Wikilinks 支持，让文档间交叉引用更自然。
+Wikilinks 是 Obsidian 风格的内部链接语法。VitePress Theme Link 内置了 Wikilinks 支持，让文档间交叉引用更自然。
 
 ## 启用 Wikilinks
 

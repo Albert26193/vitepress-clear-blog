@@ -19,7 +19,7 @@
   "references": [
     { "path": "../../packages/theme/tsconfig.typecheck.json" },
     {
-      "path": "../../packages/vitepress-plugin-callout/tsconfig.typecheck.json"
+      "path": "../../packages/vitepress-plugin-callouts/tsconfig.typecheck.json"
     }
   ]
 }

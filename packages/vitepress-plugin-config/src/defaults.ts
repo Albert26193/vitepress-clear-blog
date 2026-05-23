@@ -40,7 +40,7 @@ export const DEFAULT_META = {
   author: 'Blogger',
   locale: 'zh_CN',
   'theme-color': '#1934e9',
-  themeLink: 'https://github.com/Albert26193/vitepress-clear-blog'
+  themeLink: 'https://github.com/Albert26193/vitepress-theme-link'
 } as const
 
 export const THEME_COLOR_DEFAULTS = {

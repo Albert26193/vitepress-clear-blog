@@ -1,6 +1,6 @@
 [meta]
 title = "My Blog"
-description = "A personal blog powered by VitePress Clear Blog"
+description = "A personal blog powered by VitePress Theme Link"
 author = "Blogger"
 keywords = "blog, vitepress, static-site"
 locale = "zh_CN"
@@ -10,7 +10,7 @@ theme-color = "#8a5cf5"
 
 [homepage]
 title = "My Blog"
-description = "A personal blog powered by VitePress Clear Blog"
+description = "A personal blog powered by VitePress Theme Link"
 
 [page]
 pageSize = 10

@@ -6,12 +6,12 @@ tags:
   - 主题
   - 组件
   - 样式系统
-description: vitepress-clear-blog 主题包架构详解
+description: vitepress-theme-link 主题包架构详解
 ---
 
 # Theme 核心包
 
-> vitepress-clear-blog 主题包架构详解
+> vitepress-theme-link 主题包架构详解
 
 ## 目录结构
 

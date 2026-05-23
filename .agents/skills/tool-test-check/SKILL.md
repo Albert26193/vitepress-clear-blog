@@ -34,7 +34,7 @@ are two modes:
 | Type check | `pnpm typecheck` |
 | Unit test | `pnpm build:packages` then `pnpm test:unit` |
 | Build | `pnpm build` |
-| E2E test | `pnpm test:e2e` in CI; locally prefer targeted `pnpm -F vitepress-clear-blog test:e2e -- e2e/<Spec>.spec.ts` |
+| E2E test | `pnpm test:e2e` in CI; locally prefer targeted `pnpm -F vitepress-theme-link test:e2e -- e2e/<Spec>.spec.ts` |
 
 When the user asks whether a branch is ready for PR/CI, include all relevant CI
 gates, not just unit and E2E.
@@ -72,9 +72,9 @@ escalated to full E2E or full CI-aligned validation.
 | Need | Command |
 |---|---|
 | Full unit tests | `pnpm test:unit` |
-| One related E2E spec | `pnpm -F vitepress-clear-blog test:e2e -- e2e/<Spec>.spec.ts` |
-| Multiple related E2E specs | `pnpm -F vitepress-clear-blog test:e2e -- e2e/A.spec.ts e2e/B.spec.ts` |
-| Full theme E2E when needed | `pnpm -F vitepress-clear-blog test:e2e` |
+| One related E2E spec | `pnpm -F vitepress-theme-link test:e2e -- e2e/<Spec>.spec.ts` |
+| Multiple related E2E specs | `pnpm -F vitepress-theme-link test:e2e -- e2e/A.spec.ts e2e/B.spec.ts` |
+| Full theme E2E when needed | `pnpm -F vitepress-theme-link test:e2e` |
 | Type and package export check | `pnpm typecheck` |
 | Non-mutating lint check | `pnpm exec eslint './packages/**/*.{ts,tsx,js,jsx,vue}'` |
 
@@ -94,7 +94,7 @@ Use this when the user asks for final confidence, PR readiness, CI parity, or
 | Typecheck | `pnpm typecheck` | Includes `pnpm build:packages`. |
 | Unit test | `pnpm test:unit` | CI runs `pnpm build:packages` first; `pnpm typecheck` already covers that build step if run earlier. |
 | Build | `pnpm build` | Required by CI and produces the docs artifact used by E2E. |
-| Related E2E | `pnpm -F vitepress-clear-blog test:e2e -- e2e/<Spec>.spec.ts` | Local CI-aligned checks should still target the cases related to the current change to keep runtime reasonable. |
+| Related E2E | `pnpm -F vitepress-theme-link test:e2e -- e2e/<Spec>.spec.ts` | Local CI-aligned checks should still target the cases related to the current change to keep runtime reasonable. |
 | Full E2E only when requested or necessary | `pnpm test:e2e` | CI runs full E2E, but locally use this only when the user explicitly asks or the change is broad enough that targeted specs are misleading. |
 | Commit check | `git log -1 --format=%B | pnpm check-commit` | Only needed when validating the current commit message. |
 
@@ -106,7 +106,7 @@ bash scripts/check-e2e-coverage.sh
 pnpm typecheck
 pnpm test:unit
 pnpm build
-pnpm -F vitepress-clear-blog test:e2e -- e2e/<Related>.spec.ts
+pnpm -F vitepress-theme-link test:e2e -- e2e/<Related>.spec.ts
 ```
 
 Add the commit check when the user asks to validate commits or CI parity for an
@@ -173,13 +173,13 @@ suite. Do not use naked `pnpm test:e2e` as the default local command because it 
 slow; prefer targeted specs first.
 
 ```bash
-pnpm -F vitepress-clear-blog test:e2e -- e2e/<Related>.spec.ts
+pnpm -F vitepress-theme-link test:e2e -- e2e/<Related>.spec.ts
 ```
 
 Use full E2E only for explicit/full-scope cases:
 
 ```bash
-pnpm -F vitepress-clear-blog test:e2e
+pnpm -F vitepress-theme-link test:e2e
 ```
 
 Escalate to full E2E for changes touching:

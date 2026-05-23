@@ -8,7 +8,7 @@ tags:
 
 # Markdown Features and Extensions
 
-VitePress Clear Blog extends standard Markdown with several useful features.
+VitePress Theme Link extends standard Markdown with several useful features.
 
 ## Wiki Links
 

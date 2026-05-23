@@ -1,19 +1,19 @@
 ---
 title: About
-description: 关于 vitepress-clear-blog 项目介绍文档站点
+description: 关于 vitepress-theme-link 项目介绍文档站点
 sidebar: false
 aside: false
 ---
 
 ## About this site
 
-- 本站点是 `vitepress-clear-blog` 项目的介绍文档站点
+- 本站点是 `vitepress-theme-link` 项目的介绍文档站点
 - 主要介绍项目的架构设计、技术选型、工程规范等内容
 - 欢迎 `star` 和 `fork` 本项目
 
 ## 项目地址
 
-- 📖 [GitHub 仓库](https://github.com/Albert26193/vitepress-clear-blog)
+- 📖 [GitHub 仓库](https://github.com/Albert26193/vitepress-theme-link)
 
 ## 文档结构
 
