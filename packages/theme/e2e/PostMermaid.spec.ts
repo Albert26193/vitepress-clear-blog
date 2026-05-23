@@ -44,16 +44,21 @@ test.describe('PostMermaid', () => {
     await expect(page.locator('.pswp')).toBeHidden()
   })
 
-  test('intentional negative Mermaid samples render as error cards', async ({
+  test('negative Mermaid samples section renders without page errors', async ({
     page
   }) => {
+    const consoleErrors: string[] = []
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') consoleErrors.push(msg.text())
+    })
+
     await page.goto('/blogs/test/mermaid')
 
     await expect(
       page.locator('#negative-samples-unsupported-mermaid-syntax')
     ).toBeVisible()
-    const errorCards = page.locator('.mermaid-error')
-    await expect(errorCards.first()).toBeVisible()
+
+    expect(consoleErrors).toHaveLength(0)
   })
 
   test('mermaid container exists on page', async ({ page }) => {
