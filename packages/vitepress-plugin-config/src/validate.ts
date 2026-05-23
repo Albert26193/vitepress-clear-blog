@@ -1,18 +1,25 @@
 import { z } from 'zod'
 
-const VALID_COLOR_RE = /^(#|rgba?\(|hsla?\(|var\(--|[a-zA-Z]+$)/
+const VALID_COLOR_RE =
+  /^(#|rgba?\(|hsla?\(|var\(--|transparent$|currentColor$|inherit$|initial$|unset$|revert$|[a-zA-Z]+$)/
 
 const themeConfigSchema: z.ZodType<Record<string, unknown>> = z.lazy(() =>
   z.object({
     'vp-c-bg': z.string().optional(),
+    'vp-c-bg-alt': z.string().optional(),
     'vp-c-brand': z.string().optional(),
     'vp-c-brand-1': z.string().optional(),
+    'vp-c-brand-2': z.string().optional(),
     'vp-c-text-1': z.string().optional(),
+    'vp-c-text-2': z.string().optional(),
+    'vp-c-divider': z.string().optional(),
     'vp-button-brand-bg': z.string().optional(),
+    'vp-code-bg': z.string().optional(),
+    'vp-code-block-bg': z.string().optional(),
+    'vp-sidebar-bg-color': z.string().optional(),
     'c-text-code': z.string().optional(),
     'c-text-strong': z.string().optional(),
     'c-text-em': z.string().optional(),
-    'vp-sidebar-bg-color': z.string().optional(),
     dark: themeConfigSchema.optional()
   })
 )

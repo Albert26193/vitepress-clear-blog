@@ -15,7 +15,7 @@ keywords = "blog, vitepress, static-site"
 locale = "zh_CN"
 lang = "zh-CN"
 siteUrl = "https://your-blog.github.io"
-theme-color = "#4259f3"
+theme-color = "#8a5cf5"
 
 # Optional: ICP filing number displayed in the footer.
 # icpNumber = ""
@@ -134,30 +134,319 @@ image_dimension = true
 render_title = "frontmatter_title"
 link_style = "origin"
 
+# =============================================================================
+# THEME — CSS variable overrides
+# =============================================================================
+# 15 configurable color keys. Each key maps to a VitePress CSS variable.
+# Unused keys fall back to sensible defaults, so you only need to set the
+# ones you care about.
+#
+# Background          vp-c-bg  vp-c-bg-alt
+# Brand               vp-c-brand  vp-c-brand-1  vp-c-brand-2
+# Text                vp-c-text-1  vp-c-text-2
+# Borders             vp-c-divider
+# Sidebar             vp-sidebar-bg-color
+# Button              vp-button-brand-bg
+# Code                vp-code-bg  vp-code-block-bg  c-text-code
+# Inline semantics    c-text-strong  c-text-em
 # ---------------------------------------------------------------------------
-# CSS variable overrides (light mode)
-# ---------------------------------------------------------------------------
-[theme]
-vp-c-bg = "#fafafa"
-vp-c-brand = "#4259f3"
-vp-c-brand-1 = "#42a903"
-vp-c-text-1 = "#222"
-vp-button-brand-bg = "#129083"
-c-text-code = "#305fef"
-c-text-strong = "#f00"
-c-text-em = "#0000ff"
-vp-sidebar-bg-color = "#f3f3f3"
 
 # ---------------------------------------------------------------------------
-# CSS variable overrides (dark mode)
+# Obsidian — purple accent (hsl 254,80%,68%), real Obsidian color scale
 # ---------------------------------------------------------------------------
+[theme]
+vp-c-bg = "#ffffff"
+vp-c-bg-alt = "#f6f6f6"
+vp-c-brand = "#9873f7"
+vp-c-brand-1 = "#8a5cf5"
+vp-c-brand-2 = "#a68af9"
+vp-c-text-1 = "#222222"
+vp-c-text-2 = "#5c5c5c"
+vp-c-divider = "#e0e0e0"
+vp-button-brand-bg = "#9873f7"
+vp-code-bg = "#f6f6f6"
+vp-code-block-bg = "#f6f6f6"
+vp-sidebar-bg-color = "#f6f6f6"
+c-text-code = "#e93147"
+c-text-strong = "#111111"
+c-text-em = "#086ddd"
+
 [theme.dark]
-vp-c-bg = "#202127"
-vp-c-brand = "#94fe00"
-vp-c-brand-1 = "#fb9300"
-vp-c-text-1 = "#cccccc"
-vp-button-brand-bg = "#f2b983"
-c-text-code = "#00ff00"
-c-text-strong = "#ff0000"
-c-text-em = "#00ffff"
-vp-sidebar-bg-color = "#181922"
+vp-c-bg = "#1e1e1e"
+vp-c-bg-alt = "#262626"
+vp-c-brand = "#8a5cf5"
+vp-c-brand-1 = "#a68af9"
+vp-c-brand-2 = "#c5b6fc"
+vp-c-text-1 = "#dadada"
+vp-c-text-2 = "#b3b3b3"
+vp-c-divider = "#363636"
+vp-button-brand-bg = "#8a5cf5"
+vp-code-bg = "#262626"
+vp-code-block-bg = "#262626"
+vp-sidebar-bg-color = "#242424"
+c-text-code = "#fb464c"
+c-text-strong = "#ebebeb"
+c-text-em = "#027aff"
+
+# =============================================================================
+# PRESET COLOR SCHEMES
+# =============================================================================
+# Uncomment ONE block below and comment out the [theme] / [theme.dark]
+# sections above to switch to a different look.
+#
+# Each preset fills all 15 keys.  The three semantic colors
+# (c-text-code / c-text-strong / c-text-em) stay the same across presets
+# because they are about readability, not branding.
+# =============================================================================
+
+# --- Vercel — dark minimal, #0070F3 blue (Geist design system) ------------
+# Source: vercel.com/geist/colors, brandfetch.com/vercel.com
+# [theme]
+# vp-c-bg = "#ffffff"
+# vp-c-bg-alt = "#fafafa"
+# vp-c-brand = "#0070F3"
+# vp-c-brand-1 = "#0070F3"
+# vp-c-brand-2 = "#3399FF"
+# vp-c-text-1 = "#171717"
+# vp-c-text-2 = "#737373"
+# vp-c-divider = "#e5e5e5"
+# vp-button-brand-bg = "#0070F3"
+# vp-code-bg = "#fafafa"
+# vp-code-block-bg = "#fafafa"
+# vp-sidebar-bg-color = "#fafafa"
+# c-text-code = "#e93147"
+# c-text-strong = "#111111"
+# c-text-em = "#086ddd"
+#
+# [theme.dark]
+# vp-c-bg = "#0a0a0a"
+# vp-c-bg-alt = "#171717"
+# vp-c-brand = "#0070F3"
+# vp-c-brand-1 = "#3399FF"
+# vp-c-brand-2 = "#66BBFF"
+# vp-c-text-1 = "#EDEDED"
+# vp-c-text-2 = "#888888"
+# vp-c-divider = "#333333"
+# vp-button-brand-bg = "#0070F3"
+# vp-code-bg = "#171717"
+# vp-code-block-bg = "#171717"
+# vp-sidebar-bg-color = "#000000"
+# c-text-code = "#fb464c"
+# c-text-strong = "#ebebeb"
+# c-text-em = "#60a5fa"
+
+# --- Cloudflare — tangerine #F6821F + mango #FBAD41 -----------------------
+# Source: cloudflare.com/brand/color/
+# [theme]
+# vp-c-bg = "#ffffff"
+# vp-c-bg-alt = "#fafafa"
+# vp-c-brand = "#F6821F"
+# vp-c-brand-1 = "#FBAD41"
+# vp-c-brand-2 = "#e07010"
+# vp-c-text-1 = "#1c1c1c"
+# vp-c-text-2 = "#707070"
+# vp-c-divider = "#e5e5e5"
+# vp-button-brand-bg = "#F6821F"
+# vp-code-bg = "#fff5f0"
+# vp-code-block-bg = "#fafafa"
+# vp-sidebar-bg-color = "#fafafa"
+# c-text-code = "#e93147"
+# c-text-strong = "#111111"
+# c-text-em = "#086ddd"
+#
+# [theme.dark]
+# vp-c-bg = "#1b1b1f"
+# vp-c-bg-alt = "#1a1a1a"
+# vp-c-brand = "#FBAD41"
+# vp-c-brand-1 = "#F6821F"
+# vp-c-brand-2 = "#e07010"
+# vp-c-text-1 = "#ededed"
+# vp-c-text-2 = "#999999"
+# vp-c-divider = "#363636"
+# vp-button-brand-bg = "#F6821F"
+# vp-code-bg = "#1a1a1a"
+# vp-code-block-bg = "#1a1a1a"
+# vp-sidebar-bg-color = "#121212"
+# c-text-code = "#fb464c"
+# c-text-strong = "#ebebeb"
+# c-text-em = "#60a5fa"
+
+# --- Spotify — UI green #1DB954, dark bg #121212 --------------------------
+# Source: developer.spotify.com/documentation/design
+# [theme]
+# vp-c-bg = "#ffffff"
+# vp-c-bg-alt = "#f5f5f5"
+# vp-c-brand = "#1DB954"
+# vp-c-brand-1 = "#169c46"
+# vp-c-brand-2 = "#169c46"
+# vp-c-text-1 = "#1c1c1c"
+# vp-c-text-2 = "#707070"
+# vp-c-divider = "#e5e5e5"
+# vp-button-brand-bg = "#1DB954"
+# vp-code-bg = "#f0f8f2"
+# vp-code-block-bg = "#f6f6f8"
+# vp-sidebar-bg-color = "#f5f5f5"
+# c-text-code = "#e93147"
+# c-text-strong = "#111111"
+# c-text-em = "#086ddd"
+#
+# [theme.dark]
+# vp-c-bg = "#121212"
+# vp-c-bg-alt = "#181818"
+# vp-c-brand = "#1DB954"
+# vp-c-brand-1 = "#1ed760"
+# vp-c-brand-2 = "#169c46"
+# vp-c-text-1 = "#ffffff"
+# vp-c-text-2 = "#B3B3B3"
+# vp-c-divider = "#323232"
+# vp-button-brand-bg = "#1DB954"
+# vp-code-bg = "#181818"
+# vp-code-block-bg = "#181818"
+# vp-sidebar-bg-color = "#0a0a0a"
+# c-text-code = "#fb464c"
+# c-text-strong = "#ebebeb"
+# c-text-em = "#60a5fa"
+
+# --- Telegram — blue #0088cc, dark bg #17212b -----------------------------
+# Source: docs.telegram-mini-apps.com/platform/theming
+# [theme]
+# vp-c-bg = "#ffffff"
+# vp-c-bg-alt = "#f5f5f5"
+# vp-c-brand = "#0088cc"
+# vp-c-brand-1 = "#229ed9"
+# vp-c-brand-2 = "#006699"
+# vp-c-text-1 = "#1c1c1c"
+# vp-c-text-2 = "#707070"
+# vp-c-divider = "#e5e5e5"
+# vp-button-brand-bg = "#0088cc"
+# vp-code-bg = "#f0f7fb"
+# vp-code-block-bg = "#f6f6f8"
+# vp-sidebar-bg-color = "#f5f5f5"
+# c-text-code = "#e93147"
+# c-text-strong = "#111111"
+# c-text-em = "#086ddd"
+#
+# [theme.dark]
+# vp-c-bg = "#17212b"
+# vp-c-bg-alt = "#232e3c"
+# vp-c-brand = "#6ab2f2"
+# vp-c-brand-1 = "#0088cc"
+# vp-c-brand-2 = "#0088cc"
+# vp-c-text-1 = "#ededed"
+# vp-c-text-2 = "#999999"
+# vp-c-divider = "#2a3a4a"
+# vp-button-brand-bg = "#5288c1"
+# vp-code-bg = "#232e3c"
+# vp-code-block-bg = "#232e3c"
+# vp-sidebar-bg-color = "#0e1620"
+# c-text-code = "#fb464c"
+# c-text-strong = "#ebebeb"
+# c-text-em = "#60a5fa"
+
+# --- GitHub — Primer design system #0969da / dark #4493F8 ------------------
+# Source: github.com/primer/primitives (open source)
+# [theme]
+# vp-c-bg = "#ffffff"
+# vp-c-bg-alt = "#F6F8FA"
+# vp-c-brand = "#0969da"
+# vp-c-brand-1 = "#0550ae"
+# vp-c-brand-2 = "#0860CA"
+# vp-c-text-1 = "#1f2328"
+# vp-c-text-2 = "#59636E"
+# vp-c-divider = "#D1D9E0"
+# vp-button-brand-bg = "#0969da"
+# vp-code-bg = "#F6F8FA"
+# vp-code-block-bg = "#F6F8FA"
+# vp-sidebar-bg-color = "#F6F8FA"
+# c-text-code = "#e93147"
+# c-text-strong = "#111111"
+# c-text-em = "#086ddd"
+#
+# [theme.dark]
+# vp-c-bg = "#0D1117"
+# vp-c-bg-alt = "#151B23"
+# vp-c-brand = "#4493F8"
+# vp-c-brand-1 = "#0969da"
+# vp-c-brand-2 = "#1f6feb"
+# vp-c-text-1 = "#F0F6FC"
+# vp-c-text-2 = "#9198A1"
+# vp-c-divider = "#3D444D"
+# vp-button-brand-bg = "#0969da"
+# vp-code-bg = "#151B23"
+# vp-code-block-bg = "#151B23"
+# vp-sidebar-bg-color = "#010409"
+# c-text-code = "#fb464c"
+# c-text-strong = "#ebebeb"
+# c-text-em = "#60a5fa"
+
+# --- Stripe — indigo #635BFF, dark bg #0A2540 -----------------------------
+# Source: stripe.com/docs/elements/appearance-api, Stripe Brand Guidelines v3.2
+# [theme]
+# vp-c-bg = "#ffffff"
+# vp-c-bg-alt = "#f5f5f5"
+# vp-c-brand = "#635BFF"
+# vp-c-brand-1 = "#7C3AED"
+# vp-c-brand-2 = "#4F46E5"
+# vp-c-text-1 = "#1c1c1c"
+# vp-c-text-2 = "#707070"
+# vp-c-divider = "#e5e5e5"
+# vp-button-brand-bg = "#635BFF"
+# vp-code-bg = "#f2f0ff"
+# vp-code-block-bg = "#f6f6f8"
+# vp-sidebar-bg-color = "#f5f5f5"
+# c-text-code = "#e93147"
+# c-text-strong = "#111111"
+# c-text-em = "#086ddd"
+#
+# [theme.dark]
+# vp-c-bg = "#0A2540"
+# vp-c-bg-alt = "#112D4A"
+# vp-c-brand = "#635BFF"
+# vp-c-brand-1 = "#7C3AED"
+# vp-c-brand-2 = "#4F46E5"
+# vp-c-text-1 = "#E4E8EE"
+# vp-c-text-2 = "#8B9DB5"
+# vp-c-divider = "#1E3A5F"
+# vp-button-brand-bg = "#635BFF"
+# vp-code-bg = "#112D4A"
+# vp-code-block-bg = "#112D4A"
+# vp-sidebar-bg-color = "#051A30"
+# c-text-code = "#fb464c"
+# c-text-strong = "#ebebeb"
+# c-text-em = "#60a5fa"
+
+# --- Linear — purple #7C3AED, dark bg #121214 -----------------------------
+# Source: linear.app/brand, thedjpetersen.com/thoughts/linear-theme
+# [theme]
+# vp-c-bg = "#fcfcfc"
+# vp-c-bg-alt = "#F4F5F8"
+# vp-c-brand = "#7C3AED"
+# vp-c-brand-1 = "#8b49fc"
+# vp-c-brand-2 = "#6d28d9"
+# vp-c-text-1 = "#222326"
+# vp-c-text-2 = "#6B6E77"
+# vp-c-divider = "#e5e5e5"
+# vp-button-brand-bg = "#7C3AED"
+# vp-code-bg = "#F4F5F8"
+# vp-code-block-bg = "#F4F5F8"
+# vp-sidebar-bg-color = "#F4F5F8"
+# c-text-code = "#e93147"
+# c-text-strong = "#111111"
+# c-text-em = "#086ddd"
+#
+# [theme.dark]
+# vp-c-bg = "#121214"
+# vp-c-bg-alt = "#202024"
+# vp-c-brand = "#7C3AED"
+# vp-c-brand-1 = "#8b49fc"
+# vp-c-brand-2 = "#6d28d9"
+# vp-c-text-1 = "#e5e5e5"
+# vp-c-text-2 = "#9CA3AF"
+# vp-c-divider = "#202024"
+# vp-button-brand-bg = "#7C3AED"
+# vp-code-bg = "#202024"
+# vp-code-block-bg = "#202024"
+# vp-sidebar-bg-color = "#0A0A0C"
+# c-text-code = "#fb464c"
+# c-text-strong = "#ebebeb"
+# c-text-em = "#60a5fa"

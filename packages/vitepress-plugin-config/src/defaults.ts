@@ -45,25 +45,37 @@ export const DEFAULT_META = {
 
 export const THEME_COLOR_DEFAULTS = {
   light: {
-    'vp-c-bg': '#fff',
-    'vp-c-brand': '#f00',
-    'vp-c-brand-1': '#0f0',
-    'vp-c-text-1': '#000',
-    'vp-button-brand-bg': '#00f',
-    'c-text-code': '#ff0',
-    'c-text-strong': '#000',
-    'c-text-em': '#000',
-    'vp-sidebar-bg-color': '#000'
+    'vp-c-bg': '#ffffff',
+    'vp-c-bg-alt': '#f6f6f6',
+    'vp-c-brand': '#9873f7',
+    'vp-c-brand-1': '#8a5cf5',
+    'vp-c-brand-2': '#a68af9',
+    'vp-c-text-1': '#222222',
+    'vp-c-text-2': '#5c5c5c',
+    'vp-c-divider': '#e0e0e0',
+    'vp-button-brand-bg': '#9873f7',
+    'vp-code-bg': '#f6f6f6',
+    'vp-code-block-bg': '#f6f6f6',
+    'vp-sidebar-bg-color': '#f6f6f6',
+    'c-text-code': '#e93147',
+    'c-text-strong': '#111111',
+    'c-text-em': '#086ddd'
   },
   dark: {
-    'vp-c-bg': '#000',
-    'vp-c-brand': '#f00',
-    'vp-c-brand-1': '#0f0',
-    'vp-c-text-1': '#000',
-    'vp-button-brand-bg': '#00f',
-    'c-text-code': '#ff0',
-    'c-text-strong': '#000',
-    'c-text-em': '#000',
-    'vp-sidebar-bg-color': '#000'
+    'vp-c-bg': '#1e1e1e',
+    'vp-c-bg-alt': '#262626',
+    'vp-c-brand': '#8a5cf5',
+    'vp-c-brand-1': '#a68af9',
+    'vp-c-brand-2': '#c5b6fc',
+    'vp-c-text-1': '#dadada',
+    'vp-c-text-2': '#b3b3b3',
+    'vp-c-divider': '#363636',
+    'vp-button-brand-bg': '#8a5cf5',
+    'vp-code-bg': '#262626',
+    'vp-code-block-bg': '#262626',
+    'vp-sidebar-bg-color': '#242424',
+    'c-text-code': '#fb464c',
+    'c-text-strong': '#ebebeb',
+    'c-text-em': '#027aff'
   }
 } as const
