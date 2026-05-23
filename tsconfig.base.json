@@ -17,11 +17,11 @@
     "paths": {
       "@/*": [".vitepress/*"],
       "~/*": ["./*"],
-      "vitepress-clear-blog": ["./packages/theme/src/index.ts"],
-      "vitepress-clear-blog/node": ["./packages/theme/src/utils/node/index.ts"],
-      "vitepress-clear-blog/styles": ["./packages/theme/src/styles/index.scss"],
-      "vitepress-clear-blog/uno.config": ["./packages/theme/uno.config.ts"],
-      "vitepress-clear-blog/*": ["./packages/theme/src/*"],
+      "vitepress-theme-link": ["./packages/theme/src/index.ts"],
+      "vitepress-theme-link/node": ["./packages/theme/src/utils/node/index.ts"],
+      "vitepress-theme-link/styles": ["./packages/theme/src/styles/index.scss"],
+      "vitepress-theme-link/uno.config": ["./packages/theme/uno.config.ts"],
+      "vitepress-theme-link/*": ["./packages/theme/src/*"],
       "vitepress-plugin-analyzer": [
         "./packages/vitepress-plugin-analyzer/src/node/index.ts"
       ],
@@ -31,11 +31,11 @@
       "vitepress-plugin-analyzer/types": [
         "./packages/vitepress-plugin-analyzer/types/index.d.ts"
       ],
-      "vitepress-plugin-callout": [
-        "./packages/vitepress-plugin-callout/src/node/index.ts"
+      "vitepress-plugin-callouts": [
+        "./packages/vitepress-plugin-callouts/src/node/index.ts"
       ],
-      "vitepress-plugin-callout/styles": [
-        "./packages/vitepress-plugin-callout/src/styles/index.css"
+      "vitepress-plugin-callouts/styles": [
+        "./packages/vitepress-plugin-callouts/src/styles/index.css"
       ],
       "vitepress-plugin-codeblock-fold": [
         "./packages/vitepress-plugin-codeblock-fold/src/index.ts"

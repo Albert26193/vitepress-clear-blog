@@ -1,18 +1,18 @@
 [meta]
-title = "vitepress-clear-blog 项目文档"
-description = "vitepress-clear-blog 项目架构、技术选型、工程规范与功能介绍"
-author = "vitepress-clear-blog team"
+title = "vitepress-theme-link 项目文档"
+description = "vitepress-theme-link 项目架构、技术选型、工程规范与功能介绍"
+author = "vitepress-theme-link team"
 keywords = "vitepress blog theme monorepo architecture"
 locale = "zh_CN"
 lang = "zh-CN"
-siteUrl = "https://github.com/your-username/vitepress-clear-blog"
+siteUrl = "https://github.com/your-username/vitepress-theme-link"
 theme-color = "#8a5cf5"
 icpNumber = ""
 themeLink = ""
 
 [homepage]
-title = "vitepress-clear-blog 项目文档"
-description = "vitepress-clear-blog 项目架构、技术选型、工程规范与功能介绍"
+title = "vitepress-theme-link 项目文档"
+description = "vitepress-theme-link 项目架构、技术选型、工程规范与功能介绍"
 
 [page]
 pageSize = 10

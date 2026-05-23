@@ -1,4 +1,4 @@
-# vitepress-plugin-callout
+# vitepress-plugin-callouts
 
 A VitePress markdown-it plugin that adds support for custom callout block types
 beyond the built-in presets.
@@ -6,14 +6,14 @@ beyond the built-in presets.
 ## Installation
 
 ```bash
-npm install vitepress-plugin-callout
+npm install vitepress-plugin-callouts
 ```
 
 ## Usage
 
 ```ts
 import MarkdownIt from 'markdown-it'
-import { calloutPlugin } from 'vitepress-plugin-callout'
+import { calloutPlugin } from 'vitepress-plugin-callouts'
 
 const md = new MarkdownIt()
 md.use(calloutPlugin, {

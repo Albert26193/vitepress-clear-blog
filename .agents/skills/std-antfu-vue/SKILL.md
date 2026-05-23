@@ -1,11 +1,11 @@
 ---
 name: std-antfu-vue
-description: Use this coding-standard skill for Vue work in this VitePress Clear Blog repo, especially when editing .vue SFCs, NewLayout.vue, theme components, Composition API logic, props/emits contracts, composables, UI behavior, or Vue refactors. It adapts antfu/skills@vue-best-practices: keep the full reference-driven workflow, but preserve this repo's existing Prettier/ESLint setup, avoid unnecessary abstraction, and require related/full E2E validation for UI changes.
+description: Use this coding-standard skill for Vue work in this VitePress Theme Link repo, especially when editing .vue SFCs, NewLayout.vue, theme components, Composition API logic, props/emits contracts, composables, UI behavior, or Vue refactors. It adapts antfu/skills@vue-best-practices: keep the full reference-driven workflow, but preserve this repo's existing Prettier/ESLint setup, avoid unnecessary abstraction, and require related/full E2E validation for UI changes.
 license: MIT
 metadata:
   upstream: antfu/skills@vue-best-practices
   upstream_author: github.com/vuejs-ai
-  adapted_for: vitepress-clear-blog
+  adapted_for: vitepress-theme-link
 ---
 
 # std-antfu-vue

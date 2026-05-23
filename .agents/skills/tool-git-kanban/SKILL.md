@@ -89,7 +89,7 @@ depends_on: []
 # remote GitHub Issue and no Project item until push creates them.
 github:
   owner: Albert26193
-  repo: vitepress-clear-blog
+  repo: vitepress-theme-link
   issue_number: 12
   # issue_url is optional; derive it from owner/repo/issue_number when absent.
   issue_url: https://github.com/OWNER/REPO/issues/12

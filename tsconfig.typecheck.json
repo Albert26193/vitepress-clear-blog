@@ -2,7 +2,7 @@
   "files": [],
   "references": [
     { "path": "./packages/vitepress-plugin-analyzer/tsconfig.typecheck.json" },
-    { "path": "./packages/vitepress-plugin-callout/tsconfig.typecheck.json" },
+    { "path": "./packages/vitepress-plugin-callouts/tsconfig.typecheck.json" },
     {
       "path": "./packages/vitepress-plugin-codeblock-fold/tsconfig.typecheck.json"
     },
@@ -12,7 +12,7 @@
     },
     { "path": "./packages/vitepress-plugin-hashtag/tsconfig.typecheck.json" },
     { "path": "./packages/theme/tsconfig.typecheck.json" },
-    { "path": "./packages/create-blog-template/tsconfig.typecheck.json" },
+    { "path": "./packages/create-vitepress-theme-link/tsconfig.typecheck.json" },
     { "path": "./sites/demo/tsconfig.typecheck.json" },
     { "path": "./sites/intro/tsconfig.typecheck.json" },
     { "path": "./sites/testbed/tsconfig.typecheck.json" }

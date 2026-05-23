@@ -10,7 +10,7 @@ description: 中英文混排、字体族、间距、行高和 heti 排版增强�
 
 # 排版与字体设置
 
-良好的排版是博客可读性的基础。VitePress Clear Blog 使用 Inter 英文字体、中文系统字体栈，并集成 heti 进行中西文混排增强。
+良好的排版是博客可读性的基础。VitePress Theme Link 使用 Inter 英文字体、中文系统字体栈，并集成 heti 进行中西文混排增强。
 
 ## 字体系统
 
@@ -58,7 +58,7 @@ Heti（赫蹏）是一个中西文混排美化库，自动处理：
 
 ## 响应式字号
 
-VitePress Clear Blog 使用响应式字号系统：
+VitePress Theme Link 使用响应式字号系统：
 
 | 断点 | 正文字号 | 标题字号 (h1) |
 |------|---------|--------------|

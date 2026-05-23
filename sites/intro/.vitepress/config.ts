@@ -1,11 +1,11 @@
 import wikilinks from 'markdown-it-wikilinks'
 import { type UserConfig, defineConfig } from 'vitepress'
+import { calloutPlugin } from 'vitepress-plugin-callouts'
 import {
   getThemeConfig,
   mermaidPlugin,
   taskListsPlugin
-} from 'vitepress-clear-blog/node'
-import { calloutPlugin } from 'vitepress-plugin-callout'
+} from 'vitepress-theme-link/node'
 
 import { head, metaData } from './custom/head'
 import { nav } from './custom/nav'
@@ -52,7 +52,7 @@ export default defineConfig({
     socialLinks: [
       {
         icon: 'github',
-        link: 'https://github.com/Albert26193/vitepress-clear-blog'
+        link: 'https://github.com/Albert26193/vitepress-theme-link'
       }
     ]
   },

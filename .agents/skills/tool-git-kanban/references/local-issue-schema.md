@@ -5,7 +5,7 @@ Use this reference when designing or migrating `.ai_dev/issues` files for Kanban
 ## Required frontmatter
 
 ```yaml
-package: root | theme | plugin-callout | plugin-config | plugin-codeblock-fold | plugin-details-block | plugin-hashtag | plugin-analyzer | docs | intro
+package: root | theme | plugin-callouts | plugin-config | plugin-codeblock-fold | plugin-details-block | plugin-hashtag | plugin-analyzer | docs | intro
 type: feat | fix | test | docs | refactor | chore | perf | discussion
 priority: P0 | P1 | P2 | P3
 status: todo | in_progress | done | blocked | discussion
@@ -31,7 +31,7 @@ Lifecycle states:
 ```yaml
 github:
   owner: Albert26193
-  repo: vitepress-clear-blog
+  repo: vitepress-theme-link
   issue_number: 12
   # Optional cache; derive from owner/repo/issue_number when absent.
   issue_url: https://github.com/OWNER/REPO/issues/12

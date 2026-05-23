@@ -1,14 +1,14 @@
 ---
 title: 项目文档导航 (MOC)
 date: 2026-01-25
-description: vitepress-clear-blog 项目架构、技术选型、工程规范与功能介绍文档导航中心
+description: vitepress-theme-link 项目架构、技术选型、工程规范与功能介绍文档导航中心
 tags:
   - MOC
   - 项目介绍
   - 文档导航
 ---
 
-# vitepress-clear-blog 项目文档
+# vitepress-theme-link 项目文档
 
 > 🎯 这是项目的 **MOC (Map of Content)** - 导航中心
 
@@ -73,5 +73,5 @@ tags:
 
 ## 快速链接
 
-- 📖 [GitHub 仓库](https://github.com/Albert26193/vitepress-clear-blog)
+- 📖 [GitHub 仓库](https://github.com/Albert26193/vitepress-theme-link)
 - 🎨 [在线演示 (docs)](../docs/)

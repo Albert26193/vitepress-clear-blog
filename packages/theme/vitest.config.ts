@@ -16,9 +16,9 @@ export default defineConfig({
         __dirname,
         '../vitepress-plugin-analyzer/src/node/index.ts'
       ),
-      'vitepress-plugin-callout': resolve(
+      'vitepress-plugin-callouts': resolve(
         __dirname,
-        '../vitepress-plugin-callout/src/node/index.ts'
+        '../vitepress-plugin-callouts/src/node/index.ts'
       ),
       'vitepress-plugin-codeblock-fold': resolve(
         __dirname,

@@ -85,7 +85,7 @@ def build_new_frontmatter(existing_raw: str, issue: dict) -> str:
     # 8. github block
     lines.append("github:")
     lines.append(f"  owner: Albert26193")
-    lines.append(f"  repo: vitepress-clear-blog")
+    lines.append(f"  repo: vitepress-theme-link")
     lines.append(f"  issue_number: {issue.get('issue_number', '')}")
     lines.append(f"  issue_url: {issue.get('issue_url', '')}")
 

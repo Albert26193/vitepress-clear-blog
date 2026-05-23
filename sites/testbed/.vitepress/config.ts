@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import { createBlog } from 'vitepress-clear-blog/node'
+import { createBlog } from 'vitepress-theme-link/node'
 
 const blogConfig = await createBlog()
 
@@ -10,7 +10,7 @@ export default defineConfig({
     socialLinks: [
       {
         icon: 'github',
-        link: 'https://github.com/Albert26193/vitepress-clear-blog'
+        link: 'https://github.com/Albert26193/vitepress-theme-link'
       }
     ]
   }

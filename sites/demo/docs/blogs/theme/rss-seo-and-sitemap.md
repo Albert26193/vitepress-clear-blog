@@ -15,7 +15,7 @@ description: RSS Feed 自动生成、SEO 元数据、Open Graph 标签与站点�
 
 ## RSS 订阅
 
-VitePress Clear Blog 自动生成 RSS Feed，输出到 `/feed.rss`。
+VitePress Theme Link 自动生成 RSS Feed，输出到 `/feed.rss`。
 
 访问地址：`https://your-site.com/feed.rss`
 
@@ -49,7 +49,7 @@ RSS Feed 包含所有博客文章，按发布时间排序，包含标题、链�
 ```toml
 [meta]
 title = "My Blog"
-description = "A personal blog powered by VitePress Clear Blog"
+description = "A personal blog powered by VitePress Theme Link"
 author = "Blogger"
 keywords = "blog, vitepress, static-site"
 locale = "zh_CN"
@@ -86,7 +86,7 @@ VitePress 自动生成 sitemap.xml，包含所有页面和博客文章的 URL �
 
 ## llms.txt
 
-VitePress Clear Blog 的 llms 插件生成 `llms.txt` 和 `llms-full.txt`，供 LLM 工具索引站点内容。
+VitePress Theme Link 的 llms 插件生成 `llms.txt` 和 `llms-full.txt`，供 LLM 工具索引站点内容。
 
 - `llms.txt` — 目录索引（~1.5K tokens）
 - `llms-full.txt` — 全文索引（~20K tokens）

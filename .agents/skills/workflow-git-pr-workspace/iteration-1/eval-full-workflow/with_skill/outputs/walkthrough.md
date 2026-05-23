@@ -16,7 +16,7 @@
 - Issue type: Feature
 - Title: "Add dark mode toggle button to footer"
 - Labels: area:theme, priority:P2
-- Would call: `gh api repos/Albert26193/vitepress-clear-blog/issues -X POST ...`
+- Would call: `gh api repos/Albert26193/vitepress-theme-link/issues -X POST ...`
 
 ## Step 3: Create branch
 - Issue title → slug: "add-dark-mode-toggle-footer"

@@ -45,7 +45,7 @@ async function scaffold(projectDir: string) {
 
 const target = resolve(process.cwd(), projectName)
 
-console.log(`Creating VitePress Clear Blog project: ${projectName}`)
+console.log(`Creating VitePress Theme Link project: ${projectName}`)
 console.log()
 
 scaffold(target).catch((err) => {

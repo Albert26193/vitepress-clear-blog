@@ -19,13 +19,13 @@ Use the **package.json `name`** (not directory name) with `-F` / `--filter`.
 
 | Directory | `name` in package.json |
 |---|---|
-| `packages/theme/` | `vitepress-clear-blog` |
+| `packages/theme/` | `vitepress-theme-link` |
 | `packages/testbed/` | `testbed` |
 | `packages/demo/` | `demo` |
 | `packages/intro/` | `intro` |
-| `packages/create-blog-template/` | `create-blog-template` |
+| `packages/create-vitepress-theme-link/` | `create-vitepress-theme-link` |
 | `packages/vitepress-plugin-analyzer/` | `vitepress-plugin-analyzer` |
-| `packages/vitepress-plugin-callout/` | `vitepress-plugin-callout` |
+| `packages/vitepress-plugin-callouts/` | `vitepress-plugin-callouts` |
 | `packages/vitepress-plugin-codeblock-fold/` | `vitepress-plugin-codeblock-fold` |
 | `packages/vitepress-plugin-config/` | `vitepress-plugin-config` |
 | `packages/vitepress-plugin-details-block/` | `vitepress-plugin-details-block` |
@@ -120,7 +120,7 @@ pnpm add <pkg> -D --filter <package-name>
 Examples:
 
 ```bash
-pnpm add lodash --filter vitepress-clear-blog
+pnpm add lodash --filter vitepress-theme-link
 pnpm add @types/node -D --filter vitepress-plugin-analyzer
 ```
 
@@ -155,23 +155,23 @@ Examples:
 
 ```bash
 # Build only the theme
-pnpm -F vitepress-clear-blog build
+pnpm -F vitepress-theme-link build
 
 # Unit tests for one plugin
 pnpm -F vitepress-plugin-analyzer test:unit
 
 # Dev for one package
-pnpm -F vitepress-clear-blog dev
+pnpm -F vitepress-theme-link dev
 
 # Run a single Playwright spec
-pnpm -F vitepress-clear-blog test:e2e -- e2e/BlogMain.spec.ts
+pnpm -F vitepress-theme-link test:e2e -- e2e/BlogMain.spec.ts
 ```
 
 ### Multi-package filtering
 
 ```bash
 # Run in two specific packages
-pnpm -F vitepress-clear-blog -F vitepress-plugin-callout build
+pnpm -F vitepress-theme-link -F vitepress-plugin-callouts build
 
 # Run script recursively in all packages
 pnpm -r <script>
@@ -246,7 +246,7 @@ pkill -f "cpx.*-w" 2>/dev/null || true
 Or target a specific worktree:
 
 ```bash
-ps aux | grep "vitepress-clear-blog" | grep -v grep | \
+ps aux | grep "vitepress-theme-link" | grep -v grep | \
   grep -E "(pnpm|vite|tsup|cpx|vitepress|esbuild)" | \
   awk '{print $2}' | xargs kill -9 2>/dev/null
 ```
@@ -275,7 +275,7 @@ then ensure everything is killed **after**.
 
 ```bash
 # 1. PRE-CLEAN — kill any leftover watchers from previous sessions
-ps aux | grep "vitepress-clear-blog" | grep -v grep | \
+ps aux | grep "vitepress-theme-link" | grep -v grep | \
   grep -E "(pnpm|vite|tsup|cpx|vitepress|esbuild)" | \
   awk '{print $2}' | xargs kill -9 2>/dev/null
 

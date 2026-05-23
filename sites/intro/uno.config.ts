@@ -1,4 +1,4 @@
 // uno.config.ts
-import unoConfig from 'vitepress-clear-blog/uno.config'
+import unoConfig from 'vitepress-theme-link/uno.config'
 
 export default unoConfig

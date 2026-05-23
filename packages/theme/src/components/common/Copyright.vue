@@ -18,7 +18,7 @@
   const icpNumber = theme.value.icpNumber || ''
   const themeLink =
     theme.value.themeLink ||
-    'https://github.com/Albert26193/vitepress-clear-blog'
+    'https://github.com/Albert26193/vitepress-theme-link'
 </script>
 
 <style scoped>

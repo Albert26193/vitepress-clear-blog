@@ -82,7 +82,7 @@ pnpm --parallel build
 pnpm -r build
 
 # 仅构建指定包
-pnpm -F vitepress-clear-blog build
+pnpm -F vitepress-theme-link build
 ```
 
 ### 构建顺序

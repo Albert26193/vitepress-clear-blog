@@ -7,7 +7,7 @@ This document provides comprehensive guidelines for AI assistants working with t
 ## 1. Project Overview
 
 ### Basic Information
-- **Project Name**: vitepress-clear-blog
+- **Project Name**: vitepress-theme-link
 - **Type**: VitePress Blog Monorepo
 - **Description**: A customizable VitePress-based blog system with plugin architecture
 - **Origin**: Forked from [vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure)
@@ -39,12 +39,12 @@ This monorepo provides:
 ### Monorepo Structure
 
 ```
-vitepress-clear-blog/
+vitepress-theme-link/
 ├── packages/
 │   ├── docs/                              # Documentation site (main blog)
-│   ├── theme/                             # Custom VitePress theme (vitepress-clear-blog)
+│   ├── theme/                             # Custom VitePress theme (vitepress-theme-link)
 │   ├── vitepress-plugin-analyzer/         # Global analyzer plugin
-│   ├── vitepress-plugin-callout/          # Callout/admonition plugin
+│   ├── vitepress-plugin-callouts/          # Callout/admonition plugin
 │   ├── vitepress-plugin-codeblock-fold/   # Code block folding plugin
 │   ├── vitepress-plugin-config/           # Configuration utilities plugin
 │   ├── vitepress-plugin-details-block/    # Details/summary block plugin
@@ -59,10 +59,10 @@ vitepress-clear-blog/
 #### Core Packages
 - **`docs/`**: The main documentation site that uses the custom theme and plugins
   - Private package (not published)
-  - Depends on `vitepress-clear-blog` theme and various plugins
+  - Depends on `vitepress-theme-link` theme and various plugins
   - Contains blog content and configuration
 
-- **`theme/` (vitepress-clear-blog)**: Custom VitePress theme
+- **`theme/` (vitepress-theme-link)**: Custom VitePress theme
   - Main theme package with styles and components
   - Exports theme configuration and utilities
   - Includes UnoCSS configuration
@@ -78,16 +78,16 @@ All plugins follow a consistent structure:
 ### Package Dependencies
 ```
 docs
-├── vitepress-clear-blog (theme)
+├── vitepress-theme-link (theme)
 ├── vitepress-plugin-analyzer
-├── vitepress-plugin-callout
+├── vitepress-plugin-callouts
 ├── vitepress-plugin-config
 └── vitepress-plugin-rss (external)
 
-theme (vitepress-clear-blog)
+theme (vitepress-theme-link)
 ├── vitepress (peer)
 ├── vitepress-plugin-analyzer (dev)
-├── vitepress-plugin-callout (dev)
+├── vitepress-plugin-callouts (dev)
 ├── vitepress-plugin-codeblock-fold (dev)
 ├── vitepress-plugin-config (dev)
 └── vitepress-plugin-details-block (dev)
@@ -245,7 +245,7 @@ pnpm add <package> -w
 pnpm add <package> --filter <package-name>
 
 # Example: Add lodash to theme package
-pnpm add lodash --filter vitepress-clear-blog
+pnpm add lodash --filter vitepress-theme-link
 ```
 
 #### Update Dependencies
@@ -628,6 +628,6 @@ const totalScore = tasks.reduce((sum, task) => sum + task.score, 0)
 
 ## Conclusion
 
-This document serves as a comprehensive guide for AI assistants working with the vitepress-clear-blog monorepo. Always refer back to these guidelines when uncertain, and prioritize code quality, maintainability, and user experience in all decisions.
+This document serves as a comprehensive guide for AI assistants working with the vitepress-theme-link monorepo. Always refer back to these guidelines when uncertain, and prioritize code quality, maintainability, and user experience in all decisions.
 
 For questions or clarifications, consult the project maintainer or refer to the official VitePress documentation at https://vitepress.dev.

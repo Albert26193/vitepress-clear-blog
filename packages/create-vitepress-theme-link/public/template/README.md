@@ -1,6 +1,6 @@
 # My Blog
 
-Powered by [VitePress Clear Blog](https://github.com/Albert26193/vitepress-clear-blog).
+Powered by [VitePress Theme Link](https://github.com/Albert26193/vitepress-theme-link).
 
 ## Getting Started
 

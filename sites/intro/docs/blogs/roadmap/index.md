@@ -17,7 +17,7 @@ description: 项目发展规划与功能迭代，包括已完成、进行中、�
 
 ```mermaid
 timeline
-    title vitepress-clear-blog 发展路线
+    title vitepress-theme-link 发展路线
     
     section 已完成
         基础框架 : Monorepo 架构

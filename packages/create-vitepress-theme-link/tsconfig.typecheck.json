@@ -5,8 +5,8 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "rootDir": ".",
-    "outDir": "../../.tsbuild/types/create-blog-template",
-    "tsBuildInfoFile": "../../.tsbuild/create-blog-template.tsbuildinfo"
+    "outDir": "../../.tsbuild/types/create-vitepress-theme-link",
+    "tsBuildInfoFile": "../../.tsbuild/create-vitepress-theme-link.tsbuildinfo"
   },
   "include": [
     "../../types/**/*.d.ts",

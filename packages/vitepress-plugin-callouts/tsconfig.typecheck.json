@@ -5,8 +5,8 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "rootDir": ".",
-    "outDir": "../../.tsbuild/types/vitepress-plugin-callout",
-    "tsBuildInfoFile": "../../.tsbuild/vitepress-plugin-callout.tsbuildinfo"
+    "outDir": "../../.tsbuild/types/vitepress-plugin-callouts",
+    "tsBuildInfoFile": "../../.tsbuild/vitepress-plugin-callouts.tsbuildinfo"
   },
   "include": [
     "../../types/**/*.d.ts",

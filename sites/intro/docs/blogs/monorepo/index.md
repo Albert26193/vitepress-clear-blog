@@ -18,13 +18,13 @@ description: 项目 Monorepo 架构设计，基于 pnpm workspace 的模块化�
 项目采用 pnpm workspace 实现 Monorepo 架构：
 
 ```
-vitepress-clear-blog/
+vitepress-theme-link/
 ├── packages/
 │   ├── docs/                          # 文档站点（博客）
 │   ├── intro/                         # 项目介绍文档
 │   ├── theme/                         # 核心主题包
 │   ├── vitepress-plugin-analyzer/     # 分析器插件
-│   ├── vitepress-plugin-callout/      # Callout 插件
+│   ├── vitepress-plugin-callouts/      # Callout 插件
 │   ├── vitepress-plugin-codeblock-fold/ # 代码折叠插件
 │   ├── vitepress-plugin-config/       # 配置工具插件
 │   ├── vitepress-plugin-details-block/ # Details 块插件

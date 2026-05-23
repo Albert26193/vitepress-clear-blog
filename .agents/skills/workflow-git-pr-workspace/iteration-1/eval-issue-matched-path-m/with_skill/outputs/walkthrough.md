@@ -26,6 +26,6 @@
 
 ## Step 5: Push + PR (real execution)
 - Branch: `issue-3-ai-agent-tooling` pushed
-- PR: [#5](https://github.com/Albert26193/vitepress-clear-blog/pull/5) — Closes #3
+- PR: [#5](https://github.com/Albert26193/vitepress-theme-link/pull/5) — Closes #3
 
 ## Verdict: ✅ Real-world execution matched the skill's expected behavior exactly

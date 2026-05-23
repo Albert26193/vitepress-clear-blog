@@ -1,10 +1,10 @@
 {
-  "name": "create-blog-template",
+  "name": "create-vitepress-theme-link",
   "version": "0.1.0",
   "type": "module",
-  "description": "Scaffold a VitePress Clear Blog project with one command",
+  "description": "Scaffold a VitePress Theme Link project with one command",
   "bin": {
-    "create-blog-template": "./bin/create-blog-template.js"
+    "create-vitepress-theme-link": "./bin/create-vitepress-theme-link.js"
   },
   "files": [
     "dist",

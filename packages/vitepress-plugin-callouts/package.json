@@ -1,5 +1,5 @@
 {
-  "name": "vitepress-plugin-callout",
+  "name": "vitepress-plugin-callouts",
   "version": "0.1.0",
   "description": "plugin for vitepress callout",
   "author": "Albert26193",

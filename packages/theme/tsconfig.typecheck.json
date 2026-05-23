@@ -20,7 +20,7 @@
   "exclude": ["node_modules", "lib", "dist", "test-results", "coverage"],
   "references": [
     { "path": "../vitepress-plugin-analyzer/tsconfig.typecheck.json" },
-    { "path": "../vitepress-plugin-callout/tsconfig.typecheck.json" },
+    { "path": "../vitepress-plugin-callouts/tsconfig.typecheck.json" },
     { "path": "../vitepress-plugin-codeblock-fold/tsconfig.typecheck.json" },
     { "path": "../vitepress-plugin-config/tsconfig.typecheck.json" },
     { "path": "../vitepress-plugin-details-block/tsconfig.typecheck.json" },

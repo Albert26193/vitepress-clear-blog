@@ -10,6 +10,6 @@
   },
   "dependencies": {
     "vitepress": "^1.6.4",
-    "vitepress-clear-blog": "^0.1.0"
+    "vitepress-theme-link": "^0.1.0"
   }
 }

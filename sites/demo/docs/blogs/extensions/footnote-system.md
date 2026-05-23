@@ -10,7 +10,7 @@ description: 标准脚注语法、富文本脚注、FooterRef 组件与悬停预
 
 # 脚注系统详解
 
-VitePress Clear Blog 的脚注系统基于 markdown-it-footnote，并提供 FooterRef 组件增强交互。
+VitePress Theme Link 的脚注系统基于 markdown-it-footnote，并提供 FooterRef 组件增强交互。
 
 ## 基础脚注语法
 

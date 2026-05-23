@@ -7,7 +7,7 @@ import {
   type ResolutionMode,
   vitePressAnalyzerPlugin
 } from 'vitepress-plugin-analyzer'
-import { calloutPlugin } from 'vitepress-plugin-callout'
+import { calloutPlugin } from 'vitepress-plugin-callouts'
 import {
   DEFAULT_BLOG,
   DEFAULT_HOMEPAGE,

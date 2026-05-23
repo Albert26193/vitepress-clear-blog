@@ -27,7 +27,7 @@ Callout 是 Obsidian 风格的提示块扩展，支持六种类型和折叠模�
 ## INFO
 
 > [!INFO]
-> VitePress Clear Blog 的 Callout 支持六个类型：
+> VitePress Theme Link 的 Callout 支持六个类型：
 > 1. NOTE — 普通备注
 > 2. TIP — 技巧建议
 > 3. INFO — 信息说明

@@ -53,7 +53,7 @@ export default {
 
 ```typescript
 // docs/.vitepress/theme/index.ts
-import Theme from 'vitepress-clear-blog'
+import Theme from 'vitepress-theme-link'
 
 export default Theme
 ```

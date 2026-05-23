@@ -56,14 +56,14 @@ graph TD
 
 | 包名 | 发布名 | 说明 |
 | ---- | ---- | ---- |
-| `theme` | `vitepress-clear-blog` | 主题核心，包含组件、样式、配置 |
+| `theme` | `vitepress-theme-link` | 主题核心，包含组件、样式、配置 |
 
 ### 插件包
 
 | 包名 | 功能 |
 | ---- | ---- |
 | `vitepress-plugin-analyzer` | 内容分析、统计 |
-| `vitepress-plugin-callout` | Obsidian 风格提示框 |
+| `vitepress-plugin-callouts` | Obsidian 风格提示框 |
 | `vitepress-plugin-codeblock-fold` | 代码块折叠 |
 | `vitepress-plugin-config` | 配置工具函数 |
 | `vitepress-plugin-details-block` | 折叠详情块 |
@@ -75,9 +75,9 @@ graph TD
 // docs/package.json
 {
   "dependencies": {
-    "vitepress-clear-blog": "workspace:*",
+    "vitepress-theme-link": "workspace:*",
     "vitepress-plugin-analyzer": "workspace:*",
-    "vitepress-plugin-callout": "workspace:*",
+    "vitepress-plugin-callouts": "workspace:*",
     "vitepress-plugin-config": "workspace:*"
   }
 }
