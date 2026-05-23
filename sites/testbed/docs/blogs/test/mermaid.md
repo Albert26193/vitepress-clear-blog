@@ -342,28 +342,28 @@ sankey-beta
 
 These examples intentionally use Mermaid syntax that the renderer cannot handle. They should render as error cards instead of breaking the page.
 
-### Unknown Diagram Type
+### No Diagram Type Declared
 
 ```mermaid
-diagramThatDoesNotExist
-  A --> B
-  B --> C
+this is not valid mermaid syntax at all
+just some random text
 ```
 
-### Invalid Graph Syntax
+### Invalid Graph with Broken Characters
 
 ```mermaid
 graph TD
   A[Start] --> B[Process]
-  B --> |unclosed string
+  B --> C[End
 ```
 
-### Invalid Sequence Participant Reference
+### Sequence Diagram with Undefined Actor
 
 ```mermaid
 sequenceDiagram
-  participant Alice
-  Alice->>NonexistentParticipant: Hello
+  Alice->>Bob: Hello
+  Bob-->>Alice: Hi
+  Alice->>UndefinedActor: This should fail
 ```
 
 ---
