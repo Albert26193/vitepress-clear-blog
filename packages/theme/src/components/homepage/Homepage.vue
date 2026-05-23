@@ -1,5 +1,5 @@
 <template>
-  <section class="homepage-container">
+  <section class="homepage-container slide-enter-content">
     <div class="pt-2">
       <h1 class="text">{{ homepageTitle }}</h1>
       <div class="homepage-second-line">
@@ -33,6 +33,9 @@
   .homepage-container {
     @apply flex flex-col items-center justify-evenly px-4;
     min-height: calc(100vh - var(--vp-nav-height) - 2rem);
+
+    --enter-animation: homepage-drop;
+    --enter-duration: 1.5s;
   }
 
   .homepage-container .text {
@@ -45,6 +48,18 @@
     @apply max-w-[620px] text-center;
     @apply text-xl leading-snug;
     @apply text-[var(--vp-c-text-2)];
+  }
+
+  /* top-down variant of the blog's slide-enter, same silky feel */
+  @keyframes homepage-drop {
+    0% {
+      transform: translateY(-30px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 
   @keyframes shimmer {

@@ -1,6 +1,6 @@
 <template>
   <div class="blog-list-pagination">
-    <div class="list-container slide-enter-content">
+    <div class="list-container slide-enter-content slide-enter-fast">
       <div v-for="(post, index) in currentPagePosts" :key="post.regularPath">
         <BlogListItem
           :post="post"

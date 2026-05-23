@@ -18,7 +18,7 @@
       --enter-stage: 0;
       --enter-step: 90ms;
       --enter-initial: 0ms;
-      animation: slide-enter 1s both 1;
+      animation: var(--enter-animation, slide-enter) var(--enter-duration, 1s) var(--enter-easing, ease) both 1;
       animation-delay: calc(
         var(--enter-initial) + var(--enter-stage) * var(--enter-step)
       );
@@ -32,6 +32,11 @@
       }
     }
   }
+
+  /* easing modes — add class to container to switch curve */
+  .slide-enter-fast {
+    --enter-easing: cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
 }
 
 /* VitePress specific animations */
@@ -42,7 +47,7 @@
         --enter-step: 30ms;
         --enter-initial: 0ms;
         opacity: 0;
-        animation: slide-enter 0.6s ease-out both;
+        animation: var(--enter-animation, slide-enter) 0.6s var(--enter-easing, ease-out) both;
       }
 
       /* Title and headers */
@@ -76,7 +81,7 @@
 
         > li {
           opacity: 0;
-          animation: slide-enter 0.3s ease-out both;
+          animation: var(--enter-animation, slide-enter) 0.3s var(--enter-easing, ease-out) both;
 
           // Apply sequential delays to list items
           $delay-base: calc(var(--enter-initial) + 6 * var(--enter-step));
@@ -122,7 +127,7 @@
 
     /* divider */
     > hr {
-      animation: slide-enter 0.8s ease-out both;
+      animation: var(--enter-animation, slide-enter) 0.8s var(--enter-easing, ease-out) both;
       animation-delay: calc(var(--enter-initial) + 9 * var(--enter-step));
     }
 
@@ -131,7 +136,7 @@
     > .footnote-badge-link,
     > .footnote-badge,
     > *:has(.footnote-ref) {
-      animation: slide-enter 1s ease-out both;
+      animation: var(--enter-animation, slide-enter) 1s var(--enter-easing, ease-out) both;
       animation-delay: calc(var(--enter-initial) + 7 * var(--enter-step));
     }
 
@@ -139,7 +144,7 @@
     > div > p .footnote-ref,
     > div > p a.footnote-badge-link,
     > div > p .footnote-badge {
-      animation: slide-enter 0.6s ease-out both;
+      animation: var(--enter-animation, slide-enter) 0.6s var(--enter-easing, ease-out) both;
       animation-delay: calc(var(--enter-initial) + 7 * var(--enter-step));
       opacity: 1;
     }
