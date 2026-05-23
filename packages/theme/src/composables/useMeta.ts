@@ -1,8 +1,11 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useData } from 'vitepress'
 import { type ComputedRef, computed, nextTick, provide } from 'vue'
 
 import { type PostFrontMatter } from '../types/types.d'
+
+dayjs.extend(customParseFormat)
 
 /**
  * Truncates description text based on content type and display context
@@ -320,7 +323,7 @@ const _checkTimeFormat = (date: string) => {
   if (date.split('-').length != 3) {
     return false
   }
-  if (moment(date).isValid()) {
+  if (dayjs(date, 'YYYY-MM-DD', true).isValid()) {
     return true
   }
   return false
@@ -340,7 +343,7 @@ const useTimeFormat = (date: string) => {
   const format = (theme.value as Record<string, unknown>).dateFormat as
     | string
     | undefined
-  return moment(date).format(format || 'MMM D, YYYY')
+  return dayjs(date).format(format || 'MMM D, YYYY')
 }
 
 export {
