@@ -5,6 +5,7 @@ export type {
   DatetimeConfig,
   HomepageConfig,
   LinksConfig,
+  MermaidRenderMode,
   OutlineConfig,
   ThemeConfig,
   TimelineConfig

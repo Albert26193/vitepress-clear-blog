@@ -338,30 +338,32 @@ sankey-beta
 
 ---
 
-## Block Diagram (SVG)
+## Negative Samples: Unsupported Mermaid Syntax
+
+These examples intentionally use Mermaid syntax that the renderer cannot handle. They should render as error cards instead of breaking the page.
+
+### Unknown Diagram Type
 
 ```mermaid
-block-beta
-  columns 3
-
-  block:UI
-    columns 2
-    A[Browser]
-    B[Mobile]
-  end
-
-  space
-
-  block:Logic
-    C[API Gateway]
-    D[Services]
-    E[Database]
-  end
-
-  A --> C
+diagramThatDoesNotExist
+  A --> B
   B --> C
-  C --> D
-  D --> E
+```
+
+### Invalid Graph Syntax
+
+```mermaid
+graph TD
+  A[Start] --> B[Process]
+  B --> |unclosed string
+```
+
+### Invalid Sequence Participant Reference
+
+```mermaid
+sequenceDiagram
+  participant Alice
+  Alice->>NonexistentParticipant: Hello
 ```
 
 ---
@@ -387,7 +389,7 @@ C4Context
   Rel(blog, analytics, "Reports metrics to")
 ```
 
-### C4 Container Diagram
+### C4 Container Diagram: Unsupported Nested Boundary Syntax
 
 ```mermaid
 C4Container
@@ -685,6 +687,33 @@ pie showData
 
 ## Mindmap: Plugin Feature Tree (SVG)
 
+This simplified mindmap is expected to render successfully in the current SVG pipeline.
+
+```mermaid
+mindmap
+  root((Plugin System))
+    Markdown Enhance
+      Wiki Links
+      Footnotes
+      Callouts
+    Visualization
+      Mermaid
+      MathJax
+    Code Display
+      Syntax Highlighting
+      Code Folding
+    SEO
+      Frontmatter
+      Sitemap
+      RSS
+```
+
+---
+
+## Negative Sample: Mindmap Link Syntax
+
+This example intentionally uses bracketed link-like labels that are not supported by the current Mermaid mindmap renderer.
+
 ```mermaid
 mindmap
   root((Plugin System))
@@ -695,29 +724,6 @@ mindmap
       Footnotes
         [[auto-numbering]]
         [[backlinks]]
-      Callouts
-        NOTE
-        WARNING
-        TIP
-        DANGER
-    Visualization
-      Mermaid
-        ASCII renderer
-        SVG renderer
-        Dark mode
-      MathJax
-        Inline math
-        Block math
-    Code Display
-      Syntax highlighting
-      Line numbers
-      Code folding
-      Copy button
-    SEO
-      Frontmatter
-      Sitemap
-      RSS
-      Open Graph
 ```
 
 ---
@@ -815,6 +821,55 @@ xychart-beta
   y-axis "Views" 0 --> 5000
   bar [3200, 4500, 4100, 4800, 4300, 2100, 1800]
   line [3000, 4200, 4000, 4600, 4500, 2200, 1700]
+```
+
+---
+
+## Complex State Diagram: Auto Repair Workflow (ASCII)
+
+This fixture validates a realistic state machine with multiline labels, terminal states, and guarded transitions.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Step1_Init
+
+    Step1_Init: Step 1 初始化\n创建 run-dir / 写 s1_issue.md
+    Step2_Intake: Step 2 信息量门禁\n写 s2_bug_context.md
+    Step3_Complexity: Step 3 复杂性门禁\n写 s3_feasibility.md
+    Step4_LocalVerify: Step 4 本地验证 best-effort\n写 s4_local_verify.md
+    Step5_RepairLoop: Step 5 Repair Loop\n最多 3 轮 attempt
+    Step6_Closeout: Step 6 Closeout\n写 s6_final_report.md / s6_comment.md
+
+    Fixed: FIXED\nbuild + MTR 通过
+    NeedsHuman: NEEDS_HUMAN\n信息不足 / 范围过大 / 验证失败
+    Failed: FAILED\n确认非代码 bug 或路线不可修复
+
+    Step1_Init --> Step6_Closeout: 无入口信息
+    Step1_Init --> Step2_Intake: 有 TAPD / Issue / 具体描述
+
+    Step2_Intake --> Step3_Complexity: PASS
+    Step2_Intake --> Step6_Closeout: FAIL / 信息不足
+
+    Step3_Complexity --> Step4_LocalVerify: PASS
+    Step3_Complexity --> Step6_Closeout: NEEDS_HUMAN / FAILED
+
+    Step4_LocalVerify --> Step5_RepairLoop: PASS / confirmed
+    Step4_LocalVerify --> Step5_RepairLoop: PASS / static_only
+    Step4_LocalVerify --> Step5_RepairLoop: PASS / skipped_intrinsic
+    Step4_LocalVerify --> Step5_RepairLoop: PASS / skipped_env
+    Step4_LocalVerify --> Step6_Closeout: NEEDS_HUMAN / inconclusive
+
+    Step5_RepairLoop --> Step5_RepairLoop: patch/build/MTR 失败\n且可归因本轮 patch\nattempt < 3
+    Step5_RepairLoop --> Step6_Closeout: MTR 通过
+    Step5_RepairLoop --> Step6_Closeout: attempt 超限 / 环境问题 / 证据不足
+
+    Step6_Closeout --> Fixed: 终态 FIXED\n自动 commit，不 push
+    Step6_Closeout --> NeedsHuman: 终态 NEEDS_HUMAN\n默认 iWiki + TAPD 写回
+    Step6_Closeout --> Failed: 终态 FAILED\n默认 iWiki + TAPD 写回
+
+    Fixed --> [*]
+    NeedsHuman --> [*]
+    Failed --> [*]
 ```
 
 ---

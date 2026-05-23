@@ -4,10 +4,6 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   resolve: {
     alias: {
-      'beautiful-mermaid/ascii': resolve(
-        __dirname,
-        'node_modules/beautiful-mermaid/src/ascii/index.ts'
-      ),
       'vitepress-plugin-analyzer/client': resolve(
         __dirname,
         '../vitepress-plugin-analyzer/src/client/index.ts'

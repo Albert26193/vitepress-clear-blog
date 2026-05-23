@@ -1,7 +1,8 @@
-import type { AsciiRenderOptions } from 'beautiful-mermaid/ascii'
+import type { AsciiRenderOptions } from 'beautiful-mermaid'
 import type { ExternalDiagramDefinition, MermaidConfig } from 'mermaid'
 
-type MermaidRenderer = 'ascii' | 'mermaid'
+type MermaidRenderer = 'ascii' | 'beautiful-svg' | 'mermaid'
+type MermaidRenderMode = 'auto' | 'ascii' | 'svg'
 
 type MermaidRenderErrorCode = 'MERMAID_RENDER_FAILED'
 
@@ -38,6 +39,18 @@ const selectMermaidRenderer = (code: string): MermaidRenderer => {
   return 'mermaid'
 }
 
+const resolveMermaidRenderer = (
+  code: string,
+  mode: MermaidRenderMode
+): MermaidRenderer => {
+  if (mode === 'ascii') return 'ascii'
+  if (mode === 'svg') {
+    return selectMermaidRenderer(code) === 'ascii' ? 'beautiful-svg' : 'mermaid'
+  }
+
+  return selectMermaidRenderer(code)
+}
+
 const init = async (externalDiagrams: ExternalDiagramDefinition[]) => {
   try {
     const mermaid = await import('mermaid')
@@ -72,6 +85,13 @@ const cleanupMermaidRenderContainer = (id: string): void => {
   document.getElementById(`d${id}`)?.remove()
 }
 
+const renderWithBeautifulMermaidSvg = async (
+  code: string
+): Promise<MermaidRenderResult> => {
+  const { renderMermaidSVG } = await import('beautiful-mermaid')
+  return toSvgRenderResult(renderMermaidSVG(code))
+}
+
 const renderWithMermaid = async (
   id: string,
   code: string,
@@ -99,18 +119,23 @@ const renderWithMermaid = async (
 const render = async (
   id: string,
   code: string,
-  config: MermaidConfig = { startOnLoad: false }
+  config: MermaidConfig = { startOnLoad: false },
+  mode: MermaidRenderMode = 'auto'
 ): Promise<MermaidRenderResult> => {
-  if (selectMermaidRenderer(code) === 'ascii') {
-    const { renderMermaidASCII } = await import('beautiful-mermaid/ascii')
+  const renderer = resolveMermaidRenderer(code, mode)
+
+  if (renderer === 'ascii') {
+    const { renderMermaidASCII } = await import('beautiful-mermaid')
     return {
       type: 'ascii',
       content: renderMermaidASCII(code, BEAUTIFUL_MERMAID_ASCII_OPTIONS)
     }
   }
 
+  if (renderer === 'beautiful-svg') return renderWithBeautifulMermaidSvg(code)
+
   return renderWithMermaid(id, code, config)
 }
 
 export { init, render, selectMermaidRenderer }
-export type { MermaidRenderer, MermaidRenderResult }
+export type { MermaidRenderer, MermaidRenderMode, MermaidRenderResult }

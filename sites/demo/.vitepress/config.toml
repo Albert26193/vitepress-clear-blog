@@ -45,6 +45,7 @@ wikilinks = true
 footnote = true
 hashtag = true
 mermaid = true
+mermaid_render = "svg"
 callout = true
 render_title = "frontmatter_title"
 link_style = "wiki"

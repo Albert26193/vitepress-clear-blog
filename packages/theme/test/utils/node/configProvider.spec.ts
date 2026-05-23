@@ -121,7 +121,8 @@ describe('createBlog with mocked config.toml', async () => {
       wikilinks: true,
       footnote: false,
       render_title: 'frontmatter_title',
-      link_style: 'wiki'
+      link_style: 'wiki',
+      mermaid_render: 'svg'
     },
     theme: { 'vp-c-brand': '#ff0000', dark: { 'vp-c-brand': '#00ff00' } }
   }
@@ -298,27 +299,17 @@ describe('createBlog with mocked config.toml', async () => {
     expect((config as any).themeConfig.nav[0].text).toBe('Home')
   })
 
-  it('invokes markdown config callback with md instance', async () => {
-    const toml = {
-      meta: { title: 'MD Test', siteUrl: '' },
-      page: {},
-      markdown: {
-        mathjax: true,
-        wikilinks: true,
-        footnote: true,
-        hashtag: true,
-        mermaid: true,
-        callout: true
-      },
-      theme: {}
-    }
-    mockLoadConfig.mockReturnValue(toml)
+  it('passes configured mermaid render mode to markdown plugin', async () => {
     const config = await createBlog()
     const mdConfig = (config as any).markdown.config
-    expect(typeof mdConfig).toBe('function')
     const mockMd = { use: vi.fn(), renderer: { rules: {} } }
+
     mdConfig(mockMd)
-    expect(mockMd.use).toHaveBeenCalled()
+
+    expect(mockMd.use).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({ renderMode: 'svg' })
+    )
   })
 
   it('respects markdown boolean flags set to false', async () => {

@@ -254,7 +254,9 @@ const createBlog = async (
       }
       if (mdConf.footnote !== false) md.use(footnotePlugin)
       if (mdConf.hashtag !== false) md.use(hashtagPlugin)
-      if (mdConf.mermaid !== false) md.use(mermaidPlugin)
+      if (mdConf.mermaid !== false) {
+        md.use(mermaidPlugin, { renderMode: mdConf.mermaid_render || 'auto' })
+      }
       if (mdConf.callout !== false) md.use(calloutPlugin)
       const imageDimensionOptions = resolveImageDimensionOptions(
         mdConf.image_dimension

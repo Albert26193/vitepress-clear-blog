@@ -48,6 +48,7 @@ Enable or disable markdown extensions:
 [markdown]
 mathjax = true
 mermaid = true
+mermaid_render = "svg" # auto | ascii | svg
 footnote = true
 ```
 

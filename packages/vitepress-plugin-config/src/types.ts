@@ -1,3 +1,5 @@
+export type MermaidRenderMode = 'auto' | 'ascii' | 'svg'
+
 /**
  * Describes custom CSS variable overrides for both light and dark theme modes.
  */
@@ -96,6 +98,7 @@ export interface ConfigToml {
     footnote?: boolean
     hashtag?: boolean
     mermaid?: boolean
+    mermaid_render?: MermaidRenderMode
     callout?: boolean
     image_dimension?: boolean | ImageDimensionTomlConfig
     render_title?: 'frontmatter_title' | 'first_heading' | 'alias' | 'file_name'
