@@ -391,7 +391,7 @@ Closes #<N>
 
 ## Preview
 - Standard entry: `<route reviewers should inspect>`
-- Local build preview: run `bash .agents/skills/tool-pnpm/scripts/build_preview.sh`
+- Local build preview: run `bash .agents/skills/tool-preview/scripts/start-preview.sh --mode preview`
 
 ## Test plan
 - [ ] <verification steps>
@@ -423,27 +423,28 @@ The script will:
 
 The PR title should match the commit subject line.
 
-### Step 7: Build preview — invoke `tool-pnpm` + `build_preview.sh`
+### Step 7: Build preview — invoke `tool-preview`
 
 After push, start a production-build preview and leave it running as the local
 human-review entry point for this PR. This intentionally uses built VitePress
 output instead of watcher-based `pnpm dev`, and the exposed local port is meant
 for a human reviewer to open in a browser before the PR is merged or abandoned.
 
-**Invoke the tool-pnpm skill** to confirm the build preview command, then run:
+**Invoke the tool-preview skill** with preview mode:
 
 ```bash
-bash .agents/skills/tool-pnpm/scripts/build_preview.sh
+bash .agents/skills/tool-preview/scripts/start-preview.sh --mode preview --site testbed
 ```
 
 What it does:
-1. Runs `pnpm build:testbed` by default.
-2. Starts `pnpm preview:testbed` against the built output on `0.0.0.0:4173` by default.
-3. Waits up to 60 seconds for the preview server URL.
-4. Prints a compact table with the local preview URL, startup time, and log file.
-5. Keeps the preview server running for human browser review.
+1. Auto-allocates a free port starting from 5000.
+2. Runs `pnpm build:testbed` to produce a production build.
+3. Starts the preview server against the built output.
+4. Waits up to 60 seconds for the preview server URL.
+5. Prints a compact table with the local preview URL, port, mode, and log file.
+6. Keeps the preview server running for human browser review.
 
-Keep this local preview alive until the PR is merged, abandoned, or no longer needs visual inspection. The post-PR cleanup workflow is responsible for stopping the repo-scoped preview process.
+Keep this local preview alive until the PR is merged, abandoned, or no longer needs visual inspection. The post-PR cleanup workflow (`tool-post-pr`) is responsible for stopping the repo-scoped preview process.
 
 If the build preview fails:
 
@@ -456,7 +457,7 @@ If the build preview fails:
 The build preview must be running and accessible for human review before proceeding to CI verification.
 
 When writing the PR body and final report, distinguish clearly between:
-- **Local build preview**: a running local server from `build_preview.sh` for human browser inspection.
+- **Local build preview**: a running local server from `start-preview.sh --mode preview` for human browser inspection.
 - **Standard preview entry**: the built testbed route reviewers should inspect, for example `/blogs/test/mermaid.html` for Mermaid changes or `/` for broad theme changes.
 
 ### Step 8: CI verification — invoke `tool-ci-check`

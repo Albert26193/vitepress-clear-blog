@@ -102,7 +102,7 @@ const getThemeConfig = async (
           }
         }
       },
-      server: { port: 4000, watch: { usePolling: true } },
+      server: { watch: { usePolling: true } },
       optimizeDeps: {
         exclude: ['gzip-size']
       },

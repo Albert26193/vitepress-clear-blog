@@ -63,7 +63,7 @@ describe('getThemeConfig', async () => {
     const config = await getThemeConfig()
     const vite = (config as any).vite
     expect(vite.server).toBeDefined()
-    expect(vite.server.port).toBe(4000)
+    expect(vite.server.port).toBeUndefined()
     expect(vite.server.watch.usePolling).toBe(true)
   })
 
