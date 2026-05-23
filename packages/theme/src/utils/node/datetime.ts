@@ -1,8 +1,11 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { parse } from 'smol-toml'
 import type { DatetimeConfig } from 'vitepress-plugin-config'
+
+dayjs.extend(customParseFormat)
 
 const CONFIG_PATH = '.vitepress/config.toml'
 
@@ -52,7 +55,7 @@ export function resolveDate(
     const value = frontmatter[field]
     // VitePress frontmatter parser may convert date-like strings to Date objects
     if (value instanceof Date && !isNaN(value.getTime())) {
-      dateValue = moment(value).format(DEFAULT_OUTPUT)
+      dateValue = dayjs(value).format(DEFAULT_OUTPUT)
       break
     }
     if (typeof value === 'string' && value.trim()) {
@@ -62,10 +65,10 @@ export function resolveDate(
   }
   if (!dateValue) return undefined
 
-  // Phase 2: strict format matching via moment.
+  // Phase 2: strict format matching via dayjs.
   // Always normalize to YYYY-MM-DD so Timeline and year/month grouping
   // remain stable regardless of the configured outputFormat.
-  const parsed = moment(dateValue, formats, true)
+  const parsed = dayjs(dateValue, [...formats], true)
   if (parsed.isValid()) {
     return parsed.format(DEFAULT_OUTPUT)
   }
@@ -73,7 +76,7 @@ export function resolveDate(
   // Phase 3: fallback — let the runtime parse it (matches current behavior)
   const fallback = new Date(dateValue)
   if (!isNaN(fallback.getTime())) {
-    return moment(fallback).format(DEFAULT_OUTPUT)
+    return dayjs(fallback).format(DEFAULT_OUTPUT)
   }
 
   return undefined

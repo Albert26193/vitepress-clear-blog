@@ -75,7 +75,7 @@
     "lodash": "^4.17.21",
     "markdown-it": "^14.1.0",
     "markdown-link-extractor": "^4.0.3",
-    "moment": "^2.30.1",
+    "dayjs": "^1.11.13",
     "sass": "^1.97.2",
     "smol-toml": "^1.6.0",
     "vite": "^7.3.1",

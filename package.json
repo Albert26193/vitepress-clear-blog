@@ -16,7 +16,7 @@
         "build:testbed": "pnpm -F=testbed build",
         "dev": "pnpm --stream '/(dev:packages|dev:testbed)/'",
         "dev:testbed": "pnpm -F=testbed dev",
-        "dev:packages": "pnpm --parallel dev",
+        "dev:packages": "pnpm build:plugins && pnpm --parallel dev",
         "dev:unocss": "unocss --config ./packages/theme/uno.config.ts \"../theme/src/**/*.{vue,html,md,svelte,ts,jsx,tsx}\" --out-file ./sites/testbed/.vitepress/theme/styles/uno.css --watch",
         "test": "pnpm test:unit && pnpm test:e2e",
         "test:unit": "pnpm -r test:unit",
