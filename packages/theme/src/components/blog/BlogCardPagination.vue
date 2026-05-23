@@ -1,6 +1,6 @@
 <template>
   <div class="blog-card-pagination">
-    <div class="card-container slide-enter-content">
+    <div class="card-container slide-enter-content slide-enter-fast">
       <div v-for="post in currentPagePosts" :key="post.regularPath">
         <BlogCardItem :post="post"></BlogCardItem>
       </div>
