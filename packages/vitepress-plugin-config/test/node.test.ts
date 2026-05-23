@@ -158,10 +158,10 @@ title = "test"
     await generateThemeFile(configPath)
     const css = readCss()
 
-    // All defaults
-    expect(css).toContain('--vp-c-bg: #fff')
-    expect(css).toContain('--vp-c-brand: #f00')
-    expect(css).toContain('--vp-c-text-1: #000')
+    // All defaults (Obsidian palette)
+    expect(css).toContain('--vp-c-bg: #ffffff')
+    expect(css).toContain('--vp-c-brand: #9873f7')
+    expect(css).toContain('--vp-c-text-1: #222222')
   })
 })
 
@@ -194,8 +194,8 @@ describe('generateThemeFile with pre-parsed config', () => {
     const css = readCss()
 
     expect(css).toContain('--vp-c-brand: #abc123')
-    expect(css).toContain('--vp-c-bg: #fff') // default
-    expect(css).toContain('--vp-c-text-1: #000') // default
+    expect(css).toContain('--vp-c-bg: #ffffff') // default (Obsidian)
+    expect(css).toContain('--vp-c-text-1: #222222') // default (Obsidian)
   })
 
   it('handles dark theme in pre-parsed config', async () => {

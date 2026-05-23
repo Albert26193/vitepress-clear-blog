@@ -5,14 +5,20 @@ export type MermaidRenderMode = 'auto' | 'ascii' | 'svg'
  */
 export interface ThemeConfig {
   'vp-c-bg'?: string
+  'vp-c-bg-alt'?: string
   'vp-c-brand'?: string
   'vp-c-brand-1'?: string
+  'vp-c-brand-2'?: string
   'vp-c-text-1'?: string
+  'vp-c-text-2'?: string
+  'vp-c-divider'?: string
   'vp-button-brand-bg'?: string
+  'vp-code-bg'?: string
+  'vp-code-block-bg'?: string
+  'vp-sidebar-bg-color'?: string
   'c-text-code'?: string
   'c-text-strong'?: string
   'c-text-em'?: string
-  'vp-sidebar-bg-color'?: string
   dark?: ThemeConfig
 }
 
