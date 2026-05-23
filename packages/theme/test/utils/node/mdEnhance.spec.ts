@@ -21,6 +21,7 @@ describe('mermaidPlugin', () => {
     expect(result).toContain('<PostMermaid')
     expect(result).toContain('id="mermaid-0"')
     expect(result).toContain('code=')
+    expect(result).toContain('mode="auto"')
   })
 
   it('URL-encodes mermaid diagram content', () => {
@@ -82,6 +83,22 @@ describe('mermaidPlugin', () => {
       md.renderer
     )
     expect(result).toContain('<PostMermaid')
+  })
+
+  it('passes configured render mode to PostMermaid component', () => {
+    const md = new MarkdownIt()
+    mermaidPlugin(md, { renderMode: 'svg' })
+
+    const tokens = md.parse('```mermaid\ngraph TD; A-->B;\n```\n', {})
+    const result = md.renderer.rules.fence!(
+      tokens,
+      0,
+      md.options,
+      {},
+      md.renderer
+    )
+
+    expect(result).toContain('mode="svg"')
   })
 
   it('handles empty mermaid content', () => {

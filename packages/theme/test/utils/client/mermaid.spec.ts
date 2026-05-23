@@ -1,13 +1,14 @@
 /**
  * @vitest-environment jsdom
  */
-import { renderMermaidASCII } from 'beautiful-mermaid/ascii'
+import { renderMermaidASCII, renderMermaidSVG } from 'beautiful-mermaid'
 import mermaid from 'mermaid'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { init } from '../../../src/utils/client/mermaid'
 
-vi.mock('beautiful-mermaid/ascii', () => ({
+vi.mock('beautiful-mermaid', () => ({
+  renderMermaidSVG: vi.fn(() => '<svg>beautiful</svg>'),
   renderMermaidASCII: vi.fn(() => '+---+ +---+\n| A | | B |\n+---+ +---+')
 }))
 
@@ -94,6 +95,74 @@ describe('selectMermaidRenderer', () => {
 })
 
 describe('render', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+  it('keeps auto mode as the default rendering behavior', async () => {
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    await testRender('test-id', 'graph TD\nA-->B')
+
+    expect(renderMermaidASCII).toHaveBeenCalledWith('graph TD\nA-->B', {
+      useAscii: true,
+      colorMode: 'none'
+    })
+    expect(mermaid.initialize).not.toHaveBeenCalled()
+  })
+
+  it('forces ascii mode for diagrams that auto would render as svg', async () => {
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    const result = await testRender(
+      'test-id',
+      'gantt\ntitle Roadmap',
+      { startOnLoad: false },
+      'ascii'
+    )
+
+    expect(result.type).toBe('ascii')
+    expect(renderMermaidASCII).toHaveBeenCalledWith('gantt\ntitle Roadmap', {
+      useAscii: true,
+      colorMode: 'none'
+    })
+    expect(mermaid.initialize).not.toHaveBeenCalled()
+  })
+
+  it('forces svg mode through beautiful-mermaid for supported diagrams', async () => {
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    const result = await testRender(
+      'test-id',
+      'graph TD\nA-->B',
+      { startOnLoad: false },
+      'svg'
+    )
+
+    expect(result).toEqual({ type: 'svg', content: '<svg>beautiful</svg>' })
+    expect(renderMermaidSVG).toHaveBeenCalledWith('graph TD\nA-->B')
+    expect(mermaid.render).not.toHaveBeenCalled()
+    expect(renderMermaidASCII).not.toHaveBeenCalled()
+  })
+
+  it('falls back to original mermaid svg for diagrams unsupported by beautiful-mermaid auto path', async () => {
+    ;(mermaid.render as any).mockResolvedValueOnce({
+      svg: '<svg>original</svg>'
+    })
+
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    const result = await testRender(
+      'test-id',
+      'pie\ntitle Pets',
+      { startOnLoad: false },
+      'svg'
+    )
+
+    expect(result).toEqual({ type: 'svg', content: '<svg>original</svg>' })
+    expect(mermaid.render).toHaveBeenCalledWith('test-id', 'pie\ntitle Pets')
+    expect(renderMermaidSVG).not.toHaveBeenCalled()
+  })
+
   it('renders supported diagrams as ascii text', async () => {
     const { render: testRender } =
       await import('../../../src/utils/client/mermaid')
@@ -179,6 +248,20 @@ describe('render', () => {
     await testRender('test-id', 'gantt\ninvalid')
 
     expect(document.getElementById('dtest-id')).toBeNull()
+  })
+
+  it('returns a generic error result when mermaid rejects with a non-error value', async () => {
+    ;(mermaid.render as any).mockRejectedValueOnce('invalid')
+
+    const { render: testRender } =
+      await import('../../../src/utils/client/mermaid')
+    const result = await testRender('test-id', 'gantt\ninvalid')
+
+    expect(result).toEqual({
+      type: 'error',
+      code: 'MERMAID_RENDER_FAILED',
+      message: 'Mermaid render failed'
+    })
   })
 
   it('returns an error result when mermaid rendering fails', async () => {

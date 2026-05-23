@@ -81,9 +81,6 @@
             "ignoreMissing": [
                 "typescript"
             ]
-        },
-        "patchedDependencies": {
-            "beautiful-mermaid": "patches/beautiful-mermaid.patch"
         }
     }
 }

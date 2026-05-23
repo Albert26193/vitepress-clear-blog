@@ -46,12 +46,15 @@ const imageDimensionSchema = z.object({
   presets: z.record(z.string(), dimensionPresetSchema).optional()
 })
 
+const mermaidRenderModeSchema = z.enum(['auto', 'ascii', 'svg'])
+
 const markdownSchema = z.object({
   mathjax: z.boolean().optional(),
   wikilinks: z.boolean().optional(),
   footnote: z.boolean().optional(),
   hashtag: z.boolean().optional(),
   mermaid: z.boolean().optional(),
+  mermaid_render: mermaidRenderModeSchema.optional(),
   callout: z.boolean().optional(),
   image_dimension: z.union([z.boolean(), imageDimensionSchema]).optional(),
   render_title: z

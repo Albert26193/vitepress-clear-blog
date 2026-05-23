@@ -98,6 +98,15 @@
   }
 
   .heti code,
+  .heti pre,
+  .heti kbd,
+  .heti samp {
+    letter-spacing: normal;
+    text-align: initial;
+    text-indent: 0;
+  }
+
+  .heti code,
   .heti pre {
     margin-inline-start: 0.25em;
     margin-inline-end: 0.25em;

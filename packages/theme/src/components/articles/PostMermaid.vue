@@ -8,6 +8,7 @@
     <div v-else-if="renderError" class="mermaid-error" role="alert">
       <p class="mermaid-error-title">Mermaid diagram failed to render.</p>
       <p class="mermaid-error-code">{{ renderError.code }}</p>
+      <p class="mermaid-error-message">{{ renderError.message }}</p>
     </div>
     <img
       v-else-if="imgSrc"
@@ -23,7 +24,11 @@
 <script setup lang="ts">
   import { type PropType, computed, onMounted, shallowRef } from 'vue'
 
-  import { type MermaidRenderResult, render } from '../../utils/client/mermaid'
+  import {
+    type MermaidRenderMode,
+    type MermaidRenderResult,
+    render
+  } from '../../utils/client/mermaid'
 
   interface SvgDimensions {
     width: number | null
@@ -46,6 +51,10 @@
     code: {
       type: String as PropType<string>,
       required: true
+    },
+    mode: {
+      type: String as PropType<MermaidRenderMode>,
+      default: 'auto'
     }
   })
 
@@ -116,7 +125,14 @@
   }
 
   onMounted(async (): Promise<void> => {
-    applyRenderResult(await render(props.id, decodeURIComponent(props.code)))
+    applyRenderResult(
+      await render(
+        props.id,
+        decodeURIComponent(props.code),
+        { startOnLoad: false },
+        props.mode
+      )
+    )
   })
 
   const diagramLabel = computed(() => `Mermaid diagram: ${props.id}`)
@@ -133,6 +149,10 @@
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
+  }
+
+  .mermaid-diagram:has(.mermaid-ascii) {
+    overflow-x: visible;
   }
 
   .mermaid-ascii {
@@ -172,23 +192,24 @@
     font-weight: 600;
   }
 
-  .mermaid-error-code {
+  .mermaid-error-code,
+  .mermaid-error-message {
     margin: 0.5rem 0 0;
     font-family: var(--vp-font-family-mono);
     font-size: 0.875rem;
   }
 
   .mermaid-img {
-    min-width: 400px;
     max-width: 100%;
+    max-height: min(70vh, 900px);
     height: auto;
     margin: 0 auto;
     display: block;
+    object-fit: contain;
   }
 
   @media (min-width: 768px) {
-    .mermaid-ascii,
-    .mermaid-img {
+    .mermaid-ascii {
       min-width: 600px;
     }
   }

@@ -34,6 +34,7 @@ describe('configTomlSchema', () => {
         footnote: true,
         hashtag: true,
         mermaid: true,
+        mermaid_render: 'auto',
         callout: true,
         render_title: 'frontmatter_title',
         link_style: 'wiki'
@@ -136,6 +137,32 @@ describe('markdown link_style', () => {
     const result = configTomlSchema.safeParse({
       theme: {},
       markdown: { link_style: true }
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('markdown mermaid_render', () => {
+  it.each(['auto', 'ascii', 'svg'])('accepts mermaid_render = "%s"', (mode) => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { mermaid_render: mode }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects invalid mermaid_render values', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { mermaid_render: 'png' }
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-string mermaid_render values', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { mermaid_render: true }
     })
     expect(result.success).toBe(false)
   })

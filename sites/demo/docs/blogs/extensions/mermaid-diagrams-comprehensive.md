@@ -113,6 +113,53 @@ stateDiagram-v2
     Archived --> [*]
 ```
 
+## 复杂状态机：自动修复流程
+
+这个示例用于验证复杂状态机、换行标签、分支终态和真实工作流转移。
+
+```mermaid
+stateDiagram-v2
+    [*] --> Step1_Init
+
+    Step1_Init: Step 1 初始化\n创建 run-dir / 写 s1_issue.md
+    Step2_Intake: Step 2 信息量门禁\n写 s2_bug_context.md
+    Step3_Complexity: Step 3 复杂性门禁\n写 s3_feasibility.md
+    Step4_LocalVerify: Step 4 本地验证 best-effort\n写 s4_local_verify.md
+    Step5_RepairLoop: Step 5 Repair Loop\n最多 3 轮 attempt
+    Step6_Closeout: Step 6 Closeout\n写 s6_final_report.md / s6_comment.md
+
+    Fixed: FIXED\nbuild + MTR 通过
+    NeedsHuman: NEEDS_HUMAN\n信息不足 / 范围过大 / 验证失败
+    Failed: FAILED\n确认非代码 bug 或路线不可修复
+
+    Step1_Init --> Step6_Closeout: 无入口信息
+    Step1_Init --> Step2_Intake: 有 TAPD / Issue / 具体描述
+
+    Step2_Intake --> Step3_Complexity: PASS
+    Step2_Intake --> Step6_Closeout: FAIL / 信息不足
+
+    Step3_Complexity --> Step4_LocalVerify: PASS
+    Step3_Complexity --> Step6_Closeout: NEEDS_HUMAN / FAILED
+
+    Step4_LocalVerify --> Step5_RepairLoop: PASS / confirmed
+    Step4_LocalVerify --> Step5_RepairLoop: PASS / static_only
+    Step4_LocalVerify --> Step5_RepairLoop: PASS / skipped_intrinsic
+    Step4_LocalVerify --> Step5_RepairLoop: PASS / skipped_env
+    Step4_LocalVerify --> Step6_Closeout: NEEDS_HUMAN / inconclusive
+
+    Step5_RepairLoop --> Step5_RepairLoop: patch/build/MTR 失败\n且可归因本轮 patch\nattempt < 3
+    Step5_RepairLoop --> Step6_Closeout: MTR 通过
+    Step5_RepairLoop --> Step6_Closeout: attempt 超限 / 环境问题 / 证据不足
+
+    Step6_Closeout --> Fixed: 终态 FIXED\n自动 commit，不 push
+    Step6_Closeout --> NeedsHuman: 终态 NEEDS_HUMAN\n默认 iWiki + TAPD 写回
+    Step6_Closeout --> Failed: 终态 FAILED\n默认 iWiki + TAPD 写回
+
+    Fixed --> [*]
+    NeedsHuman --> [*]
+    Failed --> [*]
+```
+
 ## 实体关系图
 
 ```mermaid

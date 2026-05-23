@@ -1,6 +1,7 @@
 import MarkdownIt, { type Options } from 'markdown-it'
 import taskLists from 'markdown-it-task-lists'
 import type Token from 'markdown-it/lib/token.mjs'
+import type { MermaidRenderMode } from 'vitepress-plugin-config'
 
 const renderFootnoteContent = (
   md: MarkdownIt,
@@ -151,20 +152,29 @@ const getFooterRefTag = (md: MarkdownIt) => {
   }
 }
 
+interface MermaidPluginOptions {
+  renderMode?: MermaidRenderMode
+}
+
 /**
  * Replaces Mermaid fences with the theme renderer component so diagrams hydrate inside VitePress pages.
  *
  * @param md - Markdown-it instance whose fence renderer should be extended.
+ * @param pluginOptions - Mermaid renderer options passed from config.toml.
  * @returns Nothing; renderer rules are registered on the provided Markdown-it instance.
  */
-const mermaidPlugin = (md: MarkdownIt): void => {
+const mermaidPlugin = (
+  md: MarkdownIt,
+  pluginOptions: MermaidPluginOptions = {}
+): void => {
+  const renderMode = pluginOptions.renderMode || 'auto'
   const fence = md.renderer.rules.fence?.bind(md.renderer.rules)
   md.renderer.rules.fence = (tokens, idx, options, env, self) => {
     const token = tokens[idx]
     const language = token.info.trim()
 
     if (language.startsWith('mermaid')) {
-      return `<PostMermaid id="mermaid-${idx}" code="${encodeURIComponent(token.content)}"></PostMermaid>`
+      return `<PostMermaid id="mermaid-${idx}" code="${encodeURIComponent(token.content)}" mode="${renderMode}"></PostMermaid>`
     }
     return fence?.(tokens, idx, options, env, self) || ''
   }
