@@ -1,4 +1,4 @@
-import * as d3 from 'd3'
+import { scalePow } from 'd3-scale'
 
 import type { D3Link, D3Node } from '../../types/types.d'
 
@@ -40,8 +40,7 @@ export function calculateNodeRatios(
   const domain = [1, 10]
 
   // 2. Create a power scale function for an accelerating growth curve.
-  const ratioScale = d3
-    .scalePow()
+  const ratioScale = scalePow()
     .exponent(2) // Use a quadratic scale for acceleration.
     .domain(domain) // Use the fixed domain.
     .range([minRatio, maxRatio]) // Map to the desired ratio range [1, 2].

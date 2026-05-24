@@ -1,4 +1,10 @@
-import * as d3Type from 'd3'
+import type { D3DragEvent } from 'd3-drag'
+import { drag } from 'd3-drag'
+import type { Simulation } from 'd3-force'
+import type { Selection } from 'd3-selection'
+import { select } from 'd3-selection'
+import type { ZoomBehavior } from 'd3-zoom'
+import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom'
 
 import type { D3Link, D3Node } from '../../types/types'
 
@@ -29,8 +35,8 @@ export interface DragConfig {
  * focused node. Pass `null` to reset every element to its default appearance.
  */
 export function updateNodeHighlight(
-  node: d3Type.Selection<SVGGElement, D3Node, SVGGElement, unknown>,
-  link: d3Type.Selection<SVGLineElement, D3Link, SVGGElement, unknown>,
+  node: Selection<SVGGElement, D3Node, SVGGElement, unknown>,
+  link: Selection<SVGLineElement, D3Link, SVGGElement, unknown>,
   focused: D3Node | null,
   textSize: number
 ): void {
@@ -40,7 +46,7 @@ export function updateNodeHighlight(
       .classed('d3-force-node-dim', false)
       .classed('d3-force-node-active', false)
       .each(function () {
-        d3Type.select(this).select('text').style('font-size', `${textSize}px`)
+        select(this).select('text').style('font-size', `${textSize}px`)
       })
     link
       .classed('d3-force-link-highlight', false)
@@ -62,8 +68,7 @@ export function updateNodeHighlight(
     .classed('d3-force-node-active', (n) => n === focused)
     .classed('d3-force-node-dim', (n) => n !== focused && !connected.has(n))
     .each(function (n) {
-      d3Type
-        .select(this)
+      select(this)
         .select('text')
         .style('font-size', n === focused ? '1.4rem' : `${textSize}px`)
     })
@@ -90,13 +95,13 @@ export function updateNodeHighlight(
  * transform with {@link applyInitialZoom}.
  */
 export function createZoom(
-  svg: d3Type.Selection<SVGSVGElement, unknown, null, undefined>,
-  g: d3Type.Selection<SVGGElement, unknown, null, undefined>,
+  svg: Selection<SVGSVGElement, unknown, null, undefined>,
+  g: Selection<SVGGElement, unknown, null, undefined>,
   width: number,
   height: number,
   config: ZoomConfig,
   onZoom?: (scale: number) => void
-): d3Type.ZoomBehavior<SVGSVGElement, unknown> {
+): ZoomBehavior<SVGSVGElement, unknown> {
   const {
     scaleExtent = [0.1, 2.0],
     translateExtent = [
@@ -106,8 +111,7 @@ export function createZoom(
     initialScale = 1
   } = config
 
-  const zoom = d3Type
-    .zoom<SVGSVGElement, unknown>()
+  const zoom = d3Zoom<SVGSVGElement, unknown>()
     .scaleExtent(scaleExtent)
     .translateExtent(translateExtent)
     .on('zoom', (event) => {
@@ -120,10 +124,7 @@ export function createZoom(
   // Apply initial zoom with center positioning
   const tx = (width * (1 - initialScale)) / 2
   const ty = (height * (1 - initialScale)) / 2
-  svg.call(
-    zoom.transform,
-    d3Type.zoomIdentity.translate(tx, ty).scale(initialScale)
-  )
+  svg.call(zoom.transform, zoomIdentity.translate(tx, ty).scale(initialScale))
 
   return zoom
 }
@@ -139,9 +140,9 @@ export function createZoom(
  * Highlight state is updated at the start and end of every interaction.
  */
 export function createDrag(
-  node: d3Type.Selection<SVGGElement, D3Node, SVGGElement, unknown>,
-  link: d3Type.Selection<SVGLineElement, D3Link, SVGGElement, unknown>,
-  simulation: d3Type.Simulation<D3Node, D3Link>,
+  node: Selection<SVGGElement, D3Node, SVGGElement, unknown>,
+  link: Selection<SVGLineElement, D3Link, SVGGElement, unknown>,
+  simulation: Simulation<D3Node, D3Link>,
   textSize: number,
   config: DragConfig,
   onNodeClick?: (d: D3Node) => void
@@ -149,9 +150,7 @@ export function createDrag(
   let isDragging = false
   let startPos = { x: 0, y: 0 }
 
-  const dragStarted = (
-    event: d3Type.D3DragEvent<SVGGElement, D3Node, D3Node>
-  ) => {
+  const dragStarted = (event: D3DragEvent<SVGGElement, D3Node, D3Node>) => {
     event.sourceEvent.stopPropagation()
     startPos = { x: event.x, y: event.y }
     isDragging = false
@@ -160,7 +159,7 @@ export function createDrag(
       simulation.alphaTarget(config.alphaTarget ?? 0.3).restart()
   }
 
-  const dragged = (event: d3Type.D3DragEvent<SVGGElement, D3Node, D3Node>) => {
+  const dragged = (event: D3DragEvent<SVGGElement, D3Node, D3Node>) => {
     const dx = event.x - startPos.x
     const dy = event.y - startPos.y
     if (!isDragging && Math.sqrt(dx * dx + dy * dy) > 0) {
@@ -174,9 +173,7 @@ export function createDrag(
     }
   }
 
-  const dragEnded = (
-    event: d3Type.D3DragEvent<SVGGElement, D3Node, D3Node>
-  ) => {
+  const dragEnded = (event: D3DragEvent<SVGGElement, D3Node, D3Node>) => {
     if (!isDragging) {
       onNodeClick?.(event.subject)
     }
@@ -188,8 +185,7 @@ export function createDrag(
   }
 
   node.call(
-    d3Type
-      .drag<SVGGElement, D3Node>()
+    drag<SVGGElement, D3Node>()
       .on('start', dragStarted)
       .on('drag', dragged)
       .on('end', dragEnded)
@@ -205,8 +201,8 @@ export function createDrag(
  * nodes and links are highlighted while the pointer rests on a node.
  */
 export function createHover(
-  node: d3Type.Selection<SVGGElement, D3Node, SVGGElement, unknown>,
-  link: d3Type.Selection<SVGLineElement, D3Link, SVGGElement, unknown>,
+  node: Selection<SVGGElement, D3Node, SVGGElement, unknown>,
+  link: Selection<SVGLineElement, D3Link, SVGGElement, unknown>,
   textSize: number
 ): void {
   node

@@ -21,7 +21,14 @@
 </template>
 
 <script setup lang="ts">
-  import * as d3 from 'd3'
+  import {
+    forceCenter,
+    forceCollide,
+    forceLink,
+    forceManyBody,
+    forceSimulation
+  } from 'd3-force'
+  import { select } from 'd3-selection'
   import debounce from 'lodash/debounce'
   import { useRouter, withBase } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
@@ -75,25 +82,23 @@
     if (!svgRef.value) return
 
     // Clear existing content
-    d3.select(svgRef.value).selectAll('*').remove()
+    select(svgRef.value).selectAll('*').remove()
 
     const { nodes, links, width, height } = props
     const ratioMap = calculateNodeRatios(nodes, links, {
       minRatio: 1,
       maxRatio: 2
     })
-    const simulation = d3
-      .forceSimulation(nodes)
+    const simulation = forceSimulation(nodes)
       .force(
         'link',
-        d3
-          .forceLink<D3Node, D3Link>(links)
+        forceLink<D3Node, D3Link>(links)
           .id((d) => d.id)
           .distance(props.linkDistance)
           .strength(props.linkStrength)
       )
-      .force('charge', d3.forceManyBody().strength(props.chargeStrength))
-      .force('center', d3.forceCenter(width / 2, height / 2))
+      .force('charge', forceManyBody().strength(props.chargeStrength))
+      .force('center', forceCenter(width / 2, height / 2))
       .force('cluster', forceCluster())
 
     // Add cluster force function
@@ -125,8 +130,7 @@
     svgRef.value.setAttribute('width', containerWidth.toString())
 
     // Create SVG and root group
-    const svg = d3
-      .select(svgRef.value)
+    const svg = select(svgRef.value)
       .attr('width', width)
       .attr('height', height)
       .attr(
@@ -194,7 +198,7 @@
 
     // Update the background rectangle's size to match the text
     node.each(function (d: D3Node) {
-      const nodeElement = d3.select(this)
+      const nodeElement = select(this)
       const textElement = nodeElement.select('text').node() as SVGTextElement
       if (textElement) {
         const textWidth = textElement.getComputedTextLength()
@@ -217,16 +221,14 @@
     // TODO: custom collision detection
     simulation.force(
       'collision',
-      d3
-        .forceCollide()
+      forceCollide()
         .radius((d) => {
           // Find the corresponding node's text element
           const nodeElement = node
             .filter((n) => n.id === (d as D3Node).id)
             .node()
           if (nodeElement) {
-            const textElement = d3
-              .select(nodeElement)
+            const textElement = select(nodeElement)
               .select('text')
               .node() as SVGTextElement
             if (textElement) {
@@ -275,7 +277,7 @@
     () => props.linkColor,
     (newColor) => {
       if (svgRef.value) {
-        d3.select(svgRef.value)
+        select(svgRef.value)
           .selectAll('.d3-force-link')
           .attr('stroke', newColor)
       }
