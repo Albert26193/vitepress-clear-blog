@@ -95,6 +95,9 @@ const getThemeConfig = async (
       ...cfg
     },
     vite: {
+      build: {
+        chunkSizeWarningLimit: 2000
+      },
       css: {
         preprocessorOptions: {
           scss: {

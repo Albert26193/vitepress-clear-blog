@@ -112,11 +112,14 @@
 <script setup lang="ts">
   import { useWindowSize } from '@vueuse/core'
   import { useData } from 'vitepress'
-  import { computed } from 'vue'
+  import { computed, defineAsyncComponent } from 'vue'
 
   import { useClickAble } from '../../composables/useClickAble'
   import type { BlogConfig } from '../../types/types'
-  import D3FullScreen from '../d3/D3FullScreen.vue'
+
+  const D3FullScreen = defineAsyncComponent(
+    () => import('../d3/D3FullScreen.vue')
+  )
 
   const { site, theme } = useData<BlogConfig>()
   const { width } = useWindowSize()
