@@ -44,7 +44,7 @@
   .pagination-link {
     @apply flex cursor-pointer items-center justify-center rounded-md;
     @apply h-8 w-8 text-sm transition-all duration-200;
-    @apply text-gray-600 dark:text-gray-400;
+    @apply text-[var(--vp-c-text-2)];
     @apply hover:bg-gray-100 dark:hover:bg-gray-800;
     @apply mt-16 ml-[5px] md:h-6 md:w-6 md:text-base;
     text-decoration: none;

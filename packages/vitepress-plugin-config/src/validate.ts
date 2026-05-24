@@ -13,6 +13,8 @@ const themeConfigSchema: z.ZodType<Record<string, unknown>> = z.lazy(() =>
     'vp-c-text-1': z.string().optional(),
     'vp-c-text-2': z.string().optional(),
     'vp-c-divider': z.string().optional(),
+    'vp-c-bg-soft': z.string().optional(),
+    'vp-c-text-3': z.string().optional(),
     'vp-button-brand-bg': z.string().optional(),
     'vp-code-bg': z.string().optional(),
     'vp-code-block-bg': z.string().optional(),
@@ -20,6 +22,7 @@ const themeConfigSchema: z.ZodType<Record<string, unknown>> = z.lazy(() =>
     'c-text-code': z.string().optional(),
     'c-text-strong': z.string().optional(),
     'c-text-em': z.string().optional(),
+    'main-page-text': z.string().optional(),
     dark: themeConfigSchema.optional()
   })
 )

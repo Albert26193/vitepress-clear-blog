@@ -23,7 +23,7 @@
         >
           {{ selectedTag }}</span
         >
-        <span v-else :key="'default'" class="text-gray-400 dark:text-gray-200">
+        <span v-else :key="'default'" class="text-[var(--vp-c-text-3)]">
           Choose a tag to filter
         </span>
       </span>

@@ -64,6 +64,7 @@ export const generateThemeFile = async (
 
   const bgColor = color(theme, 'vp-c-bg', dL['vp-c-bg'])
   const bgAltColor = color(theme, 'vp-c-bg-alt', dL['vp-c-bg-alt'])
+  const bgSoftColor = color(theme, 'vp-c-bg-soft', dL['vp-c-bg-soft'])
   const brandColor = color(theme, 'vp-c-brand', dL['vp-c-brand'])
   const brandColor1 = color(theme, 'vp-c-brand-1', dL['vp-c-brand-1'])
   const brandColor2 = color(theme, 'vp-c-brand-2', dL['vp-c-brand-2'])
@@ -82,12 +83,15 @@ export const generateThemeFile = async (
   )
   const textColor1 = color(theme, 'vp-c-text-1', dL['vp-c-text-1'])
   const textColor2 = color(theme, 'vp-c-text-2', dL['vp-c-text-2'])
+  const textColor3 = color(theme, 'vp-c-text-3', dL['vp-c-text-3'])
   const dividerColor = color(theme, 'vp-c-divider', dL['vp-c-divider'])
   const codeBg = color(theme, 'vp-code-bg', dL['vp-code-bg'])
   const codeBlockBg = color(theme, 'vp-code-block-bg', dL['vp-code-block-bg'])
+  const mainPageText = color(theme, 'main-page-text', dL['main-page-text'])
 
   const darkBgColor = color(darkTheme, 'vp-c-bg', dD['vp-c-bg'])
   const darkBgAltColor = color(darkTheme, 'vp-c-bg-alt', dD['vp-c-bg-alt'])
+  const darkBgSoftColor = color(darkTheme, 'vp-c-bg-soft', dD['vp-c-bg-soft'])
   const darkBrandColor = color(darkTheme, 'vp-c-brand', dD['vp-c-brand'])
   const darkBrandColor1 = color(darkTheme, 'vp-c-brand-1', dD['vp-c-brand-1'])
   const darkBrandColor2 = color(darkTheme, 'vp-c-brand-2', dD['vp-c-brand-2'])
@@ -106,12 +110,18 @@ export const generateThemeFile = async (
   )
   const darkTextColor1 = color(darkTheme, 'vp-c-text-1', dD['vp-c-text-1'])
   const darkTextColor2 = color(darkTheme, 'vp-c-text-2', dD['vp-c-text-2'])
+  const darkTextColor3 = color(darkTheme, 'vp-c-text-3', dD['vp-c-text-3'])
   const darkDividerColor = color(darkTheme, 'vp-c-divider', dD['vp-c-divider'])
   const darkCodeBg = color(darkTheme, 'vp-code-bg', dD['vp-code-bg'])
   const darkCodeBlockBg = color(
     darkTheme,
     'vp-code-block-bg',
     dD['vp-code-block-bg']
+  )
+  const darkMainPageText = color(
+    darkTheme,
+    'main-page-text',
+    dD['main-page-text']
   )
 
   const generatedCssPath = resolve(
@@ -123,11 +133,13 @@ export const generateThemeFile = async (
 :root {
   --vp-c-bg: ${bgColor};
   --vp-c-bg-alt: ${bgAltColor};
+  --vp-c-bg-soft: ${bgSoftColor};
   --vp-c-brand: ${brandColor};
   --vp-c-brand-1: ${brandColor1};
   --vp-c-brand-2: ${brandColor2};
   --vp-c-text-1: ${textColor1};
   --vp-c-text-2: ${textColor2};
+  --vp-c-text-3: ${textColor3};
   --vp-c-divider: ${dividerColor};
   --vp-button-brand-bg: ${buttonBgColor};
   --vp-code-bg: ${codeBg};
@@ -136,16 +148,19 @@ export const generateThemeFile = async (
   --c-text-code: ${codeColor};
   --c-text-strong: ${strongColor};
   --c-text-em: ${emColor};
+  --main-page-text: ${mainPageText};
 }
 
 .dark {
   --vp-c-bg: ${darkBgColor};
   --vp-c-bg-alt: ${darkBgAltColor};
+  --vp-c-bg-soft: ${darkBgSoftColor};
   --vp-c-brand: ${darkBrandColor};
   --vp-c-brand-1: ${darkBrandColor1};
   --vp-c-brand-2: ${darkBrandColor2};
   --vp-c-text-1: ${darkTextColor1};
   --vp-c-text-2: ${darkTextColor2};
+  --vp-c-text-3: ${darkTextColor3};
   --vp-c-divider: ${darkDividerColor};
   --vp-button-brand-bg: ${darkButtonBgColor};
   --vp-code-bg: ${darkCodeBg};
@@ -154,6 +169,7 @@ export const generateThemeFile = async (
   --c-text-code: ${darkCodeColor};
   --c-text-strong: ${darkStrongColor};
   --c-text-em: ${darkEmColor};
+  --main-page-text: ${darkMainPageText};
 }
 `.trim()
 

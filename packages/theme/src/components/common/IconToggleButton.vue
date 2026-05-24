@@ -98,9 +98,9 @@
 
   .tooltip {
     @apply invisible absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 text-xs;
-    @apply rounded bg-gray-200 whitespace-nowrap text-gray-800 opacity-0;
+    @apply rounded bg-gray-200 whitespace-nowrap text-[var(--vp-c-text-1)] opacity-0;
     @apply transition-all duration-200;
-    @apply dark:bg-gray-600 dark:text-gray-200;
+    @apply dark:bg-gray-600;
   }
 
   .tooltip-container:hover .tooltip {

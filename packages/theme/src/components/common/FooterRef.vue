@@ -73,9 +73,9 @@
   .footnote-badge {
     @apply font-500 inline items-center rounded-md text-[11px] leading-2;
     @apply -vertical-30% mx-[1px] px-[6px] py-[0.5px];
-    @apply bg-gray-200 text-slate-900;
+    @apply bg-gray-200 text-[var(--vp-c-text-3)];
     @apply no-underline! hover:no-underline!;
-    @apply dark:bg-gray-700/80 dark:text-gray-300;
+    @apply dark:bg-gray-700/80;
   }
 
   .footnote-tooltip {

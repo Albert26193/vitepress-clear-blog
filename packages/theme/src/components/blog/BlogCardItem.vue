@@ -98,12 +98,11 @@
 
   .card-banner {
     @apply mt-auto flex shrink-0 items-center justify-between;
-    @apply pt-2 text-sm text-gray-500;
+    @apply pt-2 text-sm text-[var(--vp-c-text-2)];
   }
 
   .card-time {
     @apply flex flex-wrap items-center;
-    @apply dark:text-gray-300;
   }
 
   .card-title {
@@ -118,9 +117,8 @@
   }
 
   .describe {
-    @apply mt-1 mb-2 line-clamp-3 overflow-hidden text-sm leading-relaxed text-gray-700;
+    @apply mt-1 mb-2 line-clamp-3 overflow-hidden text-sm leading-relaxed text-[var(--vp-c-text-1)];
     @apply indent-2;
-    @apply dark:text-gray-300/90;
   }
 
   .link {

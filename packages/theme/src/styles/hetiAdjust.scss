@@ -39,11 +39,10 @@
 
     &.heti .vp-doc {
       mark {
-        background-color: #fef08a;
+        background-color: var(--c-mark-bg);
 
         .dark & {
-          background-color: #fde047;
-          color: #060606;
+          color: var(--c-mark-text);
         }
       }
 

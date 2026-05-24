@@ -19,13 +19,12 @@
 
 <script lang="ts" setup>
   import { siteMetadata } from 'virtual:vitepress-analyzer'
-  import { useData, useRoute } from 'vitepress'
+  import { useRoute } from 'vitepress'
   import { computed, ref } from 'vue'
 
   import { transformPageD3Data } from '../../utils/client'
   import D3ForceGraph from './D3ForceGraph.vue'
 
-  const { isDark } = useData()
   const props = withDefaults(
     defineProps<{
       /** Width reserved for the page graph SVG viewport. */
@@ -46,8 +45,8 @@
       height: 320,
       diameter: 6,
       textSize: 18,
-      circleColor: '#8b3cf6',
-      textColor: '#0b0503'
+      circleColor: 'var(--vp-c-brand)',
+      textColor: 'var(--vp-c-text-1)'
     }
   )
 
@@ -61,9 +60,7 @@
   )
 
   const zoomLevel = ref(1)
-  const linkColor = computed(() => {
-    return isDark.value ? '#cfcfcf' : '#0e0e0e'
-  })
+  const linkColor = 'var(--vp-c-text-1)'
 </script>
 
 <style scoped>
@@ -73,7 +70,7 @@
 
   .zoom-display {
     @apply absolute top-0 left-0 z-10 px-1 py-1 text-xs;
-    @apply text-gray-600/90 dark:text-gray-300/90;
+    @apply text-[var(--vp-c-text-2)];
     @apply rounded-br bg-[var(--vp-sidebar-bg-color)]/80;
     @apply backdrop-blur-md;
   }

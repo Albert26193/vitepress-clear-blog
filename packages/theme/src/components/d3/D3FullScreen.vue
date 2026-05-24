@@ -20,13 +20,11 @@
 
 <script lang="ts" setup>
   import { siteMetadata } from 'virtual:vitepress-analyzer'
-  import { useData } from 'vitepress'
   import { computed, ref } from 'vue'
 
   import { transformSiteD3Data } from '../../utils/client'
   import D3ForceGraph from './D3ForceGraph.vue'
 
-  const { isDark } = useData()
   const props = withDefaults(
     defineProps<{
       /** Width reserved for the full-site graph SVG viewport. */
@@ -46,9 +44,7 @@
   const zoomLevel = ref(props.zoomLevel)
 
   const graphData = computed(() => transformSiteD3Data(siteMetadata))
-  const linkColor = computed(() => {
-    return isDark.value ? '#9ca3af' : '#0e0e0e'
-  })
+  const linkColor = 'var(--vp-c-text-1)'
 </script>
 
 <style scoped>
