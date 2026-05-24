@@ -35,11 +35,11 @@ jobs:
 
       - run: pnpm build
         env:
-          VITEPRESS_BASE: /vitepress-clear-blog/demo/
+          VITEPRESS_BASE: /vitepress-theme-link/demo/
 
       - run: pnpm -F=testbed build
         env:
-          VITEPRESS_BASE: /vitepress-clear-blog/testbed/
+          VITEPRESS_BASE: /vitepress-theme-link/testbed/
 
       - run: |
           mkdir -p _deploy/demo _deploy/testbed
