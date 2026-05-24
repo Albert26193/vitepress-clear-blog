@@ -73,6 +73,26 @@
       padding-inline-end: 0rem;
     }
 
+    // Reset heti list overrides — let VitePress vp-doc.css handle lists.
+    // heti uses logical properties (padding-inline-start, margin-block-*)
+    // which conflict with VitePress physical properties from vp-doc.css.
+    // Explicitly set physical properties to match VitePress defaults.
+    &.heti .vp-doc {
+      ul,
+      ol {
+        margin: 16px 0;
+        padding-left: 1.25rem;
+      }
+
+      ul {
+        list-style: disc;
+      }
+
+      ol {
+        list-style: decimal;
+      }
+    }
+
     &.heti .vp-doc blockquote {
       margin-block-start: 1rem;
       margin-block-end: 1rem;
