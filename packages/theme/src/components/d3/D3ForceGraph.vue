@@ -54,12 +54,12 @@
     height: 320,
     diameter: 10,
     textSize: 5,
-    circleColor: '#5040c9',
-    textColor: '#4a4a4a',
+    circleColor: 'var(--vp-c-brand)',
+    textColor: 'var(--vp-c-text-1)',
     modelValue: 1,
     linkDistance: 40,
     linkStrength: 0.12,
-    linkColor: '#0e0e0e',
+    linkColor: 'var(--vp-c-text-1)',
     chargeStrength: -600
   })
 

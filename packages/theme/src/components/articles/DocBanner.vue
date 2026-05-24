@@ -24,7 +24,7 @@
       <!-- author -->
       <div class="i-carbon-user ml-3" />
       <span
-        class="hover:text-color-[var(--vp-c-brand)] ml-1 align-middle text-sm hover:cursor-pointer"
+        class="ml-1 align-middle text-sm hover:cursor-pointer hover:text-[var(--vp-c-brand)]"
         role="link"
         tabindex="0"
         @click="handleAuthorClick"

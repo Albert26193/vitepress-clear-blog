@@ -160,7 +160,7 @@
   /* Meta Item */
   .meta-item {
     @apply mr-0 mb-2 flex items-center text-xs;
-    @apply text-gray-600 dark:text-gray-400;
+    @apply text-[var(--vp-c-text-2)];
     @apply md:text-sm;
   }
 
@@ -237,7 +237,7 @@
   /* Description */
   .describe {
     @apply mt-1 line-clamp-2 flex-grow indent-0 text-sm leading-relaxed break-words;
-    @apply text-gray-700 dark:text-gray-300;
+    @apply text-[var(--vp-c-text-1)];
     @apply md:text-md md:mt-2 md:line-clamp-3 md:indent-2 md:leading-normal;
   }
 

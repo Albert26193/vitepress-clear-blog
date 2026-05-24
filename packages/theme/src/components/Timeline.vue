@@ -286,7 +286,7 @@
   .timeline-year-title-span {
     @apply flex max-w-full cursor-pointer items-center font-serif text-sm;
     @apply animate-fade-in delay-100 duration-200;
-    @apply dark:text-gray-500;
+    @apply text-[var(--vp-c-text-2)];
     @apply md:text-base;
   }
 
@@ -321,7 +321,7 @@
   /* Month Title */
   .timeline-month-title {
     @apply ml-3 flex items-center justify-between pt-2 pb-1 text-sm font-semibold;
-    @apply dark:text-gray-400;
+    @apply text-[var(--vp-c-text-2)];
     @apply md:ml-4 md:text-base;
   }
 
@@ -365,7 +365,7 @@
   /* Post Date */
   .post-date {
     @apply flex-shrink-0 font-serif text-xs whitespace-nowrap;
-    @apply text-gray-500 dark:text-gray-400;
+    @apply text-[var(--vp-c-text-2)];
     @apply md:text-sm;
   }
 </style>

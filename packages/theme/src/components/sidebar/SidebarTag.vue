@@ -120,7 +120,7 @@
 
   .tag-title {
     @apply mb-4 flex items-center text-base font-semibold;
-    @apply text-gray-600 dark:text-gray-400;
+    @apply text-[var(--vp-c-text-1)];
   }
 
   .current-tags {
@@ -164,7 +164,7 @@
   }
 
   .no-related {
-    @apply text-sm text-gray-400 dark:text-gray-500;
+    @apply text-sm text-[var(--vp-c-text-2)];
     @apply mt-3 ml-6;
   }
 </style>

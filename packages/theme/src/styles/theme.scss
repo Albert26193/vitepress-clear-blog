@@ -1,27 +1,15 @@
-:root {
-  --main-page-bg: #f0f0f0;
-  --main-page-text: #050505;
-  --main-page-from: #222222;
-  --main-page-to: #585858;
-  --main-page-menu: #525861;
-  --main-page-appearance: #e0e0e0;
-}
-
-.dark {
-  --main-page-bg: #333333;
-  --main-page-text: #f0f0f0e8;
-  --main-page-from: #f0f0f0;
-  --main-page-to: #575757;
-  --main-page-menu: #969ba6;
-  --main-page-appearance: #424242;
-}
-
 /* font  */
 :root {
   --vp-font-family-base: 'Times New Roman', times, 'Heti Song';
   --vp-font-family-mono:
     'Iosevka', 'Fira Code', 'JetBrains Mono', 'Menlo', 'Consolas', 'Monaco',
     'Andale Mono', 'Ubuntu Mono', 'Courier New', monospace;
+  --c-mark-bg: #fef08a;
+}
+
+.dark {
+  --c-mark-bg: #fde047;
+  --c-mark-text: #060606;
 }
 
 /* theme reset start */

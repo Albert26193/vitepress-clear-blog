@@ -103,7 +103,7 @@
   }
 
   .popup-close-button {
-    @apply h-5 w-5 rounded-full bg-gray-200 text-gray-600;
+    @apply h-5 w-5 rounded-full bg-gray-200 text-[var(--vp-c-text-1)];
     @apply hover:bg-gray-300;
     @apply transition-colors duration-200;
     @apply flex items-center justify-center;
@@ -111,8 +111,7 @@
   }
 
   .popup-close-icon {
-    @apply h-4 w-4 hover:text-gray-900;
-    @apply dark:text-gray-900 dark:hover:text-gray-300;
+    @apply h-4 w-4 hover:text-[var(--vp-c-text-1)];
   }
 
   .popup-body {
