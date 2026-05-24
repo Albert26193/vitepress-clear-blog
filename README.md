@@ -14,10 +14,10 @@ Forked from [vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure)
 Scaffold a new blog with one command:
 
 ```bash
-npm create blog-template@latest my-blog   # npm
-pnpm create blog-template@latest my-blog  # pnpm
-yarn create blog-template my-blog         # yarn
-bun create blog-template@latest my-blog   # bun
+npm create vitepress-theme-link@latest my-blog   # npm
+pnpm create vitepress-theme-link@latest my-blog  # pnpm
+yarn create vitepress-theme-link my-blog         # yarn
+bun create vitepress-theme-link@latest my-blog   # bun
 ```
 
 Then install dependencies and start the dev server:
@@ -31,6 +31,26 @@ pnpm dev
 > **Tip**: The scaffold auto-detects your package manager and prints the exact
 > commands to run. Add `.md` files under `docs/` — see `docs/example.md` for a
 > minimal post with frontmatter.
+
+### Local development (before npm publish)
+
+From the monorepo root, link the scaffold package globally:
+
+```bash
+cd packages/create-vitepress-theme-link && npm link
+```
+
+Then scaffold a new blog anywhere with `npx`:
+
+```bash
+npx create-vitepress-theme-link my-blog
+```
+
+Or run the CLI directly without linking:
+
+```bash
+node packages/create-vitepress-theme-link/bin/create-vitepress-theme-link.js my-blog
+```
 
 ## Features
 
@@ -48,17 +68,20 @@ pnpm dev
 vitepress-theme-link/
 ├── packages/
 │   ├── create-vitepress-theme-link/            # Project scaffold CLI
-│   ├── theme/                           # VitePress blog theme (vitepress-theme-link)
-│   ├── testbed/                         # Theme demo and development site
-│   ├── demo/                            # Public demo site
-│   ├── intro/                           # Project introduction and docs site
-│   ├── vitepress-plugin-analyzer/       # Content analysis and graph data
-│   ├── vitepress-plugin-callouts/        # Markdown callout blocks
-│   ├── vitepress-plugin-codeblock-fold/ # Foldable code blocks
-│   ├── vitepress-plugin-config/         # Shared config utilities
-│   ├── vitepress-plugin-details-block/  # Details/summary blocks
-│   └── vitepress-plugin-hashtag/        # Hashtag support
-├── .github/workflows/                   # CI/CD pipelines
+│   ├── theme/                                  # VitePress blog theme (vitepress-theme-link)
+│   ├── vitepress-plugin-analyzer/              # Content analysis and graph data
+│   ├── vitepress-plugin-callout/               # Markdown callout blocks
+│   ├── vitepress-plugin-callouts/              # Markdown callout blocks (alternative)
+│   ├── vitepress-plugin-codeblock-fold/        # Foldable code blocks
+│   ├── vitepress-plugin-config/                # Shared config utilities
+│   ├── vitepress-plugin-details-block/         # Details/summary blocks
+│   ├── vitepress-plugin-hashtag/               # Hashtag support
+│   └── vitepress-plugin-image-dimension/       # Image dimension support
+├── sites/
+│   ├── demo/                                   # Public demo site
+│   ├── intro/                                  # Project introduction site
+│   └── testbed/                                # Theme dev and test site
+├── .github/workflows/                          # CI/CD pipelines
 ├── package.json
 └── pnpm-workspace.yaml
 ```
@@ -77,15 +100,27 @@ pnpm install
 # Start all packages in development mode
 pnpm dev
 
-# Build all packages
+# Build from clean
+pnpm build
+
+# Build all packages only
 pnpm build:packages
 
 # Build and preview the testbed site
 pnpm build:testbed
 pnpm preview:testbed
 
-# Run tests
+# Run full test suite (unit + e2e)
+pnpm test
+
+# Run unit tests only
 pnpm test:unit
+
+# Run e2e tests only
+pnpm test:e2e
+
+# Type-check
+pnpm typecheck
 
 # Lint and format
 pnpm lint
