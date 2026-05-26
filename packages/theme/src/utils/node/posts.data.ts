@@ -12,21 +12,17 @@ export default createContentLoader<Post[]>('blogs/**/*.md', {
   transform(rawData) {
     return rawData
       .map((page) => {
-        if (page.frontmatter.date) {
-          const normalized = normalizePostDate(
-            page.frontmatter as Record<string, unknown>
-          )
-          if (normalized) {
-            page.frontmatter.date = normalized
-          } else {
-            // Safety net: fall back to legacy behavior when the datetime
-            // pipeline cannot normalize the value (e.g. timestamp numbers).
-            const date = new Date(
-              page.frontmatter.date as string | number | Date
-            )
-            if (!isNaN(date.getTime())) {
-              page.frontmatter.date = date.toISOString().split('T')[0]
-            }
+        const normalized = normalizePostDate(
+          page.frontmatter as Record<string, unknown>
+        )
+        if (normalized) {
+          page.frontmatter.date = normalized
+        } else if (page.frontmatter.date) {
+          // Safety net: fall back to legacy behavior when the datetime
+          // pipeline cannot normalize the value (e.g. timestamp numbers).
+          const date = new Date(page.frontmatter.date as string | number | Date)
+          if (!isNaN(date.getTime())) {
+            page.frontmatter.date = date.toISOString().split('T')[0]
           }
         }
         const post = {
