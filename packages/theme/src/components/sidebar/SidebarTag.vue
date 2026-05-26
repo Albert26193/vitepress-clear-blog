@@ -58,7 +58,9 @@
 
   // get tags for current article
   const currentTags = computed(() => {
-    return frontmatter.value.tags || []
+    const tags = frontmatter.value.tags
+    if (!Array.isArray(tags)) return []
+    return [...new Set(tags.map((t) => String(t).trim()))]
   })
 
   // active tag for filtering

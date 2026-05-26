@@ -35,6 +35,11 @@ export default createContentLoader<Post[]>('blogs/**/*.md', {
           rawContent: page.src,
           html: page.html
         } as Post
+        if (Array.isArray(post.frontMatter.tags)) {
+          post.frontMatter.tags = [
+            ...new Set(post.frontMatter.tags.map((t) => String(t).trim()))
+          ]
+        }
         return post
       })
       .sort((a, b) => {

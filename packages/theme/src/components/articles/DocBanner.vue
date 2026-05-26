@@ -1,9 +1,9 @@
 <template>
   <div class="meta-des" id="hack-article-des" ref="$des">
     <!-- tags -->
-    <div class="tags-container" v-if="frontmatter.tags">
+    <div class="tags-container" v-if="uniqueTags.length">
       <BlogTagItem
-        v-for="item in frontmatter.tags"
+        v-for="item in uniqueTags"
         :key="item"
         :text="item"
         :href="`/tags.html?tag=${item}`"
@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
   import { useData } from 'vitepress'
-  import { onMounted, ref } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
 
   import { useClickAble } from '../../composables/useClickAble'
   import { useAuthor, useTimeFormat } from '../../composables/useMeta'
@@ -48,6 +48,11 @@
   import BlogTagItem from '../common/BlogTagItem.vue'
 
   const { frontmatter } = useData()
+  const uniqueTags = computed(() => {
+    const tags = frontmatter.value.tags
+    if (!Array.isArray(tags)) return []
+    return [...new Set(tags.map((t) => String(t).trim()))]
+  })
   const { handleClick: handleAuthorClick, handleKeydown: handleAuthorKeydown } =
     useClickAble('/about.html')
 
