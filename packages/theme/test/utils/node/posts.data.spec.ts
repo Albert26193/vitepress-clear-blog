@@ -112,4 +112,23 @@ describe('posts.data', () => {
 
     expect(post.frontMatter.date).toBe('not a date at all')
   })
+
+  it('handles posts without dates or tags', async () => {
+    vi.mocked(readFileSync).mockReturnValue(
+      '[datetime]\nfrontmatterFields = ["date"]\nformats = ["YYYY-MM-DD"]'
+    )
+
+    const loader = (await import('../../../src/utils/node/posts.data'))
+      .default as unknown as PostsLoader
+    const [post] = loader.transform([
+      {
+        frontmatter: {
+          title: 'Post without metadata'
+        },
+        url: '/blogs/post-without-metadata.html'
+      }
+    ]) as Array<{ frontMatter: Record<string, unknown> }>
+
+    expect(post.frontMatter).toEqual({ title: 'Post without metadata' })
+  })
 })

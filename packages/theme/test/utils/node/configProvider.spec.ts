@@ -149,6 +149,83 @@ describe('createBlog with mocked config.toml', async () => {
     expect(tc.renderTitle).toBe('frontmatter_title')
   })
 
+  it('normalizes current page frontmatter dates for article metadata', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      datetime: {
+        frontmatterFields: ['date', 'date created'],
+        formats: ['YYYY-MM-DD']
+      }
+    })
+    const config = await createBlog()
+    const pageData: { frontmatter: Record<string, unknown> } = {
+      frontmatter: {
+        title: 'Post without standard date',
+        'date created': '2026-05-24'
+      }
+    }
+
+    ;(config as any).transformPageData(pageData)
+
+    expect(pageData.frontmatter.date).toBe('2026-05-24')
+  })
+
+  it('leaves current page frontmatter unchanged when no date can be resolved', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      datetime: {
+        frontmatterFields: ['date created'],
+        formats: ['YYYY-MM-DD']
+      }
+    })
+    const config = await createBlog()
+    const pageData = {
+      frontmatter: {
+        title: 'Post without date'
+      }
+    }
+
+    ;(config as any).transformPageData(pageData)
+
+    expect(pageData.frontmatter).toEqual({ title: 'Post without date' })
+  })
+
+  it('handles page data without frontmatter', async () => {
+    const config = await createBlog()
+    const pageData = {}
+
+    expect(() => (config as any).transformPageData(pageData)).not.toThrow()
+  })
+
+  it('preserves custom transformPageData hooks', async () => {
+    const userTransformPageData = vi.fn((pageData) => {
+      pageData.frontmatter.custom = true
+      return { extra: 'value' }
+    })
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      datetime: {
+        frontmatterFields: ['date created'],
+        formats: ['YYYY-MM-DD']
+      }
+    })
+    const config = await createBlog({
+      transformPageData: userTransformPageData
+    })
+    const pageData: { frontmatter: Record<string, unknown> } = {
+      frontmatter: {
+        'date created': '2026-05-24'
+      }
+    }
+
+    const result = (config as any).transformPageData(pageData)
+
+    expect(userTransformPageData).toHaveBeenCalledWith(pageData)
+    expect(pageData.frontmatter.date).toBe('2026-05-24')
+    expect(pageData.frontmatter.custom).toBe(true)
+    expect(result).toEqual({ extra: 'value' })
+  })
+
   it('sets linkStyle in themeConfig', async () => {
     const config = await createBlog()
     const tc = (config as any).themeConfig
