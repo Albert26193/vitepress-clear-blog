@@ -25,6 +25,7 @@ import llmstxt from 'vitepress-plugin-llms'
 import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 
 import { classifyHref } from '../linkKind'
+import { resolveDate } from './datetime'
 import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
 import { createWikilinkPlugin } from './wikilinkPlugin'
 
@@ -161,6 +162,9 @@ const createBlog = async (
 
   const vitePressBase = process.env.VITEPRESS_BASE || '/'
   const cleanUrls = cfg.cleanUrls === true
+  const userTransformPageData = cfg.transformPageData as
+    | ((pageData: { frontmatter?: Record<string, unknown> }) => unknown)
+    | undefined
 
   const wikiLinkPlugin =
     mdConf.wikilinks !== false
@@ -288,6 +292,18 @@ const createBlog = async (
     description: meta.description || '',
     head,
     markdown,
+    transformPageData(pageData: { frontmatter?: Record<string, unknown> }) {
+      if (pageData.frontmatter) {
+        const normalized = resolveDate(
+          pageData.frontmatter,
+          toml?.datetime || {}
+        )
+        if (normalized) {
+          pageData.frontmatter.date = normalized
+        }
+      }
+      return userTransformPageData?.(pageData)
+    },
     vite: {
       ...(base.vite as Record<string, unknown>),
       define: {
