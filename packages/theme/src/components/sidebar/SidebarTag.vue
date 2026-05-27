@@ -133,8 +133,7 @@
 
   .related-posts {
     @apply relative mt-3 ml-2 flex flex-col gap-[2px];
-    @apply max-h-40 overflow-scroll;
-    @apply truncate;
+    @apply max-h-40 overflow-y-auto;
   }
 
   .related-posts::before {
@@ -144,7 +143,7 @@
   }
 
   .page-link {
-    @apply relative block px-4 py-[3px] text-sm transition-colors duration-300;
+    @apply relative block flex-shrink-0 px-4 py-[3px] text-sm transition-colors duration-300;
     @apply font-normal hover:text-[var(--vp-c-brand)];
     @apply truncate;
   }
