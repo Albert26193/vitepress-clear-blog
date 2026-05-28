@@ -1,6 +1,6 @@
 {
   "name": "vitepress-plugin-details-block",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A customizable details block component for VitePress",
   "main": "dist/index.umd.js",
   "module": "dist/index.mjs",
