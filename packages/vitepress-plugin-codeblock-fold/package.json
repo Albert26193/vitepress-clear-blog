@@ -1,10 +1,28 @@
 {
   "name": "vitepress-plugin-codeblock-fold",
   "version": "0.1.0",
-  "description": "A VitePress plugin to fold long code blocks",
+  "description": "VitePress plugin to fold long code blocks",
   "author": "Albert26193",
   "license": "MIT",
   "type": "module",
+  "homepage": "https://github.com/Albert26193/vitepress-theme-link",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Albert26193/vitepress-theme-link.git",
+    "directory": "packages/vitepress-plugin-codeblock-fold"
+  },
+  "bugs": {
+    "url": "https://github.com/Albert26193/vitepress-theme-link/issues"
+  },
+  "keywords": [
+    "vitepress",
+    "plugin",
+    "codeblock",
+    "fold"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",

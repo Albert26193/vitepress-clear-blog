@@ -1,20 +1,28 @@
 {
   "name": "vitepress-plugin-config",
   "version": "0.1.0",
-  "description": "",
+  "description": "VitePress plugin for TOML-based theme configuration",
   "author": "Albert26193",
   "license": "MIT",
   "type": "module",
-  "homepage": "",
+  "homepage": "https://github.com/Albert26193/vitepress-theme-link",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/Albert26193/vitepress-theme-link.git",
+    "directory": "packages/vitepress-plugin-config"
   },
-  "bugs": {},
+  "bugs": {
+    "url": "https://github.com/Albert26193/vitepress-theme-link/issues"
+  },
   "keywords": [
     "vitepress",
-    "plugin"
+    "plugin",
+    "config",
+    "toml"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",

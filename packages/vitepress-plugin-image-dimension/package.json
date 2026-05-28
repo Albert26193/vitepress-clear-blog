@@ -1,14 +1,18 @@
 {
   "name": "vitepress-plugin-image-dimension",
   "version": "0.1.0",
-  "description": "Markdown-it plugin for normalizing image dimensions",
+  "description": "Markdown-it plugin for normalizing image dimensions in VitePress",
   "author": "Albert26193",
   "license": "MIT",
   "type": "module",
-  "homepage": "",
+  "homepage": "https://github.com/Albert26193/vitepress-theme-link",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/Albert26193/vitepress-theme-link.git",
+    "directory": "packages/vitepress-plugin-image-dimension"
+  },
+  "bugs": {
+    "url": "https://github.com/Albert26193/vitepress-theme-link/issues"
   },
   "keywords": [
     "vitepress",
@@ -16,6 +20,9 @@
     "markdown-it",
     "image"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./lib/node/index.d.ts",
