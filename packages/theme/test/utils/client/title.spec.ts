@@ -127,6 +127,47 @@ describe('resolveLinkTitle', () => {
   })
 })
 
+describe('resolveLinkTitle index page normalization', () => {
+  const indexPost: Post = {
+    frontMatter: {
+      title: 'Database Index',
+      date: '2024-04-01',
+      tags: [],
+      description: ''
+    },
+    regularPath: '/DB/',
+    html: '<h1>Database</h1><p>Index page</p>'
+  }
+
+  const indexLink: PageLink = {
+    absolutePath: '/abs/DB/index.md',
+    text: 'Stale Target Label',
+    relativePath: 'DB/index',
+    fullUrl: '/DB/index',
+    type: 'markdown',
+    raw: '[Stale Target Label](./index.md)'
+  }
+
+  it('frontmatter_title resolves index page via /DIR/ fallback', () => {
+    expect(resolveLinkTitle(indexLink, [indexPost], 'frontmatter_title')).toBe(
+      'Database Index'
+    )
+  })
+
+  it('first_heading resolves index page via /DIR/ fallback', () => {
+    expect(resolveLinkTitle(indexLink, [indexPost], 'first_heading')).toBe(
+      'Database'
+    )
+  })
+
+  it('does not use /DIR/ fallback for non-index pages', () => {
+    const nonIndexLink = { ...indexLink, relativePath: 'DB/notes' }
+    expect(
+      resolveLinkTitle(nonIndexLink, [indexPost], 'frontmatter_title')
+    ).toBe('Stale Target Label')
+  })
+})
+
 describe('resolveLinkTitle edge cases', () => {
   it('alias returns empty when both text and matched post missing', () => {
     const link: PageLink = {

@@ -45,10 +45,15 @@ export const analyzeDocument = (
     outgoingLinks.forEach((link) => {
       const targetPath = link.relativePath
       if (globalMetadata[targetPath]) {
+        const sourceTitle =
+          metadata.firstHeading && metadata.firstHeading !== 'no-heading'
+            ? metadata.firstHeading
+            : filePath.split('/').pop() || filePath
         globalMetadata[targetPath].backLinks.push({
           ...link,
           relativePath: filePath,
-          fullUrl: `/${filePath}`
+          fullUrl: `/${filePath}`,
+          text: sourceTitle
         })
       }
     })
@@ -172,10 +177,15 @@ export const buildDocumentRelationships = (
     doc.outgoingLinks.forEach((link) => {
       const targetPath = link.relativePath
       if (globalMetadata[targetPath]) {
+        const sourceTitle =
+          doc.firstHeading && doc.firstHeading !== 'no-heading'
+            ? doc.firstHeading
+            : sourcePath.split('/').pop() || sourcePath
         globalMetadata[targetPath].backLinks.push({
           ...link,
           relativePath: sourcePath,
-          fullUrl: `/${sourcePath}`.replace(/\/+/g, '/')
+          fullUrl: `/${sourcePath}`.replace(/\/+/g, '/'),
+          text: sourceTitle
         })
       }
     })

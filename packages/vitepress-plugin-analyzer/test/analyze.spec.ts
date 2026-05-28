@@ -291,10 +291,85 @@ describe('Document Analyzer', () => {
       expect(globalMetadata.source.backLinks).toEqual([])
       expect(globalMetadata.target.backLinks).toEqual([
         expect.objectContaining({
-          text: 'Target',
+          text: 'Source',
           relativePath: 'source',
           fullUrl: '/source',
           type: 'markdown'
+        })
+      ])
+    })
+
+    it('uses source firstHeading as backlink text for index pages', () => {
+      const globalMetadata: Record<string, PageMetadata> = {
+        'DB/index': {
+          firstHeading: 'Database',
+          outgoingLinks: [
+            {
+              text: 'SQL Logs',
+              relativePath: 'DB/sql-logs',
+              absolutePath: '/docs/DB/sql-logs.md',
+              fullUrl: '/DB/sql-logs',
+              raw: '[SQL Logs](./sql-logs.md)',
+              type: 'markdown'
+            }
+          ],
+          backLinks: [],
+          wordCount: 10,
+          lastUpdated: 1
+        },
+        'DB/sql-logs': {
+          firstHeading: 'SQL Logs',
+          outgoingLinks: [],
+          backLinks: [],
+          wordCount: 20,
+          lastUpdated: 1
+        }
+      }
+
+      buildDocumentRelationships(globalMetadata)
+
+      expect(globalMetadata['DB/sql-logs'].backLinks).toEqual([
+        expect.objectContaining({
+          text: 'Database',
+          relativePath: 'DB/index',
+          fullUrl: '/DB/index'
+        })
+      ])
+    })
+
+    it('falls back to path basename when firstHeading is no-heading', () => {
+      const globalMetadata: Record<string, PageMetadata> = {
+        'notes/index': {
+          firstHeading: 'no-heading',
+          outgoingLinks: [
+            {
+              text: 'Target Page',
+              relativePath: 'notes/target',
+              absolutePath: '/docs/notes/target.md',
+              fullUrl: '/notes/target',
+              raw: '[Target Page](./target.md)',
+              type: 'markdown'
+            }
+          ],
+          backLinks: [],
+          wordCount: 5,
+          lastUpdated: 1
+        },
+        'notes/target': {
+          firstHeading: 'Target Page',
+          outgoingLinks: [],
+          backLinks: [],
+          wordCount: 10,
+          lastUpdated: 1
+        }
+      }
+
+      buildDocumentRelationships(globalMetadata)
+
+      expect(globalMetadata['notes/target'].backLinks).toEqual([
+        expect.objectContaining({
+          text: 'index',
+          relativePath: 'notes/index'
         })
       ])
     })

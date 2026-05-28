@@ -46,9 +46,16 @@ const resolveLinkTitle = (
         linkPath = '/' + relativePath + '.html'
       }
 
-      const matchedPost = allPosts.find(
+      let matchedPost = allPosts.find(
         (post: Post) => post.regularPath === linkPath
       )
+
+      if (!matchedPost && linkPath.endsWith('/index.html')) {
+        const dirPath = linkPath.replace(/\/index\.html$/, '/')
+        matchedPost = allPosts.find(
+          (post: Post) => post.regularPath === dirPath
+        )
+      }
 
       if (!matchedPost) {
         return (
