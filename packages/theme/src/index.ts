@@ -91,6 +91,15 @@ export const BlogTheme: Theme = {
               ) || '/'
             )
           }
+          // Index pages: pathname uses /dir/ form instead of /dir/index.html
+          if (clean.endsWith('/index')) {
+            const dirWithSlash = clean.slice(0, -'index'.length)
+            if (pathname.endsWith(dirWithSlash)) {
+              return pathname.slice(0, -dirWithSlash.length) || '/'
+            }
+          } else if (clean === 'index') {
+            return pathname
+          }
         }
         return '/'
       }
