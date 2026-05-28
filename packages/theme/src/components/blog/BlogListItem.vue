@@ -57,7 +57,7 @@
               }).value
             }}
           </template>
-          <div v-else v-html="preview" />
+          <template v-else>{{ preview }}</template>
         </div>
       </div>
     </div>
