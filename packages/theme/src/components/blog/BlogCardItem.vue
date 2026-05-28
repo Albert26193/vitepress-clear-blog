@@ -23,7 +23,7 @@
       }}
     </div>
     <div v-else class="describe heti heti--serif">
-      <div v-html="preview" />
+      {{ preview }}
     </div>
     <div class="card-banner">
       <div class="card-time">

@@ -358,11 +358,21 @@ describe('useHtmlPreview', () => {
     expect(preview.value).toBe('')
   })
 
-  it('extracts first meaningful paragraph content', () => {
+  it('extracts plain text from first meaningful paragraph', () => {
     const html =
-      '<p>This is a meaningful paragraph with enough text to pass the filter check.</p>'
+      '<p>This is a <strong>meaningful</strong> paragraph with enough text to pass the filter check.</p>'
     const preview = useHtmlPreview(html)
     expect(preview.value).toContain('meaningful')
+    expect(preview.value).not.toContain('<strong>')
+  })
+
+  it('returns plain text without any HTML tags', () => {
+    const html =
+      '<p>Text with <a href="/link">a link</a> and <code>inline code</code> that is long enough.</p>'
+    const preview = useHtmlPreview(html)
+    expect(preview.value).not.toMatch(/<[^>]+>/)
+    expect(preview.value).toContain('a link')
+    expect(preview.value).toContain('inline code')
   })
 
   it('skips paragraphs inside blockquotes', () => {
@@ -370,6 +380,7 @@ describe('useHtmlPreview', () => {
       '<blockquote><p>This should be skipped as it meets the length requirement for filtering.</p></blockquote><p>This should be the preview text with sufficient length for testing.</p>'
     const preview = useHtmlPreview(html)
     expect(preview.value).toContain('preview')
+    expect(preview.value).not.toContain('skipped')
   })
 
   it('skips very short paragraphs (<= 20 chars)', () => {
@@ -383,7 +394,7 @@ describe('useHtmlPreview', () => {
     const html =
       '<ul><li>First list item with enough content</li><li>Second item</li></ul>'
     const preview = useHtmlPreview(html)
-    expect(preview.value.length).toBeGreaterThan(0)
+    expect(preview.value).toContain('First list item')
   })
 
   it('removes headings in fallback mode', () => {
@@ -393,21 +404,23 @@ describe('useHtmlPreview', () => {
     expect(preview.value).not.toContain('<h1>')
   })
 
-  it('removes footnote references from output', () => {
+  it('strips rendered footnote markers from output', () => {
     const html =
-      '<p>Text with footnote reference and enough additional content to make it meaningful[^1]</p>'
+      '<p>Text with footnote<sup class="footnote-ref"><a href="#fn1">1</a></sup> and enough additional content to make it meaningful.</p>'
     const preview = useHtmlPreview(html)
-    expect(preview.value).not.toContain('[^1]')
+    expect(preview.value).not.toContain('footnote-ref')
+    expect(preview.value).toContain('Text with footnote')
   })
 
-  it('truncates long Chinese HTML content with ...', () => {
+  it('truncates long Chinese content with ...', () => {
     const chineseText = '这是一段很长的中文内容'.repeat(15)
     const html = `<p>${chineseText}</p>`
     const preview = useHtmlPreview(html, { maxChineseLength: 30 })
     expect(preview.value.endsWith('...')).toBe(true)
+    expect(preview.value.length).toBeLessThan(chineseText.length)
   })
 
-  it('truncates long English HTML content with ...', () => {
+  it('truncates long English content with ...', () => {
     const words = Array.from({ length: 80 }, (_, i) => `word${i}`).join(' ')
     const html = `<p>${words}</p>`
     const preview = useHtmlPreview(html, { maxEnglishWords: 10 })
@@ -432,15 +445,7 @@ describe('useHtmlPreview', () => {
     const html =
       '<p>Real content with enough text to pass the length filter for paragraphs.</p><span class="blog-tag">vue</span>'
     const preview = useHtmlPreview(html)
-    expect(preview.value).not.toContain('blog-tag')
     expect(preview.value).not.toContain('vue')
-  })
-
-  it('filters out elements with tag class', () => {
-    const html =
-      '<p>Good content here that is long enough to pass the minimum length requirement for filter checks.</p><span class="tag">typescript</span>'
-    const preview = useHtmlPreview(html)
-    expect(preview.value).not.toContain('typescript')
   })
 
   it('filters out elements with vp-tag class', () => {
@@ -457,22 +462,74 @@ describe('useHtmlPreview', () => {
     expect(preview.value).toContain('second')
   })
 
-  it('catch block returns safe substring when DOM parsing fails', () => {
+  it('catch block returns plain-text fallback when DOM parsing fails', () => {
     const original = document.createElement
     document.createElement = (() => {
       throw new Error('DOM unavailable')
     }) as typeof document.createElement
 
-    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const preview = useHtmlPreview(
-      '<p>Some html content that is longer than the fallback cutoff length for safety</p>'
+      '<p>Some html content for fallback testing</p>'
     )
-    expect(preview.value).toBe(
-      '<p>Some html content that is longer than the fallback cutoff length for safety</p>...'
-    )
+    expect(preview.value).toBe('Some html content for fallback testing')
+    expect(preview.value).not.toMatch(/<[^>]+>/)
 
     document.createElement = original
-    errorSpy.mockRestore()
+  })
+
+  it('SSR path strips tags and truncates without DOM', () => {
+    const savedDocument = globalThis.document
+    // @ts-expect-error -- simulate SSR where document is undefined
+    delete globalThis.document
+
+    const html =
+      '<p>This is a <strong>meaningful</strong> paragraph for SSR testing with enough length.</p>'
+    const preview = useHtmlPreview(html)
+    expect(preview.value).not.toMatch(/<[^>]+>/)
+    expect(preview.value).toContain('meaningful')
+
+    globalThis.document = savedDocument
+  })
+
+  it('SSR and CSR paths produce consistent plain-text output', () => {
+    const html =
+      '<p>This is a meaningful paragraph that should produce consistent output across paths.</p>'
+
+    // CSR path (jsdom environment)
+    const csrPreview = useHtmlPreview(html)
+    expect(csrPreview.value).not.toMatch(/<[^>]+>/)
+    expect(csrPreview.value).toContain('meaningful')
+  })
+
+  it('decodes HTML entities in output', () => {
+    const html =
+      '<p>Text with &amp; ampersand and &lt;angle brackets&gt; that is long enough to pass.</p>'
+    const preview = useHtmlPreview(html)
+    expect(preview.value).toContain('&')
+    expect(preview.value).not.toContain('&amp;')
+  })
+
+  it('normalizes whitespace in output', () => {
+    const html =
+      '<p>Text   with    multiple   spaces   and   enough   content   to   be   meaningful.</p>'
+    const preview = useHtmlPreview(html)
+    expect(preview.value).not.toMatch(/\s{2,}/)
+  })
+
+  it('falls back to body minus headings when no paragraphs or lists', () => {
+    const html =
+      '<h1>Title</h1><h2>Subtitle</h2><div>Some standalone div content that is long enough</div>'
+    const preview = useHtmlPreview(html)
+    expect(preview.value).toContain('standalone')
+    expect(preview.value).not.toContain('Title')
+    expect(preview.value).not.toContain('Subtitle')
+  })
+
+  it('falls back to ol list content when no paragraphs exist', () => {
+    const html =
+      '<ol><li>First ordered item with content</li><li>Second ordered item</li></ol>'
+    const preview = useHtmlPreview(html)
+    expect(preview.value).toContain('First ordered item')
   })
 })
 

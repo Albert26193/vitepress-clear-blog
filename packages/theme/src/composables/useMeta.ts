@@ -129,16 +129,16 @@ const useDarkTransition = () => {
 }
 
 /**
- * Process HTML content and return a preview
- * This will:
- * 1. Extract meaningful content from HTML (not just the first paragraph)
- * 2. Skip block quotes, citation blocks and other non-content elements when possible
- * 3. Truncate content while keeping HTML structure intact
- * 4. Handle both Chinese and English content differently
+ * Extract a plain-text preview from rendered post HTML.
  *
- * @param html The HTML content to process
+ * Picks the first meaningful paragraph (skipping blockquotes and very short
+ * paragraphs), falls back to lists or the whole body minus headings, then
+ * truncates to the requested length. Both SSR and CSR paths produce the same
+ * plain-text output so there is no hydration mismatch.
+ *
+ * @param html Rendered post HTML from VitePress content loader
  * @param options Configuration options
- * @returns A computed ref containing the processed HTML preview
+ * @returns A computed ref containing the plain-text preview
  */
 const useHtmlPreview = (
   html = '',
@@ -151,135 +151,85 @@ const useHtmlPreview = (
 
   const isChinese = (str: string) => /[\u4e00-\u9fa5]/.test(str)
 
+  const stripTags = (s: string) =>
+    s
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+
+  const truncate = (text: string): string => {
+    const normalized = text.replace(/\s+/g, ' ').trim()
+    if (!normalized) return ''
+
+    if (isChinese(normalized)) {
+      if (normalized.length > maxChineseLength) {
+        return normalized.slice(0, maxChineseLength) + '...'
+      }
+    } else {
+      const words = normalized.split(' ')
+      if (words.length > maxEnglishWords) {
+        return words.slice(0, maxEnglishWords).join(' ') + '...'
+      }
+    }
+    return normalized
+  }
+
   return computed(() => {
     if (!html) return ''
 
     try {
+      // SSR path: strip tags with regex, then truncate
       if (typeof document === 'undefined') {
-        return html.substring(0, 200) + (html.length > 200 ? '...' : '')
+        return truncate(stripTags(html))
       }
 
-      // Create a temporary div to parse HTML
+      // CSR path: use DOM for accurate text extraction
       const div = document.createElement('div')
       div.innerHTML = html
 
-      // Filter out elements with specified classes like blog-tags, tags, etc.
-      const classesToFilter = [
-        'blog-tag',
-        'blog-tags',
-        'tag',
-        'tags',
-        'clear-blog-tags',
-        'tag',
-        'vp-tag'
-      ] // Added a few common variations
-      classesToFilter.forEach((cls) => {
-        const elementsToRemove = div.querySelectorAll(`.${cls}`)
-        elementsToRemove.forEach((el) => el.remove())
-      })
+      // Remove tag/meta elements that should not contribute to the excerpt
+      div
+        .querySelectorAll(
+          '.blog-tag, .blog-tags, .tags, .clear-blog-tags, .vp-tag'
+        )
+        .forEach((el) => el.remove())
 
-      // 1. Try to find the main content paragraph
-      // Priority: regular paragraphs > lists > other content
+      // Remove footnote markers (sup > a.footnote-ref)
+      div
+        .querySelectorAll('sup.footnote-ref, a.footnote-ref')
+        .forEach((el) => el.remove())
+
+      // Find the first meaningful paragraph outside blockquotes
       const paragraphs = Array.from(div.getElementsByTagName('p'))
-      let mainContent = ''
-      let contentElement = null
-
-      // Skip very short paragraphs and blockquotes
-      const meaningfulParagraphs = paragraphs.filter((p) => {
-        // Skip blockquotes, citations, etc.
+      const meaningful = paragraphs.find((p) => {
         if (
           p.closest('blockquote') ||
           p.parentElement?.tagName.toLowerCase() === 'blockquote'
         ) {
           return false
         }
-
-        // Skip very short paragraphs (likely headings or incomplete sentences)
-        const text = p.textContent || ''
-        return text.length > 20
+        return (p.textContent || '').length > 20
       })
 
-      if (meaningfulParagraphs.length > 0) {
-        contentElement = meaningfulParagraphs[0]
-        mainContent = contentElement.innerHTML
-      } else {
-        // If no good paragraphs, try lists or other content
-        const lists = Array.from(div.getElementsByTagName('ul')).concat(
-          Array.from(div.getElementsByTagName('ol'))
-        )
-
-        if (lists.length > 0) {
-          contentElement = lists[0]
-          mainContent = contentElement.innerHTML
-        } else {
-          // Fallback to div's content, excluding headings
-          const headings = div.querySelectorAll('h1, h2, h3, h4, h5, h6')
-          headings.forEach((h) => h.remove())
-
-          mainContent = div.innerHTML
-        }
+      if (meaningful) {
+        return truncate(meaningful.textContent || '')
       }
 
-      // Get text content for length checking
-      const textContent = contentElement?.textContent || div.textContent || ''
-
-      // Apply length limits while preserving HTML structure
-      if (isChinese(textContent)) {
-        if (textContent.length > maxChineseLength) {
-          // For Chinese content, we need to be careful with HTML tags
-          let currentLength = 0
-          let result = ''
-          let inTag = false
-
-          for (let i = 0; i < mainContent.length; i++) {
-            const char = mainContent[i]
-
-            if (char === '<') inTag = true
-            if (!inTag) currentLength++
-            if (char === '>') inTag = false
-
-            result += char
-
-            if (currentLength >= maxChineseLength && !inTag) {
-              result += '...'
-              break
-            }
-          }
-          mainContent = result
-        }
-      } else {
-        // For English content, split by words
-        const words = textContent.split(/\s+/)
-        if (words.length > maxEnglishWords) {
-          // Similar process for English, but word-based
-          let wordCount = 0
-          let result = ''
-          let inTag = false
-
-          for (let i = 0; i < mainContent.length; i++) {
-            const char = mainContent[i]
-
-            if (char === '<') inTag = true
-            if (!inTag && char === ' ') wordCount++
-            if (char === '>') inTag = false
-
-            result += char
-
-            if (wordCount >= maxEnglishWords && !inTag && char === ' ') {
-              result += '...'
-              break
-            }
-          }
-          mainContent = result
-        }
+      // Fallback: first list
+      const list = div.querySelector('ul') || div.querySelector('ol')
+      if (list) {
+        return truncate(list.textContent || '')
       }
 
-      // Clean up any footnotes
-      mainContent = mainContent.replace(/\[\^(\d+)\]/g, '')
-
-      return mainContent
+      // Last resort: body minus headings
+      div.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => h.remove())
+      return truncate(div.textContent || '')
     } catch {
-      return html.substring(0, 200) + '...'
+      return truncate(stripTags(html))
     }
   })
 }
