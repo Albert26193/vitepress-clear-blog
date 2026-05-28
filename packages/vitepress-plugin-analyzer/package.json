@@ -1,19 +1,27 @@
 {
   "name": "vitepress-plugin-analyzer",
   "version": "0.1.0",
-  "description": "vitepress plugin for global analyzer",
+  "description": "VitePress plugin for global site analytics and backlink graph",
   "author": "Albert26193",
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/Albert26193/vitepress-theme-link",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/Albert26193/vitepress-theme-link.git",
+    "directory": "packages/vitepress-plugin-analyzer"
   },
-  "bugs": {},
+  "bugs": {
+    "url": "https://github.com/Albert26193/vitepress-theme-link/issues"
+  },
   "keywords": [
     "vitepress",
-    "plugin"
+    "plugin",
+    "analyzer",
+    "backlink"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",

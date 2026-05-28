@@ -2,6 +2,20 @@
   "name": "vitepress-plugin-details-block",
   "version": "0.1.0",
   "description": "A customizable details block component for VitePress",
+  "author": "Albert26193",
+  "license": "MIT",
+  "homepage": "https://github.com/Albert26193/vitepress-theme-link",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Albert26193/vitepress-theme-link.git",
+    "directory": "packages/vitepress-plugin-details-block"
+  },
+  "bugs": {
+    "url": "https://github.com/Albert26193/vitepress-theme-link/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.umd.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -24,8 +38,6 @@
     "details",
     "component"
   ],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.3",
     "@vitest/coverage-v8": "^4.1.2",

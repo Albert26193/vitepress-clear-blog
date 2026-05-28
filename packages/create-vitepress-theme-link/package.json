@@ -2,7 +2,31 @@
   "name": "create-vitepress-theme-link",
   "version": "0.1.0",
   "type": "module",
-  "description": "Scaffold a VitePress Theme Link project with one command",
+  "description": "Scaffold a VitePress Theme Link blog project",
+  "author": "Albert26193",
+  "license": "MIT",
+  "homepage": "https://github.com/Albert26193/vitepress-theme-link",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Albert26193/vitepress-theme-link.git",
+    "directory": "packages/create-vitepress-theme-link"
+  },
+  "bugs": {
+    "url": "https://github.com/Albert26193/vitepress-theme-link/issues"
+  },
+  "keywords": [
+    "create",
+    "vitepress",
+    "theme",
+    "blog",
+    "scaffold"
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "create-vitepress-theme-link": "./bin/create-vitepress-theme-link.js"
   },
