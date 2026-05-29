@@ -74,10 +74,6 @@
     padding: var(--bv-tag-py, 0.25rem) var(--bv-tag-px, 0.5rem);
     font-size: var(--bv-tag-font-size, 11px);
     line-height: 1rem;
-    overflow-wrap: normal;
-    word-wrap: normal;
-    word-break: normal;
-    hyphens: manual;
   }
 
   .bordered {
