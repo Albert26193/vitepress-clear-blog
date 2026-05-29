@@ -8,8 +8,8 @@ description: >
   "改完跑一下测试", "不要全量 e2e", or asks which checks should be run. For quick
   local validation, run root unit tests and only related Playwright e2e specs;
   for PR/CI confidence, align with .github/workflows/ci.yml: lint, E2E coverage,
-  typecheck, build, unit tests, and related E2E specs unless full E2E is explicitly
-  requested or clearly necessary.
+  typecheck, build, package artifact validation, unit tests, and related E2E specs
+  unless full E2E is explicitly requested or clearly necessary.
 ---
 
 # Local and CI Test Check
@@ -33,7 +33,7 @@ are two modes:
 | Commit check | `git log -1 --format=%B | pnpm check-commit` |
 | Type check | `pnpm typecheck` |
 | Unit test | `pnpm build:packages` then `pnpm test:unit` |
-| Build | `pnpm build` |
+| Build + package artifacts | `pnpm build` then `pnpm validate:packages` |
 | E2E test | `pnpm test:e2e` in CI; locally prefer targeted `pnpm -F vitepress-theme-link test:e2e -- e2e/<Spec>.spec.ts` |
 
 When the user asks whether a branch is ready for PR/CI, include all relevant CI
@@ -94,6 +94,8 @@ Use this when the user asks for final confidence, PR readiness, CI parity, or
 | Typecheck | `pnpm typecheck` | Includes `pnpm build:packages`. |
 | Unit test | `pnpm test:unit` | CI runs `pnpm build:packages` first; `pnpm typecheck` already covers that build step if run earlier. |
 | Build | `pnpm build` | Required by CI and produces the docs artifact used by E2E. |
+| Package artifacts | `pnpm validate:packages` | Fast tarball/export/content validation; run after `pnpm build`. |
+| Consumer package install | `pnpm validate:consumer` | Heavy fresh-consumer tarball install/build validation; run for package-publishing-sensitive changes. |
 | Related E2E | `pnpm -F vitepress-theme-link test:e2e -- e2e/<Spec>.spec.ts` | Local CI-aligned checks should still target the cases related to the current change to keep runtime reasonable. |
 | Full E2E only when requested or necessary | `pnpm test:e2e` | CI runs full E2E, but locally use this only when the user explicitly asks or the change is broad enough that targeted specs are misleading. |
 | Commit check | `git log -1 --format=%B | pnpm check-commit` | Only needed when validating the current commit message. |
@@ -106,11 +108,20 @@ bash scripts/check-e2e-coverage.sh
 pnpm typecheck
 pnpm test:unit
 pnpm build
+pnpm validate:packages
 pnpm -F vitepress-theme-link test:e2e -- e2e/<Related>.spec.ts
 ```
 
 Add the commit check when the user asks to validate commits or CI parity for an
 already-created commit.
+
+Run the heavy consumer package validation when the diff touches package-publishing-sensitive paths:
+
+```bash
+pnpm validate:consumer
+```
+
+Package-publishing-sensitive paths include `packages/*/package.json`, package build configs (`tsup.config.ts`, `vite.config.ts`), `packages/theme/src/**`, `packages/theme/uno.config.ts`, `packages/create-vitepress-theme-link/public/template/**`, `scripts/validate-*.mjs`, and package/release workflow files.
 
 ## Mutation safety
 
@@ -214,6 +225,8 @@ Use this structure when presenting the check plan and results:
 | Typecheck | `...` | Passed/Failed/Skipped | ... |
 | Unit | `...` | Passed/Failed/Skipped | ... |
 | Build | `...` | Passed/Failed/Skipped | ... |
+| Package artifacts | `pnpm validate:packages` | Passed/Failed/Skipped | ... |
+| Consumer package install | `pnpm validate:consumer` | Passed/Failed/Skipped | Run for package-sensitive changes. |
 | E2E | `...` | Passed/Failed/Skipped | ... |
 
 ## Recommendation

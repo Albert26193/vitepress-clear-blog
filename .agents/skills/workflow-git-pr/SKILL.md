@@ -358,11 +358,16 @@ Ask `tool-test-check` to run the PR/CI-aligned local gate for the staged commit:
 - `pnpm typecheck`
 - `pnpm test:unit`
 - `pnpm build`
+- `pnpm validate:packages`
+- `pnpm validate:consumer` when package-publishing-sensitive paths changed
 - related E2E specs for the current changes, not naked full `pnpm test:e2e`
 
-Use `tool-test-check`'s E2E selection rules to choose the related cases. Only run
-full local E2E if the user explicitly requested it or if the changes are broad
-enough that targeted cases would be misleading.
+Use `tool-test-check`'s E2E and package validation selection rules to choose the
+related cases. Only run full local E2E if the user explicitly requested it or if
+the changes are broad enough that targeted cases would be misleading. Run the
+heavy consumer package validation for package manifests, package build configs,
+theme source exports, scaffold templates, validation scripts, or package/release
+workflow changes.
 
 If the quality gate passes, continue to Step 6.
 

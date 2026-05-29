@@ -62,6 +62,8 @@ These are defined in the root `package.json` and work from the repo root.
 | Build packages | `pnpm build:packages` | Recursive build across all packages |
 | Build testbed | `pnpm build:testbed` | VitePress build for testbed |
 | Build UnoCSS | `pnpm build:unocss` | One-shot UnoCSS generation |
+| Validate package artifacts | `pnpm validate:packages` | Fast pack/export/tarball content validation for publishable packages |
+| Validate consumer install | `pnpm validate:consumer` | Heavy fresh consumer install/build validation from packed tarballs |
 
 ### Clean
 
@@ -197,6 +199,16 @@ pnpm build:packages && pnpm dev
 **Quick local validation before commit:**
 ```bash
 pnpm test:unit
+```
+
+**Package artifact validation before PR/publish:**
+```bash
+pnpm build && pnpm validate:packages
+```
+
+**Fresh consumer validation before release or package-sensitive PRs:**
+```bash
+pnpm build && pnpm validate:consumer
 ```
 
 **Full CI check locally:**
