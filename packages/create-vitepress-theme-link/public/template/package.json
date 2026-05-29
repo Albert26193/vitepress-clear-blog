@@ -11,5 +11,10 @@
   "dependencies": {
     "vitepress": "^1.6.4",
     "vitepress-theme-link": "^0.1.0"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "^1.2.16",
+    "sass": "^1.97.2",
+    "unocss": "^66.0.0"
   }
 }
