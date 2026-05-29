@@ -23,11 +23,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "./dist/index.mjs",
   "exports": {
     "./package.json": "./package.json",
-    "./styles": "./lib/styles/index.scss",
     ".": {
+      "types": "./src/types/types.d.ts",
       "import": "./src/index.ts"
     },
     "./node": {
@@ -36,12 +35,14 @@
       "require": "./lib/node/index.js",
       "default": "./lib/node/index.js"
     },
+    "./styles": "./lib/styles/index.scss",
     "./types": "./src/types/types.d.ts",
     "./uno.config": "./uno.config.ts"
   },
   "files": [
     "lib",
-    "src"
+    "src",
+    "uno.config.ts"
   ],
   "scripts": {
     "dev": "pnpm '/(tsup|copy):watch/'",

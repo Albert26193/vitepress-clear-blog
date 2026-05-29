@@ -16,17 +16,20 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist/index.umd.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.umd.js",
+  "module": "lib/index.mjs",
+  "types": "lib/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.umd.js"
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.umd.js"
     },
-    "./dist/index.css": "./dist/index.css"
+    "./style.css": "./lib/index.css"
   },
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "build": "vite build && vue-tsc -p tsconfig.json",
     "dev": "vite build --watch",

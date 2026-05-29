@@ -5,6 +5,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [vue()],
   build: {
+    outDir: 'lib',
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'VitePressPluginDetailsBlock',
