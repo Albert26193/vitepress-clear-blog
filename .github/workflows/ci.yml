@@ -111,6 +111,8 @@ jobs:
 
       - run: pnpm build
 
+      - run: pnpm validate:packages
+
       - uses: actions/upload-artifact@v5
         with:
           name: build-artifacts
