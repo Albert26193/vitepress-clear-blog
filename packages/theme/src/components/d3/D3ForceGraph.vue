@@ -33,7 +33,7 @@
   import { useRouter, withBase } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
 
-  import type { D3ForceConfig, D3Link, D3Node } from '../../types/types'
+  import type { D3Link, D3Node } from '../../types/types'
   import {
     createDrag,
     createHover,
@@ -44,8 +44,19 @@
   const router = useRouter()
   const svgRef = ref<SVGSVGElement | null>(null)
 
-  interface Props extends D3ForceConfig {
-    /** Current zoom level mirrored through v-model for external controls. */
+  interface Props {
+    nodes: D3Node[]
+    links: D3Link[]
+    width?: number
+    height?: number
+    diameter?: number
+    textSize?: number
+    circleColor?: string
+    textColor?: string
+    linkDistance?: number
+    linkStrength?: number
+    linkColor?: string
+    chargeStrength?: number
     modelValue?: number
   }
 
