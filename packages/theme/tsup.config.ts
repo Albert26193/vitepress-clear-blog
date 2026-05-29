@@ -16,6 +16,7 @@ export default defineConfig({
     'unocss'
   ],
   noExternal: [
+    'dayjs',
     'vitepress-plugin-analyzer',
     'vitepress-plugin-callouts',
     'vitepress-plugin-config',

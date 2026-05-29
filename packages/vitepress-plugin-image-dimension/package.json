@@ -48,6 +48,14 @@
   "dependencies": {
     "markdown-it": "^14.1.0"
   },
+  "peerDependencies": {
+    "vitepress": "^1.5.0"
+  },
+  "peerDependenciesMeta": {
+    "vitepress": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
     "vitest": "^4.1.2"
