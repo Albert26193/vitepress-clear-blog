@@ -12,7 +12,7 @@ export interface CodeBlockFoldOptions {
   /**
    * Keeps a folded block tall enough to hint that more code is available.
    *
-   * @default 50
+   * @default 130
    */
   visibleHeight?: number
 }
@@ -60,7 +60,7 @@ export function setupCodeBlockFold(options: CodeBlockFoldOptions = {}) {
 
   const route = useRoute()
   const minHeight = options.minHeight ?? 200
-  const visibleHeight = options.visibleHeight ?? 50
+  const visibleHeight = options.visibleHeight ?? 130
   const codeBlockStates = new Map<HTMLElement, CodeBlockState>()
 
   let mutationObserver: MutationObserver | undefined
