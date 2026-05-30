@@ -19,12 +19,11 @@ test.describe('WikiLinks', () => {
 
     await expect(existing).toBeVisible()
     await expect(existing).not.toHaveClass(/broken-link/)
-    await expect(existing).toHaveAttribute('data-link-internal', '')
     await expect(existing).not.toHaveAttribute('data-link-broken', '')
     await expect(missing).toBeVisible()
     await expect(missing).toHaveAttribute(
       'href',
-      'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.html'
+      '/blogs/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.html'
     )
     await expect(missing).toHaveClass(/broken-link/)
     await expect(missing).toHaveAttribute('data-link-broken', '')
@@ -54,9 +53,7 @@ test.describe('WikiLinks', () => {
       .locator('.vp-doc a[href^="https://"]')
       .first()
 
-    await expect(wikiLink).toHaveAttribute('data-link-internal', '')
     await expect(wikiLink).toHaveAttribute('data-link-style-target', '')
-    await expect(markdownInternalLink).toHaveAttribute('data-link-internal', '')
     await expect(markdownInternalLink).toHaveAttribute(
       'data-link-style-target',
       ''
@@ -145,10 +142,9 @@ test.describe('WikiLinks', () => {
 
     await expect(missingPageLink).toHaveAttribute(
       'href',
-      './../missing/target-page.html'
+      '/missing/target-page.html'
     )
     await expect(missingPageLink).toHaveClass(/broken-link/)
-    await expect(missingPageLink).toHaveAttribute('data-link-internal', '')
     await expect(missingPageLink).toHaveAttribute('data-link-broken', '')
     await expect(missingPageLink).toHaveAttribute('data-link-style-target', '')
   })

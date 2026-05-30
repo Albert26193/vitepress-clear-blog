@@ -27,7 +27,7 @@ import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 import { classifyHref } from '../linkKind'
 import { resolveDate } from './datetime'
 import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
-import { createWikilinkPlugin } from './wikilinkPlugin'
+import { type RenderTitleMode, createWikilinkPlugin } from './wikilinkPlugin'
 
 type ImageDimensionTomlConfig = {
   enabled?: boolean
@@ -166,12 +166,15 @@ const createBlog = async (
     | ((pageData: { frontmatter?: Record<string, unknown> }) => unknown)
     | undefined
 
+  const renderTitle = ((mdConf as Record<string, unknown>).render_title ||
+    'frontmatter_title') as RenderTitleMode
+
   const wikiLinkPlugin =
     mdConf.wikilinks !== false
       ? await createWikilinkPlugin(
           toml?.links?.resolutionModes as ResolutionMode[] | undefined,
           {},
-          { base: vitePressBase, cleanUrls }
+          { base: vitePressBase, cleanUrls, renderTitle }
         )
       : null
 

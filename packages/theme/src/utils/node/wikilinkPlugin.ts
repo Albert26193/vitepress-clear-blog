@@ -1,21 +1,31 @@
 import type MarkdownIt from 'markdown-it'
 import type StateInline from 'markdown-it/lib/rules_inline/state_inline.mjs'
 import type Token from 'markdown-it/lib/token.mjs'
-import { dirname, relative, resolve } from 'node:path'
+import { relative } from 'node:path'
 import {
   type AnalyzerConfig,
   type ResolutionMode,
-  buildFilenameIndex,
+  type SiteMetadata,
+  analyzeAllDocuments,
   createConfig,
   getDocsRoot,
   resolveInternalLink
 } from 'vitepress-plugin-analyzer'
 
 import { classifyHref } from '../linkKind'
+import { clampToVaultPath } from '../shared/path'
+
+/** Wiki link label rendering mode, mirrors `markdown.render_title` in config.toml. */
+type RenderTitleMode =
+  | 'alias'
+  | 'file_name'
+  | 'frontmatter_title'
+  | 'first_heading'
 
 type WikilinkPluginOptions = {
   base?: string
   cleanUrls?: boolean
+  renderTitle?: RenderTitleMode
 }
 
 const WIKILINK_RE = /^\[\[([^|\]\n]+)(?:\|([^\]\n]+))?\]\]/
@@ -79,36 +89,30 @@ const formatBasePageHref = (
   return `${siteBase}${pagePath.replace(/^\/+/, '')}`
 }
 
-const formatBrokenPagePath = (
-  path: string,
-  { cleanUrls = false }: Pick<WikilinkPluginOptions, 'cleanUrls'>
-): string => {
-  const [pathname, suffix] = splitHashAndQuery(path)
-  const htmlPath =
-    cleanUrls || !pathname || pathname === '/' || pathname.endsWith('.html')
-      ? pathname
-      : `${pathname}.html`
-
-  return `${htmlPath}${suffix}`
-}
-
+/**
+ * Formats the href for a broken page candidate. The target is clamped to a
+ * vault-absolute path so the resulting href can never escape the site base —
+ * it always lands on VitePress's 404 route (issue #434).
+ */
 const formatBrokenPageHref = (
   path: string,
+  currentFile: string,
   options: WikilinkPluginOptions,
   withBase: boolean
 ): string => {
   if (!isPageCandidateHref(path)) return path
 
-  const pagePath = formatBrokenPagePath(path, options)
+  const clamped = clampToVaultPath(path, currentFile)
 
-  return withBase && pagePath.startsWith('/')
-    ? formatBasePageHref(pagePath, options)
-    : pagePath
+  return withBase
+    ? formatBasePageHref(clamped, options)
+    : formatInternalPagePath(clamped, options)
 }
 
 type PageCandidateHrefResult = {
   href: string
   broken: boolean
+  relativePath: string | null
 }
 
 const resolvePageCandidateHref = (
@@ -129,13 +133,62 @@ const resolvePageCandidateHref = (
       href: withBase
         ? formatBasePageHref(resolvedPath, options)
         : formatInternalPagePath(resolvedPath, options),
-      broken: false
+      broken: false,
+      relativePath: resolved.relativePath
     }
   }
 
   return {
-    href: formatBrokenPageHref(href, options, withBase),
-    broken: true
+    href: formatBrokenPageHref(href, currentFile, options, withBase),
+    broken: true,
+    relativePath: null
+  }
+}
+
+/**
+ * Looks up analyzer metadata for a resolved target, falling back to the
+ * directory's `index` page (since directory links resolve to `dir`, not
+ * `dir/index`).
+ */
+const lookupPageMetadata = (relativePath: string, siteMetadata: SiteMetadata) =>
+  siteMetadata[relativePath] || siteMetadata[`${relativePath}/index`]
+
+/**
+ * Resolves the display label for a wiki link. An explicit alias always wins;
+ * otherwise the label follows `renderTitle`, read from build-time analyzer
+ * metadata. Broken links fall back to the raw target text.
+ */
+const resolveWikiLabel = (
+  rawTarget: string,
+  alias: string | undefined,
+  relativePath: string | null,
+  renderTitle: RenderTitleMode,
+  siteMetadata: SiteMetadata
+): string => {
+  if (alias) return alias
+
+  // Broken (unresolved) links keep the raw target as a readable label.
+  if (!relativePath) return rawTarget
+
+  const meta = lookupPageMetadata(relativePath, siteMetadata)
+  const fileName = relativePath.split('/').pop() || rawTarget
+
+  switch (renderTitle) {
+    case 'file_name':
+      return fileName
+
+    case 'frontmatter_title':
+      return meta?.frontMatterTitle || fileName
+
+    case 'first_heading': {
+      const heading = meta?.firstHeading
+      if (heading && heading !== 'no-heading') return heading
+      return meta?.frontMatterTitle || fileName
+    }
+
+    case 'alias':
+    default:
+      return rawTarget
   }
 }
 
@@ -145,16 +198,20 @@ export const createWikilinkPlugin = async (
   options: WikilinkPluginOptions = {}
 ): Promise<(md: MarkdownIt) => void> => {
   const pluginOptions = options
+  const renderTitle = options.renderTitle ?? 'alias'
   const config = createConfig({
     ...configOverrides,
     ...(resolutionModes?.length ? { resolutionModes } : {})
   })
   const docsRoot = getDocsRoot(config)
-  const indexResult = await buildFilenameIndex(docsRoot, config)
 
-  config.filenameIndex = indexResult.match(
-    (index) => index,
-    () => new Map()
+  // A single analysis pass builds the filename index (stored on `config`, used
+  // by obsidianShortest resolution) and returns whole-site metadata that powers
+  // build-time title rendering — making the analyzer the single source of truth.
+  const analysis = await analyzeAllDocuments(config)
+  const siteMetadata: SiteMetadata = analysis.match(
+    (result) => result.globalMetadata,
+    () => ({})
   )
 
   return (md: MarkdownIt) => {
@@ -166,20 +223,56 @@ export const createWikilinkPlugin = async (
       if (silent) return true
 
       const rawTarget = match[1].trim()
-      const label = (match[2] || rawTarget).trim()
+      const alias = match[2]?.trim()
       const currentFile = getCurrentFile(state.env || {}, docsRoot)
-      const hrefResult = currentFile
-        ? resolvePageCandidateHref(
-            rawTarget,
-            config,
-            currentFile,
-            pluginOptions,
-            true
-          )
-        : {
-            href: formatBrokenPageHref(rawTarget, pluginOptions, true),
-            broken: true
+      const targetKind = classifyHref(rawTarget)
+      const isNonPageTarget = Boolean(
+        targetKind && targetKind !== 'pageCandidate'
+      )
+
+      // Decision 1 (#434): leading-slash wiki links like `[[/path]]` are not
+      // part of Obsidian's syntax and are always treated as broken. Standard
+      // markdown links `[text](/path)` are unaffected — they flow through the
+      // `link_open` rule and VitePress's native resolution.
+      const forcedBroken = !rawTarget || rawTarget.startsWith('/')
+
+      const hrefResult: PageCandidateHrefResult = isNonPageTarget
+        ? {
+            href: rawTarget,
+            broken: false,
+            relativePath: null
           }
+        : !forcedBroken && currentFile
+          ? resolvePageCandidateHref(
+              rawTarget,
+              config,
+              currentFile,
+              pluginOptions,
+              true
+            )
+          : {
+              href: rawTarget
+                ? formatBrokenPageHref(
+                    rawTarget,
+                    currentFile,
+                    pluginOptions,
+                    true
+                  )
+                : '#',
+              broken: true,
+              relativePath: null
+            }
+
+      const label =
+        resolveWikiLabel(
+          rawTarget,
+          alias,
+          hrefResult.relativePath,
+          renderTitle,
+          siteMetadata
+        ) ||
+        rawTarget ||
+        match[1]
 
       const token = state.push('wikilink_open', 'a', 1)
       token.attrs = [
@@ -227,7 +320,8 @@ export const createWikilinkPlugin = async (
             )
           : {
               href,
-              broken: true
+              broken: true,
+              relativePath: null
             }
 
         token.attrSet('href', hrefResult.href)
@@ -257,3 +351,5 @@ export const createWikilinkPlugin = async (
     ) => self.renderToken(tokens, idx, options)
   }
 }
+
+export type { RenderTitleMode, WikilinkPluginOptions }

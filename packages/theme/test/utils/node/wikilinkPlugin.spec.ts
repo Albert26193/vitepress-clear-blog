@@ -33,13 +33,20 @@ describe('createWikilinkPlugin', () => {
   beforeAll(async () => {
     await mkdir(resolve(docsDir, 'src/utils/node'), { recursive: true })
     await mkdir(resolve(docsDir, 'test/utils/node'), { recursive: true })
+    await mkdir(resolve(docsDir, 'assets'), { recursive: true })
+    await mkdir(resolve(docsDir, 'guide'), { recursive: true })
     await writeFile(
       resolve(docsDir, 'src/utils/node/target-page.md'),
-      '# Target'
+      '---\ntitle: Frontmatter Target\n---\n\n# Target Heading\n'
     )
     await writeFile(
       resolve(docsDir, 'test/utils/node/source-page.md'),
       '# Source'
+    )
+    await writeFile(resolve(docsDir, 'assets/diagram.svg'), '<svg></svg>')
+    await writeFile(
+      resolve(docsDir, 'guide/index.md'),
+      '---\ntitle: Guide Home\n---\n\n# Guide Heading\n'
     )
   })
 
@@ -111,6 +118,83 @@ describe('createWikilinkPlugin', () => {
     )
   })
 
+  it.each([
+    ['alias', 'target-page'],
+    ['file_name', 'target-page'],
+    ['frontmatter_title', 'Frontmatter Target'],
+    ['first_heading', 'Target Heading']
+  ] as const)('renders labels in %s mode', async (renderTitle, expected) => {
+    const html = await render(
+      '[[target-page]]',
+      { relativePath: 'test/utils/node/source-page.md' },
+      { renderTitle }
+    )
+
+    expect(html).toContain(`>${expected}</a>`)
+  })
+
+  it('lets explicit aliases override renderTitle modes', async () => {
+    const html = await render(
+      '[[target-page|Explicit Alias]]',
+      { relativePath: 'test/utils/node/source-page.md' },
+      { renderTitle: 'frontmatter_title' }
+    )
+
+    expect(html).toContain('>Explicit Alias</a>')
+    expect(html).not.toContain('Frontmatter Target')
+  })
+
+  it('forces leading-slash wikilinks to be broken', async () => {
+    const html = await render('[[/src/utils/node/target-page]]', {
+      relativePath: 'test/utils/node/source-page.md'
+    })
+
+    expect(html).toContain('href="/src/utils/node/target-page.html"')
+    expect(html).toContain('broken-link')
+    expect(html).toContain('data-link-broken')
+  })
+
+  it('preserves hash-only wikilinks as non-page links', async () => {
+    const html = await render('[[#section]]', {
+      relativePath: 'test/utils/node/source-page.md'
+    })
+
+    expect(html).toContain('href="#section"')
+    expect(html).toContain('>#section</a>')
+    expect(html).not.toContain('broken-link')
+    expect(html).not.toContain('data-link-broken')
+  })
+
+  it('preserves asset wikilinks as non-page links', async () => {
+    const html = await render('[[../../assets/diagram.svg]]', {
+      relativePath: 'test/utils/node/source-page.md'
+    })
+
+    expect(html).toContain('href="../../assets/diagram.svg"')
+    expect(html).not.toContain('broken-link')
+    expect(html).not.toContain('data-link-broken')
+  })
+
+  it('marks blank wikilink targets as broken without resolving the docs root', async () => {
+    const html = await render('[[   ]]', {
+      relativePath: 'test/utils/node/source-page.md'
+    })
+
+    expect(html).toContain('href="#"')
+    expect(html).toContain('broken-link')
+    expect(html).toContain('data-link-broken')
+    expect(html).not.toContain('href="/index.html"')
+  })
+
+  it('resolves directory wikilinks to index pages', async () => {
+    const html = await render('[[../../../guide]] [[../../../guide/index]]', {
+      relativePath: 'test/utils/node/source-page.md'
+    })
+
+    expect(html.match(/href="\/guide\/index\.html"/g)).toHaveLength(2)
+    expect(html).not.toContain('href="/guide.html"')
+  })
+
   it('does not rewrite external or hash markdown links', async () => {
     const html = await render(
       '[External](https://example.com) [Hash](#section)',
@@ -140,47 +224,61 @@ describe('createWikilinkPlugin', () => {
   })
 
   it('marks broken regular markdown internal links', async () => {
-    const html = await render('[Missing](../missing/target-page)', {
+    const html = await render('[Missing](../missing/no-such-page)', {
       relativePath: 'test/utils/node/source-page.md'
     })
 
-    expect(html).toContain('href="../missing/target-page.html"')
+    expect(html).toContain('href="/test/utils/missing/no-such-page.html"')
     expect(html).toContain('broken-link')
     expect(html).toContain('data-link-broken')
   })
 
   it('marks unresolved wikilinks as broken', async () => {
-    const html = await render('[[../missing/target-page|Broken]]', {
+    const html = await render('[[../missing/no-such-page|Broken]]', {
       relativePath: 'test/utils/node/source-page.md'
     })
 
-    expect(html).toContain('href="../missing/target-page.html"')
+    expect(html).toContain('href="/test/utils/missing/no-such-page.html"')
     expect(html).toContain('broken-link')
     expect(html).toContain('data-link-broken')
   })
 
   it('formats broken markdown links and wikilinks consistently', async () => {
     const html = await render(
-      '[[../missing/target-page|Broken Wiki]] [Broken Markdown](../missing/target-page)',
+      '[[../missing/no-such-page|Broken Wiki]] [Broken Markdown](../missing/no-such-page)',
       { relativePath: 'test/utils/node/source-page.md' }
     )
 
-    expect(html.match(/href="\.\.\/missing\/target-page\.html"/g)).toHaveLength(
-      2
-    )
+    expect(
+      html.match(/href="\/test\/utils\/missing\/no-such-page\.html"/g)
+    ).toHaveLength(2)
     expect(html.match(/data-link-broken/g)).toHaveLength(2)
   })
 
   it('preserves clean URLs and suffixes on broken page candidates', async () => {
     const html = await render(
-      '[[../missing/target-page?from=wiki#part|Broken Wiki]] [Broken Markdown](../missing/target-page?from=md#part)',
+      '[[../missing/no-such-page?from=wiki#part|Broken Wiki]] [Broken Markdown](../missing/no-such-page?from=md#part)',
       { relativePath: 'test/utils/node/source-page.md' },
       { cleanUrls: true }
     )
 
-    expect(html).toContain('href="../missing/target-page?from=wiki#part"')
-    expect(html).toContain('href="../missing/target-page?from=md#part"')
-    expect(html).not.toContain('target-page.html')
+    expect(html).toContain(
+      'href="/test/utils/missing/no-such-page?from=wiki#part"'
+    )
+    expect(html).toContain(
+      'href="/test/utils/missing/no-such-page?from=md#part"'
+    )
+    expect(html).not.toContain('no-such-page.html')
+  })
+
+  it('clamps overshooting broken page candidates to the vault root', async () => {
+    const html = await render(
+      '[[../../../../../../../../missing|Broken Wiki]] [Broken Markdown](../../../../../../../../missing)',
+      { relativePath: 'test/utils/node/source-page.md' }
+    )
+
+    expect(html.match(/href="\/missing\.html"/g)).toHaveLength(2)
+    expect(html.match(/data-link-broken/g)).toHaveLength(2)
   })
 
   it('leaves non-wikilink text unchanged', async () => {
@@ -195,7 +293,7 @@ describe('createWikilinkPlugin', () => {
   it('marks links as broken when current file is unavailable', async () => {
     const html = await render('[[target-page]]', {})
 
-    expect(html).toContain('href="target-page.html"')
+    expect(html).toContain('href="/target-page.html"')
     expect(html).toContain('broken-link')
   })
 

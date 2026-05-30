@@ -53,6 +53,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "markdown-it": "^14.1.0",
     "markdown-it-wikilinks": "^1.4.0",
     "neverthrow": "^8.2.0"

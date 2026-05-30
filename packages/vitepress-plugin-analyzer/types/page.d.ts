@@ -18,6 +18,8 @@ export interface PageMetadata {
   backLinks: PageLink[]
   wordCount: number
   firstHeading: string
+  /** Frontmatter `title` value, or empty string when absent. */
+  frontMatterTitle: string
   lastUpdated: number
 }
 

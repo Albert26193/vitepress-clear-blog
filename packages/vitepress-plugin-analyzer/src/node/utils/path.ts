@@ -25,12 +25,6 @@ const getDocsRoot = (config: AnalyzerConfig): string => {
  */
 const normalizeLink = (link: string): string => link.split('#')[0]
 
-const isExplicitRelativeLink = (linkPath: string): boolean =>
-  linkPath.startsWith('./') ||
-  linkPath.startsWith('../') ||
-  linkPath.includes('/../') ||
-  linkPath.includes('/./')
-
 export type ResolvedInternalLink = {
   absolutePath: string
   relativePath: string
@@ -38,16 +32,28 @@ export type ResolvedInternalLink = {
 }
 
 /**
- * Check if a file exists at the given absolute path.
- * Supports both with and without .md extension.
+ * Resolve a candidate path to the actual Markdown file it represents.
+ * Supports `.md` extension fallback and directory→`index.md` fallback,
+ * matching the Obsidian/VitePress behavior for `[[dir]]` style links.
  */
-const linkedFileExists = (absolutePath: string): boolean => {
-  if (existsSync(absolutePath) && statSync(absolutePath).isFile()) return true
+const resolveLinkedFilePath = (absolutePath: string): string | null => {
+  if (existsSync(absolutePath)) {
+    const stat = statSync(absolutePath)
+    if (stat.isFile()) return absolutePath
+    if (stat.isDirectory()) {
+      const indexPath = join(absolutePath, 'index.md')
+      return existsSync(indexPath) && statSync(indexPath).isFile()
+        ? indexPath
+        : null
+    }
+  }
   if (!absolutePath.endsWith('.md')) {
     const markdownPath = `${absolutePath}.md`
     return existsSync(markdownPath) && statSync(markdownPath).isFile()
+      ? absolutePath
+      : null
   }
-  return false
+  return null
 }
 
 /**
@@ -82,6 +88,9 @@ const getProjectRelativePath = (
 
 // ── Mode-specific resolvers ───────────────────────────────────────
 
+// Accept both `/path` (standard Markdown vault-absolute, used by `[Text](/path)`)
+// and bare `path`. The wikilink layer applies the stricter Obsidian semantics
+// (rejecting `[[/path]]`) on top of this resolver — see `wikilinkPlugin.ts`.
 const resolveRepoRoot = (
   linkPath: string,
   config: AnalyzerConfig,
@@ -89,7 +98,7 @@ const resolveRepoRoot = (
 ): string | null => {
   const clean = linkPath.startsWith('/') ? linkPath.substring(1) : linkPath
   const abs = resolve(getDocsRoot(config), clean)
-  return linkedFileExists(abs) ? abs : null
+  return resolveLinkedFilePath(abs)
 }
 
 const resolveByAbsolutePath = (
@@ -98,7 +107,7 @@ const resolveByAbsolutePath = (
   _currentFile: string
 ): string | null => {
   if (!isAbsolute(linkPath)) return null
-  return linkedFileExists(linkPath) ? linkPath : null
+  return resolveLinkedFilePath(linkPath)
 }
 
 const resolveRelativeToCurrentFile = (
@@ -109,7 +118,7 @@ const resolveRelativeToCurrentFile = (
   if (linkPath.startsWith('/')) return null
   const currentFileAbs = resolve(getDocsRoot(config), currentFile)
   const abs = resolve(dirname(currentFileAbs), linkPath)
-  return linkedFileExists(abs) ? abs : null
+  return resolveLinkedFilePath(abs)
 }
 
 const resolveObsidianShortest = (
@@ -149,16 +158,16 @@ const MODE_RESOLVERS: Record<
   obsidianShortest: resolveObsidianShortest
 }
 
+// All link forms — including explicit relative `[[../foo]]` — are allowed to
+// fall back through `obsidianShortest`. This mirrors Obsidian's basename-first
+// resolution and avoids the asymmetry that caused issue #434, where overshooting
+// `../` chains went broken instead of resolving by basename.
 const resolveLinkMultiMode = (
   linkPath: string,
   config: AnalyzerConfig,
   currentFile: string
 ): string | null => {
-  const explicitRelative = isExplicitRelativeLink(linkPath)
-
   for (const mode of config.resolutionModes) {
-    if (explicitRelative && mode === 'obsidianShortest') continue
-
     const resolver = MODE_RESOLVERS[mode]
     if (!resolver) continue
     const result = resolver(linkPath, config, currentFile)

@@ -97,7 +97,9 @@ describe('Path Resolution and Validation', () => {
       })
     })
 
-    it('should not resolve directory paths to index.md or README.md', () => {
+    it('resolves directory paths to their index.md (Obsidian-style [[dir]])', () => {
+      // README.md is NOT auto-resolved — only index.md, matching VitePress
+      // serving conventions.
       const content = [
         '[Directory Index](./directory-index/)',
         '[Directory README](./directory-readme/)',
@@ -106,7 +108,11 @@ describe('Path Resolution and Validation', () => {
       ].join('\n')
       const links = extractInnerLinks(content, testConfig, 'attach/test.md')
 
-      expect(links).toHaveLength(0)
+      // After dedup the 3 directory-index variants collapse into a single
+      // entry at the real index page; directory-readme/ stays broken because
+      // the implicit index is index.md, not README.md.
+      expect(links).toHaveLength(1)
+      expect(links[0].relativePath).toBe('attach/directory-index/index')
     })
 
     it('should resolve explicit markdown index.md and README.md links', () => {
@@ -155,7 +161,7 @@ describe('Path Resolution and Validation', () => {
       )
     })
 
-    it('should not recover broken explicit relative paths with obsidian shortest mode', async () => {
+    it('recovers broken explicit relative paths via obsidianShortest fallback (issue #434)', async () => {
       const { buildFilenameIndex } = await import('../src/node/utils/path')
       const config = createConfig({
         ...testConfig,
@@ -172,7 +178,11 @@ describe('Path Resolution and Validation', () => {
       const content = '[[../missing/doc1|Doc 1]]'
       const links = extractInnerLinks(content, config, 'attach/test.md')
 
-      expect(links).toEqual([])
+      expect(links).toHaveLength(1)
+      expect(links[0]).toMatchObject({
+        relativePath: 'attach/doc1',
+        type: 'wiki'
+      })
     })
 
     it('should handle special characters in paths', () => {
