@@ -1,4 +1,29 @@
+import type { Page } from '@playwright/test'
 import { expect, test } from '@playwright/test'
+
+/**
+ * Open the Overview popup and return its wrapper locator.
+ *
+ * The Overview button is server-rendered, so under CI CPU contention a click
+ * can land before Vue finishes hydrating the page. Such a click is silently
+ * dropped, `showOverview` never flips, and `.popup-wrapper` never mounts — the
+ * old fixed `waitForTimeout` could not recover from this, so the assertion
+ * failed on every retry. Re-issue the click until the popup actually appears
+ * instead of waiting a fixed interval and asserting once.
+ */
+const openOverview = async (page: Page) => {
+  const overviewBtn = page.locator('button[title="Overview"]')
+  const popup = page.locator('.popup-wrapper')
+
+  await expect(async () => {
+    if (!(await popup.isVisible())) {
+      await overviewBtn.click()
+    }
+    await expect(popup).toBeVisible({ timeout: 2000 })
+  }).toPass({ timeout: 15000 })
+
+  return popup
+}
 
 test.describe('D3FullScreen', () => {
   test.beforeEach(async ({ page }) => {
@@ -11,11 +36,8 @@ test.describe('D3FullScreen', () => {
       test.skip(true, 'Overview button not found')
       return
     }
-    await overviewBtn.click()
-    await page.waitForTimeout(1000)
 
-    const popup = page.locator('.popup-wrapper')
-    await expect(popup).toBeVisible()
+    const popup = await openOverview(page)
 
     const svg = popup.locator('.d3-overall-container svg')
     if ((await svg.count()) > 0) {
@@ -29,10 +51,8 @@ test.describe('D3FullScreen', () => {
       test.skip(true, 'Overview button not found')
       return
     }
-    await overviewBtn.click()
-    await page.waitForTimeout(2000)
 
-    const popup = page.locator('.popup-wrapper')
+    const popup = await openOverview(page)
     const circles = popup.locator('.d3-overall-container svg circle')
     const count = await circles.count()
     if (count > 0) {
@@ -52,10 +72,8 @@ test.describe('D3FullScreen', () => {
       test.skip(true, 'Overview button not found')
       return
     }
-    await overviewBtn.click()
-    await page.waitForTimeout(2000)
 
-    const popup = page.locator('.popup-wrapper')
+    const popup = await openOverview(page)
     const node = popup.locator('.d3-overall-container svg circle').first()
     const count = await node.count()
     if (count === 0) return
@@ -83,13 +101,12 @@ test.describe('D3FullScreen', () => {
       test.skip(true, 'Overview button not found')
       return
     }
-    await overviewBtn.click()
-    await page.waitForTimeout(1000)
+
+    await openOverview(page)
 
     const closeBtn = page.locator('.popup-close-button').first()
     if ((await closeBtn.count()) > 0) {
       await closeBtn.click()
-      await page.waitForTimeout(500)
       await expect(page.locator('.popup-wrapper')).not.toBeVisible()
     }
   })
