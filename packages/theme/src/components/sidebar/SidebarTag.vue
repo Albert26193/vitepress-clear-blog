@@ -133,7 +133,6 @@
 
   .related-posts {
     @apply relative mt-3 ml-2 flex flex-col gap-[2px];
-    @apply max-h-40 overflow-y-auto;
   }
 
   .related-posts::before {
