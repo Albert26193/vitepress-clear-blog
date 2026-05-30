@@ -10,6 +10,9 @@ export type { ResolvedInternalLink } from './utils/path'
 export { createConfig } from './config'
 export { calculateWords } from './utils/wordCount'
 
+export { analyzeAllDocuments } from './parsers/analyze'
+export type { AnalysisResult } from './parsers/analyze'
+
 // Export types
 export type {
   AnalyzerConfig,

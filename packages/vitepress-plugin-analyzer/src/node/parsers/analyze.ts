@@ -1,3 +1,4 @@
+import matter from 'gray-matter'
 import { ResultAsync, ok, okAsync } from 'neverthrow'
 import { relative, resolve } from 'node:path'
 
@@ -33,8 +34,15 @@ export const analyzeDocument = (
   const outgoingLinks = extractInnerLinks(content, config, filePath)
   const wordCount = calculateWords(content)
 
+  // Extract the frontmatter `title` so build-time consumers (e.g. the theme's
+  // wikilink plugin) can render link labels without re-parsing the file.
+  const frontMatter = matter(content).data as Record<string, unknown>
+  const frontMatterTitle =
+    typeof frontMatter.title === 'string' ? frontMatter.title : ''
+
   const metadata: PageMetadata = {
     firstHeading: headings[0] || '',
+    frontMatterTitle,
     outgoingLinks,
     backLinks: [],
     wordCount,

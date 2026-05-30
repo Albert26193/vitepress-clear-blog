@@ -71,6 +71,17 @@ describe('resolveLinkMultiMode — repoRoot', () => {
     )
     expect(result).toBe(path.resolve(testRoot, 'attach/doc1.md'))
   })
+
+  it('resolves a directory path to its index.md (Obsidian-style [[dir]])', () => {
+    const result = resolveLinkMultiMode(
+      'attach/directory-index',
+      configWithModes(['repoRoot']),
+      'index.md'
+    )
+    expect(result).toBe(
+      path.resolve(testRoot, 'attach/directory-index/index.md')
+    )
+  })
 })
 
 describe('resolveLinkMultiMode — absolutePath', () => {
@@ -439,7 +450,9 @@ describe('resolveLinkMultiMode — obsidianShortest integration', () => {
     expect(result).toBe(path.resolve(testRoot, 'attach/doc1'))
   })
 
-  it('does not fall back to obsidianShortest for explicit relative paths', () => {
+  it('falls back to obsidianShortest for explicit relative paths (issue #434)', () => {
+    // When the relative segment chain over-shoots / mis-targets, the basename
+    // index should still rescue the link — matching Obsidian's resolution.
     const config = configWithModes([
       'relativeToCurrentFile',
       'obsidianShortest'
@@ -449,6 +462,22 @@ describe('resolveLinkMultiMode — obsidianShortest integration', () => {
 
     const result = resolveLinkMultiMode(
       '../missing/doc1',
+      config,
+      'attach/test.md'
+    )
+    expect(result).toBe(path.resolve(testRoot, 'attach/doc1'))
+  })
+
+  it('returns null when neither relative nor obsidianShortest can resolve', () => {
+    const config = configWithModes([
+      'relativeToCurrentFile',
+      'obsidianShortest'
+    ])
+    config.filenameIndex = sharedIndex
+    config.diagnostics = []
+
+    const result = resolveLinkMultiMode(
+      '../missing/truly-not-anywhere',
       config,
       'attach/test.md'
     )

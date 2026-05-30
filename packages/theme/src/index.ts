@@ -1,7 +1,6 @@
 // styles
 import 'photoswipe/style.css'
 import 'virtual:uno.css'
-import { siteMetadata } from 'virtual:vitepress-analyzer'
 import type { EnhanceAppContext, Theme } from 'vitepress'
 import { useRoute } from 'vitepress'
 import { setupCodeBlockFold } from 'vitepress-plugin-codeblock-fold'
@@ -24,23 +23,17 @@ import SidebarLink from './components/sidebar/SidebarLink.vue'
 import SidebarTag from './components/sidebar/SidebarTag.vue'
 import './styles/index.scss'
 import { photoSwipeInit } from './utils/client'
-import {
-  addClassForHetiElement,
-  markBrokenLinks,
-  registerHetiScript
-} from './utils/client/'
-import { data as allPostsData } from './utils/node/posts.data'
+import { addClassForHetiElement, registerHetiScript } from './utils/client/'
 
 /**
  * Extends VitePress with Clear Blog layout, global components, and client-only enhancements.
  */
-declare const __RENDER_TITLE__: string
 declare const __LINK_STYLE__: string
 
 export const BlogTheme: Theme = {
   ...DefaultTheme,
   Layout: NewLayout,
-  enhanceApp({ app, router }: EnhanceAppContext) {
+  enhanceApp({ app }: EnhanceAppContext) {
     // register global components
     app.component('Tags', Tags)
     app.component('Timeline', Timeline)
@@ -73,73 +66,11 @@ export const BlogTheme: Theme = {
     app.component('Badge', VPBadge)
 
     if (typeof window !== 'undefined') {
+      // Broken-link detection and title rewriting are handled at build time by
+      // the wikilink markdown-it plugin (issue #434); the client only applies
+      // the configured link style to the document root.
       document.documentElement.dataset.linkStyle =
         typeof __LINK_STYLE__ !== 'undefined' ? __LINK_STYLE__ : 'origin'
-
-      let wikiLinkRefreshTimer: number | undefined
-      let wikiLinkObserver: MutationObserver | undefined
-      const getBaseFromLocation = () => {
-        const relativePath = router.route.data.relativePath
-        const pathname = window.location.pathname
-        if (relativePath) {
-          const clean = relativePath.replace(/\.(md|html)$/, '')
-          if (pathname.endsWith(clean + '.html') || pathname.endsWith(clean)) {
-            return (
-              pathname.slice(
-                0,
-                -clean.length - (pathname.endsWith(clean + '.html') ? 5 : 0)
-              ) || '/'
-            )
-          }
-          // Index pages: pathname uses /dir/ form instead of /dir/index.html
-          if (clean.endsWith('/index')) {
-            const dirWithSlash = clean.slice(0, -'index'.length)
-            if (pathname.endsWith(dirWithSlash)) {
-              return pathname.slice(0, -dirWithSlash.length) || '/'
-            }
-          } else if (clean === 'index') {
-            return pathname
-          }
-        }
-        return '/'
-      }
-      const scheduleWikiLinkRefresh = () => {
-        window.clearTimeout(wikiLinkRefreshTimer)
-        wikiLinkRefreshTimer = window.setTimeout(() => {
-          markBrokenLinks(siteMetadata, {
-            base: getBaseFromLocation(),
-            currentPath: router.route.data.relativePath,
-            renderTitle:
-              typeof __RENDER_TITLE__ !== 'undefined'
-                ? __RENDER_TITLE__
-                : 'frontmatter_title',
-            allPosts: allPostsData
-          })
-        })
-      }
-
-      app.mixin({
-        mounted: scheduleWikiLinkRefresh,
-        updated: scheduleWikiLinkRefresh
-      })
-      const ensureWikiLinkObserver = () => {
-        if (wikiLinkObserver) return
-        const target = document.querySelector('#app') || document.body
-        if (!target) {
-          window.setTimeout(ensureWikiLinkObserver, 50)
-          return
-        }
-        wikiLinkObserver = new MutationObserver(scheduleWikiLinkRefresh)
-        wikiLinkObserver.observe(target, {
-          childList: true,
-          subtree: true
-        })
-      }
-      window.setTimeout(scheduleWikiLinkRefresh)
-      window.setTimeout(scheduleWikiLinkRefresh, 100)
-      window.setTimeout(scheduleWikiLinkRefresh, 500)
-      window.addEventListener('load', scheduleWikiLinkRefresh, { once: true })
-      ensureWikiLinkObserver()
     }
   },
   setup() {

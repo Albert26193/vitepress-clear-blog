@@ -285,6 +285,9 @@ importers:
 
   packages/vitepress-plugin-analyzer:
     dependencies:
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -6699,11 +6702,6 @@ snapshots:
       vite: 5.4.21(@types/node@25.0.6)(sass@1.97.2)
       vue: 3.5.26(typescript@6.0.2)
 
-  '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@25.5.0)(sass@1.97.2))(vue@3.5.26(typescript@5.7.3))':
-    dependencies:
-      vite: 5.4.21(@types/node@25.5.0)(sass@1.97.2)
-      vue: 3.5.26(typescript@5.7.3)
-
   '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@25.5.0)(sass@1.97.2))(vue@3.5.26(typescript@5.9.3))':
     dependencies:
       vite: 5.4.21(@types/node@25.5.0)(sass@1.97.2)
@@ -9889,7 +9887,7 @@ snapshots:
       '@shikijs/transformers': 2.5.0
       '@shikijs/types': 2.5.0
       '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 5.2.4(vite@5.4.21(@types/node@25.5.0)(sass@1.97.2))(vue@3.5.26(typescript@5.7.3))
+      '@vitejs/plugin-vue': 5.2.4(vite@5.4.21(@types/node@25.5.0)(sass@1.97.2))(vue@3.5.26(typescript@6.0.2))
       '@vue/devtools-api': 7.7.6
       '@vue/shared': 3.5.16
       '@vueuse/core': 12.8.2(typescript@6.0.2)
