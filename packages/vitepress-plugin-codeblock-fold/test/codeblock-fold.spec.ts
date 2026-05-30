@@ -183,7 +183,7 @@ describe('setupCodeBlockFold', () => {
 
     expect(block.classList.contains('vp-code-fold-processed')).toBe(true)
     expect(block.classList.contains('vp-code-fold-active')).toBe(true)
-    expect(block.style.maxHeight).toBe('50px')
+    expect(block.style.maxHeight).toBe('130px')
   })
 
   it('folds code blocks exceeding custom minHeight', () => {
@@ -195,7 +195,7 @@ describe('setupCodeBlockFold', () => {
 
     expect(block.classList.contains('vp-code-fold-processed')).toBe(true)
     expect(block.classList.contains('vp-code-fold-active')).toBe(true)
-    expect(block.style.maxHeight).toBe('50px')
+    expect(block.style.maxHeight).toBe('130px')
   })
 
   it('returns early when visibleHeight is not smaller than minHeight', () => {
