@@ -14,7 +14,7 @@ export default defineConfig({
     video: 'retain-on-failure'
   },
   webServer: {
-    command: 'pnpm exec vitepress preview sites/testbed',
+    command: 'pnpm -F testbed preview',
     cwd: '../..',
     port: 4173,
     reuseExistingServer: !process.env.CI
