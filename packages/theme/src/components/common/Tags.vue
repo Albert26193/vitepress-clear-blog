@@ -121,7 +121,7 @@
 <style scoped>
   /* Tags Container */
   .tags-container {
-    @apply mt-12 flex flex-wrap gap-2 border border-dashed border-gray-500;
+    @apply mt-6 flex flex-wrap gap-2 border border-dashed border-gray-500;
     @apply mx-3 p-3;
     @apply md:mx-0 md:p-4;
   }
