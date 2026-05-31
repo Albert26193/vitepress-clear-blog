@@ -120,6 +120,7 @@ jobs:
             packages/**/lib
             packages/vitepress-plugin-details-block/dist
             sites/testbed/.vitepress/dist
+            sites/demo/.vitepress/dist
           retention-days: 7
 
   e2e:

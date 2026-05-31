@@ -9,14 +9,36 @@ export default defineConfig({
   workers: 4,
   reporter: [['list'], ['./e2e/coverage-reporter.ts']],
   use: {
-    baseURL: 'http://localhost:4173',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
   },
-  webServer: {
-    command: 'pnpm -F testbed preview',
-    cwd: '../..',
-    port: 4173,
-    reuseExistingServer: !process.env.CI
-  }
+  // Two surfaces share one Playwright run: the main suite drives the testbed
+  // preview, while the #434 boundary spec drives the demo preview (its page
+  // only exists there). Each project pins its own baseURL.
+  projects: [
+    {
+      name: 'testbed',
+      testIgnore: 'WikiLinksBoundary.spec.ts',
+      use: { baseURL: 'http://localhost:4173' }
+    },
+    {
+      name: 'demo-boundary',
+      testMatch: 'WikiLinksBoundary.spec.ts',
+      use: { baseURL: 'http://localhost:4174' }
+    }
+  ],
+  webServer: [
+    {
+      command: 'pnpm -F testbed preview',
+      cwd: '../..',
+      port: 4173,
+      reuseExistingServer: !process.env.CI
+    },
+    {
+      command: 'pnpm -F demo preview',
+      cwd: '../..',
+      port: 4174,
+      reuseExistingServer: !process.env.CI
+    }
+  ]
 })
