@@ -113,14 +113,14 @@ describe('posts.data', () => {
     expect(post.frontMatter.date).toBe('not a date at all')
   })
 
-  it('handles posts without dates or tags', async () => {
+  it('keeps posts even when they have no publish date', async () => {
     vi.mocked(readFileSync).mockReturnValue(
       '[datetime]\nfrontmatterFields = ["date"]\nformats = ["YYYY-MM-DD"]'
     )
 
     const loader = (await import('../../../src/utils/node/posts.data'))
       .default as unknown as PostsLoader
-    const [post] = loader.transform([
+    const posts = loader.transform([
       {
         frontmatter: {
           title: 'Post without metadata'
@@ -129,6 +129,57 @@ describe('posts.data', () => {
       }
     ]) as Array<{ frontMatter: Record<string, unknown> }>
 
-    expect(post.frontMatter).toEqual({ title: 'Post without metadata' })
+    // A dateless post is still a post — it is never silently dropped.
+    expect(posts).toHaveLength(1)
+    expect(posts[0].frontMatter).toEqual({ title: 'Post without metadata' })
+  })
+
+  it('matches markdown site-wide so docs-root layouts are discovered', async () => {
+    vi.mocked(readFileSync).mockReturnValue(
+      '[datetime]\nfrontmatterFields = ["date"]\nformats = ["YYYY-MM-DD"]'
+    )
+
+    // Re-evaluate the module so the createContentLoader call is recorded fresh.
+    vi.resetModules()
+    await import('../../../src/utils/node/posts.data')
+
+    expect(createContentLoaderMock).toHaveBeenCalledWith(
+      '**/*.md',
+      expect.objectContaining({ includeSrc: true, render: true })
+    )
+  })
+
+  it('keeps docs-root and blogs-nested posts, excludes functional pages', async () => {
+    vi.mocked(readFileSync).mockReturnValue(
+      '[datetime]\nfrontmatterFields = ["date"]\nformats = ["YYYY-MM-DD"]'
+    )
+
+    const loader = (await import('../../../src/utils/node/posts.data'))
+      .default as unknown as PostsLoader
+    const posts = loader.transform([
+      {
+        frontmatter: { title: 'Docs-root post', date: '2024-01-02' },
+        url: '/example.html'
+      },
+      {
+        frontmatter: { title: 'Nested post', date: '2024-01-01' },
+        url: '/blogs/deep/nested.html'
+      },
+      // Functional/route pages — excluded via flags.
+      { frontmatter: { title: 'Tags', page: true }, url: '/tags.html' },
+      { frontmatter: { title: 'Home', layout: 'home' }, url: '/index.html' },
+      { frontmatter: { title: 'About', article: false }, url: '/about.html' },
+      // Reserved-route content (collections/) with no flags — excluded via the
+      // reserved route prefix, mirroring NewLayout.vue.
+      {
+        frontmatter: { title: 'something' },
+        url: '/collections/cs/something-1.html'
+      }
+    ]) as Array<{ frontMatter: Record<string, unknown>; regularPath: string }>
+
+    expect(posts.map((post) => post.regularPath)).toEqual([
+      '/example.html',
+      '/blogs/deep/nested.html'
+    ])
   })
 })

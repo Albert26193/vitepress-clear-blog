@@ -6,11 +6,36 @@ import { normalizePostDate } from './datetime'
 declare const data: Post[]
 export { data }
 
-export default createContentLoader<Post[]>('blogs/**/*.md', {
+/**
+ * Decide whether a markdown file should appear in post listings.
+ *
+ * Posts are matched site-wide (`**\/*.md`) so the theme works regardless of
+ * whether content lives under `docs/blogs/` or at the docs root. A file is a
+ * post unless it is a functional/route page:
+ *
+ * - `article: false` — canonical opt-out for any non-post page.
+ * - `page: true` / `layout: home` — defensive fallbacks for built-in route
+ *   pages (Tags, Timeline, Pages, Homepage) that already carry these flags.
+ * - reserved route prefixes (`/pages`, `/timeline`, `/tags`, `/collections`)
+ *   — built-in theme routes whose content is not part of the post feed. This
+ *   mirrors the reserved-route set in NewLayout.vue.
+ */
+const RESERVED_ROUTE_RE = /^\/(pages|timeline|tags|collections)(\/|$)/
+
+const isPost = (frontmatter: Record<string, unknown>, url: string): boolean => {
+  if (frontmatter.article === false) return false
+  if (frontmatter.page === true) return false
+  if (frontmatter.layout === 'home') return false
+  if (RESERVED_ROUTE_RE.test(url.replace(/\.html$/, ''))) return false
+  return true
+}
+
+export default createContentLoader<Post[]>('**/*.md', {
   includeSrc: true,
   render: true,
   transform(rawData) {
     return rawData
+      .filter((page) => isPost(page.frontmatter, page.url))
       .map((page) => {
         const normalized = normalizePostDate(
           page.frontmatter as Record<string, unknown>

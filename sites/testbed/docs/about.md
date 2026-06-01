@@ -1,6 +1,7 @@
 ---
 title: About
 description: About me test
+article: false
 sidebar: false
 aside: false
 ---

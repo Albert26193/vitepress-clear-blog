@@ -1,5 +1,6 @@
 ---
 page: true
+article: false
 title: Tags
 description: Tags
 aside: false

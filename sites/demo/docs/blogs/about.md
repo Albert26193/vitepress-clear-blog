@@ -1,5 +1,6 @@
 ---
 title: About
+article: false
 ---
 
 # About
