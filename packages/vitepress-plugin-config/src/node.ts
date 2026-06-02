@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { parse } from 'smol-toml'
 
-import { CONFIG_PATH, THEME_COLOR_DEFAULTS } from './defaults'
+import { CONFIG_PATH, FONT_DEFAULTS, THEME_COLOR_DEFAULTS } from './defaults'
 import { validateConfigToml } from './validate'
 import type { ValidatedConfigToml } from './validate'
 
@@ -14,6 +14,28 @@ const color = (
   const val = obj?.[key]
   if (typeof val !== 'string' || val.length === 0) return fallback
   return val
+}
+
+/**
+ * Normalizes a configured font value (string or string[]) into a CSS font-family
+ * list with a CJK fallback appended, so a custom font never leaves Chinese text
+ * as tofu. Families containing whitespace are quoted unless already quoted.
+ *
+ * @returns The CSS value, or `undefined` when unset/empty so the caller can omit
+ *   the variable and let the SCSS default stack apply.
+ */
+const fontList = (value: unknown, cjkFallback: string): string | undefined => {
+  if (value === undefined || value === null) return undefined
+  const items = Array.isArray(value) ? value : [value]
+  const cleaned = items
+    .filter((item): item is string => typeof item === 'string')
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0)
+  if (cleaned.length === 0) return undefined
+  const normalized = cleaned.map((family) =>
+    /\s/.test(family) && !/^['"].*['"]$/.test(family) ? `'${family}'` : family
+  )
+  return `${normalized.join(', ')}, ${cjkFallback}`
 }
 
 /**
@@ -124,6 +146,21 @@ export const generateThemeFile = async (
     dD['main-page-text']
   )
 
+  // Fonts are mode-independent, so they are emitted only in `:root`. Each role is
+  // emitted only when configured; unset roles fall through to the SCSS defaults.
+  const fonts = theme.fonts as Record<string, unknown> | undefined
+  const fontSans = fontList(fonts?.sans, FONT_DEFAULTS.cjkFallback.sans)
+  const fontSerif = fontList(fonts?.serif, FONT_DEFAULTS.cjkFallback.serif)
+  const fontMono = fontList(fonts?.mono, FONT_DEFAULTS.cjkFallback.mono)
+  const fontBlock = [
+    fontSans && `  --theme-font-sans: ${fontSans};`,
+    fontSerif && `  --theme-font-serif: ${fontSerif};`,
+    fontMono && `  --theme-font-mono: ${fontMono};`
+  ]
+    .filter(Boolean)
+    .join('\n')
+  const fontLines = fontBlock ? `\n${fontBlock}` : ''
+
   const generatedCssPath = resolve(
     process.cwd(),
     '.vitepress/theme/styles/generated.css'
@@ -148,7 +185,7 @@ export const generateThemeFile = async (
   --c-text-code: ${codeColor};
   --c-text-strong: ${strongColor};
   --c-text-em: ${emColor};
-  --main-page-text: ${mainPageText};
+  --main-page-text: ${mainPageText};${fontLines}
 }
 
 .dark {

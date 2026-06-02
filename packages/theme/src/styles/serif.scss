@@ -1,3 +1,10 @@
+// Serif font for VitePress UI chrome (nav, sidebar, outline, local search).
+// Each declaration routes through the config injection var --theme-font-serif
+// (issue #218); the inline fallback preserves the previous hardcoded stack, so an
+// unset config renders identically. The outline-title keeps a distinct calligraphic
+// display face via --theme-font-serif-display, which the plugin does not emit — it
+// is a fixed decorative accent, intentionally not driven by [theme.fonts].
+
 .VPDoc {
   .aside {
     padding-left: 2px;
@@ -5,14 +12,29 @@
   .aside-container {
     .VPDocAside .content {
       .outline-title {
-        font-family: 'Heti Kai Black', Times, ui-serif, Georgia, Cambria, serif;
-        font-weight: 900;
+        font-family: var(
+          --theme-font-serif-display,
+          'Heti Kai Black',
+          Times,
+          ui-serif,
+          Georgia,
+          Cambria,
+          serif
+        );
+        font-weight: 800;
       }
       .outline-link {
         & {
-          font-family:
-            'Heti Song', 'Times New Roman', Times, ui-serif, Georgia, Cambria,
-            serif;
+          font-family: var(
+            --theme-font-serif,
+            'Heti Song',
+            'Times New Roman',
+            Times,
+            ui-serif,
+            Georgia,
+            Cambria,
+            serif
+          );
           font-weight: 800;
           color: var(--vp-c-text-1);
           &:hover {
@@ -26,8 +48,16 @@
 }
 
 :root {
-  --vp-local-search-font-family:
-    'Heti Song', 'Times New Roman', Times, ui-serif, Georgia, Cambria, serif;
+  --vp-local-search-font-family: var(
+    --theme-font-serif,
+    'Heti Song',
+    'Times New Roman',
+    Times,
+    ui-serif,
+    Georgia,
+    Cambria,
+    serif
+  );
 }
 
 .VPLocalSearchBox {
@@ -47,18 +77,32 @@
     .items {
       .header .top-link {
         & {
-          font-family:
-            'Heti Song', 'Times New Roman', Times, ui-serif, Georgia, Cambria,
-            serif;
+          font-family: var(
+            --theme-font-serif,
+            'Heti Song',
+            'Times New Roman',
+            Times,
+            ui-serif,
+            Georgia,
+            Cambria,
+            serif
+          );
           font-weight: 800;
         }
       }
       .outline {
         .VPDocOutlineItem .outline-link {
           & {
-            font-family:
-              'Heti Song', 'Times New Roman', Times, ui-serif, Georgia, Cambria,
-              serif;
+            font-family: var(
+              --theme-font-serif,
+              'Heti Song',
+              'Times New Roman',
+              Times,
+              ui-serif,
+              Georgia,
+              Cambria,
+              serif
+            );
             font-weight: 800;
             color: var(--vp-c-text-1);
           }
@@ -72,9 +116,16 @@
   #VPSidebarNav {
     .page-link {
       & {
-        font-family:
-          'Heti Song', 'Times New Roman', Times, ui-serif, Georgia, Cambria,
-          serif;
+        font-family: var(
+          --theme-font-serif,
+          'Heti Song',
+          'Times New Roman',
+          Times,
+          ui-serif,
+          Georgia,
+          Cambria,
+          serif
+        );
         font-weight: 700;
         font-size: 14px;
       }
@@ -83,8 +134,16 @@
 }
 
 .VPNav .VPNavBar .container .VPLink {
-  font-family:
-    'Heti Song', 'Times New Roman', Times, ui-serif, Georgia, Cambria, serif;
-  font-weight: 900;
+  font-family: var(
+    --theme-font-serif,
+    'Heti Song',
+    'Times New Roman',
+    Times,
+    ui-serif,
+    Georgia,
+    Cambria,
+    serif
+  );
+  font-weight: 800;
   font-size: 16px;
 }

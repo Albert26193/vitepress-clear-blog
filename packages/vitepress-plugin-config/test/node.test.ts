@@ -165,6 +165,123 @@ title = "test"
   })
 })
 
+describe('generateThemeFile fonts', () => {
+  it('emits --theme-font-serif with appended CJK fallback', async () => {
+    writeToml(`[theme]
+
+[theme.fonts]
+serif = "Georgia"
+`)
+
+    await generateThemeFile(configPath)
+    const css = readCss()
+
+    expect(css).toContain("--theme-font-serif: Georgia, 'Heti Song', serif;")
+  })
+
+  it('emits sans and mono with their CJK fallbacks', async () => {
+    writeToml(`[theme]
+
+[theme.fonts]
+sans = "Inter"
+mono = "JetBrains Mono"
+`)
+
+    await generateThemeFile(configPath)
+    const css = readCss()
+
+    expect(css).toContain("--theme-font-sans: Inter, 'Heti Hei', sans-serif;")
+    expect(css).toContain(
+      "--theme-font-mono: 'JetBrains Mono', 'Heti Hei', monospace;"
+    )
+  })
+
+  it('joins array form and quotes families containing whitespace', async () => {
+    writeToml(`[theme]
+
+[theme.fonts]
+serif = ["EB Garamond", "Georgia"]
+`)
+
+    await generateThemeFile(configPath)
+    const css = readCss()
+
+    expect(css).toContain(
+      "--theme-font-serif: 'EB Garamond', Georgia, 'Heti Song', serif;"
+    )
+  })
+
+  it('does not double-quote an already-quoted family', async () => {
+    writeToml(`[theme]
+
+[theme.fonts]
+serif = "'My Font'"
+`)
+
+    await generateThemeFile(configPath)
+    const css = readCss()
+
+    expect(css).toContain("--theme-font-serif: 'My Font', 'Heti Song', serif;")
+    expect(css).not.toContain("''My Font''")
+  })
+
+  it('omits font vars entirely when fonts are not configured', async () => {
+    writeToml(`[theme]
+vp-c-brand = "#abc123"
+`)
+
+    await generateThemeFile(configPath)
+    const css = readCss()
+
+    expect(css).not.toContain('--theme-font-')
+  })
+
+  it('emits only the configured roles', async () => {
+    writeToml(`[theme]
+
+[theme.fonts]
+mono = "JetBrains Mono"
+`)
+
+    await generateThemeFile(configPath)
+    const css = readCss()
+
+    expect(css).toContain('--theme-font-mono:')
+    expect(css).not.toContain('--theme-font-serif')
+    expect(css).not.toContain('--theme-font-sans')
+  })
+
+  it('treats empty string and empty array as unset', async () => {
+    writeToml(`[theme]
+
+[theme.fonts]
+serif = ""
+sans = []
+`)
+
+    await generateThemeFile(configPath)
+    const css = readCss()
+
+    expect(css).not.toContain('--theme-font-')
+  })
+
+  it('emits font vars from a pre-parsed config', async () => {
+    const toml: ValidatedConfigToml = {
+      meta: {},
+      page: {},
+      theme: {
+        'vp-c-brand': '#abc123',
+        fonts: { serif: 'Georgia' }
+      }
+    }
+
+    await generateThemeFile(toml)
+    const css = readCss()
+
+    expect(css).toContain("--theme-font-serif: Georgia, 'Heti Song', serif;")
+  })
+})
+
 describe('generateThemeFile with pre-parsed config', () => {
   it('generates CSS from ValidatedConfigToml without reading file', () => {
     const toml: ValidatedConfigToml = {

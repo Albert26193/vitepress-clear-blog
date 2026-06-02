@@ -3,6 +3,14 @@ import { z } from 'zod'
 const VALID_COLOR_RE =
   /^(#|rgba?\(|hsla?\(|var\(--|transparent$|currentColor$|inherit$|initial$|unset$|revert$|[a-zA-Z]+$)/
 
+const fontValueSchema = z.union([z.string(), z.array(z.string())])
+
+const fontsSchema = z.object({
+  sans: fontValueSchema.optional(),
+  serif: fontValueSchema.optional(),
+  mono: fontValueSchema.optional()
+})
+
 const themeConfigSchema: z.ZodType<Record<string, unknown>> = z.lazy(() =>
   z.object({
     'vp-c-bg': z.string().optional(),
@@ -23,6 +31,7 @@ const themeConfigSchema: z.ZodType<Record<string, unknown>> = z.lazy(() =>
     'c-text-strong': z.string().optional(),
     'c-text-em': z.string().optional(),
     'main-page-text': z.string().optional(),
+    fonts: fontsSchema.optional(),
     dark: themeConfigSchema.optional()
   })
 )
@@ -225,6 +234,10 @@ export function checkThemeColors(
   const walk = (obj: Record<string, unknown>, prefix: string) => {
     for (const [key, value] of Object.entries(obj)) {
       const fieldPath = `${sourcePath}:${prefix}${key}`
+      // Fonts are validated structurally by the schema, not as colors.
+      if (key === 'fonts') {
+        continue
+      }
       if (key === 'dark' && typeof value === 'object' && value !== null) {
         walk(value as Record<string, unknown>, `${prefix}${key}.`)
         continue

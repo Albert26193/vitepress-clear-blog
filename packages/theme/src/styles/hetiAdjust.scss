@@ -1,5 +1,41 @@
 // @import 'heti/umd/heti.min.css';
 
+/* Route heti's content font modifier classes through the config injection vars
+ * (issue #218). Equal specificity to `heti.min.css`'s own `.heti--serif` / `.heti`
+ * rules; this file is `@use`d after heti in `index.scss`, so source order wins —
+ * no `!important` needed. `.heti--serif` is declared after `.heti` so body text
+ * (which carries both classes) resolves to serif, matching heti's own ordering.
+ * Each `var()` keeps the original heti default as fallback, so an unset config
+ * renders identically to before. */
+.heti,
+.heti--sans {
+  font-family: var(
+    --theme-font-sans,
+    'Helvetica Neue',
+    helvetica,
+    arial,
+    'Heti Hei',
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol'
+  );
+}
+
+.heti--serif,
+.heti--classic {
+  font-family: var(
+    --theme-font-serif,
+    'Times New Roman',
+    times,
+    'Heti Song',
+    serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol'
+  );
+}
+
 /* `heti.min.css` caps `.heti { max-width: 42em }`. `addClassForHetiElement` adds
  * `.heti` to `main.main`, so wide custom layouts (timeline, article index…) get
  * squeezed to ~672px and sit left-aligned in the content band. */
@@ -134,9 +170,18 @@
   .heti pre {
     margin-inline-start: 0.25em;
     margin-inline-end: 0.25em;
-    font-family:
-      'Iosevka', consolas, 'Liberation Mono', menlo, courier, monospace,
-      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: var(
+      --theme-font-mono,
+      'Iosevka',
+      consolas,
+      'Liberation Mono',
+      menlo,
+      courier,
+      monospace,
+      'Apple Color Emoji',
+      'Segoe UI Emoji',
+      'Segoe UI Symbol'
+    );
     font-size: 0.875em;
   }
 
