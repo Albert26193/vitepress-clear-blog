@@ -43,6 +43,24 @@ export const DEFAULT_META = {
   themeLink: 'https://github.com/Albert26193/vitepress-theme-link'
 } as const
 
+/**
+ * Default font-family stacks, mirrored verbatim by the SCSS `var(..., <default>)`
+ * fallbacks. These are only used as a reference/contract for tests; the SCSS side
+ * owns the live defaults. `cjkFallback` is what node.ts appends to user-configured
+ * values so a custom font can never leave Chinese text as tofu (□) or blank.
+ */
+export const FONT_DEFAULTS = {
+  serif:
+    "'Times New Roman', times, 'Heti Song', serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+  sans: "'Helvetica Neue', helvetica, arial, 'Heti Hei', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+  mono: "'Iosevka', 'Fira Code', 'JetBrains Mono', 'Menlo', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', 'Courier New', 'Heti Hei', monospace",
+  cjkFallback: {
+    serif: "'Heti Song', serif",
+    sans: "'Heti Hei', sans-serif",
+    mono: "'Heti Hei', monospace"
+  }
+} as const
+
 export const THEME_COLOR_DEFAULTS = {
   light: {
     'vp-c-bg': '#ffffff',

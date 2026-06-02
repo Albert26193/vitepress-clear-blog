@@ -1,9 +1,32 @@
 /* font  */
 :root {
-  --vp-font-family-base: 'Times New Roman', times, 'Heti Song';
-  --vp-font-family-mono:
-    'Iosevka', 'Fira Code', 'JetBrains Mono', 'Menlo', 'Consolas', 'Monaco',
-    'Andale Mono', 'Ubuntu Mono', 'Courier New', monospace;
+  // Font roles consume the config injection vars (--theme-font-*, written into
+  // generated.css when configured) and fall back to the built-in stacks below.
+  // Each fallback ends with a CJK family + generic so text never renders as tofu.
+  --vp-font-family-base: var(
+    --theme-font-serif,
+    'Times New Roman',
+    times,
+    'Heti Song',
+    serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol'
+  );
+  --vp-font-family-mono: var(
+    --theme-font-mono,
+    'Iosevka',
+    'Fira Code',
+    'JetBrains Mono',
+    'Menlo',
+    'Consolas',
+    'Monaco',
+    'Andale Mono',
+    'Ubuntu Mono',
+    'Courier New',
+    'Heti Hei',
+    monospace
+  );
   --c-mark-bg: #fef08a;
 }
 

@@ -434,4 +434,72 @@ describe('checkThemeColors', () => {
     )
     expect(issues).toHaveLength(0)
   })
+
+  it('does not flag the fonts object as a color', () => {
+    const issues = checkThemeColors(
+      {
+        'vp-c-brand': '#fff',
+        fonts: { serif: 'Georgia', sans: ['Inter', 'Arial'] }
+      },
+      CFG
+    )
+    expect(issues).toHaveLength(0)
+  })
+})
+
+describe('theme.fonts schema', () => {
+  it('accepts string font values', () => {
+    const result = configTomlSchema.safeParse({
+      theme: { fonts: { sans: 'Inter', serif: 'Georgia', mono: 'Menlo' } }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts array font values', () => {
+    const result = configTomlSchema.safeParse({
+      theme: { fonts: { serif: ['EB Garamond', 'Georgia'] } }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a partial fonts config', () => {
+    const result = configTomlSchema.safeParse({
+      theme: { fonts: { mono: 'JetBrains Mono' } }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('preserves fonts on the validated output', () => {
+    const result = configTomlSchema.safeParse({
+      theme: { fonts: { serif: 'Georgia' } }
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect((result.data.theme as { fonts?: unknown }).fonts).toEqual({
+        serif: 'Georgia'
+      })
+    }
+  })
+
+  it('rejects a non-string / non-array font value', () => {
+    const result = configTomlSchema.safeParse({
+      theme: { fonts: { serif: 123 } }
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects an array containing a non-string', () => {
+    const result = configTomlSchema.safeParse({
+      theme: { fonts: { serif: ['Georgia', 5] } }
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('validateConfigToml is valid for a config mixing colors and fonts', () => {
+    const { valid } = validateConfigToml(
+      { theme: { 'vp-c-brand': '#fff', fonts: { serif: 'Georgia' } } },
+      CFG
+    )
+    expect(valid).toBe(true)
+  })
 })

@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
   import { useData, useRoute } from 'vitepress'
-  import DefaultTheme from 'vitepress/theme'
+  import DefaultTheme from 'vitepress/theme-without-fonts'
   import { computed, defineAsyncComponent, watchEffect } from 'vue'
 
   import { useDarkTransition } from '../composables/useMeta'

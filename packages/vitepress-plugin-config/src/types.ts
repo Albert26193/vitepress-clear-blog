@@ -1,6 +1,22 @@
 export type MermaidRenderMode = 'auto' | 'ascii' | 'svg'
 
 /**
+ * A font-family stack: either a single family or an ordered list of families.
+ * Values are emitted into CSS with a CJK fallback appended automatically.
+ */
+export type FontStack = string | string[]
+
+/**
+ * Custom font-family stacks per role. Any role left unset falls through to the
+ * theme's built-in default stack, so partial configuration is safe.
+ */
+export interface FontsConfig {
+  sans?: FontStack
+  serif?: FontStack
+  mono?: FontStack
+}
+
+/**
  * Describes custom CSS variable overrides for both light and dark theme modes.
  */
 export interface ThemeConfig {
@@ -19,6 +35,7 @@ export interface ThemeConfig {
   'c-text-code'?: string
   'c-text-strong'?: string
   'c-text-em'?: string
+  fonts?: FontsConfig
   dark?: ThemeConfig
 }
 
