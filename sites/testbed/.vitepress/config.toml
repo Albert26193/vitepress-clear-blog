@@ -20,7 +20,7 @@ pageSize = 10
 [datetime]
 frontmatterFields = ["date", "created", "createdAt", "published", "publishedAt"]
 formats = ["YYYY-MM-DD", "YYYY/MM/DD", "YYYY-MM-DD HH:mm:ss", "YYYY/MM/DD HH:mm:ss", "YYYY-MM-DDTHH:mm:ssZ"]
-outputFormat = "YYYY/MM/DD"
+outputFormat = "MMM D, YYYY"
 
 [blog]
 defaultViewMode = "card"
