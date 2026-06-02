@@ -94,7 +94,7 @@
             class="timeline-month-container"
           >
             <div class="timeline-month-line"></div>
-            <div class="slide-enter-content">
+            <div class="slide-enter-content slide-enter-fast">
               <div
                 v-for="(article, index) in monthList"
                 :key="index"

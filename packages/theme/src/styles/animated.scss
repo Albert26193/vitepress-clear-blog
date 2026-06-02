@@ -19,8 +19,11 @@
       --enter-step: 90ms;
       --enter-initial: 0ms;
       animation: var(--enter-animation, slide-enter) var(--enter-duration, 1s) var(--enter-easing, ease) both 1;
-      animation-delay: calc(
-        var(--enter-initial) + var(--enter-stage) * var(--enter-step)
+      /* Cap the cascade delay so long lists (timeline/tags) never blow up
+         and never collapse the tail to delay 0 */
+      animation-delay: min(
+        calc(var(--enter-initial) + var(--enter-stage) * var(--enter-step)),
+        var(--enter-max-delay, 600ms)
       );
     }
   }
@@ -30,6 +33,13 @@
       > *:nth-child(#{$i}) {
         --enter-stage: #{$i} !important;
       }
+    }
+
+    /* Items past the generated range share the last stage (bounded by
+       --enter-max-delay) instead of falling back to stage 0, which would
+       make the bottom of a long list pop in immediately before the rest */
+    > *:nth-child(n + 31) {
+      --enter-stage: 31 !important;
     }
   }
 
