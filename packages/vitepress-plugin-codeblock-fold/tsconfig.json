@@ -13,7 +13,7 @@
         "declarationMap": true,
         "outDir": "./lib",
         "rootDir": "./src",
-        "ignoreDeprecations": "5.0",
+        "ignoreDeprecations": "6.0",
         "allowImportingTsExtensions": true,
         "noEmit": true
     },

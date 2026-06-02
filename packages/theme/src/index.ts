@@ -11,6 +11,7 @@ import { HashtagTag } from 'vitepress-plugin-hashtag/client'
 import 'vitepress-plugin-hashtag/client.css'
 import DefaultTheme from 'vitepress/theme'
 import { VPBadge } from 'vitepress/theme'
+import type { Component } from 'vue'
 import { defineAsyncComponent, nextTick, onMounted, watch } from 'vue'
 
 import Collections from './components/Collections.vue'
@@ -40,7 +41,9 @@ export const BlogTheme: Theme = {
     app.component('BlogMain', BlogMain)
     app.component('SidebarTag', SidebarTag)
     app.component('SidebarLink', SidebarLink)
-    app.component('HashtagTag', HashtagTag)
+    // Cast to the loose Component type: TS 6 otherwise hits "excessive stack
+    // depth" comparing the cross-package DefineComponent type here (TS2321).
+    app.component('HashtagTag', HashtagTag as Component)
     app.component(
       'D3PageSidebar',
       defineAsyncComponent(() => import('./components/d3/D3PageSidebar.vue'))

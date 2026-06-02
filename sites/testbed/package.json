@@ -13,15 +13,15 @@
   "dependencies": {
     "@types/markdown-it-footnote": "^3.0.4",
     "markdown-it-footnote": "^4.0.0",
-    "smol-toml": "^1.6.0",
+    "smol-toml": "^1.6.1",
     "vitepress": "^1.6.4",
-    "vitepress-theme-link": "workspace:*",
     "vitepress-plugin-analyzer": "workspace:*",
     "vitepress-plugin-callouts": "workspace:*",
-    "vitepress-plugin-hashtag": "workspace:*",
     "vitepress-plugin-config": "workspace:*",
-    "vitepress-plugin-rss": "^0.4.2",
-    "vitepress-sidebar": "^1.33.1"
+    "vitepress-plugin-hashtag": "workspace:*",
+    "vitepress-plugin-rss": "^0.4.4",
+    "vitepress-sidebar": "^1.36.1",
+    "vitepress-theme-link": "workspace:*"
   },
   "engines": {
     "node": ">=22.0.0"
