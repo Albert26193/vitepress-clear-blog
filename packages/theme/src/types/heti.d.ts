@@ -1,16 +1,16 @@
-// 声明 Heti 模块
+// Declare the Heti module
 declare module 'heti/umd/heti-addon.min.js' {
-  // 这里不需要具体内容，只需要声明模块存在
+  // No concrete content needed; only declare that the module exists
 }
 
-// 声明 Heti 类型
+// Declare the Heti type
 interface HetiConstructor {
   new (selector: string): {
     autoSpacing: () => void
   }
 }
 
-// 扩展全局 Window 接口
+// Augment the global Window interface
 declare global {
   interface Window {
     Heti: HetiConstructor

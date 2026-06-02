@@ -1,8 +1,6 @@
 <template>
   <div class="site-footer">
-    <a v-if="icpNumber" class="ml-4" href="https://beian.miit.gov.cn/">{{
-      icpNumber
-    }}</a>
+    <a v-if="icpNumber" class="ml-4" :href="ICP_FILING_URL">{{ icpNumber }}</a>
     <br />
     Theme by
     <a class="vitepress-copyright-detail" target="_blank" :href="themeLink"
@@ -14,11 +12,15 @@
 <script lang="ts" setup>
   import { useData } from 'vitepress'
 
+  // Official ICP filing query site — a fixed government URL, identical for
+  // every site, so it stays a constant rather than user-configurable metadata.
+  const ICP_FILING_URL = 'https://beian.miit.gov.cn/'
+
   const { theme } = useData()
   const icpNumber = theme.value.icpNumber || ''
-  const themeLink =
-    theme.value.themeLink ||
-    'https://github.com/Albert26193/vitepress-theme-link'
+  // themeLink default is resolved by the config provider (DEFAULT_META in
+  // vitepress-plugin-config), so no repo URL is hardcoded here.
+  const themeLink = theme.value.themeLink || ''
 </script>
 
 <style scoped>
