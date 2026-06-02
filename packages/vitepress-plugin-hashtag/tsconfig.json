@@ -10,7 +10,8 @@
     "isolatedModules": true,
     "declaration": true,
     "outDir": "./lib",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "lib"]

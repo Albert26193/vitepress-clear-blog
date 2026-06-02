@@ -19,7 +19,7 @@
             "vite/client",
             "node"
         ],
-        "ignoreDeprecations": "5.0",
+        "ignoreDeprecations": "6.0",
         "allowImportingTsExtensions": true,
         "noEmit": true
     },

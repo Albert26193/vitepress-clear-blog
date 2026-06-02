@@ -46,7 +46,7 @@
     "test:unit": "vitest run"
   },
   "dependencies": {
-    "markdown-it": "^14.1.0"
+    "markdown-it": "^14.2.0"
   },
   "peerDependencies": {
     "vitepress": "^1.5.0"
@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.8"
   },
   "engines": {
     "node": ">=22.0.0"
