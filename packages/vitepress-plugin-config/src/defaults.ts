@@ -43,6 +43,11 @@ export const DEFAULT_META = {
   themeLink: 'https://github.com/Albert26193/vitepress-theme-link'
 } as const
 
+export const DEFAULT_MARKDOWN_THEME = {
+  light: 'github-light',
+  dark: 'ayu-dark'
+} as const
+
 /**
  * Default font-family stacks, mirrored verbatim by the SCSS `var(..., <default>)`
  * fallbacks. These are only used as a reference/contract for tests; the SCSS side

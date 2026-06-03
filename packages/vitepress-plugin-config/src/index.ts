@@ -5,6 +5,9 @@ export type {
   DatetimeConfig,
   HomepageConfig,
   LinksConfig,
+  MarkdownConfig,
+  MarkdownThemeConfig,
+  MarkdownThemeModesConfig,
   MermaidRenderMode,
   OutlineConfig,
   ThemeConfig,
@@ -30,6 +33,7 @@ export {
   DEFAULT_OUTLINE,
   DEFAULT_LINKS,
   DEFAULT_META,
+  DEFAULT_MARKDOWN_THEME,
   DEFAULT_TIMELINE,
   THEME_COLOR_DEFAULTS
 } from './defaults'

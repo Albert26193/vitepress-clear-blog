@@ -134,6 +134,12 @@ image_dimension = true
 render_title = "frontmatter_title"
 link_style = "origin"
 
+# VitePress/Shiki code block highlight themes. Use a single string via
+# `theme = "github-light"` inside [markdown] if you want one theme for all modes.
+[markdown.theme]
+light = "github-light"
+dark = "ayu-dark"
+
 # =============================================================================
 # THEME — CSS variable overrides
 # =============================================================================

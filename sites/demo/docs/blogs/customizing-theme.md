@@ -52,7 +52,26 @@ mermaid_render = "svg" # auto | ascii | svg
 footnote = true
 ```
 
-All configuration is hot-reloaded during development.
+### Code Highlight Theme
+
+Configure VitePress/Shiki code block themes directly in `config.toml`:
+
+```toml
+[markdown.theme]
+light = "github-light"
+dark = "ayu-dark"
+```
+
+You can also use one Shiki theme for all modes:
+
+```toml
+[markdown]
+theme = "github-light"
+```
+
+When only `light` or `dark` is set, the missing mode falls back to the default theme.
+
+Most configuration is hot-reloaded during development. Changing the Shiki highlight theme restarts the dev server so VitePress can rebuild its markdown highlighter.
 
 ## 延伸阅读
 

@@ -13,6 +13,16 @@ description: 代码围栏、行号、行高亮、code-group 与多语言切换�
 
 VitePress 使用 Shiki 作为语法高亮引擎。本文展示所有代码块功能。
 
+代码高亮主题可以通过 `.vitepress/config.toml` 配置：
+
+```toml
+[markdown.theme]
+light = "github-light"
+dark = "ayu-dark"
+```
+
+只想使用单一主题时，也可以写成 `[markdown] theme = "github-light"`。
+
 ## 围栏代码块
 
 ````markdown
@@ -83,6 +93,7 @@ function greet(name: string): string {
 
 ```ts [config.ts]
 import { defineConfig } from 'vitepress'
+
 export default defineConfig({
   title: 'My Site',
   description: 'A VitePress site'

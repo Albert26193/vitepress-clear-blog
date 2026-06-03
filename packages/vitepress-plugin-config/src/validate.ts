@@ -3,6 +3,8 @@ import { z } from 'zod'
 const VALID_COLOR_RE =
   /^(#|rgba?\(|hsla?\(|var\(--|transparent$|currentColor$|inherit$|initial$|unset$|revert$|[a-zA-Z]+$)/
 
+const nonEmptyStringSchema = z.string().min(1)
+
 const fontValueSchema = z.union([z.string(), z.array(z.string())])
 
 const fontsSchema = z.object({
@@ -67,6 +69,14 @@ const imageDimensionSchema = z.object({
 
 const mermaidRenderModeSchema = z.enum(['auto', 'ascii', 'svg'])
 
+const markdownThemeSchema = z.union([
+  nonEmptyStringSchema,
+  z.object({
+    light: nonEmptyStringSchema.optional(),
+    dark: nonEmptyStringSchema.optional()
+  })
+])
+
 const markdownSchema = z.object({
   mathjax: z.boolean().optional(),
   wikilinks: z.boolean().optional(),
@@ -79,7 +89,8 @@ const markdownSchema = z.object({
   render_title: z
     .enum(['frontmatter_title', 'first_heading', 'alias', 'file_name'])
     .optional(),
-  link_style: z.enum(['wiki', 'origin']).optional()
+  link_style: z.enum(['wiki', 'origin']).optional(),
+  theme: markdownThemeSchema.optional()
 })
 
 const metaSchema = z.object({

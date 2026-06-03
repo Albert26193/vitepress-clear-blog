@@ -1,7 +1,6 @@
 # vitepress-plugin-config
 
-A VitePress plugin that generates theme CSS variables from `.vitepress/config.toml`,
-enabling theme customization without editing source styles.
+A VitePress plugin that generates theme CSS variables from `.vitepress/config.toml`, enabling theme customization without editing source styles.
 
 ## Installation
 
@@ -42,6 +41,10 @@ vp-sidebar-bg-color = "#f8f8f8"
 vp-c-bg = "#0e1117"
 vp-c-brand = "#3aa675"
 vp-c-text-1 = "#e6e6e6"
+
+[markdown.theme]
+light = "github-light"
+dark = "ayu-dark"
 ```
 
 The plugin watches for changes during development and hot-reloads the theme CSS.
@@ -49,7 +52,11 @@ The plugin watches for changes during development and hot-reloads the theme CSS.
 ## API
 
 ```ts
-import { loadConfig, clearConfigCache, validateConfigToml } from 'vitepress-plugin-config'
+import {
+  clearConfigCache,
+  loadConfig,
+  validateConfigToml
+} from 'vitepress-plugin-config'
 
 // Load and validate .vitepress/config.toml
 const config = loadConfig()
