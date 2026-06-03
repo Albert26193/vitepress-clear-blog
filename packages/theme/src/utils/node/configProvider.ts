@@ -10,11 +10,13 @@ import { calloutPlugin } from 'vitepress-plugin-callouts'
 import {
   DEFAULT_BLOG,
   DEFAULT_HOMEPAGE,
+  DEFAULT_MARKDOWN_THEME,
   DEFAULT_META,
   DEFAULT_NAV_LABELS,
   DEFAULT_OUTLINE,
   DEFAULT_PAGE_SIZE,
   DEFAULT_TIMELINE,
+  type MarkdownThemeConfig,
   generateThemePlugin,
   loadConfig
 } from 'vitepress-plugin-config'
@@ -62,6 +64,21 @@ const resolveImageDimensionOptions = (
     presets: config.presets,
     stripDimensionQuery: config.strip_dimension_query
   }
+}
+
+type ResolvedMarkdownThemeConfig = string | { light: string; dark: string }
+
+const resolveMarkdownThemeOptions = (
+  config: MarkdownThemeConfig | undefined
+): ResolvedMarkdownThemeConfig => {
+  if (typeof config === 'string') return config
+
+  const resolved: { light: string; dark: string } = {
+    ...DEFAULT_MARKDOWN_THEME
+  }
+  if (config?.light) resolved.light = config.light
+  if (config?.dark) resolved.dark = config.dark
+  return resolved
 }
 
 const isLinkStyleTargetHref = (href: string): boolean =>
@@ -203,7 +220,7 @@ const createBlog = async (
   ]
 
   const markdown = {
-    theme: { light: 'github-light', dark: 'ayu-dark' },
+    theme: resolveMarkdownThemeOptions(mdConf.theme as MarkdownThemeConfig),
     config: (md: MarkdownIt) => {
       const defaultLinkOpen =
         md.renderer.rules.link_open ||

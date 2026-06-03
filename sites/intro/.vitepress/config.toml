@@ -17,6 +17,11 @@ description = "vitepress-theme-link 项目架构、技术选型、工程规范�
 [page]
 pageSize = 10
 
+# VitePress/Shiki code block highlight themes.
+[markdown.theme]
+light = "github-light"
+dark = "ayu-dark"
+
 [theme]
 vp-c-bg = "#ffffff"
 vp-c-bg-alt = "#f6f6f6"

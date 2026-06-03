@@ -87,6 +87,27 @@ export interface ImageDimensionTomlConfig {
   presets?: Record<string, number | ImageDimensionTomlPreset>
 }
 
+export interface MarkdownThemeModesConfig {
+  light?: string
+  dark?: string
+}
+
+export type MarkdownThemeConfig = string | MarkdownThemeModesConfig
+
+export interface MarkdownConfig {
+  mathjax?: boolean
+  wikilinks?: boolean
+  footnote?: boolean
+  hashtag?: boolean
+  mermaid?: boolean
+  mermaid_render?: MermaidRenderMode
+  callout?: boolean
+  image_dimension?: boolean | ImageDimensionTomlConfig
+  render_title?: 'frontmatter_title' | 'first_heading' | 'alias' | 'file_name'
+  link_style?: 'wiki' | 'origin'
+  theme?: MarkdownThemeConfig
+}
+
 export interface NavLabels {
   home?: string
   tags?: string
@@ -115,18 +136,7 @@ export interface ConfigToml {
     pageSizeList?: number
   }
   nav?: NavLabels
-  markdown?: {
-    mathjax?: boolean
-    wikilinks?: boolean
-    footnote?: boolean
-    hashtag?: boolean
-    mermaid?: boolean
-    mermaid_render?: MermaidRenderMode
-    callout?: boolean
-    image_dimension?: boolean | ImageDimensionTomlConfig
-    render_title?: 'frontmatter_title' | 'first_heading' | 'alias' | 'file_name'
-    link_style?: 'wiki' | 'origin'
-  }
+  markdown?: MarkdownConfig
   datetime?: DatetimeConfig
   blog?: BlogConfig
   outline?: OutlineConfig

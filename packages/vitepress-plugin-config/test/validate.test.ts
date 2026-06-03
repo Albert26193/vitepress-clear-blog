@@ -37,7 +37,8 @@ describe('configTomlSchema', () => {
         mermaid_render: 'auto',
         callout: true,
         render_title: 'frontmatter_title',
-        link_style: 'wiki'
+        link_style: 'wiki',
+        theme: { light: 'github-light', dark: 'ayu-dark' }
       },
       nav: {
         home: 'Home',
@@ -138,6 +139,60 @@ describe('markdown link_style', () => {
       theme: {},
       markdown: { link_style: true }
     })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('markdown theme', () => {
+  it('accepts a single Shiki theme string', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { theme: 'github-light' }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts light and dark Shiki theme names', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      markdown: { theme: { light: 'github-light', dark: 'ayu-dark' } }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it.each([{ light: 'github-light' }, { dark: 'github-dark' }])(
+    'accepts partial Shiki theme object %#',
+    (theme) => {
+      const result = configTomlSchema.safeParse({
+        theme: {},
+        markdown: { theme }
+      })
+      expect(result.success).toBe(true)
+    }
+  )
+
+  it('preserves markdown theme on fallback validation output', () => {
+    const data = validateConfigTomlWithFallback(
+      {
+        theme: {},
+        markdown: { theme: { light: 'vitesse-light', dark: 'vitesse-dark' } }
+      },
+      CFG
+    )
+
+    expect(data.markdown?.theme).toEqual({
+      light: 'vitesse-light',
+      dark: 'vitesse-dark'
+    })
+  })
+
+  it.each([
+    { theme: '' },
+    { theme: true },
+    { theme: { light: '' } },
+    { theme: { dark: false } }
+  ])('rejects invalid markdown theme %#', (markdown) => {
+    const result = configTomlSchema.safeParse({ theme: {}, markdown })
     expect(result.success).toBe(false)
   })
 })

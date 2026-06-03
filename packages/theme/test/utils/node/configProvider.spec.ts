@@ -26,6 +26,7 @@ vi.mock('vitepress-plugin-config', () => ({
   },
   DEFAULT_PAGE_SIZE: 10,
   DEFAULT_HOMEPAGE: { title: 'Blog', description: '' },
+  DEFAULT_MARKDOWN_THEME: { light: 'github-light', dark: 'ayu-dark' },
   DEFAULT_BLOG: { defaultViewMode: 'card' },
   DEFAULT_TIMELINE: { sortDirection: 'desc' }
 }))
@@ -249,11 +250,55 @@ describe('createBlog with mocked config.toml', async () => {
     expect(authorMeta![1].content).toBe('Test Author')
   })
 
-  it('configures markdown theme', async () => {
+  it('configures default markdown theme', async () => {
     const config = await createBlog()
     const md = (config as any).markdown
-    expect(md.theme.light).toBe('github-light')
-    expect(md.theme.dark).toBe('ayu-dark')
+    expect(md.theme).toEqual({ light: 'github-light', dark: 'ayu-dark' })
+  })
+
+  it('configures markdown theme from config.toml', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      markdown: {
+        ...mockToml.markdown,
+        theme: { light: 'vitesse-light', dark: 'vitesse-dark' }
+      }
+    })
+
+    const config = await createBlog()
+    const md = (config as any).markdown
+
+    expect(md.theme).toEqual({ light: 'vitesse-light', dark: 'vitesse-dark' })
+  })
+
+  it('merges partial markdown theme with defaults', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      markdown: {
+        ...mockToml.markdown,
+        theme: { dark: 'github-dark' }
+      }
+    })
+
+    const config = await createBlog()
+    const md = (config as any).markdown
+
+    expect(md.theme).toEqual({ light: 'github-light', dark: 'github-dark' })
+  })
+
+  it('passes string markdown theme through to VitePress', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      markdown: {
+        ...mockToml.markdown,
+        theme: 'github-light'
+      }
+    })
+
+    const config = await createBlog()
+    const md = (config as any).markdown
+
+    expect(md.theme).toBe('github-light')
   })
 
   it('includes search config', async () => {

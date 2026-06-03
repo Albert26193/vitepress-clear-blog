@@ -50,6 +50,11 @@ callout = true
 render_title = "frontmatter_title"
 link_style = "wiki"
 
+# VitePress/Shiki code block highlight themes.
+[markdown.theme]
+light = "github-light"
+dark = "ayu-dark"
+
 [theme]
 vp-c-bg = "#ffffff"
 vp-c-bg-alt = "#fafafa"

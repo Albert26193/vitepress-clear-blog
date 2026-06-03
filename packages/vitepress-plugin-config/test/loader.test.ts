@@ -48,6 +48,24 @@ vp-c-brand = "#ff0000"
     expect(config!.meta.author).toBe('Alice')
   })
 
+  it('preserves markdown theme config from TOML', () => {
+    writeToml(`[markdown.theme]
+light = "vitesse-light"
+dark = "vitesse-dark"
+
+[theme]
+vp-c-brand = "#000"
+`)
+
+    const config = loadConfig()
+
+    expect(config).not.toBeNull()
+    expect(config!.markdown?.theme).toEqual({
+      light: 'vitesse-light',
+      dark: 'vitesse-dark'
+    })
+  })
+
   it('returns cached result on second call', () => {
     writeToml(`[meta]
 title = "First"

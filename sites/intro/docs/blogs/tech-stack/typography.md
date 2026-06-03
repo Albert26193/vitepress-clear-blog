@@ -18,6 +18,7 @@ description: 中文排版与阅读体验优化方案
 ### 简介
 
 Heti（赫蹏）是专为中文内容设计的排版增强工具，解决：
+
 - 中英文混排间距
 - 标点挤压
 - 行高优化
@@ -31,26 +32,21 @@ import 'heti/umd/heti.min.css'
 
 ### 效果对比
 
-| 项目 | 优化前 | 优化后 |
-| ---- | ---- | ---- |
+| 项目       | 优化前      | 优化后       |
+| ---------- | ----------- | ------------ |
 | 中英文间距 | `Hello世界` | `Hello 世界` |
-| 标点位置 | 压缩 | 正常 |
-| 行高 | 1.5 | 1.75 |
+| 标点位置   | 压缩        | 正常         |
+| 行高       | 1.5         | 1.75         |
 
 ## 代码高亮
 
 ### Shiki 配置
 
-```typescript
-// .vitepress/config.ts
-export default defineConfig({
-  markdown: {
-    theme: {
-      light: 'github-light',
-      dark: 'ayu-dark'
-    }
-  }
-})
+```toml
+# .vitepress/config.toml
+[markdown.theme]
+light = "github-light"
+dark = "ayu-dark"
 ```
 
 ### 支持特性
@@ -67,10 +63,8 @@ export default defineConfig({
 
 ```css
 :root {
-  --vp-font-family-base: 'Inter', 'PingFang SC', 
-    'Microsoft YaHei', sans-serif;
-  --vp-font-family-mono: 'JetBrains Mono', 
-    'Fira Code', monospace;
+  --vp-font-family-base: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 ```
 
@@ -86,4 +80,3 @@ export default defineConfig({
 - [[../features/markdown-enhance|Markdown 增强功能]]
 
 ---
-
