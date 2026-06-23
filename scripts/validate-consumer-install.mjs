@@ -51,6 +51,7 @@ function run(command, args, options = {}) {
     throw new Error(`${command} ${args.join(' ')} failed${options.cwd ? ` in ${options.cwd}` : ''}\n${output}`)
   }
 
+  if (options.stdoutOnly) return result.stdout
   return [result.stdout, result.stderr].filter(Boolean).join('')
 }
 
@@ -75,7 +76,8 @@ async function discoverPackages() {
 
 function packPackage(pkg, tarballDir) {
   const output = run('pnpm', ['--dir', pkg.dir, 'pack', '--pack-destination', tarballDir, '--json'], {
-    capture: true
+    capture: true,
+    stdoutOnly: true
   })
   const pack = parsePnpmPackJson(output)
   const tarballPath = join(tarballDir, basename(pack.filename))
@@ -166,19 +168,20 @@ try {
     'vitepress-theme-link': tarballSpec(tarballs.get('vitepress-theme-link'))
   }
 
-  consumerManifest.pnpm = {
-    ...(consumerManifest.pnpm || {}),
-    overrides: {
-      ...(consumerManifest.pnpm?.overrides || {})
-    }
-  }
+  const overrides = {}
 
   for (const [name, tarball] of tarballs) {
     if (name === 'create-vitepress-theme-link' || name === 'vitepress-theme-link') continue
-    consumerManifest.pnpm.overrides[name] = tarballSpec(tarball)
+    overrides[name] = tarballSpec(tarball)
   }
 
   writeJson(consumerManifestPath, consumerManifest)
+  writeFileSync(
+    join(consumerDir, 'pnpm-workspace.yaml'),
+    `packages:\n  - .\n\nallowBuilds:\n  '@parcel/watcher': true\n  esbuild: true\n  sharp: true\n\noverrides:\n${Object.entries(overrides)
+      .map(([name, spec]) => `  ${name}: ${spec}`)
+      .join('\n')}\n`
+  )
 
   console.log('Installing fresh consumer dependencies...')
   run('pnpm', ['install'], { cwd: consumerDir })

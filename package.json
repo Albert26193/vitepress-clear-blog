@@ -5,7 +5,7 @@
     "description": "A VitePress blog monorepo",
     "type": "module",
     "scripts": {
-        "clean": "pnpm -r --stream clean",
+        "clean": "pnpm -r --stream run clean",
         "clean:testbed": "pnpm -F=testbed clean",
         "build": "pnpm clean && pnpm build:packages",
         "build:packages": "pnpm build:plugins && pnpm build:system && pnpm build:test-packages",
@@ -79,13 +79,7 @@
     },
     "engines": {
         "node": ">=22.0.0",
-        "pnpm": ">=9.0.0"
+        "pnpm": ">=11.0.0"
     },
-    "pnpm": {
-        "peerDependencyRules": {
-            "ignoreMissing": [
-                "typescript"
-            ]
-        }
-    }
+    "packageManager": "pnpm@11.8.0"
 }

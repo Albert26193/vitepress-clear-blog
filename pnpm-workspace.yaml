@@ -2,8 +2,12 @@ packages:
   - 'packages/*'
   - 'sites/*'
 
-onlyBuiltDependencies:
-  - "reurl"
-  - "@parcel/watcher"
-  - "esbuild"
-  - "sharp"
+peerDependencyRules:
+  ignoreMissing:
+    - typescript
+
+# pnpm 11+ replaced `onlyBuiltDependencies` with `allowBuilds`.
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true

@@ -1,0 +1,8 @@
+packages:
+  - .
+
+# Required by pnpm 11+ for packages that install native/binary helpers.
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true
