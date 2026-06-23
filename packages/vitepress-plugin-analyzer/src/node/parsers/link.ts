@@ -1,24 +1,15 @@
 import MarkdownIt from 'markdown-it'
-import markdownItWikilinks from 'markdown-it-wikilinks'
 import type Token from 'markdown-it/lib/token.mjs'
 
 import type { AnalyzerConfig, PageLink } from '../../../types'
 import { normalizeLink, resolveInternalLink } from '../utils/path'
 
-// Initialize markdown-it instance with wikilink support
 const md = new MarkdownIt({
   linkify: true,
   html: true
 })
-md.use(
-  markdownItWikilinks({
-    baseURL: '/',
-    uriSuffix: '',
-    makeAllLinksAbsolute: true,
-    postProcessPagePath: (pagePath: string) => pagePath.trim(),
-    postProcessLabel: (label: string) => label.trim()
-  })
-)
+
+const WIKILINK_RE = /\[\[([^|\]\n]+)(?:\|([^\]\n]+))?\]\]/g
 
 /**
  * Check if a link is an external link
@@ -55,6 +46,29 @@ const createValidateLink =
     return resolveInternalLink(normalizedLink, config, currentFile) !== null
   }
 
+const extractWikiLinksFromText = (
+  content: string,
+  validateLink: (link: string) => boolean
+): Partial<PageLink>[] => {
+  const links: Partial<PageLink>[] = []
+
+  for (const match of content.matchAll(WIKILINK_RE)) {
+    const pagePath = match[1]?.trim()
+    const label = (match[2] || match[1] || '').trim()
+
+    if (!pagePath || !validateLink(pagePath)) continue
+
+    links.push({
+      text: label,
+      relativePath: pagePath,
+      type: 'wiki',
+      raw: match[0]
+    })
+  }
+
+  return links
+}
+
 /**
  * Extract standard Markdown links from tokens, be like:
  *  [link](./link.md) or [link](./link)
@@ -88,21 +102,8 @@ const extractMarkdownLinks = (
           }
         }
 
-        if (child.type.startsWith('regexp-')) {
-          const match = (child.meta as { match: RegExpExecArray } | undefined)
-            ?.match
-          if (match) {
-            const pagePath = match[1]
-            const label = match[3] || match[1]
-            if (validateLink(pagePath)) {
-              links.push({
-                text: label.trim(),
-                relativePath: pagePath.trim(),
-                type: 'wiki',
-                raw: match[0]
-              })
-            }
-          }
+        if (!currentLink && child.type === 'text') {
+          links.push(...extractWikiLinksFromText(child.content, validateLink))
         }
 
         if (
