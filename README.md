@@ -20,6 +20,13 @@ yarn create vitepress-theme-link my-blog         # yarn
 bun create vitepress-theme-link@latest my-blog   # bun
 ```
 
+For beta releases, use the beta dist-tag explicitly:
+
+```bash
+npm create vitepress-theme-link@beta my-blog
+pnpm create vitepress-theme-link@beta my-blog
+```
+
 Then install dependencies and start the dev server:
 
 ```bash
