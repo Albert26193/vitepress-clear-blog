@@ -1,6 +1,6 @@
 {
   "name": "vitepress-plugin-image-dimension",
-  "version": "0.1.0",
+  "version": "0.1.0-beta.0",
   "description": "Markdown-it plugin for normalizing image dimensions in VitePress",
   "author": "Albert26193",
   "license": "MIT",
