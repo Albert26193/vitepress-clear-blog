@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, relative, resolve } from 'node:path'
@@ -74,8 +74,8 @@ async function discoverPackages() {
   return packages.sort((a, b) => a.manifest.name.localeCompare(b.manifest.name))
 }
 
-function packPackage(pkg, tarballDir) {
-  const output = run('pnpm', ['--dir', pkg.dir, 'pack', '--pack-destination', tarballDir, '--json'], {
+function packDirectory(dir, tarballDir, name) {
+  const output = run('pnpm', ['--dir', dir, 'pack', '--pack-destination', tarballDir, '--json'], {
     capture: true,
     stdoutOnly: true
   })
@@ -83,10 +83,14 @@ function packPackage(pkg, tarballDir) {
   const tarballPath = join(tarballDir, basename(pack.filename))
 
   if (!existsSync(tarballPath)) {
-    throw new Error(`Expected tarball not found for ${pkg.manifest.name}: ${tarballPath}`)
+    throw new Error(`Expected tarball not found for ${name}: ${tarballPath}`)
   }
 
   return tarballPath
+}
+
+function packPackage(pkg, tarballDir) {
+  return packDirectory(pkg.dir, tarballDir, pkg.manifest.name)
 }
 
 function tarballSpec(path) {
@@ -114,6 +118,45 @@ function assertNoKnownFailure(output) {
   }
 }
 
+function prepareThemePackageWithLocalDependencies(pkg, patchedPackagesDir, tarballs) {
+  const patchedDir = join(patchedPackagesDir, pkg.manifest.name)
+  rmSync(patchedDir, { recursive: true, force: true })
+  cpSync(pkg.dir, patchedDir, {
+    recursive: true,
+    filter: (source) => !source.includes('/node_modules')
+  })
+
+  const manifestPath = join(patchedDir, 'package.json')
+  const manifest = readJson(manifestPath)
+  const dependencies = { ...(manifest.dependencies || {}) }
+
+  for (const name of localTarballDependencies) {
+    if (!dependencies[name]) continue
+
+    const tarball = tarballs.get(name)
+    if (!tarball) {
+      throw new Error(`Cannot patch ${pkg.manifest.name} dependency ${name}: local tarball has not been packed.`)
+    }
+
+    dependencies[name] = tarballSpec(tarball)
+  }
+
+  manifest.dependencies = dependencies
+  writeJson(manifestPath, manifest)
+
+  return patchedDir
+}
+
+const localTarballDependencies = [
+  'vitepress-plugin-analyzer',
+  'vitepress-plugin-callouts',
+  'vitepress-plugin-codeblock-fold',
+  'vitepress-plugin-config',
+  'vitepress-plugin-details-block',
+  'vitepress-plugin-hashtag',
+  'vitepress-plugin-image-dimension'
+]
+
 const packages = await discoverPackages()
 const packageByName = new Map(packages.map((pkg) => [pkg.manifest.name, pkg]))
 const requiredPackages = [
@@ -136,18 +179,29 @@ for (const name of requiredPackages) {
 
 const tempRoot = mkdtempSync(join(tmpdir(), 'vitepress-theme-link-consumer-'))
 const tarballDir = join(tempRoot, 'tarballs')
+const patchedPackagesDir = join(tempRoot, 'patched-packages')
 const consumerParent = join(tempRoot, 'consumer')
 
 try {
-  run('mkdir', ['-p', tarballDir, consumerParent])
+  mkdirSync(tarballDir, { recursive: true })
+  mkdirSync(patchedPackagesDir, { recursive: true })
+  mkdirSync(consumerParent, { recursive: true })
 
   console.log(`Packing ${packages.length} publishable packages into ${tarballDir}...`)
   const tarballs = new Map()
   for (const pkg of packages) {
+    if (pkg.manifest.name === 'vitepress-theme-link') continue
+
     const tarball = packPackage(pkg, tarballDir)
     tarballs.set(pkg.manifest.name, tarball)
     console.log(`✓ ${pkg.manifest.name} -> ${relative(tempRoot, tarball)}`)
   }
+
+  const themePackage = packageByName.get('vitepress-theme-link')
+  const patchedThemeDir = prepareThemePackageWithLocalDependencies(themePackage, patchedPackagesDir, tarballs)
+  const themeTarball = packDirectory(patchedThemeDir, tarballDir, themePackage.manifest.name)
+  tarballs.set(themePackage.manifest.name, themeTarball)
+  console.log(`✓ ${themePackage.manifest.name} -> ${relative(tempRoot, themeTarball)}`)
 
   const createPackage = packageByName.get('create-vitepress-theme-link')
   const cliPath = join(createPackage.dir, 'dist/index.js')
@@ -160,31 +214,25 @@ try {
 
   const consumerDir = join(consumerParent, 'consumer-app')
   const consumerManifestPath = join(consumerDir, 'package.json')
+  const consumerWorkspacePath = join(consumerDir, 'pnpm-workspace.yaml')
   const consumerManifest = readJson(consumerManifestPath)
   assertTemplateDeps(consumerManifest)
+
+  if (existsSync(consumerWorkspacePath)) {
+    throw new Error(
+      'Scaffold template should not include pnpm-workspace.yaml. Consumer validation should exercise the generated app without workspace-only config.'
+    )
+  }
 
   consumerManifest.dependencies = {
     ...(consumerManifest.dependencies || {}),
     'vitepress-theme-link': tarballSpec(tarballs.get('vitepress-theme-link'))
   }
 
-  const overrides = {}
-
-  for (const [name, tarball] of tarballs) {
-    if (name === 'create-vitepress-theme-link' || name === 'vitepress-theme-link') continue
-    overrides[name] = tarballSpec(tarball)
-  }
-
   writeJson(consumerManifestPath, consumerManifest)
-  writeFileSync(
-    join(consumerDir, 'pnpm-workspace.yaml'),
-    `packages:\n  - .\n\nallowBuilds:\n  '@parcel/watcher': true\n  esbuild: true\n  sharp: true\n\noverrides:\n${Object.entries(overrides)
-      .map(([name, spec]) => `  ${name}: ${spec}`)
-      .join('\n')}\n`
-  )
 
   console.log('Installing fresh consumer dependencies...')
-  run('pnpm', ['install'], { cwd: consumerDir })
+  run('pnpm', ['install', '--config.dangerouslyAllowAllBuilds=true'], { cwd: consumerDir })
 
   console.log('Building fresh consumer project from packed artifacts...')
   const buildOutput = run('pnpm', ['build'], { cwd: consumerDir, capture: true })
