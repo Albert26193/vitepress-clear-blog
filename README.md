@@ -187,7 +187,7 @@ pnpm format
 Set the next lockstep beta version, then commit that version change separately from release tooling changes:
 
 ```bash
-pnpm release:version 0.1.0-beta.0
+pnpm release:version 0.1.0-beta.1
 ```
 
 Before publishing, run the local release dry-run gate:
@@ -201,11 +201,11 @@ pnpm test:unit
 pnpm build
 pnpm validate:packages
 pnpm validate:consumer
-pnpm release:check -- --version 0.1.0-beta.0 --require-build
-pnpm release:publish:beta -- --version 0.1.0-beta.0
+pnpm release:check -- --version 0.1.0-beta.1 --require-build
+pnpm release:publish:beta -- --version 0.1.0-beta.1
 ```
 
-Then trigger the `Publish npm beta` GitHub Actions workflow. Keep `dry_run=true` for validation-only runs. For a real publish, set `dry_run=false` and `confirm=publish-0.1.0-beta.0-to-npm-beta`.
+Then trigger the `Publish npm beta` GitHub Actions workflow. Keep `dry_run=true` for validation-only runs. For a real publish, set `dry_run=false` and `confirm=publish-0.1.0-beta.1-to-npm-beta`.
 
 The beta workflow and release scripts publish only with `--tag beta`; they must not publish `latest`.
 

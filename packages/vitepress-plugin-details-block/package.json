@@ -1,6 +1,6 @@
 {
   "name": "vitepress-plugin-details-block",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.1",
   "description": "A customizable details block component for VitePress",
   "author": "Albert26193",
   "license": "MIT",
