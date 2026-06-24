@@ -16,6 +16,11 @@ on:
         description: 'Required for real publish: publish-<version>-to-npm-beta'
         required: false
         type: string
+      promote_latest:
+        description: 'Also point the latest dist-tag at this beta version'
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: npm-publish-beta
@@ -87,6 +92,6 @@ jobs:
 
       - name: Publish npm beta
         if: ${{ !inputs.dry_run }}
-        run: pnpm release:publish:beta -- --version "${{ inputs.version }}" --publish --confirm "${{ inputs.confirm }}"
+        run: pnpm release:publish:beta -- --version "${{ inputs.version }}" --publish --confirm "${{ inputs.confirm }}"${{ inputs.promote_latest && ' --promote-latest' || '' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

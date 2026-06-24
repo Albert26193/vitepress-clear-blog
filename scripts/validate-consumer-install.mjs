@@ -218,9 +218,12 @@ try {
   const consumerManifest = readJson(consumerManifestPath)
   assertTemplateDeps(consumerManifest)
 
-  if (existsSync(consumerWorkspacePath)) {
+  // The scaffold must ship a pnpm-workspace.yaml with an allowBuilds allowlist:
+  // VitePress pulls in native build-script deps (esbuild, sharp, @parcel/watcher)
+  // and pnpm 11 fails a fresh install with ERR_PNPM_IGNORED_BUILDS without it.
+  if (!existsSync(consumerWorkspacePath)) {
     throw new Error(
-      'Scaffold template should not include pnpm-workspace.yaml. Consumer validation should exercise the generated app without workspace-only config.'
+      'Scaffold template must include pnpm-workspace.yaml with an allowBuilds allowlist so a fresh consumer install does not fail with ERR_PNPM_IGNORED_BUILDS.'
     )
   }
 
@@ -231,8 +234,11 @@ try {
 
   writeJson(consumerManifestPath, consumerManifest)
 
+  // Install exactly like an end user: no --dangerouslyAllowAllBuilds bypass, so
+  // this exercises the template's own allowBuilds allowlist. If the allowlist is
+  // wrong or missing, the install fails here instead of silently passing.
   console.log('Installing fresh consumer dependencies...')
-  run('pnpm', ['install', '--config.dangerouslyAllowAllBuilds=true'], { cwd: consumerDir })
+  run('pnpm', ['install'], { cwd: consumerDir })
 
   console.log('Building fresh consumer project from packed artifacts...')
   const buildOutput = run('pnpm', ['build'], { cwd: consumerDir, capture: true })
