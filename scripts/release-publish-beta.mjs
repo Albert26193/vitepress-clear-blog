@@ -15,7 +15,8 @@ import {
 function parseArgs(argv) {
   const options = {
     publish: false,
-    skipRegistry: false
+    skipRegistry: false,
+    promoteLatest: false
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -39,6 +40,11 @@ function parseArgs(argv) {
       index += 1
     } else if (arg === '--skip-registry') {
       options.skipRegistry = true
+    } else if (arg === '--promote-latest') {
+      // Point the `latest` dist-tag at this beta version after publishing.
+      // pnpm dlx/create can fall back to `latest` when resolving a dist-tag,
+      // so a stale `latest` makes scaffolds install the wrong theme version.
+      options.promoteLatest = true
     } else {
       options.unknown ||= []
       options.unknown.push(arg)
@@ -148,6 +154,21 @@ function publishTarball(tarballPath, options) {
   return run('npm', args, { inherit: true })
 }
 
+function promoteLatestTag(pkg, version, options) {
+  // Move the `latest` dist-tag to this version. Real publish only — the
+  // dry-run path must never mutate the registry.
+  const args = [
+    'dist-tag',
+    'add',
+    `${pkg.manifest.name}@${version}`,
+    'latest',
+    ...npmRegistryArgs(options),
+    ...npmOtpArgs(options)
+  ]
+
+  return run('npm', args, { inherit: true })
+}
+
 const options = parseArgs(process.argv.slice(2))
 const errors = []
 
@@ -167,6 +188,10 @@ if (options.publish) {
   if (options.skipRegistry) {
     errors.push('Real publish cannot use --skip-registry')
   }
+}
+
+if (options.promoteLatest && !options.publish) {
+  errors.push('--promote-latest requires --publish (it mutates the registry)')
 }
 
 const packages = await discoverPublishablePackages()
@@ -206,6 +231,9 @@ try {
 
   console.log(`Starting npm beta ${mode} for ${options.version}.`)
   console.log('Publishing tarballs with --tag beta and --access public.')
+  if (options.promoteLatest && options.publish) {
+    console.log('Will promote the latest dist-tag after a successful publish.')
+  }
 
   for (const pkg of packages) {
     const availabilityError = checkRegistryAvailability(
@@ -233,6 +261,25 @@ try {
 
   console.log(`\nNpm beta ${mode} completed for ${options.version}.`)
   console.log(`Completed packages: ${completed.join(', ')}`)
+
+  if (options.promoteLatest && options.publish) {
+    console.log(`\nPromoting latest dist-tag to ${options.version}.`)
+    const promoted = []
+
+    for (const pkg of packages) {
+      const result = promoteLatestTag(pkg, options.version, options)
+      if (result.status !== 0) {
+        throw new Error(
+          `npm dist-tag add latest failed for ${pkg.manifest.name}@${options.version}. Promoted before failure: ${promoted.join(', ') || 'none'}`
+        )
+      }
+
+      promoted.push(pkg.manifest.name)
+    }
+
+    console.log(`Latest dist-tag now points at ${options.version}.`)
+    console.log(`Promoted packages: ${promoted.join(', ')}`)
+  }
 } catch (error) {
   console.error(`\nNpm beta ${mode} failed: ${error.message}`)
   if (completed.length > 0) {
