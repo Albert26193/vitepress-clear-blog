@@ -1,6 +1,6 @@
 {
   "name": "vitepress-plugin-config",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-beta.4",
   "description": "VitePress plugin for TOML-based theme configuration",
   "author": "Albert26193",
   "license": "MIT",

@@ -59,6 +59,10 @@ jobs:
 
       - run: pnpm validate:packages
 
+      # validate:consumer renders the scaffolded dev server in headless Chromium
+      # to catch white screens, so the browser must be installed first.
+      - run: pnpm exec playwright install --with-deps chromium
+
       - run: pnpm validate:consumer
 
       - run: pnpm release:check -- --version "${{ inputs.version }}" --require-build --require-master

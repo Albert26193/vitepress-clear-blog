@@ -1,6 +1,6 @@
 {
   "name": "vitepress-theme-link",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0-beta.4",
   "description": "A clean, customizable blog theme for VitePress",
   "author": "Albert26193",
   "license": "MIT",
@@ -67,7 +67,6 @@
     "dayjs": "^1.11.21",
     "gray-matter": "^4.0.3",
     "heti": "^0.9.6",
-    "lodash": "^4.18.1",
     "markdown-it": "^14.2.0",
     "markdown-it-footnote": "^4.0.0",
     "markdown-it-mathjax3": "^5.2.0",
@@ -105,7 +104,6 @@
     "@types/d3-selection": "^3.0.11",
     "@types/d3-zoom": "^3.0.8",
     "@types/fs-extra": "^11.0.4",
-    "@types/lodash": "^4.17.24",
     "@types/markdown-it": "^14.1.2",
     "@types/markdown-it-footnote": "^3.0.4",
     "@types/node": "^25.9.1",
