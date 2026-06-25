@@ -1,5 +1,12 @@
-import dayjs from 'dayjs'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
+// Import dayjs from its ESM build. This composable ships as source in the
+// published theme, so it is transformed by the consumer's Vite pipeline from
+// node_modules — where Vite does not rewrite bare CJS imports to optimized
+// deps. The default `dayjs` / `dayjs/plugin/*` entrypoints are UMD/CJS and have
+// no ESM default export, which breaks `pnpm dev` in scaffolded blogs with
+// "does not provide an export named 'default'". The `dayjs/esm` paths are real
+// ESM modules and resolve cleanly without dep pre-bundling.
+import dayjs from 'dayjs/esm'
+import customParseFormat from 'dayjs/esm/plugin/customParseFormat'
 import { useData } from 'vitepress'
 import { type ComputedRef, computed, nextTick, provide } from 'vue'
 

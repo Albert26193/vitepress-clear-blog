@@ -28,8 +28,8 @@
     forceManyBody,
     forceSimulation
   } from 'd3-force'
+  import { useDebounceFn } from '@vueuse/core'
   import { select } from 'd3-selection'
-  import debounce from 'lodash/debounce'
   import { useRouter, withBase } from 'vitepress'
   import { onMounted, ref, watch } from 'vue'
 
@@ -84,7 +84,11 @@
     (e: 'update:modelValue', value: number): void
   }>()
 
-  const debouncedEmit = debounce((value: number) => {
+  // useDebounceFn (ESM, already a theme dependency) replaces lodash/debounce,
+  // whose CJS-only `lodash/debounce` entrypoint breaks `pnpm dev` when the theme
+  // is consumed as source from node_modules. Same call signature, no behavior
+  // change for this trailing-edge debounce.
+  const debouncedEmit = useDebounceFn((value: number) => {
     emit('update:modelValue', value)
   }, 100)
 

@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, relative, resolve } from 'node:path'
 import { spawn, spawnSync } from 'node:child_process'
 
+import { chromium } from '@playwright/test'
+
 const repoRoot = resolve(dirname(new URL(import.meta.url).pathname), '..')
 const packagesRoot = join(repoRoot, 'packages')
 const keepTemp = process.argv.includes('--keep')
@@ -121,6 +123,58 @@ function assertNoKnownFailure(output) {
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
+ * Load each route in a headless browser and assert the Vue app actually mounts.
+ * A dev server can serve HTTP 200 with a clean dependency-optimization log yet
+ * still white-screen: the theme ships client code as source from node_modules,
+ * where Vite does NOT rewrite bare CJS imports to optimized deps. A CJS-only
+ * import (e.g. `dayjs/plugin/customParseFormat`, `lodash/debounce`) then throws
+ * "does not provide an export named 'default'" at module-eval time, aborting
+ * client mount. The dev-log scan cannot see that browser-side failure, so this
+ * renders the page and checks `#app` has children and no uncaught page errors.
+ */
+async function assertRoutesMount(baseUrl, routes) {
+  let browser
+  try {
+    browser = await chromium.launch()
+  } catch (error) {
+    throw new Error(
+      'Could not launch headless Chromium for the dev mount check. ' +
+        'Install it before running validate:consumer (e.g. `pnpm exec playwright install chromium`).\n\n' +
+        error.message
+    )
+  }
+  try {
+    for (const route of routes) {
+      const page = await browser.newPage()
+      const pageErrors = []
+      page.on('pageerror', (error) => pageErrors.push(error.message))
+      try {
+        await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle', timeout: 30000 })
+      } catch (error) {
+        pageErrors.push(`navigation: ${error.message}`)
+      }
+      // Give client JS time to evaluate and mount (or throw).
+      await page.waitForTimeout(4000)
+      const childCount = await page.evaluate(
+        () => document.querySelector('#app')?.childElementCount ?? -1
+      )
+      await page.close()
+
+      if (pageErrors.length > 0 || childCount <= 0) {
+        throw new Error(
+          `Consumer dev server white-screened on ${route} (app #app childCount=${childCount}). ` +
+            'A theme client module likely failed to evaluate in the browser ' +
+            '(commonly a CJS-only dependency with no ESM default export).\n\n' +
+            (pageErrors.join('\n---\n') || '(no uncaught page error captured)')
+        )
+      }
+    }
+  } finally {
+    await browser.close()
+  }
+}
+
+/**
  * Start `vitepress dev` in the consumer project and exercise it the way a
  * browser would. The theme ships its client as source and imports build-time
  * virtual modules (virtual:uno.css, virtual:vitepress-analyzer), a `?url` asset
@@ -128,11 +182,11 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
  * path) while `pnpm dev` fails, because Vite's dep optimizer cannot resolve
  * those theme imports unless the scaffold marks the theme noExternal.
  *
- * The reliable signal is the dev server LOG after dep optimization runs: a
- * broken scaffold logs `error while updating dependencies` /
- * `Could not resolve "virtual:uno.css"`. Probing individual /@fs/ modules is
- * NOT reliable — Vite serves a single .vue file with its imports left
- * unresolved by design, so it returns 200 even when dev is actually broken.
+ * Two independent checks run here because they catch different failure modes:
+ * (1) the dev server LOG after dep optimization — a broken scaffold logs
+ * `error while updating dependencies` / `Could not resolve "virtual:uno.css"`;
+ * (2) a real browser mount check — see assertRoutesMount, which catches the
+ * white-screen class the log scan is blind to.
  */
 async function validateDevServer(consumerDir) {
   const port = 5390
@@ -205,8 +259,12 @@ async function validateDevServer(consumerDir) {
     // Give the optimizer time to run and log any failure, then assert.
     await sleep(8000)
     assertNoDevError()
-
     console.log('Consumer dev server resolved theme client modules cleanly.')
+
+    // Render the routes in a real browser and assert the app mounts — this
+    // catches white screens that the dev-log scan cannot see.
+    await assertRoutesMount(baseUrl, ['/', '/example.html', '/about.html'])
+    console.log('Consumer dev server mounted the Vue app in a browser cleanly.')
   } finally {
     devProcess.kill('SIGKILL')
   }
