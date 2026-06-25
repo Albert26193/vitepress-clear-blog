@@ -3,7 +3,7 @@ import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, write
 import { readdir } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, relative, resolve } from 'node:path'
-import { spawnSync } from 'node:child_process'
+import { spawn, spawnSync } from 'node:child_process'
 
 const repoRoot = resolve(dirname(new URL(import.meta.url).pathname), '..')
 const packagesRoot = join(repoRoot, 'packages')
@@ -115,6 +115,100 @@ function assertNoKnownFailure(output) {
       `Consumer build output matched known package-regression pattern(s): ${matches.map(String).join(', ')}\n\n` +
         output
     )
+  }
+}
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+/**
+ * Start `vitepress dev` in the consumer project and exercise it the way a
+ * browser would. The theme ships its client as source and imports build-time
+ * virtual modules (virtual:uno.css, virtual:vitepress-analyzer), a `?url` asset
+ * (heti), and VitePress content loaders. A fresh `pnpm build` can succeed (SSR
+ * path) while `pnpm dev` fails, because Vite's dep optimizer cannot resolve
+ * those theme imports unless the scaffold marks the theme noExternal.
+ *
+ * The reliable signal is the dev server LOG after dep optimization runs: a
+ * broken scaffold logs `error while updating dependencies` /
+ * `Could not resolve "virtual:uno.css"`. Probing individual /@fs/ modules is
+ * NOT reliable — Vite serves a single .vue file with its imports left
+ * unresolved by design, so it returns 200 even when dev is actually broken.
+ */
+async function validateDevServer(consumerDir) {
+  const port = 5390
+  const baseUrl = `http://localhost:${port}`
+  console.log('Starting consumer dev server for runtime validation...')
+
+  const devProcess = spawn(
+    join(consumerDir, 'node_modules/.bin/vitepress'),
+    ['dev', '--port', String(port)],
+    { cwd: consumerDir, stdio: ['ignore', 'pipe', 'pipe'] }
+  )
+
+  let devOutput = ''
+  devProcess.stdout.on('data', (chunk) => (devOutput += chunk))
+  devProcess.stderr.on('data', (chunk) => (devOutput += chunk))
+
+  const assertNoDevError = () => {
+    const devErrorPatterns = [
+      /error while updating dependencies/i,
+      /Could not resolve ["']virtual:/i,
+      /Could not read from file:.*\?url/i,
+      /Failed to resolve import/i,
+      /\[plugin:.*\] .*Could not resolve/i
+    ]
+    const hit = devErrorPatterns.find((pattern) => pattern.test(devOutput))
+    if (hit) {
+      throw new Error(
+        `Consumer dev server failed to resolve theme client modules (matched ${hit}). ` +
+          'The scaffold likely no longer marks vitepress-theme-link as noExternal.\n\n' +
+          devOutput
+      )
+    }
+  }
+
+  try {
+    // Wait for the dev server to accept requests (up to ~60s).
+    let ready = false
+    for (let attempt = 0; attempt < 30; attempt += 1) {
+      await sleep(2000)
+      if (devProcess.exitCode !== null) {
+        throw new Error(`Dev server exited early (code ${devProcess.exitCode}).\n\n${devOutput}`)
+      }
+      try {
+        const response = await fetch(`${baseUrl}/`)
+        if (response.status === 200) {
+          ready = true
+          break
+        }
+      } catch {
+        // server not up yet, keep polling
+      }
+    }
+
+    if (!ready) {
+      throw new Error(`Dev server did not become ready in time.\n\n${devOutput}`)
+    }
+
+    // Hit several routes to force Vite's dependency optimizer to scan and bundle
+    // the theme's client entry — this is what surfaces the virtual-module /
+    // ?url resolution failures into the dev log.
+    const routes = ['/', '/example.html', '/about.html', '/timeline.html', '/tags.html']
+    for (const route of routes) {
+      try {
+        await fetch(`${baseUrl}${route}`)
+      } catch {
+        // a 500/connection error here is captured via the dev log scan below
+      }
+    }
+
+    // Give the optimizer time to run and log any failure, then assert.
+    await sleep(8000)
+    assertNoDevError()
+
+    console.log('Consumer dev server resolved theme client modules cleanly.')
+  } finally {
+    devProcess.kill('SIGKILL')
   }
 }
 
@@ -244,6 +338,11 @@ try {
   const buildOutput = run('pnpm', ['build'], { cwd: consumerDir, capture: true })
   process.stdout.write(buildOutput)
   assertNoKnownFailure(buildOutput)
+
+  // A passing build only exercises the SSR path. Dev is a separate pipeline that
+  // can fail to resolve the theme's source-distributed client modules, so probe
+  // it explicitly.
+  await validateDevServer(consumerDir)
 
   console.log('\nConsumer package validation passed.')
   console.log(`Temp workspace: ${tempRoot}${keepTemp ? '' : ' (removed)'}`)

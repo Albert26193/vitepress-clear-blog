@@ -71,12 +71,30 @@ import { defineConfig } from 'vitepress'
 import { createBlog } from 'vitepress-theme-link/node'
 
 const blogConfig = await createBlog()
+const blogVite = (blogConfig.vite ?? {}) as Record<string, unknown>
+const blogOptimizeDeps = (blogVite.optimizeDeps ?? {}) as { exclude?: string[] }
 
 export default defineConfig({
   ...blogConfig,
   themeConfig: {
     ...(blogConfig.themeConfig as Record<string, unknown>),
     socialLinks: [{ icon: 'github', link: 'https://github.com' }]
+  },
+  vite: {
+    ...blogVite,
+    // The theme ships its client code as source and imports build-time virtual
+    // modules (`virtual:uno.css`, `virtual:vitepress-analyzer`) and VitePress
+    // content-loader data. Vite does not transform node_modules by default, so
+    // the theme must be noExternal (and excluded from pre-bundling) for these
+    // to resolve during `pnpm dev`.
+    optimizeDeps: {
+      ...blogOptimizeDeps,
+      exclude: [...(blogOptimizeDeps.exclude ?? []), 'vitepress-theme-link']
+    },
+    ssr: {
+      ...((blogVite.ssr ?? {}) as Record<string, unknown>),
+      noExternal: ['vitepress-theme-link']
+    }
   }
 })
 ```
@@ -187,7 +205,7 @@ pnpm format
 Set the next lockstep beta version, then commit that version change separately from release tooling changes:
 
 ```bash
-pnpm release:version 0.1.0-beta.2
+pnpm release:version 0.1.0-beta.3
 ```
 
 Before publishing, run the local release dry-run gate:
@@ -201,18 +219,18 @@ pnpm test:unit
 pnpm build
 pnpm validate:packages
 pnpm validate:consumer
-pnpm release:check -- --version 0.1.0-beta.2 --require-build
-pnpm release:publish:beta -- --version 0.1.0-beta.2
+pnpm release:check -- --version 0.1.0-beta.3 --require-build
+pnpm release:publish:beta -- --version 0.1.0-beta.3
 ```
 
-Then trigger the `Publish npm beta` GitHub Actions workflow. Keep `dry_run=true` for validation-only runs. For a real publish, set `dry_run=false` and `confirm=publish-0.1.0-beta.2-to-npm-beta`.
+Then trigger the `Publish npm beta` GitHub Actions workflow. Keep `dry_run=true` for validation-only runs. For a real publish, set `dry_run=false` and `confirm=publish-0.1.0-beta.3-to-npm-beta`.
 
 By default the beta workflow and release scripts publish only with `--tag beta`. The `latest` dist-tag is left untouched, so `npm install <pkg>` (no tag) keeps resolving the previous `latest`.
 
 Because `pnpm dlx` / `pnpm create` can fall back to the `latest` dist-tag when resolving a scoped tag, a stale `latest` makes `pnpm create vitepress-theme-link@beta` scaffold the wrong theme version. To also move `latest` onto the published beta version, opt in explicitly:
 
 - Workflow: set `promote_latest=true` on the `Publish npm beta` dispatch (real publish only).
-- Script: append `--promote-latest` to a real publish, e.g. `pnpm release:publish:beta -- --version 0.1.0-beta.2 --publish --confirm publish-0.1.0-beta.2-to-npm-beta --promote-latest`.
+- Script: append `--promote-latest` to a real publish, e.g. `pnpm release:publish:beta -- --version 0.1.0-beta.3 --publish --confirm publish-0.1.0-beta.3-to-npm-beta --promote-latest`.
 
 `--promote-latest` requires `--publish`; it never runs during a dry-run.
 
