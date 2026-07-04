@@ -21,10 +21,10 @@
           <D3PageSidebar />
           <SidebarLink />
         </div>
-        <div class="flex-grow" />
-        <div class="h-[30%]">
+        <div>
           <SidebarTag />
         </div>
+        <div class="flex-grow" />
       </div>
     </template>
 
