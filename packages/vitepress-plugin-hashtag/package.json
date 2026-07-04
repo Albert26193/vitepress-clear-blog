@@ -1,6 +1,6 @@
 {
   "name": "vitepress-plugin-hashtag",
-  "version": "0.1.0-beta.4",
+  "version": "0.1.0-beta.5",
   "description": "VitePress plugin that converts #TagName into clickable tag links",
   "author": "Albert26193",
   "license": "MIT",
