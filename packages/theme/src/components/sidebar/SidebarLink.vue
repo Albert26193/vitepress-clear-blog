@@ -8,7 +8,7 @@
       <!-- outgoing links list -->
       <div v-if="outgoingLinks.length" class="page-links">
         <a
-          v-for="link in outgoingLinks"
+          v-for="link in visibleOutgoingLinks"
           :key="link.relativePath"
           :href="formatPageHref(link.fullUrl)"
           class="page-link slide-enter"
@@ -16,6 +16,13 @@
         >
           {{ getResolvedLinkTitle(link) }}
         </a>
+        <button
+          v-if="hiddenOutgoingCount > 0"
+          class="expand-toggle"
+          @click="showAllOutgoing = !showAllOutgoing"
+        >
+          {{ showAllOutgoing ? '… collapse' : `… ${hiddenOutgoingCount} more` }}
+        </button>
       </div>
       <!-- if no links -->
       <div v-else class="no-links">No Outgoing Links</div>
@@ -25,7 +32,7 @@
       </div>
       <div v-if="backLinks.length" class="page-links">
         <a
-          v-for="link in backLinks"
+          v-for="link in visibleBackLinks"
           :key="link.relativePath"
           :href="formatPageHref(link.fullUrl)"
           class="page-link slide-enter"
@@ -33,6 +40,13 @@
         >
           {{ getResolvedLinkTitle(link) }}
         </a>
+        <button
+          v-if="hiddenBackCount > 0"
+          class="expand-toggle"
+          @click="showAllBack = !showAllBack"
+        >
+          {{ showAllBack ? '… collapse' : `… ${hiddenBackCount} more` }}
+        </button>
       </div>
       <div v-else class="no-links">No Back Links</div>
     </div>
@@ -75,6 +89,8 @@
     return withBase(`${pathname}.html${suffix}`)
   }
 
+  const MAX_VISIBLE = 10
+
   const route = useRoute()
   const currentPath = ref(route.data.relativePath.replace(/\.md$/, ''))
 
@@ -86,10 +102,35 @@
     return siteMetadata[currentPath.value]?.backLinks ?? []
   })
 
+  // Expand/collapse state for overflow links
+  const showAllOutgoing = ref(false)
+  const showAllBack = ref(false)
+
+  const visibleOutgoingLinks = computed(() =>
+    showAllOutgoing.value
+      ? outgoingLinks.value
+      : outgoingLinks.value.slice(0, MAX_VISIBLE)
+  )
+
+  const hiddenOutgoingCount = computed(() =>
+    Math.max(0, outgoingLinks.value.length - MAX_VISIBLE)
+  )
+
+  const visibleBackLinks = computed(() =>
+    showAllBack.value ? backLinks.value : backLinks.value.slice(0, MAX_VISIBLE)
+  )
+
+  const hiddenBackCount = computed(() =>
+    Math.max(0, backLinks.value.length - MAX_VISIBLE)
+  )
+
   watch(
     () => route.path,
     () => {
       currentPath.value = route.data.relativePath.replace(/\.md$/, '')
+      // Reset expand state on route change
+      showAllOutgoing.value = false
+      showAllBack.value = false
     }
   )
 </script>
@@ -142,5 +183,14 @@
   .no-links {
     @apply text-sm text-[var(--vp-c-text-2)];
     @apply mt-0 ml-6;
+  }
+
+  .expand-toggle {
+    @apply px-4 py-[3px] text-left text-sm;
+    @apply text-[var(--vp-c-text-2)] hover:text-[var(--vp-c-brand)];
+    @apply transition-colors duration-300;
+    background: none;
+    border: none;
+    cursor: pointer;
   }
 </style>

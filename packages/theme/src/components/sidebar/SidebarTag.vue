@@ -22,10 +22,10 @@
         />
       </div>
       <!-- related posts -->
-      <div v-if="filteredRelatedPosts.length" class="related-posts">
+      <div v-if="cappedRelatedPosts.length" class="related-posts">
         <a
           v-show="showPosts"
-          v-for="post in filteredRelatedPosts"
+          v-for="post in cappedRelatedPosts"
           :key="post.regularPath"
           :href="isCurrentPage(post) ? undefined : withBase(post.regularPath)"
           :title="useTitle(post.frontMatter, post.html)"
@@ -37,6 +37,17 @@
         >
           {{ useTitle(post.frontMatter, post.html) }}
         </a>
+        <a
+          v-if="tagOverflowCount > 0"
+          class="overflow-link"
+          :href="
+            withBase(
+              `/tags?tag=${encodeURIComponent(activeTag || currentTags[0])}`
+            )
+          "
+        >
+          → view all {{ filteredRelatedPosts.length }}
+        </a>
       </div>
       <!-- if no related posts -->
       <div v-else class="no-related"> No Related Posts </div>
@@ -46,7 +57,7 @@
 
 <script setup lang="ts">
   import { useData, useRoute, withBase } from 'vitepress'
-  import { computed, onMounted, ref } from 'vue'
+  import { computed, ref } from 'vue'
 
   import { useTitle } from '../../composables/useMeta'
   import type { Post } from '../../types/types'
@@ -63,8 +74,12 @@
     return [...new Set(tags.map((t) => String(t).trim()))]
   })
 
-  // active tag for filtering
-  const activeTag = ref<string | null>(null)
+  const MAX_VISIBLE_TAG_POSTS = 10
+
+  // active tag for filtering — default to first tag to narrow results immediately
+  const activeTag = ref<string | null>(
+    currentTags.value.length > 0 ? currentTags.value[0] : null
+  )
 
   // show posts flag
   const showPosts = ref(true)
@@ -103,15 +118,14 @@
     })
   })
 
-  const chooseFirstTag = () => {
-    if (currentTags.value && currentTags.value.length > 0) {
-      activeTag.value = currentTags.value[0]
-    }
-  }
+  // Cap visible posts to prevent sidebar overflow
+  const cappedRelatedPosts = computed(() =>
+    filteredRelatedPosts.value.slice(0, MAX_VISIBLE_TAG_POSTS)
+  )
 
-  onMounted(() => {
-    chooseFirstTag()
-  })
+  const tagOverflowCount = computed(() =>
+    Math.max(0, filteredRelatedPosts.value.length - MAX_VISIBLE_TAG_POSTS)
+  )
 </script>
 
 <style scoped>
@@ -166,5 +180,12 @@
   .no-related {
     @apply text-sm text-[var(--vp-c-text-2)];
     @apply mt-3 ml-6;
+  }
+
+  .overflow-link {
+    @apply relative block px-4 py-[3px] text-sm;
+    @apply font-medium text-[var(--vp-c-brand)];
+    @apply transition-colors duration-300;
+    @apply hover:underline;
   }
 </style>
