@@ -94,8 +94,10 @@
   }
 
   // check if post is current page
+  // decodeURI needed: VitePress page.url is percent-encoded (e.g. %E5%88%A9)
+  // but Vue Router 4 route.path returns decoded Unicode
   const isCurrentPage = (post: Post) => {
-    return withBase(post.regularPath) === route.path
+    return decodeURI(withBase(post.regularPath)) === decodeURI(route.path)
   }
 
   // get related posts
