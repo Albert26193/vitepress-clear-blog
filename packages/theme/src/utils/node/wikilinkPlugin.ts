@@ -49,6 +49,19 @@ const getCurrentFile = (
   return relativePath.replace(/\.md$/, '').replace(/\\/g, '/')
 }
 
+/**
+ * markdown-it stores link hrefs percent-encoded (via `normalizeLink`), so
+ * non-ASCII paths never match the filesystem or the filename index unless
+ * decoded first. Malformed sequences fall back to the raw href.
+ */
+const safeDecodeHref = (href: string): string => {
+  try {
+    return decodeURIComponent(href)
+  } catch {
+    return href
+  }
+}
+
 const normalizeHref = (path: string): string => {
   if (!path) return '#'
   return path.startsWith('/') ? path : `/${path}`
@@ -303,7 +316,8 @@ export const createWikilinkPlugin = async (
 
     md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
       const token = tokens[idx]
-      const href = token.attrGet('href')
+      const rawHref = token.attrGet('href')
+      const href = rawHref && safeDecodeHref(rawHref)
 
       if (href && isPageCandidateHref(href)) {
         const currentFile = getCurrentFile(

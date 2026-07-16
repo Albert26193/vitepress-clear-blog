@@ -48,6 +48,10 @@ describe('createWikilinkPlugin', () => {
       resolve(docsDir, 'guide/index.md'),
       '---\ntitle: Guide Home\n---\n\n# Guide Heading\n'
     )
+    await writeFile(
+      resolve(docsDir, 'src/utils/node/Linux-对于BASH_SOURCE的理解.md'),
+      '# Non-ASCII Target'
+    )
   })
 
   afterAll(async () => {
@@ -221,6 +225,40 @@ describe('createWikilinkPlugin', () => {
     expect(html).toContain('href="//cdn.example.com/lib.js"')
     expect(html).not.toContain('broken-link')
     expect(html).not.toContain('data-link-broken')
+  })
+
+  it('resolves non-ASCII markdown links despite percent-encoded hrefs', async () => {
+    const html = await render(
+      '[BASH](../../../src/utils/node/Linux-对于BASH_SOURCE的理解.md)',
+      { relativePath: 'test/utils/node/source-page.md' }
+    )
+
+    expect(html).toContain(
+      'href="/src/utils/node/Linux-对于BASH_SOURCE的理解.html"'
+    )
+    expect(html).not.toContain('broken-link')
+    expect(html).not.toContain('data-link-broken')
+  })
+
+  it('resolves non-ASCII markdown links through the basename fallback', async () => {
+    const html = await render(
+      '[BASH](any/wrong/prefix/Linux-对于BASH_SOURCE的理解.md)',
+      { relativePath: 'test/utils/node/source-page.md' }
+    )
+
+    expect(html).toContain(
+      'href="/src/utils/node/Linux-对于BASH_SOURCE的理解.html"'
+    )
+    expect(html).not.toContain('broken-link')
+  })
+
+  it('still marks missing non-ASCII markdown links as broken', async () => {
+    const html = await render('[Missing](./不存在的页面.md)', {
+      relativePath: 'test/utils/node/source-page.md'
+    })
+
+    expect(html).toContain('broken-link')
+    expect(html).toContain('data-link-broken')
   })
 
   it('marks broken regular markdown internal links', async () => {
