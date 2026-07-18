@@ -76,7 +76,11 @@ export const FONT_DEFAULTS = {
  */
 export const WEBFONT_DEFAULTS = {
   base: 'https://fonts.loli.net',
-  display: 'swap'
+  display: 'swap',
+  // Weights requested for every webfont family: regular + real bold. This is
+  // plugin policy, not user syntax — bold UI/heading text renders a true bold
+  // face instead of a browser-synthesized one.
+  weights: [400, 700]
 } as const
 
 export const THEME_COLOR_DEFAULTS = {

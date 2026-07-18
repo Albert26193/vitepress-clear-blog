@@ -142,7 +142,7 @@
   }
 
   .link-title {
-    @apply mb-2 flex items-center text-base font-semibold;
+    @apply mb-2 flex items-center text-sm font-semibold;
     @apply text-[var(--vp-c-text-1)];
   }
 
