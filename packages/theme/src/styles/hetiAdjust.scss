@@ -182,6 +182,12 @@
       'Segoe UI Emoji',
       'Segoe UI Symbol'
     );
+  }
+
+  /* Mirror upstream heti: only `code` gets the 0.875em reduction. Setting it
+   * on `pre` as well compounded with VitePress's em-based
+   * --vp-code-font-size inside shiki blocks (16px × .875 × .875 = 12.25px). */
+  .heti code {
     font-size: 0.875em;
   }
 

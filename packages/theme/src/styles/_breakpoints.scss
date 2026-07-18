@@ -1,0 +1,43 @@
+@use 'sass:map';
+
+/* Single breakpoint scale for the hand-written SCSS layers (theme.scss,
+ * hetiAdjust.scss) and component styles. The xs–2xl values MUST stay in sync
+ * with `theme.screens` in uno.config.ts — test/styles/breakpoints-sync.spec.ts
+ * enforces this in CI.
+ *
+ * The vp-* entries are VitePress-internal layout boundaries (sidebar appears
+ * at 960px, wide layout at 1440px). They are not part of the uno scale but are
+ * collected here so overrides that interact with VitePress defaults never
+ * hard-code magic numbers. */
+$breakpoints: (
+  'xs': 375px,
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px,
+  'vp-sidebar': 960px,
+  'vp-wide': 1440px
+);
+
+@function bp($name) {
+  @if not map.has-key($breakpoints, $name) {
+    @error 'Unknown breakpoint `#{$name}`. Valid keys: #{map.keys($breakpoints)}';
+  }
+
+  @return map.get($breakpoints, $name);
+}
+
+@mixin above($name) {
+  @media (min-width: bp($name)) {
+    @content;
+  }
+}
+
+/* -0.02px keeps below()/above() ranges disjoint, matching how UnoCSS derives
+ * its max-width variants from the same scale. */
+@mixin below($name) {
+  @media (max-width: (bp($name) - 0.02px)) {
+    @content;
+  }
+}
