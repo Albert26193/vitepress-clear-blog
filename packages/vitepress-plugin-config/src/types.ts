@@ -9,11 +9,18 @@ export type FontStack = string | string[]
 /**
  * Custom font-family stacks per role. Any role left unset falls through to the
  * theme's built-in default stack, so partial configuration is safe.
+ *
+ * `webfont` lists families to load from a Google Fonts css2-compatible
+ * endpoint; each entry is a family name with an optional axis suffix
+ * (e.g. `"Noto Serif SC:wght@400;700"`). `webfontBase` overrides the endpoint
+ * origin — the default is a mainland-China-friendly mirror.
  */
 export interface FontsConfig {
   sans?: FontStack
   serif?: FontStack
   mono?: FontStack
+  webfont?: FontStack
+  webfontBase?: string
 }
 
 /**

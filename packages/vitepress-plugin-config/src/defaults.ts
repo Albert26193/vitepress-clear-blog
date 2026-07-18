@@ -66,6 +66,19 @@ export const FONT_DEFAULTS = {
   }
 } as const
 
+/**
+ * Defaults for webfont loading via a Google Fonts css2-compatible endpoint.
+ * The default base is a mainland-China-friendly mirror (fonts.googleapis.com
+ * is unreliable there); override with `theme.fonts.webfontBase` — any
+ * path-compatible reverse proxy works, including the official origin.
+ * fonts.font.im was rejected as default: its TLS cert was expired at the time
+ * of writing, which is exactly the failure mode the override field exists for.
+ */
+export const WEBFONT_DEFAULTS = {
+  base: 'https://fonts.loli.net',
+  display: 'swap'
+} as const
+
 export const THEME_COLOR_DEFAULTS = {
   light: {
     'vp-c-bg': '#ffffff',

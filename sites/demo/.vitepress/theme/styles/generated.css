@@ -17,6 +17,8 @@
   --c-text-strong: #111111;
   --c-text-em: #086ddd;
   --main-page-text: #050505;
+  --theme-font-sans: 'Noto Sans SC', 'Heti Hei', sans-serif;
+  --theme-font-serif: 'Noto Sans SC', 'Heti Song', serif;
 }
 
 .dark {

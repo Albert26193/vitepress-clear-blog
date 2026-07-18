@@ -7,10 +7,16 @@ const nonEmptyStringSchema = z.string().min(1)
 
 const fontValueSchema = z.union([z.string(), z.array(z.string())])
 
+const webfontBaseSchema = z
+  .string()
+  .regex(/^https:\/\/[^\s]+$/, 'webfontBase must be an https:// URL')
+
 const fontsSchema = z.object({
   sans: fontValueSchema.optional(),
   serif: fontValueSchema.optional(),
-  mono: fontValueSchema.optional()
+  mono: fontValueSchema.optional(),
+  webfont: fontValueSchema.optional(),
+  webfontBase: webfontBaseSchema.optional()
 })
 
 const themeConfigSchema: z.ZodType<Record<string, unknown>> = z.lazy(() =>

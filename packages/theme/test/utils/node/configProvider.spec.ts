@@ -7,7 +7,11 @@ const { mockLoadConfig } = vi.hoisted(() => ({
   mockLoadConfig: vi.fn()
 }))
 
-vi.mock('vitepress-plugin-config', () => ({
+vi.mock('vitepress-plugin-config', async (importOriginal) => ({
+  // Keep the real buildWebfontHead so head injection is exercised end-to-end.
+  buildWebfontHead: (
+    await importOriginal<typeof import('vitepress-plugin-config')>()
+  ).buildWebfontHead,
   loadConfig: mockLoadConfig,
   generateThemePlugin: vi.fn(() => ({ name: 'mock-plugin' })),
   DEFAULT_NAV_LABELS: {
@@ -248,6 +252,30 @@ describe('createBlog with mocked config.toml', async () => {
     )
     expect(authorMeta).toBeDefined()
     expect(authorMeta![1].content).toBe('Test Author')
+  })
+
+  it('injects webfont head entries when theme.fonts.webfont is set', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      theme: {
+        ...(mockToml as any).theme,
+        fonts: { serif: 'Noto Serif SC', webfont: ['Noto Serif SC'] }
+      }
+    })
+    const config = await createBlog()
+    const head = (config as any).head as [string, Record<string, string>][]
+    const stylesheet = head.find(
+      (h) => h[1]?.rel === 'stylesheet' && h[1]?.href?.includes('/css2?')
+    )
+    expect(stylesheet).toBeDefined()
+    expect(stylesheet![1].href).toContain('family=Noto+Serif+SC')
+    expect(head.filter((h) => h[1]?.rel === 'preconnect')).toHaveLength(2)
+  })
+
+  it('adds no webfont head entries when webfont is not configured', async () => {
+    const config = await createBlog()
+    const head = (config as any).head as [string, Record<string, string>][]
+    expect(head.some((h) => h[1]?.rel === 'preconnect')).toBe(false)
   })
 
   it('configures default markdown theme', async () => {
