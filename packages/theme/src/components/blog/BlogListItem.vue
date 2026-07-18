@@ -101,7 +101,7 @@
 
   const partedTags = props.post.frontMatter.tags?.slice(0, 4) ?? []
 
-  const author = useAuthor(props.post.frontMatter) || 'Blogger'
+  const author = useAuthor(() => props.post.frontMatter)
 
   const preview = useHtmlPreview(props.post.html, {
     maxChineseLength: 120,

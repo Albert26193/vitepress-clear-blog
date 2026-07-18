@@ -2,6 +2,7 @@
  * @vitest-environment jsdom
  */
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 
 import {
   useAuthor,
@@ -172,12 +173,12 @@ describe('useAuthor', () => {
 
   it('uses author from frontMatter when set', () => {
     const fm = makeFrontMatter({ author: 'FrontMatterAuthor' })
-    expect(useAuthor(fm)).toBe('FrontMatterAuthor')
+    expect(useAuthor(fm).value).toBe('FrontMatterAuthor')
   })
 
   it('falls back to config author when frontMatter has no author', () => {
     const fm = makeFrontMatter({ author: undefined as unknown as string })
-    expect(useAuthor(fm)).toBe('ConfigAuthor')
+    expect(useAuthor(fm).value).toBe('ConfigAuthor')
   })
 
   it('falls back to "Blogger" when neither frontMatter nor config has author', () => {
@@ -188,7 +189,7 @@ describe('useAuthor', () => {
     })
 
     const fm = makeFrontMatter({ author: undefined as unknown as string })
-    expect(useAuthor(fm)).toBe('Blogger')
+    expect(useAuthor(fm).value).toBe('Blogger')
   })
 
   it('falls back to "Blogger" when meta is missing author', () => {
@@ -199,17 +200,26 @@ describe('useAuthor', () => {
     })
 
     const fm = makeFrontMatter({ author: undefined as unknown as string })
-    expect(useAuthor(fm)).toBe('Blogger')
+    expect(useAuthor(fm).value).toBe('Blogger')
   })
 
   it('uses frontMatter author even when config author exists', () => {
     const fm = makeFrontMatter({ author: 'OverrideAuthor' })
-    expect(useAuthor(fm)).toBe('OverrideAuthor')
+    expect(useAuthor(fm).value).toBe('OverrideAuthor')
   })
 
   it('handles empty string author in frontMatter as falsy', () => {
     const fm = makeFrontMatter({ author: '' })
-    expect(useAuthor(fm)).toBe('ConfigAuthor')
+    expect(useAuthor(fm).value).toBe('ConfigAuthor')
+  })
+
+  it('tracks frontmatter changes when given a ref source', () => {
+    const fm = ref(makeFrontMatter({ author: 'FirstAuthor' }))
+    const author = useAuthor(fm)
+    expect(author.value).toBe('FirstAuthor')
+
+    fm.value = makeFrontMatter({ author: 'SecondAuthor' })
+    expect(author.value).toBe('SecondAuthor')
   })
 })
 
