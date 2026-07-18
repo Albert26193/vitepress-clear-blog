@@ -1,3 +1,5 @@
+@use './breakpoints' as bp;
+
 /* font  */
 :root {
   // Font roles consume the config injection vars (--theme-font-*, written into
@@ -143,6 +145,17 @@
       margin: 0 0.5px;
       padding: 1px 5px 1px 5px;
     }
+  }
+}
+
+/* VitePress makes code blocks full-bleed below 640px (margin: 16px -24px,
+ * square corners). Keep them inside the text column as rounded cards instead —
+ * long lines already need in-block horizontal scroll either way. */
+@include bp.below('sm') {
+  .vp-doc div[class*='language-'],
+  .vp-doc li div[class*='language-'] {
+    margin: 16px 0;
+    border-radius: 8px;
   }
 }
 
