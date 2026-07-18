@@ -33,6 +33,8 @@
       >
         {{ author }}
       </span>
+      <!-- copy raw markdown (llms sibling .md) for LLM use -->
+      <CopyMdButton class="ml-auto" />
     </div>
   </div>
 </template>
@@ -46,6 +48,7 @@
   import type { PostFrontMatter } from '../../types/types.d'
   import { calculateWords } from '../../utils/client/'
   import BlogTagItem from '../common/BlogTagItem.vue'
+  import CopyMdButton from './CopyMdButton.vue'
 
   const { frontmatter } = useData()
   const uniqueTags = computed(() => {

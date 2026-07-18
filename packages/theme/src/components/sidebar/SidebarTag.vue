@@ -180,7 +180,7 @@
   }
 
   .no-related {
-    @apply text-sm text-[var(--vp-c-text-2)];
+    @apply text-sm text-[var(--vp-c-text-3)];
     @apply mt-3 ml-6;
   }
 
