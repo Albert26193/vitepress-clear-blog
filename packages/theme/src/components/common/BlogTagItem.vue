@@ -68,9 +68,14 @@
 </script>
 
 <style scoped>
+  /* Text colors below use plain CSS instead of `text-[var(...)]` utilities:
+   * consumers build this source with their own UnoCSS version, and bracketed
+   * var() values in `text-[...]` are resolved inconsistently across 66.x
+   * releases (some silently generate no CSS), leaving tags black. */
   .blog-tag {
     @apply inline-flex shrink-0 cursor-default items-center rounded-full whitespace-nowrap;
-    @apply text-[var(--vp-c-text-1)] no-underline;
+    @apply no-underline;
+    color: var(--vp-c-text-1);
     padding: var(--bv-tag-py, 0.25rem) var(--bv-tag-px, 0.5rem);
     font-size: var(--bv-tag-font-size, 11px);
     line-height: 1rem;
@@ -88,7 +93,7 @@
   }
 
   .blog-tag.clickable:hover {
-    @apply text-[var(--vp-c-brand)];
+    color: var(--vp-c-brand);
   }
 
   .bordered.clickable:hover {
@@ -96,19 +101,21 @@
   }
 
   .blog-tag.clickable:hover .count {
-    @apply text-[var(--tag-hover-color,--vp-c-brand)];
+    color: var(--tag-hover-color, var(--vp-c-brand));
   }
 
   .blog-tag.active {
-    @apply border-1 border-solid border-[var(--vp-c-brand)] text-[var(--vp-c-brand)];
+    @apply border-1 border-solid border-[var(--vp-c-brand)];
+    color: var(--vp-c-brand);
     box-shadow: 0 0 0 0.5px var(--vp-c-brand);
   }
 
   .count {
-    @apply ml-1 text-[var(--vp-c-brand)];
+    @apply ml-1;
+    color: var(--vp-c-brand);
   }
 
   .blog-tag.active .count {
-    @apply text-inherit;
+    color: inherit;
   }
 </style>
