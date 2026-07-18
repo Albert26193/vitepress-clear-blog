@@ -3,6 +3,8 @@ export type {
   BlogConfig,
   ConfigToml,
   DatetimeConfig,
+  FontStack,
+  FontsConfig,
   HomepageConfig,
   LinksConfig,
   MarkdownConfig,
@@ -13,6 +15,8 @@ export type {
   ThemeConfig,
   TimelineConfig
 } from './types'
+export { buildWebfontHead } from './webfont'
+export type { WebfontHeadEntry } from './webfont'
 export {
   validateConfigToml,
   validateConfigTomlWithFallback,
@@ -35,5 +39,6 @@ export {
   DEFAULT_META,
   DEFAULT_MARKDOWN_THEME,
   DEFAULT_TIMELINE,
-  THEME_COLOR_DEFAULTS
+  THEME_COLOR_DEFAULTS,
+  WEBFONT_DEFAULTS
 } from './defaults'

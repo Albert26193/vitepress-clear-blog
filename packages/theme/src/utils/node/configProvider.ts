@@ -16,7 +16,9 @@ import {
   DEFAULT_OUTLINE,
   DEFAULT_PAGE_SIZE,
   DEFAULT_TIMELINE,
+  type FontsConfig,
   type MarkdownThemeConfig,
+  buildWebfontHead,
   generateThemePlugin,
   loadConfig
 } from 'vitepress-plugin-config'
@@ -216,7 +218,12 @@ const createBlog = async (
     ['meta', { property: 'og:title', content: meta.title || 'Blog' }],
     ['meta', { property: 'og:description', content: meta.description || '' }],
     ['meta', { property: 'og:site', content: meta.siteUrl || '' }],
-    ['meta', { property: 'og:site_name', content: meta.title || 'Blog' }]
+    ['meta', { property: 'og:site_name', content: meta.title || 'Blog' }],
+    // Webfont loading from [theme.fonts] webfont/webfontBase: preconnect +
+    // stylesheet links, empty when the site configures no webfont.
+    ...buildWebfontHead(
+      (toml?.theme as { fonts?: FontsConfig } | undefined)?.fonts
+    )
   ]
 
   const markdown = {

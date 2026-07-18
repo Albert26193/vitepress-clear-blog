@@ -557,4 +557,42 @@ describe('theme.fonts schema', () => {
     )
     expect(valid).toBe(true)
   })
+
+  it('accepts webfont as string or array', () => {
+    expect(
+      configTomlSchema.safeParse({
+        theme: { fonts: { webfont: 'Noto Serif SC' } }
+      }).success
+    ).toBe(true)
+    expect(
+      configTomlSchema.safeParse({
+        theme: { fonts: { webfont: ['Noto Serif SC', 'Fira Code'] } }
+      }).success
+    ).toBe(true)
+  })
+
+  it('accepts an https webfontBase', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {
+        fonts: {
+          webfont: 'Noto Sans SC',
+          webfontBase: 'https://fonts.googleapis.com'
+        }
+      }
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects a non-https webfontBase', () => {
+    expect(
+      configTomlSchema.safeParse({
+        theme: { fonts: { webfontBase: 'http://fonts.font.im' } }
+      }).success
+    ).toBe(false)
+    expect(
+      configTomlSchema.safeParse({
+        theme: { fonts: { webfontBase: 'fonts.font.im' } }
+      }).success
+    ).toBe(false)
+  })
 })

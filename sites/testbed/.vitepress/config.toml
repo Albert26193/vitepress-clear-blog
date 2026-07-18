@@ -77,6 +77,13 @@ c-text-strong = "#111111"
 c-text-em = "#086ddd"
 main-page-text = "#050505"
 
+# Serif-style site: body/content follows the serif role. The webfont is
+# loaded from the default mainland-China-friendly mirror (https://fonts.loli.net)
+# since webfontBase is not set.
+[theme.fonts]
+serif = "Noto Serif SC"
+webfont = ["Noto Serif SC"]
+
 [theme.dark]
 vp-c-bg = "#1e1e1e"
 vp-c-bg-alt = "#262626"
