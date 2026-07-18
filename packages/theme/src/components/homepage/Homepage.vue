@@ -21,21 +21,33 @@
 
     <div class="home-d3-container">
       <D3FullScreen
-        :width="Math.min(width * 0.78, 850)"
-        :height="Math.min(width * 0.75, 800)"
-        :zoom-level="0.7"
+        :width="graphWidth"
+        :height="graphHeight"
+        :zoom-level="graphZoom"
       ></D3FullScreen
     ></div>
   </section>
 </template>
 
 <style lang="scss" scoped>
+  @use '../../styles/breakpoints' as bp;
+
   .homepage-container {
     @apply flex flex-col items-center justify-evenly px-4;
     min-height: calc(100vh - var(--vp-nav-height) - 2rem);
+    /* dvh tracks the mobile browser's dynamic toolbar so the graph box is not
+     * pushed below the visible fold; the vh line above is the fallback. */
+    min-height: calc(100dvh - var(--vp-nav-height) - 2rem);
 
     --enter-animation: homepage-drop;
     --enter-duration: 1.5s;
+
+    /* On compact screens justify-evenly turns leftover height into large gaps
+     * that shove the graph toward the fold — keep content grouped instead. */
+    @include bp.below('md') {
+      justify-content: center;
+      gap: 2.5rem;
+    }
   }
 
   .homepage-container .text {
@@ -125,6 +137,25 @@
   const { width } = useWindowSize()
   const { handleClick: handlePagesClick, handleKeydown: handlePagesKeydown } =
     useClickAble('/pages/')
+
+  // 768 = the shared `md` breakpoint (see styles/_breakpoints.scss).
+  const isCompact = computed(() => width.value < 768)
+
+  // Compact screens get a wider canvas fraction so the graph box uses the
+  // available width instead of shrinking with the desktop ratio.
+  const graphWidth = computed(() =>
+    Math.min(width.value * (isCompact.value ? 0.92 : 0.78), 850)
+  )
+  const graphHeight = computed(() =>
+    Math.min(width.value * (isCompact.value ? 0.88 : 0.75), 800)
+  )
+
+  // The force-layout params are tuned for the 850px canvas; scale the initial
+  // zoom with the actual canvas so the graph content fits smaller viewBoxes
+  // instead of being clipped at the edges.
+  const graphZoom = computed(() =>
+    Math.min(0.7, Math.max(0.3, 0.7 * (graphWidth.value / 850)))
+  )
 
   const homepageTitle = computed(
     () => theme.value.homepage?.title || site.value.title

@@ -76,8 +76,12 @@
     }
 
     img {
-      max-width: 600px;
-      object-fit: contain;
+      /* min() keeps the 600px design cap while restoring VitePress's fluid
+       * shrink on narrow screens; height:auto preserves the aspect ratio
+       * derived from the width/height attrs that
+       * vitepress-plugin-image-dimension injects. */
+      max-width: min(100%, 600px);
+      height: auto;
       margin: 1.5px auto;
     }
   }
@@ -132,11 +136,12 @@
       color: var(--c-text-code);
     }
 
+    /* Code font-size is owned solely by --vp-code-font-size so inline and
+     * block code stay consistent; do not add a font-size here. */
     :not(pre, div, h1, h2, h3, h4, h5, h6) > code {
       color: var(--c-text-code);
       margin: 0 0.5px;
       padding: 1px 5px 1px 5px;
-      font-size: 0.85rem;
     }
   }
 }
