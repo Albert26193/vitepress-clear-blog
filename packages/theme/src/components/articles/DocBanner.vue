@@ -38,8 +38,8 @@
 </template>
 
 <script setup lang="ts">
-  import { useData } from 'vitepress'
-  import { computed, onMounted, ref } from 'vue'
+  import { onContentUpdated, useData } from 'vitepress'
+  import { computed, onMounted, ref, shallowRef } from 'vue'
 
   import { useClickAble } from '../../composables/useClickAble'
   import { useAuthor, useTimeFormat } from '../../composables/useMeta'
@@ -58,13 +58,22 @@
 
   const $des = ref<HTMLDivElement>()
 
-  const author = useAuthor(frontmatter.value as PostFrontMatter) || 'Blogger'
+  const author = useAuthor(() => frontmatter.value as PostFrontMatter)
 
-  const domContainer = window.document.querySelector('#VPContent')
-  const textContent =
-    domContainer?.querySelector('.content-container .main')?.textContent || ''
+  // The banner lives in the layout and persists across route changes, so the
+  // word count must be recomputed whenever the rendered markdown updates.
+  const wordsCount = shallowRef(0)
+  const updateWordsCount = () => {
+    const textContent =
+      window.document.querySelector('#VPContent .content-container .main')
+        ?.textContent || ''
+    wordsCount.value = calculateWords(textContent)
+  }
 
-  const wordsCount = calculateWords(textContent)
+  // Covers SPA navigations; the initial ClientOnly mount happens after the
+  // content's first render, so onMounted below handles that case.
+  onContentUpdated(updateWordsCount)
+
   const reposition = () => {
     if (!$des.value) {
       return
@@ -77,6 +86,8 @@
   }
 
   onMounted(() => {
+    updateWordsCount()
+
     const observer = new MutationObserver(() => {
       const targetInstance = document.querySelector('#hack-article-des')
       if (!targetInstance) {

@@ -8,7 +8,14 @@
 import dayjs from 'dayjs/esm'
 import customParseFormat from 'dayjs/esm/plugin/customParseFormat'
 import { useData } from 'vitepress'
-import { type ComputedRef, computed, nextTick, provide } from 'vue'
+import {
+  type ComputedRef,
+  type MaybeRefOrGetter,
+  computed,
+  nextTick,
+  provide,
+  toValue
+} from 'vue'
 
 import { type PostFrontMatter } from '../types/types.d'
 
@@ -77,21 +84,29 @@ const useTruncatedDescription = (
 /**
  * Resolves the display author with frontmatter taking precedence over site defaults.
  *
- * @param frontMatter - Post frontmatter that may override the configured author.
- * @returns Author name suitable for post metadata UI.
+ * Accepts a ref/getter so persistent components (e.g. the layout-level doc
+ * banner) keep the author in sync across route changes.
+ *
+ * @param frontMatter - Post frontmatter (or ref/getter) that may override the configured author.
+ * @returns Computed author name suitable for post metadata UI.
  */
-const useAuthor = (frontMatter: PostFrontMatter) => {
+const useAuthor = (
+  frontMatter: MaybeRefOrGetter<PostFrontMatter>
+): ComputedRef<string> => {
   const { site } = useData()
-  // 1. first use author from frontmatter
-  if (frontMatter.author) {
-    return frontMatter.author
-  }
-  // 2. otherwise use default author from config
-  if (site.value.themeConfig?.meta?.author) {
-    return site.value.themeConfig.meta.author
-  }
-  // 3. otherwise use default author from vitepress
-  return 'Blogger'
+  return computed(() => {
+    // 1. first use author from frontmatter
+    const fmAuthor = toValue(frontMatter).author
+    if (fmAuthor) {
+      return fmAuthor
+    }
+    // 2. otherwise use default author from config
+    if (site.value.themeConfig?.meta?.author) {
+      return site.value.themeConfig.meta.author
+    }
+    // 3. otherwise use default author from vitepress
+    return 'Blogger'
+  })
 }
 
 /**
