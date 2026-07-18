@@ -77,11 +77,12 @@ main-page-text = "#050505"
 
 # Sans-style site: the theme body/content follows the serif role, so a
 # sans-looking site points both roles at the same sans family. The webfont
-# is loaded from the official Google Fonts origin (overseas-friendly).
+# is loaded (weights 400/700 automatic) from the official Google Fonts
+# origin (overseas-friendly).
 [theme.fonts]
 sans = "Noto Sans SC"
 serif = "Noto Sans SC"
-webfont = ["Noto Sans SC"]
+webfont = "Noto Sans SC"
 webfontBase = "https://fonts.googleapis.com"
 
 [theme.dark]

@@ -21,39 +21,30 @@ const toList = (value: string | string[] | undefined): string[] => {
     .filter((item) => item.length > 0)
 }
 
-/**
- * Splits a webfont entry into its family name and optional css2 axis suffix.
- * `"Noto Serif SC:wght@400;700"` → family `Noto Serif SC`, axis `wght@400;700`.
- */
-const splitEntry = (entry: string): { family: string; axis?: string } => {
-  const idx = entry.indexOf(':')
-  if (idx === -1) return { family: entry.trim() }
-  return {
-    family: entry.slice(0, idx).trim(),
-    axis: entry.slice(idx + 1).trim() || undefined
-  }
-}
-
-/**
- * Encodes one entry as a css2 `family=` query parameter value. Spaces become
- * `+` (the css2 convention); an axis suffix is passed through verbatim so users
- * can request explicit weights, e.g. `Noto+Serif+SC:wght@400;700`.
- */
-const familyParam = (entry: string): string => {
-  const { family, axis } = splitEntry(entry)
-  const encoded = family.replace(/\s+/g, '+')
-  return axis ? `${encoded}:${axis}` : encoded
-}
-
 const stripQuotes = (value: string): string =>
   value.replace(/^['"]|['"]$/g, '').trim()
+
+/**
+ * Extracts the plain family name from a webfont entry. css2 axis syntax
+ * (`Family:wght@...`) is NOT supported — weights are a plugin policy, not user
+ * syntax — so anything after a `:` is dropped with a warning.
+ */
+const familyName = (entry: string, warn: (message: string) => void): string => {
+  const idx = entry.indexOf(':')
+  if (idx === -1) return entry.trim()
+  const family = entry.slice(0, idx).trim()
+  warn(
+    `[config] theme.fonts.webfont: "${entry}" — axis syntax is not supported; weights ${WEBFONT_DEFAULTS.weights.join('/')} are loaded automatically. Using "${family}".`
+  )
+  return family
+}
 
 /**
  * Warns when a webfont family is not referenced by any configured font stack —
  * the font would download but never apply, which is almost always a typo.
  */
 const warnUnusedFamilies = (
-  entries: string[],
+  families: string[],
   fonts: FontsConfig,
   warn: (message: string) => void
 ): void => {
@@ -63,8 +54,7 @@ const warnUnusedFamilies = (
     )
   )
   if (stackFamilies.size === 0) return
-  for (const entry of entries) {
-    const { family } = splitEntry(entry)
+  for (const family of families) {
     if (!stackFamilies.has(stripQuotes(family).toLowerCase())) {
       warn(
         `[config] theme.fonts.webfont: "${family}" is loaded as a webfont but does not appear in any sans/serif/mono stack, so it will never render`
@@ -79,9 +69,13 @@ const warnUnusedFamilies = (
  * path-compatible reverse proxies, so only the base origin differs; the default
  * base is a mainland-China-friendly mirror and can be overridden per site.
  *
+ * Each family gets its own stylesheet link requesting the default weights
+ * (400/700 — regular and real bold), so one family with a missing weight fails
+ * alone instead of taking down the whole request.
+ *
  * @param fonts - The `[theme.fonts]` section from config.toml.
  * @param warn - Warning sink, defaults to `console.warn` (injectable for tests).
- * @returns Head entries (preconnect + stylesheet), or `[]` when no webfont is
+ * @returns Head entries (preconnect + stylesheets), or `[]` when no webfont is
  *   configured so sites without the feature pay zero cost.
  */
 export const buildWebfontHead = (
@@ -89,8 +83,8 @@ export const buildWebfontHead = (
   warn: (message: string) => void = console.warn
 ): WebfontHeadEntry[] => {
   if (!fonts) return []
-  const entries = toList(fonts.webfont)
-  if (entries.length === 0) return []
+  const families = toList(fonts.webfont).map((entry) => familyName(entry, warn))
+  if (families.length === 0) return []
 
   const base = (fonts.webfontBase || WEBFONT_DEFAULTS.base).replace(/\/+$/, '')
   let origin: string
@@ -101,14 +95,18 @@ export const buildWebfontHead = (
     return []
   }
 
-  warnUnusedFamilies(entries, fonts, warn)
+  warnUnusedFamilies(families, fonts, warn)
 
-  const familyParams = entries
-    .map((entry) => `family=${familyParam(entry)}`)
-    .join('&')
-  const href = `${base}/css2?${familyParams}&display=${WEBFONT_DEFAULTS.display}`
+  const wght = WEBFONT_DEFAULTS.weights.join(';')
+  const stylesheets: WebfontHeadEntry[] = families.map((family) => [
+    'link',
+    {
+      rel: 'stylesheet',
+      href: `${base}/css2?family=${family.replace(/\s+/g, '+')}:wght@${wght}&display=${WEBFONT_DEFAULTS.display}`
+    }
+  ])
 
-  const head: WebfontHeadEntry[] = [
+  return [
     ['link', { rel: 'preconnect', href: origin }],
     // Font binaries are fetched in CORS mode, so they need a separate
     // crossorigin preconnect. Official Google serves them from gstatic;
@@ -123,7 +121,6 @@ export const buildWebfontHead = (
           }
         ]
       : ['link', { rel: 'preconnect', href: origin, crossorigin: '' }],
-    ['link', { rel: 'stylesheet', href }]
+    ...stylesheets
   ]
-  return head
 }

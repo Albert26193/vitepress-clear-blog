@@ -17,7 +17,7 @@
   --c-text-strong: #111111;
   --c-text-em: #086ddd;
   --main-page-text: #050505;
-  --theme-font-serif: 'Noto Serif SC', 'Heti Song', serif;
+  --theme-font-serif: Spectral, 'Noto Serif SC', 'Heti Song', serif;
 }
 
 .dark {

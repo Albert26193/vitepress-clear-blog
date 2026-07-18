@@ -23,6 +23,15 @@ export default defineConfig({
     ]
   ],
   theme: {
+    // Route Uno's font-serif/sans/mono utilities through the theme font vars,
+    // so they follow [theme.fonts] config instead of Uno's built-in stacks
+    // (which silently escaped the theme font system, e.g. Georgia dates).
+    fontFamily: {
+      serif:
+        "var(--theme-font-serif, 'Heti Song', 'Times New Roman', Times, ui-serif, Georgia, Cambria, serif)",
+      sans: "var(--theme-font-sans, 'Helvetica Neue', helvetica, arial, 'Heti Hei', sans-serif)",
+      mono: "var(--theme-font-mono, 'Iosevka', 'Fira Code', 'JetBrains Mono', Menlo, Consolas, monospace)"
+    },
     screens: {
       xs: '375px',
       sm: '640px',

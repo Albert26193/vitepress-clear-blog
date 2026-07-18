@@ -3,11 +3,14 @@ import { describe, expect, it, vi } from 'vitest'
 import { WEBFONT_DEFAULTS } from '../src/defaults'
 import { buildWebfontHead } from '../src/webfont'
 
-const stylesheetHref = (head: [string, Record<string, string>][]): string => {
-  const entry = head.find(([, attrs]) => attrs.rel === 'stylesheet')
-  expect(entry).toBeDefined()
-  return entry![1].href
-}
+const stylesheets = (
+  head: [string, Record<string, string>][]
+): Record<string, string>[] =>
+  head
+    .filter(([, attrs]) => attrs.rel === 'stylesheet')
+    .map(([, attrs]) => attrs)
+
+const WGHT = WEBFONT_DEFAULTS.weights.join(';')
 
 describe('buildWebfontHead', () => {
   it('returns no entries when fonts or webfont are not configured', () => {
@@ -18,35 +21,41 @@ describe('buildWebfontHead', () => {
     expect(buildWebfontHead({ webfont: ['  '] })).toEqual([])
   })
 
-  it('builds a css2 stylesheet URL on the default mirror base', () => {
+  it('builds a css2 stylesheet URL with automatic weights on the default base', () => {
     const head = buildWebfontHead({
       serif: 'Noto Serif SC',
       webfont: ['Noto Serif SC']
     })
-    expect(stylesheetHref(head)).toBe(
-      `${WEBFONT_DEFAULTS.base}/css2?family=Noto+Serif+SC&display=swap`
+    const sheets = stylesheets(head)
+    expect(sheets).toHaveLength(1)
+    expect(sheets[0].href).toBe(
+      `${WEBFONT_DEFAULTS.base}/css2?family=Noto+Serif+SC:wght@${WGHT}&display=swap`
     )
   })
 
-  it('joins multiple families into a single request', () => {
+  it('emits one stylesheet link per family so failures are isolated', () => {
     const head = buildWebfontHead({
       serif: ['Noto Serif SC'],
       mono: ['Fira Code'],
       webfont: ['Noto Serif SC', 'Fira Code']
     })
-    expect(stylesheetHref(head)).toContain(
-      'css2?family=Noto+Serif+SC&family=Fira+Code&display=swap'
-    )
+    const sheets = stylesheets(head)
+    expect(sheets).toHaveLength(2)
+    expect(sheets[0].href).toContain(`family=Noto+Serif+SC:wght@${WGHT}`)
+    expect(sheets[1].href).toContain(`family=Fira+Code:wght@${WGHT}`)
   })
 
-  it('passes an axis suffix through verbatim', () => {
-    const head = buildWebfontHead({
-      serif: 'Noto Serif SC',
-      webfont: ['Noto Serif SC:wght@400;700']
-    })
-    expect(stylesheetHref(head)).toContain(
-      'family=Noto+Serif+SC:wght@400;700&display=swap'
+  it('drops css2 axis syntax from entries with a warning', () => {
+    const warn = vi.fn()
+    const head = buildWebfontHead(
+      { serif: 'Noto Serif SC', webfont: ['Noto Serif SC:wght@200..900'] },
+      warn
     )
+    const sheets = stylesheets(head)
+    expect(sheets[0].href).toContain(`family=Noto+Serif+SC:wght@${WGHT}`)
+    expect(sheets[0].href).not.toContain('200..900')
+    expect(warn).toHaveBeenCalledOnce()
+    expect(warn.mock.calls[0][0]).toContain('axis syntax is not supported')
   })
 
   it('accepts a single string webfont value', () => {
@@ -54,7 +63,7 @@ describe('buildWebfontHead', () => {
       serif: 'Noto Serif SC',
       webfont: 'Noto Serif SC'
     })
-    expect(stylesheetHref(head)).toContain('family=Noto+Serif+SC')
+    expect(stylesheets(head)[0].href).toContain('family=Noto+Serif+SC')
   })
 
   it('uses a custom base and strips trailing slashes', () => {
@@ -63,8 +72,8 @@ describe('buildWebfontHead', () => {
       webfont: ['Noto Serif SC'],
       webfontBase: 'https://example.com/gfonts/'
     })
-    expect(stylesheetHref(head)).toBe(
-      'https://example.com/gfonts/css2?family=Noto+Serif+SC&display=swap'
+    expect(stylesheets(head)[0].href).toBe(
+      `https://example.com/gfonts/css2?family=Noto+Serif+SC:wght@${WGHT}&display=swap`
     )
   })
 
@@ -111,7 +120,7 @@ describe('buildWebfontHead', () => {
     buildWebfontHead(
       {
         serif: ["'noto serif sc'", 'Georgia'],
-        webfont: ['Noto Serif SC:wght@400;700']
+        webfont: ['Noto Serif SC']
       },
       warn
     )
