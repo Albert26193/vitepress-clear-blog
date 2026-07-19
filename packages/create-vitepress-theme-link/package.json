@@ -1,6 +1,6 @@
 {
   "name": "create-vitepress-theme-link",
-  "version": "0.1.0-beta.7",
+  "version": "0.1.0-beta.8",
   "type": "module",
   "description": "Scaffold a VitePress Theme Link blog project",
   "author": "Albert26193",
