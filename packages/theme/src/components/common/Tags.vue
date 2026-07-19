@@ -1,6 +1,10 @@
 <template>
   <div class="custom-page-layout max-w-880px">
-    <div class="tags-container slide-enter">
+    <div
+      ref="tagsContainerRef"
+      class="tags-container slide-enter"
+      :class="{ collapsed: !tagsExpanded, 'has-overflow': tagsOverflow }"
+    >
       <BlogTagItem
         v-for="(_, key) in sortTags(tagsList)"
         :key="key"
@@ -13,6 +17,14 @@
         @click="toggleTag(String(key))"
       />
     </div>
+    <button
+      v-if="tagsOverflow"
+      type="button"
+      class="tags-toggle"
+      @click="tagsExpanded = !tagsExpanded"
+    >
+      {{ tagsExpanded ? 'Show less' : `Show all (${tagCount})` }}
+    </button>
     <div class="tag-header">
       <span class="i-carbon-tag-group text-xl" />
       <span class="ml-2">
@@ -54,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, onMounted, ref } from 'vue'
+  import { computed, onMounted, onUnmounted, ref } from 'vue'
 
   import { useClickAble } from '../../composables/useClickAble'
   import { useTimeFormat, useTitle } from '../../composables/useMeta'
@@ -83,6 +95,21 @@
 
   const selectedTag = ref('')
 
+  // Mobile collapse: clamp the tag cloud to a few rows and let the user
+  // expand it. Overflow is measured (not guessed from tag count) so the
+  // toggle only appears when the clamp actually hides tags.
+  const tagsContainerRef = ref<HTMLElement>()
+  const tagsExpanded = ref(false)
+  const tagsOverflow = ref(false)
+  const tagCount = computed(() => Object.keys(tagsList.value).length)
+
+  const measureTagsOverflow = () => {
+    const el = tagsContainerRef.value
+    // Only measure while clamped; expanding never hides the toggle.
+    if (!el || tagsExpanded.value) return
+    tagsOverflow.value = el.scrollHeight > el.clientHeight
+  }
+
   onMounted(() => {
     // Get tag from URL on initial load
     const urlParams = new URLSearchParams(window.location.search)
@@ -90,6 +117,12 @@
     if (tagFromUrl && tagsList.value[tagFromUrl]) {
       selectedTag.value = tagFromUrl
     }
+    measureTagsOverflow()
+    window.addEventListener('resize', measureTagsOverflow)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', measureTagsOverflow)
   })
 
   const toggleTag = (tag: string) => {
@@ -121,9 +154,34 @@
 <style scoped>
   /* Tags Container */
   .tags-container {
-    @apply mt-6 flex flex-wrap gap-2 border border-dashed border-gray-500;
+    @apply relative mt-6 flex flex-wrap gap-2 border border-dashed border-gray-500;
     @apply mx-3 p-3;
     @apply md:mx-0 md:p-4;
+  }
+
+  /* Mobile-only clamp: ~3 rows of chips (3 x 1.5rem + 2 x 0.5rem gap + p-3) */
+  @media (max-width: 767px) {
+    .tags-container.collapsed {
+      max-height: 7rem;
+      overflow: hidden;
+    }
+
+    .tags-container.collapsed.has-overflow::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 2.5rem;
+      background: linear-gradient(transparent, var(--vp-c-bg));
+      pointer-events: none;
+    }
+  }
+
+  .tags-toggle {
+    @apply mx-3 mt-2 block cursor-pointer border-none bg-transparent p-0 text-sm;
+    @apply md:hidden;
+    color: var(--vp-c-brand);
   }
 
   /* Tag View — overrides base BlogTagItem for tags-page look */
