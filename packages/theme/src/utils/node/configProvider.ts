@@ -31,6 +31,7 @@ import { type RSSOptions, RssPlugin } from 'vitepress-plugin-rss'
 import { classifyHref } from '../linkKind'
 import { resolveDate } from './datetime'
 import { getFooterRefTag, mermaidPlugin } from './mdEnhance'
+import { mergeUserConfig } from './mergeUserConfig'
 import { type RenderTitleMode, createWikilinkPlugin } from './wikilinkPlugin'
 
 type ImageDimensionTomlConfig = {
@@ -125,8 +126,16 @@ const getThemeConfig = async (
         }
       },
       server: { watch: { usePolling: true } },
+      // The theme ships its client code as source (src/*.ts and *.vue import
+      // build-time virtual modules and VitePress data loaders that only exist
+      // inside the consumer's Vite pipeline), so it must be compiled by the
+      // consumer instead of being externalized. Declaring that here means
+      // consumers never have to repeat this boilerplate in their config.ts.
       optimizeDeps: {
-        exclude: ['gzip-size']
+        exclude: ['gzip-size', 'vitepress-theme-link']
+      },
+      ssr: {
+        noExternal: ['vitepress-theme-link']
       },
       plugins: [
         vitePressAnalyzerPlugin({
@@ -151,6 +160,10 @@ const getThemeConfig = async (
  * markdown plugins, Vite plugins, head metadata, and theme config so that
  * the consumer's config.ts is minimal.
  *
+ * Any config passed in is deep-merged OVER the generated base (user wins;
+ * see mergeUserConfig for the exact contract), so overrides like
+ * `createBlog({ themeConfig: { socialLinks } })` work directly.
+ *
  * @returns VitePress user config object suitable for `defineConfig()`.
  */
 const createBlog = async (
@@ -165,8 +178,9 @@ const createBlog = async (
   const outline = toml?.outline || {}
   const blog = toml?.blog || {}
   const timeline = toml?.timeline || {}
+  const social = toml?.social || []
 
-  const base = await getThemeConfig(cfg)
+  const base = await getThemeConfig()
 
   const nav: { text: string; link: string }[] = [
     { text: navLabels.home || DEFAULT_NAV_LABELS.home, link: '/' },
@@ -309,12 +323,13 @@ const createBlog = async (
     'mprescripts'
   ]
 
-  return {
-    extends: base.clearBlogConfig,
+  const baseConfig: Record<string, unknown> = {
     base: vitePressBase,
     srcDir: './docs',
     srcExclude: ['README.md'],
     ignoreDeadLinks: true,
+    // html lang attribute; VitePress defaults to en-US when unset.
+    ...(meta.lang ? { lang: meta.lang } : {}),
     title: meta.title || 'Blog',
     description: meta.description || '',
     head,
@@ -356,6 +371,7 @@ const createBlog = async (
     },
     themeConfig: {
       nav,
+      ...(social.length ? { socialLinks: social } : {}),
       sidebar: [{ text: '', items: [] }],
       search: { provider: 'local' },
       outline: [2, 3],
@@ -383,6 +399,13 @@ const createBlog = async (
       meta: { author: meta.author || DEFAULT_META.author }
     }
   }
+
+  // transformPageData is composed above (theme normalization first, then the
+  // user's hook), so it must not go through the generic merge — a naive merge
+  // would let the user's function replace the composed one.
+  const userOverrides = { ...cfg }
+  delete userOverrides.transformPageData
+  return mergeUserConfig(baseConfig, userOverrides)
 }
 
 export { createBlog, getFooterRefTag, getThemeConfig, mermaidPlugin }

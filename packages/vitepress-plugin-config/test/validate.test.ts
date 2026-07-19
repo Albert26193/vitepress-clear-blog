@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import {
   checkThemeColors,
@@ -101,6 +101,46 @@ describe('configTomlSchema', () => {
   })
 })
 
+describe('social links', () => {
+  it('accepts an array of icon/link entries', () => {
+    const result = configTomlSchema.safeParse({
+      theme: {},
+      social: [
+        { icon: 'github', link: 'https://github.com/foo' },
+        { icon: 'x', link: 'https://x.com/foo', ariaLabel: 'X profile' }
+      ]
+    })
+    expect(result.success).toBe(true)
+    if (result.success) {
+      expect(result.data.social).toHaveLength(2)
+    }
+  })
+
+  it('rejects entries missing icon or link', () => {
+    expect(
+      configTomlSchema.safeParse({
+        theme: {},
+        social: [{ icon: 'github' }]
+      }).success
+    ).toBe(false)
+    expect(
+      configTomlSchema.safeParse({
+        theme: {},
+        social: [{ link: 'https://github.com/foo' }]
+      }).success
+    ).toBe(false)
+  })
+
+  it('rejects empty icon or link strings', () => {
+    expect(
+      configTomlSchema.safeParse({
+        theme: {},
+        social: [{ icon: '', link: 'https://github.com/foo' }]
+      }).success
+    ).toBe(false)
+  })
+})
+
 describe('markdown link_style', () => {
   it('accepts link_style = "wiki"', () => {
     const result = configTomlSchema.safeParse({
@@ -170,6 +210,21 @@ describe('markdown theme', () => {
       expect(result.success).toBe(true)
     }
   )
+
+  it('warns before degrading to defaults on invalid config', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const data = validateConfigTomlWithFallback(
+        { theme: {}, markdown: { mathjax: 'yes' } },
+        CFG
+      )
+      expect(data.markdown).toBeUndefined()
+      expect(warnSpy).toHaveBeenCalled()
+      expect(String(warnSpy.mock.calls[0][0])).toContain('markdown.mathjax')
+    } finally {
+      warnSpy.mockRestore()
+    }
+  })
 
   it('preserves markdown theme on fallback validation output', () => {
     const data = validateConfigTomlWithFallback(

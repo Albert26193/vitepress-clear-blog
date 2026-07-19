@@ -1,12 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { createBlog } from 'vitepress-theme-link/node'
 
-const blogConfig = await createBlog()
-
-export default defineConfig({
-  ...blogConfig,
-  themeConfig: {
-    ...(blogConfig.themeConfig as Record<string, unknown>),
-    socialLinks: [{ icon: 'github', link: 'https://github.com' }]
-  }
-})
+// All site options live in .vitepress/config.toml. Overrides passed to
+// createBlog() are deep-merged over the generated config (user wins).
+export default defineConfig(await createBlog())

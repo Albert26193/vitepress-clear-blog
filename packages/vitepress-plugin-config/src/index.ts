@@ -12,6 +12,7 @@ export type {
   MarkdownThemeModesConfig,
   MermaidRenderMode,
   OutlineConfig,
+  SocialLinkConfig,
   ThemeConfig,
   TimelineConfig
 } from './types'

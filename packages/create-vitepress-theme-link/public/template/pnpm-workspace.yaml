@@ -1,9 +1,7 @@
-# pnpm 11+ refuses to run dependency build scripts unless they are approved.
-# VitePress pulls in native build-script packages (esbuild via Vite, sharp via
-# the RSS plugin, @parcel/watcher via sass), so without this allowlist a fresh
-# `pnpm install` fails with ERR_PNPM_IGNORED_BUILDS. These settings live in
-# pnpm-workspace.yaml because pnpm 11 reads project-level config only from here.
+# pnpm requires an explicit stance on dependency build scripts. "false" means
+# the scripts never run — esbuild, sharp, and @parcel/watcher all ship prebuilt
+# binaries, so nothing needs to build on install.
 allowBuilds:
-  '@parcel/watcher': true
-  esbuild: true
-  sharp: true
+  '@parcel/watcher': false
+  esbuild: false
+  sharp: false

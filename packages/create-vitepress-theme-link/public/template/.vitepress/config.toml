@@ -94,6 +94,14 @@ pages = "Pages"
 about = "About"
 
 # ---------------------------------------------------------------------------
+# Social links — icons shown in the navbar
+# ---------------------------------------------------------------------------
+# icon accepts VitePress preset names: github, x, discord, mastodon, ...
+[[social]]
+icon = "github"
+link = "https://github.com"
+
+# ---------------------------------------------------------------------------
 # Markdown features
 # ---------------------------------------------------------------------------
 # render_title — which strategy to use for displaying [[wikilink]] titles.

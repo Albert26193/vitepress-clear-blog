@@ -39,6 +39,11 @@ timeline = "Timeline"
 pages = "Pages"
 about = "About"
 
+# Social icons shown in the navbar.
+[[social]]
+icon = "github"
+link = "https://github.com/Albert26193/vitepress-theme-link"
+
 [markdown]
 mathjax = true
 wikilinks = true

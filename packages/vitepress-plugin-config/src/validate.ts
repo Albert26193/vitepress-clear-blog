@@ -44,6 +44,12 @@ const themeConfigSchema: z.ZodType<Record<string, unknown>> = z.lazy(() =>
   })
 )
 
+const socialLinkSchema = z.object({
+  icon: nonEmptyStringSchema,
+  link: nonEmptyStringSchema,
+  ariaLabel: z.string().optional()
+})
+
 const navLabelsSchema = z.object({
   home: z.string().optional(),
   tags: z.string().optional(),
@@ -159,6 +165,7 @@ export const configTomlSchema = z.object({
   homepage: homepageSchema.optional(),
   page: pageSchema.optional().default({}),
   nav: navLabelsSchema.optional(),
+  social: z.array(socialLinkSchema).optional(),
   markdown: markdownSchema.optional(),
   datetime: datetimeSchema.optional(),
   blog: blogSchema.optional(),
@@ -235,6 +242,15 @@ export function validateConfigTomlWithFallback(
 ): ValidatedConfigToml {
   const result = configTomlSchema.safeParse(raw)
   if (!result.success) {
+    // Falling back to defaults without a trace makes a broken config.toml
+    // impossible to debug — surface every issue before degrading.
+    for (const issue of result.error.issues.map((i) =>
+      formatZodIssue(i, sourcePath)
+    )) {
+      console.warn(
+        `[vitepress-plugin-config] invalid config, using defaults — ${issue.path}: ${issue.message}`
+      )
+    }
     return configTomlSchema.parse({ theme: {} })
   }
 
