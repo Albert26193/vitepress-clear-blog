@@ -123,6 +123,16 @@ export interface NavLabels {
   about?: string
 }
 
+/**
+ * One social link rendered in the navbar. `icon` accepts the VitePress preset
+ * icon names (e.g. "github", "x", "discord").
+ */
+export interface SocialLinkConfig {
+  icon: string
+  link: string
+  ariaLabel?: string
+}
+
 export interface ConfigToml {
   meta: {
     title?: string
@@ -143,6 +153,7 @@ export interface ConfigToml {
     pageSizeList?: number
   }
   nav?: NavLabels
+  social?: SocialLinkConfig[]
   markdown?: MarkdownConfig
   datetime?: DatetimeConfig
   blog?: BlogConfig

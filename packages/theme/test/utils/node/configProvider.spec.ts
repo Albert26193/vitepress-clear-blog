@@ -237,6 +237,100 @@ describe('createBlog with mocked config.toml', async () => {
     expect(tc.linkStyle).toBe('wiki')
   })
 
+  it('maps toml meta.lang to the VitePress lang option', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      meta: { ...mockToml.meta, lang: 'zh-CN' }
+    })
+    const config = await createBlog()
+    expect((config as any).lang).toBe('zh-CN')
+  })
+
+  it('leaves lang unset when toml has no meta.lang', async () => {
+    const config = await createBlog()
+    expect((config as any).lang).toBeUndefined()
+  })
+
+  it('marks the theme noExternal and excluded from dep pre-bundling', async () => {
+    const config = await createBlog()
+    const vite = (config as any).vite
+    expect(vite.ssr.noExternal).toContain('vitepress-theme-link')
+    expect(vite.optimizeDeps.exclude).toContain('vitepress-theme-link')
+  })
+
+  it('maps toml [[social]] entries to themeConfig.socialLinks', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      social: [{ icon: 'github', link: 'https://github.com/foo' }]
+    })
+    const config = await createBlog()
+    expect((config as any).themeConfig.socialLinks).toEqual([
+      { icon: 'github', link: 'https://github.com/foo' }
+    ])
+  })
+
+  it('omits socialLinks when toml has no social section', async () => {
+    const config = await createBlog()
+    expect((config as any).themeConfig.socialLinks).toBeUndefined()
+  })
+
+  it('lets user config win over the generated base (deep merge)', async () => {
+    const config = await createBlog({
+      title: 'Override Title',
+      themeConfig: {
+        socialLinks: [{ icon: 'x', link: 'https://x.com/foo' }],
+        outlineTitle: 'Custom TOC'
+      }
+    })
+    expect((config as any).title).toBe('Override Title')
+    const tc = (config as any).themeConfig
+    // user-provided keys win...
+    expect(tc.socialLinks).toEqual([{ icon: 'x', link: 'https://x.com/foo' }])
+    expect(tc.outlineTitle).toBe('Custom TOC')
+    // ...while untouched generated keys survive the merge
+    expect(tc.nav[0].text).toBe('Home')
+    expect(tc.renderTitle).toBe('frontmatter_title')
+  })
+
+  it('user socialLinks replace toml [[social]] entries', async () => {
+    mockLoadConfig.mockReturnValue({
+      ...mockToml,
+      social: [{ icon: 'github', link: 'https://github.com/from-toml' }]
+    })
+    const config = await createBlog({
+      themeConfig: {
+        socialLinks: [{ icon: 'discord', link: 'https://discord.gg/x' }]
+      }
+    })
+    expect((config as any).themeConfig.socialLinks).toEqual([
+      { icon: 'discord', link: 'https://discord.gg/x' }
+    ])
+  })
+
+  it('appends user head entries after the generated head', async () => {
+    const config = await createBlog({
+      head: [['script', { src: '/analytics.js' }]]
+    })
+    const head = (config as any).head as [string, Record<string, string>][]
+    expect(head.some((h) => h[1]?.name === 'author')).toBe(true)
+    expect(head[head.length - 1]).toEqual(['script', { src: '/analytics.js' }])
+  })
+
+  it('concatenates user vite arrays instead of clobbering them', async () => {
+    const userPlugin = { name: 'user-plugin' }
+    const config = await createBlog({
+      vite: {
+        optimizeDeps: { exclude: ['my-dep'] },
+        plugins: [userPlugin]
+      }
+    })
+    const vite = (config as any).vite
+    expect(vite.optimizeDeps.exclude).toContain('vitepress-theme-link')
+    expect(vite.optimizeDeps.exclude).toContain('my-dep')
+    expect(vite.plugins).toContain(userPlugin)
+    expect(vite.plugins.length).toBeGreaterThan(1)
+  })
+
   it('creates navigation from toml nav labels', async () => {
     const config = await createBlog()
     const nav = (config as any).themeConfig.nav

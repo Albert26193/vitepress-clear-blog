@@ -92,6 +92,12 @@ vp-c-brand = "#fff"
     expect(config).toBeNull()
   })
 
+  it('throws with the file path on malformed TOML', () => {
+    writeToml(`[meta
+title = broken`)
+    expect(() => loadConfig()).toThrow(/failed to parse .*config\.toml/)
+  })
+
   it('caches null result for missing file', () => {
     const first = loadConfig()
     expect(first).toBeNull()
