@@ -1,0 +1,72 @@
+{
+  "name": "vitepress-plugin-shortlink",
+  "version": "0.1.0-beta.8",
+  "description": "VitePress plugin that auto-generates stable short links for blog posts",
+  "author": "Albert26193",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://github.com/Albert26193/vitepress-theme-link",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Albert26193/vitepress-theme-link.git",
+    "directory": "packages/vitepress-plugin-shortlink"
+  },
+  "bugs": {
+    "url": "https://github.com/Albert26193/vitepress-theme-link/issues"
+  },
+  "keywords": [
+    "vitepress",
+    "plugin",
+    "shortlink",
+    "short-url",
+    "redirect"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/node/index.d.ts",
+      "import": "./lib/node/index.js",
+      "require": "./lib/node/index.cjs"
+    },
+    "./client": {
+      "types": "./lib/client.d.ts",
+      "import": "./lib/client.js",
+      "require": "./lib/client.cjs"
+    },
+    "./client.css": "./lib/client.css"
+  },
+  "main": "lib/node/index.cjs",
+  "module": "lib/node/index.js",
+  "types": "lib/node/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "client": [
+        "lib/client.d.ts"
+      ],
+      "*": [
+        "lib/node/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "dev": "tsup --config tsup.config.ts --watch",
+    "build": "rimraf lib && tsup --config tsup.config.ts",
+    "clean": "rimraf lib",
+    "test:unit": "vitest run"
+  },
+  "peerDependencies": {
+    "vitepress": "^1.5.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.8"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

@@ -24,6 +24,7 @@
     { "path": "../vitepress-plugin-codeblock-fold/tsconfig.typecheck.json" },
     { "path": "../vitepress-plugin-config/tsconfig.typecheck.json" },
     { "path": "../vitepress-plugin-details-block/tsconfig.typecheck.json" },
-    { "path": "../vitepress-plugin-hashtag/tsconfig.typecheck.json" }
+    { "path": "../vitepress-plugin-hashtag/tsconfig.typecheck.json" },
+    { "path": "../vitepress-plugin-shortlink/tsconfig.typecheck.json" }
   ]
 }

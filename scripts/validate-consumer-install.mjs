@@ -306,7 +306,8 @@ const localTarballDependencies = [
   'vitepress-plugin-config',
   'vitepress-plugin-details-block',
   'vitepress-plugin-hashtag',
-  'vitepress-plugin-image-dimension'
+  'vitepress-plugin-image-dimension',
+  'vitepress-plugin-shortlink'
 ]
 
 const packages = await discoverPackages()
@@ -320,7 +321,8 @@ const requiredPackages = [
   'vitepress-plugin-config',
   'vitepress-plugin-details-block',
   'vitepress-plugin-hashtag',
-  'vitepress-plugin-image-dimension'
+  'vitepress-plugin-image-dimension',
+  'vitepress-plugin-shortlink'
 ]
 
 for (const name of requiredPackages) {

@@ -160,6 +160,13 @@ const linksSchema = z.object({
     .optional()
 })
 
+const shortlinkSchema = z.object({
+  enabled: z.boolean().optional(),
+  keyLength: z.number().int().min(3).max(16).optional(),
+  prefix: z.string().optional(),
+  exclude: z.array(z.string()).optional()
+})
+
 export const configTomlSchema = z.object({
   meta: metaSchema.optional().default({}),
   homepage: homepageSchema.optional(),
@@ -172,6 +179,7 @@ export const configTomlSchema = z.object({
   outline: outlineSchema.optional(),
   timeline: timelineSchema.optional(),
   links: linksSchema.optional(),
+  shortlink: shortlinkSchema.optional(),
   theme: themeConfigSchema
 })
 
