@@ -1,4 +1,5 @@
 ---
+page_id: "build-toolchain"
 date: 2026-01-23
 title: 构建工具链
 tags:

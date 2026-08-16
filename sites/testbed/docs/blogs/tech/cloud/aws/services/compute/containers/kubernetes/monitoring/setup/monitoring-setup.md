@@ -1,4 +1,5 @@
 ---
+page_id: "k8s-monitoring-setup"
 date: 2024-02-18
 title: Kubernetes监控系统配置指南
 tags:

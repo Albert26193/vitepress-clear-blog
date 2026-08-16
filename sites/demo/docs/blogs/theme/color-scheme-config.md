@@ -1,4 +1,5 @@
 ---
+page_id: "color-scheme-config"
 title: 主题颜色方案配置
 date: 2026-05-22
 tags:

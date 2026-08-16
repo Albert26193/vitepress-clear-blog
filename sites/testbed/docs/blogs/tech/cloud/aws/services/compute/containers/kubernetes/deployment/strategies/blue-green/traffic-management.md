@@ -1,4 +1,5 @@
 ---
+page_id: "k8s-blue-green-traffic"
 date: 2024-02-16
 title: Kubernetes流量管理策略
 tags:

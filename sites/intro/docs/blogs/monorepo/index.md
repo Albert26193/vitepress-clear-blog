@@ -1,4 +1,5 @@
 ---
+page_id: "monorepo/index"
 date: 2026-01-25
 title: Monorepo 架构 - MOC
 tags:

@@ -1,4 +1,5 @@
 ---
+page_id: "commit-lint"
 date: 2026-01-23
 title: Git 提交规范
 tags:

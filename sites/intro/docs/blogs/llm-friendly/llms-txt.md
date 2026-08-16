@@ -1,4 +1,5 @@
 ---
+page_id: "llms-txt"
 date: 2026-01-25
 title: llms.txt 规范
 tags:

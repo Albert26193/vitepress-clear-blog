@@ -1,4 +1,5 @@
 ---
+page_id: "k8s-blue-green-best-practices"
 date: 2024-02-15
 title: Kubernetes蓝绿部署最佳实践
 tags:

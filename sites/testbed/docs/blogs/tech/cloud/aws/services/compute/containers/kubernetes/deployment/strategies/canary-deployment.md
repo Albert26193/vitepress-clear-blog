@@ -1,4 +1,5 @@
 ---
+page_id: "k8s-canary-deployment"
 date: 2024-02-17
 title: Kubernetes金丝雀部署详解
 tags:

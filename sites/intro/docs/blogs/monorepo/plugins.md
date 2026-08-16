@@ -1,4 +1,5 @@
 ---
+page_id: "plugins"
 date: 2026-01-22
 title: 插件体系
 tags:

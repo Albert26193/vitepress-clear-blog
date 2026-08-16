@@ -1,4 +1,5 @@
 ---
+page_id: "Bug收录-OpenStack平台崩溃修复记录"
 author: Albert
 date modified: 2024-04-06
 date created: 2024-03-08

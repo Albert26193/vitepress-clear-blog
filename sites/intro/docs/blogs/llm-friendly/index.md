@@ -1,4 +1,5 @@
 ---
+page_id: "llm-friendly/index"
 date: 2026-01-25
 title: LLM 友好支持
 tags:

@@ -1,4 +1,5 @@
 ---
+page_id: "wikilinks-basic-guide"
 title: Wiki Links 基础入门
 date: 2026-05-15
 tags:

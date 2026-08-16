@@ -1,4 +1,5 @@
 ---
+page_id: "tech-stack/index"
 date: 2026-01-25
 title: 技术选型 - MOC
 tags:

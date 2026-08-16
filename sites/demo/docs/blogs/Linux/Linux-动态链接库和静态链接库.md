@@ -1,4 +1,5 @@
 ---
+page_id: "Linux-动态链接库和静态链接库"
 author: Albert
 date modified: 2024-02-22
 date created: 2023-05-09

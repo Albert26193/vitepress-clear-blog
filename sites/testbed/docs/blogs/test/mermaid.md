@@ -1,4 +1,5 @@
 ---
+page_id: "mermaid"
 date: 2024-08-30
 title: Mermaid Diagrams Showcase
 tags:

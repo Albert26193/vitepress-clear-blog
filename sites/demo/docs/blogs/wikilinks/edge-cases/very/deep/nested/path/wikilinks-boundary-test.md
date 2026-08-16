@@ -1,4 +1,5 @@
 ---
+page_id: "wikilinks-boundary-test"
 title: Wiki Links 边界情况测试
 date: 2026-05-17
 tags:

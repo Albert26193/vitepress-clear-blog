@@ -1,4 +1,5 @@
 ---
+page_id: "state-management"
 date: 2024-01-15
 title: 现代前端状态管理方案
 tags:

@@ -1,4 +1,5 @@
 ---
+page_id: "architecture-principles"
 date: 2024-02-10
 title: 软件架构设计原则
 tags:

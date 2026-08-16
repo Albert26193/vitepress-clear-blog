@@ -1,4 +1,5 @@
 ---
+page_id: "CS基础-如何开启coredump"
 author: Albert
 date modified: 2024-08-11
 date created: 2024-08-05

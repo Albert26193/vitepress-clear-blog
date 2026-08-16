@@ -1,4 +1,5 @@
 ---
+page_id: "details-block-fold"
 title: 可折叠详情块 DetailsBlock
 date: 2026-05-14
 tags:

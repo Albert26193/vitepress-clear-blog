@@ -1,4 +1,5 @@
 ---
+page_id: "Linux-利用nohup查看实时输出"
 author: Albert
 date modified: 2024-02-22
 date created: 2023-05-09

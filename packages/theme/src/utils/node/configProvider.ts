@@ -1,13 +1,9 @@
-import matter from 'gray-matter'
 import type MarkdownIt from 'markdown-it'
 import footnotePlugin from 'markdown-it-footnote'
 import mathjax3 from 'markdown-it-mathjax3'
-import { readFileSync } from 'node:fs'
 import UnoCSS from 'unocss/vite'
 import {
   type ResolutionMode,
-  analyzeAllDocuments,
-  createConfig,
   vitePressAnalyzerPlugin
 } from 'vitepress-plugin-analyzer'
 import { calloutPlugin } from 'vitepress-plugin-callouts'
@@ -91,46 +87,6 @@ const resolveMarkdownThemeOptions = (
 
 const isLinkStyleTargetHref = (href: string): boolean =>
   classifyHref(href) === 'pageCandidate'
-
-// Mirrors the post detection in posts.data.ts so short links cover exactly the
-// pages that appear in the blog feed: article:false / page:true / layout:home
-// and reserved theme routes are excluded.
-const RESERVED_SHORTLINK_ROUTE_RE =
-  /^(?:pages|timeline|tags|collections)(?:\/|$)/
-
-const isShortlinkPost = (
-  frontmatter: Record<string, unknown>,
-  path: string
-): boolean => {
-  if (frontmatter.article === false) return false
-  if (frontmatter.page === true) return false
-  if (frontmatter.layout === 'home') return false
-  if (RESERVED_SHORTLINK_ROUTE_RE.test(path)) return false
-  return true
-}
-
-/** Collects the canonical paths of every post that should get a short link. */
-const collectShortlinkPosts = async (): Promise<string[]> => {
-  const analysis = await analyzeAllDocuments(createConfig())
-  const pages = analysis.match(
-    (result) => result.globalPages,
-    () => ({})
-  )
-
-  const posts: string[] = []
-  for (const [relPath, page] of Object.entries(pages)) {
-    const clean = relPath.replace(/\.md$/i, '').replace(/\/index$/i, '')
-    let frontmatter: Record<string, unknown> = {}
-    try {
-      frontmatter = matter(readFileSync(page.absolutePath, 'utf-8'))
-        .data as Record<string, unknown>
-    } catch {
-      // Unreadable files are skipped by the analyzer too; treat as no frontmatter.
-    }
-    if (isShortlinkPost(frontmatter, clean)) posts.push(relPath)
-  }
-  return posts
-}
 
 /**
  * Creates the default Clear Blog VitePress config fragment with core plugins wired in.
@@ -258,12 +214,16 @@ const createBlog = async (
         )
       : null
 
-  // Auto short links for posts: keys are deterministic SHA-256 prefixes so
-  // shared short URLs never drift across rebuilds (see the shortlink plugin).
+  // Short links are derived from each page's stable id (frontmatter `idField`)
+  // within the configured scope, so keys survive renames as long as the id
+  // stays in the frontmatter (see the shortlink plugin).
   const shortlinkToml = toml?.shortlink
-  const shortlinkEnabled = shortlinkToml?.enabled !== false
-  const shortlinkPosts = shortlinkEnabled ? await collectShortlinkPosts() : []
-  const shortlinkExclude = new Set(shortlinkToml?.exclude ?? [])
+  // Opt-in: every scoped page must carry a page_id, so the feature is only
+  // active where a site explicitly enables it.
+  const shortlinkEnabled = shortlinkToml?.enabled === true
+  const shortlinkScope = (shortlinkToml?.scope as string | undefined) ?? 'blogs'
+  const shortlinkIdField =
+    (shortlinkToml?.idField as string | undefined) ?? 'page_id'
 
   const head: [string, Record<string, string>][] = [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
@@ -405,18 +365,17 @@ const createBlog = async (
       plugins: [
         ...(((base.vite as Record<string, unknown>)?.plugins as unknown[]) ||
           []),
-        ...(shortlinkEnabled
-          ? [
-              shortlinkPlugin({
-                posts: shortlinkPosts.filter(
-                  (path) => !shortlinkExclude.has(path)
-                ),
-                base: vitePressBase,
-                cleanUrls,
-                keyLength: shortlinkToml?.keyLength ?? 6
-              })
-            ]
-          : [])
+        // Always registered so the client can import the copy button
+        // unconditionally; the plugin is inert when shortlinks are disabled.
+        shortlinkPlugin({
+          enabled: shortlinkEnabled,
+          srcDir: './docs',
+          scope: shortlinkScope,
+          idField: shortlinkIdField,
+          base: vitePressBase,
+          cleanUrls,
+          keyLength: shortlinkToml?.keyLength ?? 6
+        })
       ],
       define: {
         ...(((base.vite as Record<string, unknown>)?.define as Record<

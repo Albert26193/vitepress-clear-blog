@@ -1,4 +1,5 @@
 ---
+page_id: "Linux-awk实践案例"
 author: Albert
 date modified: 2024-02-22
 date created: 2023-08-08

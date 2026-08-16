@@ -1,4 +1,5 @@
 ---
+page_id: "typescript"
 date: 2026-01-23
 title: TypeScript 配置
 tags:

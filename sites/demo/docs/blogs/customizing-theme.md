@@ -1,4 +1,5 @@
 ---
+page_id: "customizing-theme"
 title: Customizing Your Blog Theme
 date: 2026-05-07
 tags:

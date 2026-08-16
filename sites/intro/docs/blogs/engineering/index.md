@@ -1,4 +1,5 @@
 ---
+page_id: "engineering/index"
 date: 2026-01-25
 title: 工程规范化 - MOC
 tags:

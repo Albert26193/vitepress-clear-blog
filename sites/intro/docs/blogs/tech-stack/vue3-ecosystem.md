@@ -1,4 +1,5 @@
 ---
+page_id: "vue3-ecosystem"
 date: 2026-01-24
 title: Vue3 生态
 tags:

@@ -1,4 +1,5 @@
 ---
+page_id: "nav-bar-configuration"
 title: 导航栏配置完全指南
 date: 2026-05-18
 tags:

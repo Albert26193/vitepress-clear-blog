@@ -162,6 +162,8 @@ const linksSchema = z.object({
 
 const shortlinkSchema = z.object({
   enabled: z.boolean().optional(),
+  scope: z.string().optional(),
+  idField: z.string().optional(),
   keyLength: z.number().int().min(3).max(16).optional(),
   prefix: z.string().optional(),
   exclude: z.array(z.string()).optional()

@@ -1,4 +1,5 @@
 ---
+page_id: "JS-proto_和prototype"
 author: Albert
 category: CS-前端
 date modified: 2024-02-22

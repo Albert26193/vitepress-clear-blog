@@ -1,4 +1,5 @@
 ---
+page_id: "Linux-服务器重装备忘录"
 author: Albert
 date modified: 2024-05-28
 date created: 2023-12-25

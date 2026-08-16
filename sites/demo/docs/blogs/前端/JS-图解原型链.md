@@ -1,4 +1,5 @@
 ---
+page_id: "JS-图解原型链"
 author: Albert
 date modified: 2024-02-22
 date created: 2023-06-21 22:01

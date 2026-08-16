@@ -1,4 +1,5 @@
 ---
+page_id: "LInux-关于fdisk命令"
 author: Albert
 date modified: 2024-02-22
 date created: 2023-07-19

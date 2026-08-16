@@ -1,4 +1,5 @@
 ---
+page_id: "Linux-对于BASH_SOURCE的理解"
 author: Albert
 date modified: 2024-07-09
 date created: 2024-06-14

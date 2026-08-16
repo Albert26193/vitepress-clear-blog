@@ -1,4 +1,5 @@
 ---
+page_id: "Linux/index"
 date created: 2026-05-24
 tags:
   - MOC

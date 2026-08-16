@@ -1,4 +1,5 @@
 ---
+page_id: "mermaid-diagrams-comprehensive"
 title: Mermaid 图表类型大全
 date: 2026-05-10
 tags:

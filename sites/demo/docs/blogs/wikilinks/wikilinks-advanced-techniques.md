@@ -1,4 +1,5 @@
 ---
+page_id: "wikilinks-advanced-techniques"
 title: Wiki Links 高级技巧
 date: 2026-05-16
 tags:
