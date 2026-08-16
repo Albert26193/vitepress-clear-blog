@@ -1,4 +1,4 @@
-import { prefix, shortlinks } from 'virtual:vitepress-shortlinks'
+import { cleanUrls, prefix, shortlinks } from 'virtual:vitepress-shortlinks'
 import { useData, withBase } from 'vitepress'
 import { computed, defineComponent, h, ref } from 'vue'
 
@@ -132,7 +132,11 @@ const ShortlinkCopyButton = defineComponent({
     const copyShortlink = async () => {
       const shortKey = key.value
       if (!shortKey) return
-      const url = `${window.location.origin}${withBase(`/${prefix}/${shortKey}`)}`
+      // The shared URL must be exactly the file the static host will serve:
+      // without clean URLs that is /s/<key>.html, with clean URLs /s/<key>.
+      const suffix = cleanUrls ? '' : '.html'
+      const shortPath = `/${prefix}/${shortKey}${suffix}`
+      const url = `${window.location.origin}${withBase(shortPath)}`
       flash((await copyText(url)) ? 'copied' : 'failed')
     }
 

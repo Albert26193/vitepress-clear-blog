@@ -201,7 +201,19 @@ describe('shortlinkPlugin', () => {
 
     expect(resolved).toBe('\0virtual:vitepress-shortlinks')
     expect(content).toContain('export const prefix = "s"')
+    expect(content).toContain('export const cleanUrls = false')
     expect(content).toContain('export const shortlinks = {')
+  })
+
+  it('reports clean URLs through the virtual module when enabled', () => {
+    const plugin = asPlugin(
+      shortlinkPlugin({ posts: ['blogs/a'], cleanUrls: true })
+    )
+    const content = plugin.load(
+      plugin.resolveId('virtual:vitepress-shortlinks')!
+    )
+
+    expect(content).toContain('export const cleanUrls = true')
   })
 
   it('writes one redirect page per post at build time', async () => {
@@ -225,6 +237,30 @@ describe('shortlinkPlugin', () => {
       const html = readFileSync(join(sDir, files[0]), 'utf-8')
       expect(html).toContain('http-equiv="refresh"')
       expect(html).toContain('.html"')
+    } finally {
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
+
+  it('writes extensionless redirect pages when clean URLs are enabled', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'shortlink-clean-'))
+    try {
+      const config = {
+        vitepress: { buildEnd: async (_sc: { outDir: string }) => {} }
+      }
+      const plugin = asPlugin(
+        shortlinkPlugin({ posts: ['blogs/alpha'], cleanUrls: true })
+      )
+      plugin.configResolved(config)
+      await config.vitepress.buildEnd({ outDir: dir })
+
+      const sDir = join(dir, 's')
+      const files = readdirSync(sDir).filter((f) => !f.endsWith('.html'))
+      expect(files).toHaveLength(1)
+
+      const html = readFileSync(join(sDir, files[0]), 'utf-8')
+      // Target omits the ".html" suffix under clean URLs.
+      expect(html).not.toContain('blogs/alpha.html')
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
