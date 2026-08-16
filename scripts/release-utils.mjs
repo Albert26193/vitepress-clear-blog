@@ -15,6 +15,7 @@ export const publishOrder = Object.freeze([
   'vitepress-plugin-details-block',
   'vitepress-plugin-hashtag',
   'vitepress-plugin-image-dimension',
+  'vitepress-plugin-shortlink',
   'vitepress-theme-link',
   'create-vitepress-theme-link'
 ])
