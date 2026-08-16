@@ -88,7 +88,10 @@ export const shortlinkPlugin = (options: ShortlinkPluginOptions): Plugin => {
     await Promise.all(
       entries.map(({ url, key }) =>
         writeFile(
-          join(outPath, `${key}.html`),
+          // Match the site's URL convention: with clean URLs the short link is
+          // extensionless, otherwise it keeps the ".html" suffix so the shared
+          // URL is exactly the file that a plain static host will serve.
+          join(outPath, `${key}${cleanUrls ? '' : '.html'}`),
           renderRedirectPage(toRoutable(url)),
           'utf-8'
         )
@@ -108,6 +111,7 @@ export const shortlinkPlugin = (options: ShortlinkPluginOptions): Plugin => {
         return `// Auto-generated short link map (canonical path -> short key).
 // Do not edit manually.
 export const prefix = ${JSON.stringify(normalizedPrefix)}
+export const cleanUrls = ${cleanUrls}
 export const shortlinks = ${JSON.stringify(Object.fromEntries(longToShort))}`
       }
     },

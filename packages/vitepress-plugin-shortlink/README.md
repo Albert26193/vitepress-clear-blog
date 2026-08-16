@@ -68,7 +68,10 @@ app.component('ShortlinkCopyButton', ShortlinkCopyButton)
 ```
 
 The button renders on pages that have a generated short link and copies
-`<origin>/s/<key>` on click.
+`<origin>/s/<key>` on click. The shared URL always matches the file the host
+will serve: with `cleanUrls: false` it is `<origin>/s/<key>.html`, with
+`cleanUrls: true` it is `<origin>/s/<key>` — so the link works on any plain
+static host (GitHub Pages, Caddy, nginx) without per-host rewrite rules.
 
 ## How it works
 
