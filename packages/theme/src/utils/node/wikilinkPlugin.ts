@@ -50,6 +50,20 @@ const getCurrentFile = (
 }
 
 /**
+ * Reads cleanUrls from the markdown-it render env, which VitePress populates
+ * from the top-level config (the single source of truth). A boolean env value
+ * always wins; the plugin options act as a fallback for standalone usage where
+ * the env carries no cleanUrls.
+ */
+const resolveCleanUrls = (
+  env: unknown,
+  fallback: boolean | undefined
+): boolean | undefined => {
+  const value = (env as { cleanUrls?: unknown } | undefined)?.cleanUrls
+  return typeof value === 'boolean' ? value : fallback
+}
+
+/**
  * markdown-it stores link hrefs percent-encoded (via `normalizeLink`), so
  * non-ASCII paths never match the filesystem or the filename index unless
  * decoded first. Malformed sequences fall back to the raw href.
@@ -238,6 +252,10 @@ export const createWikilinkPlugin = async (
       const rawTarget = match[1].trim()
       const alias = match[2]?.trim()
       const currentFile = getCurrentFile(state.env || {}, docsRoot)
+      const renderOptions = {
+        ...pluginOptions,
+        cleanUrls: resolveCleanUrls(state.env, pluginOptions.cleanUrls)
+      }
       const targetKind = classifyHref(rawTarget)
       const isNonPageTarget = Boolean(
         targetKind && targetKind !== 'pageCandidate'
@@ -260,7 +278,7 @@ export const createWikilinkPlugin = async (
               rawTarget,
               config,
               currentFile,
-              pluginOptions,
+              renderOptions,
               true
             )
           : {
@@ -268,7 +286,7 @@ export const createWikilinkPlugin = async (
                 ? formatBrokenPageHref(
                     rawTarget,
                     currentFile,
-                    pluginOptions,
+                    renderOptions,
                     true
                   )
                 : '#',
@@ -324,12 +342,16 @@ export const createWikilinkPlugin = async (
           (env || {}) as Record<string, unknown>,
           docsRoot
         )
+        const renderOptions = {
+          ...pluginOptions,
+          cleanUrls: resolveCleanUrls(env, pluginOptions.cleanUrls)
+        }
         const hrefResult = currentFile
           ? resolvePageCandidateHref(
               href,
               config,
               currentFile,
-              pluginOptions,
+              renderOptions,
               false
             )
           : {

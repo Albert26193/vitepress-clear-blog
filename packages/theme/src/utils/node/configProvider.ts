@@ -239,6 +239,8 @@ const createBlog = async (
   ]
 
   const vitePressBase = process.env.VITEPRESS_BASE || '/'
+  // Only the shortlink plugin still consumes cfg.cleanUrls; the wikilink
+  // plugin reads env.cleanUrls (injected by VitePress) at render time.
   const cleanUrls = cfg.cleanUrls === true
   const userTransformPageData = cfg.transformPageData as
     | ((pageData: { frontmatter?: Record<string, unknown> }) => unknown)
@@ -252,7 +254,7 @@ const createBlog = async (
       ? await createWikilinkPlugin(
           toml?.links?.resolutionModes as ResolutionMode[] | undefined,
           {},
-          { base: vitePressBase, cleanUrls, renderTitle }
+          { base: vitePressBase, renderTitle }
         )
       : null
 
