@@ -1,3 +1,16 @@
+# [0.1.0-beta.11](https://github.com/Albert26193/vitepress-theme-link/compare/v0.1.0-beta.10...v0.1.0-beta.11) (2026-08-16)
+
+
+### Bug Fixes
+
+* **release:** [#525](https://github.com/Albert26193/vitepress-theme-link/issues/525) make npm beta publish resumable across partial failures ([#526](https://github.com/Albert26193/vitepress-theme-link/issues/526)) ([190944b](https://github.com/Albert26193/vitepress-theme-link/commit/190944bbf4a004c993042a4502b54d7270c3132a))
+* **release:** [#527](https://github.com/Albert26193/vitepress-theme-link/issues/527) allow release:check to pass for partially-published releases ([#529](https://github.com/Albert26193/vitepress-theme-link/issues/529)) ([b5e7b2a](https://github.com/Albert26193/vitepress-theme-link/commit/b5e7b2a19769cf22b57955b710e826d7312547f0))
+
+
+### Features
+
+* **plugin-shortlink:** [#528](https://github.com/Albert26193/vitepress-theme-link/issues/528) derive short keys from frontmatter page ids ([#530](https://github.com/Albert26193/vitepress-theme-link/issues/530)) ([9a98bfd](https://github.com/Albert26193/vitepress-theme-link/commit/9a98bfd86c4a9685e557a1a32dc4461f63c64404))
+
 # [0.1.0-beta.10](https://github.com/Albert26193/vitepress-theme-link/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2026-08-16)
 
 
