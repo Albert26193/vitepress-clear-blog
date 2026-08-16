@@ -34,6 +34,12 @@ sortDirection = "desc"
 [links]
 resolutionModes = ["repoRoot", "absolutePath", "relativeToCurrentFile", "obsidianShortest"]
 
+# Auto short links for blog posts (/s/<key>). Keys are deterministic SHA-256
+# prefixes, so shared short URLs never drift across rebuilds.
+[shortlink]
+enabled = true
+keyLength = 6
+
 [nav]
 home = "Home"
 tags = "Tags"

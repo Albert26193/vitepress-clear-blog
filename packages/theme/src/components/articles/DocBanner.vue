@@ -12,7 +12,7 @@
         class="tag"
       />
     </div>
-    <div class="mt-1 flex items-center">
+    <div class="mt-1 flex flex-wrap items-center">
       <!-- time -->
       <div class="i-carbon-time" />
       <span class="ml-1 align-middle text-sm">
@@ -33,8 +33,11 @@
       >
         {{ author }}
       </span>
-      <!-- copy raw markdown (llms sibling .md) for LLM use -->
-      <CopyMdButton class="ml-auto" />
+      <!-- copy raw markdown (llms sibling .md) for LLM use + short link share -->
+      <div class="meta-buttons">
+        <CopyMdButton />
+        <ShortlinkCopyButton />
+      </div>
     </div>
   </div>
 </template>
@@ -120,6 +123,14 @@
   /* Tags Container */
   .tags-container {
     @apply mt-2 flex grow flex-wrap gap-x-2 gap-y-2;
+  }
+
+  /* Action buttons (copy md / short link) stay one right-aligned group so they
+   * wrap to their own row on narrow screens instead of squeezing the meta
+   * info line. */
+  .meta-buttons {
+    @apply mt-1 flex w-full items-center justify-end gap-2;
+    @apply sm:mt-0 sm:ml-auto sm:w-auto;
   }
 
   /* Tag On Page */

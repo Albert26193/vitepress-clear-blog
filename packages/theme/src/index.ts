@@ -9,6 +9,8 @@ import { DetailsBlock } from 'vitepress-plugin-details-block'
 import 'vitepress-plugin-details-block/style.css'
 import { HashtagTag } from 'vitepress-plugin-hashtag/client'
 import 'vitepress-plugin-hashtag/client.css'
+import { ShortlinkCopyButton } from 'vitepress-plugin-shortlink/client'
+import 'vitepress-plugin-shortlink/client.css'
 import DefaultTheme from 'vitepress/theme-without-fonts'
 import { VPBadge } from 'vitepress/theme-without-fonts'
 import type { Component } from 'vue'
@@ -44,6 +46,7 @@ export const BlogTheme: Theme = {
     // Cast to the loose Component type: TS 6 otherwise hits "excessive stack
     // depth" comparing the cross-package DefineComponent type here (TS2321).
     app.component('HashtagTag', HashtagTag as Component)
+    app.component('ShortlinkCopyButton', ShortlinkCopyButton as Component)
     app.component(
       'D3PageSidebar',
       defineAsyncComponent(() => import('./components/d3/D3PageSidebar.vue'))

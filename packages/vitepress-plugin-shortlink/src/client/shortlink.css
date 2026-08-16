@@ -1,0 +1,40 @@
+/* Plain CSS (no @apply / UnoCSS utilities) so the button renders identically
+ * regardless of the consumer's UnoCSS version. Styling echoes the bordered
+ * pill badges used by the article doc banner. */
+.shortlink-copy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 9999px;
+  border: 1px solid var(--vp-c-divider);
+  padding: 3px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--vp-c-text-2);
+  background: none;
+  cursor: pointer;
+  transition:
+    border-color 0.3s,
+    color 0.3s;
+}
+
+.shortlink-copy-button:hover {
+  border-color: var(--vp-c-brand);
+  color: var(--vp-c-brand);
+}
+
+.shortlink-icon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.shortlink-copy-label {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .shortlink-copy-label {
+    display: inline;
+  }
+}

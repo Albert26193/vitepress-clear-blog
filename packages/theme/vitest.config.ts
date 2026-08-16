@@ -32,6 +32,10 @@ export default defineConfig({
       'vitepress-plugin-image-dimension': resolve(
         __dirname,
         '../vitepress-plugin-image-dimension/src/node/index.ts'
+      ),
+      'vitepress-plugin-shortlink': resolve(
+        __dirname,
+        '../vitepress-plugin-shortlink/src/node/index.ts'
       )
     }
   },

@@ -58,6 +58,15 @@
       ],
       "vitepress-plugin-hashtag/client.css": [
         "./packages/vitepress-plugin-hashtag/src/client/hashtag.css"
+      ],
+      "vitepress-plugin-shortlink": [
+        "./packages/vitepress-plugin-shortlink/src/node/index.ts"
+      ],
+      "vitepress-plugin-shortlink/client": [
+        "./packages/vitepress-plugin-shortlink/src/client/index.ts"
+      ],
+      "vitepress-plugin-shortlink/client.css": [
+        "./packages/vitepress-plugin-shortlink/src/client/shortlink.css"
       ]
     }
   }

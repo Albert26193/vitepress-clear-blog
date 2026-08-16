@@ -82,6 +82,7 @@
     "vitepress-plugin-hashtag": "workspace:*",
     "vitepress-plugin-image-dimension": "workspace:*",
     "vitepress-plugin-llms": "^1.13.1",
+    "vitepress-plugin-shortlink": "workspace:*",
     "vitepress-plugin-rss": "^0.4.4"
   },
   "peerDependencies": {

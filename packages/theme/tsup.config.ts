@@ -21,7 +21,8 @@ export default defineConfig({
     'vitepress-plugin-callouts',
     'vitepress-plugin-config',
     'vitepress-plugin-image-dimension',
-    'vitepress-plugin-llms'
+    'vitepress-plugin-llms',
+    'vitepress-plugin-shortlink'
   ],
   silent: true,
   clean: true,

@@ -11,6 +11,9 @@
       "path": "./packages/vitepress-plugin-details-block/tsconfig.typecheck.json"
     },
     { "path": "./packages/vitepress-plugin-hashtag/tsconfig.typecheck.json" },
+    {
+      "path": "./packages/vitepress-plugin-shortlink/tsconfig.typecheck.json"
+    },
     { "path": "./packages/theme/tsconfig.typecheck.json" },
     { "path": "./packages/create-vitepress-theme-link/tsconfig.typecheck.json" },
     { "path": "./sites/demo/tsconfig.typecheck.json" },
