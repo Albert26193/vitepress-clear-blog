@@ -107,6 +107,42 @@ describe('createWikilinkPlugin', () => {
     expect(html).not.toContain('target-page.html')
   })
 
+  it('reads cleanUrls from env when no options are provided (regression)', async () => {
+    const html = await render(
+      '[[target-page|Target page]] [Target](target-page)',
+      {
+        relativePath: 'test/utils/node/source-page.md',
+        cleanUrls: true
+      }
+    )
+
+    expect(html).toContain('href="/src/utils/node/target-page"')
+    expect(html).toContain('Target page')
+    expect(html).not.toContain('target-page.html')
+  })
+
+  it('lets env.cleanUrls=false win over options.cleanUrls=true', async () => {
+    const html = await render(
+      '[[target-page|Target page]] [Target](target-page)',
+      { relativePath: 'test/utils/node/source-page.md', cleanUrls: false },
+      { cleanUrls: true }
+    )
+
+    expect(html).toContain('href="/src/utils/node/target-page.html"')
+    expect(html).toContain('Target page')
+  })
+
+  it('lets env.cleanUrls=true win over options.cleanUrls=false', async () => {
+    const html = await render(
+      '[[target-page|Target page]] [Target](target-page)',
+      { relativePath: 'test/utils/node/source-page.md', cleanUrls: true },
+      { cleanUrls: false }
+    )
+
+    expect(html).toContain('href="/src/utils/node/target-page"')
+    expect(html).not.toContain('target-page.html')
+  })
+
   it('preserves hash and query suffixes on resolved links', async () => {
     const html = await render(
       '[[target-page?from=wiki#part|Target page]] [Target](target-page?from=md#part)',

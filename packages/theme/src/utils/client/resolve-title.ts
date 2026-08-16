@@ -39,23 +39,19 @@ const resolveLinkTitle = (
 
     case 'frontmatter_title':
     case 'first_heading': {
-      let linkPath: string
-      if (relativePath.endsWith('.md')) {
-        linkPath = '/' + relativePath.replace(/\.md$/, '.html')
-      } else {
-        linkPath = '/' + relativePath + '.html'
-      }
+      // regularPath mirrors VitePress's page.url, which has no .html suffix
+      // when cleanUrls is enabled — normalize both sides to the same key so
+      // matches work under either mode. /index collapses to its directory
+      // (e.g. /guide/index -> /guide/), matching how the content loader
+      // resolves directory index pages.
+      const linkPath = '/' + relativePath.replace(/\.md$/, '')
+      const normalizeForMatch = (p: string): string =>
+        p.replace(/\.html$/, '').replace(/(^|\/)index$/, '$1')
 
-      let matchedPost = allPosts.find(
-        (post: Post) => post.regularPath === linkPath
+      const matchedPost = allPosts.find(
+        (post: Post) =>
+          normalizeForMatch(post.regularPath) === normalizeForMatch(linkPath)
       )
-
-      if (!matchedPost && linkPath.endsWith('/index.html')) {
-        const dirPath = linkPath.replace(/\/index\.html$/, '/')
-        matchedPost = allPosts.find(
-          (post: Post) => post.regularPath === dirPath
-        )
-      }
 
       if (!matchedPost) {
         return (
