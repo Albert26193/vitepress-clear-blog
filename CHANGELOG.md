@@ -1,3 +1,11 @@
+# [0.1.0-beta.10](https://github.com/Albert26193/vitepress-theme-link/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2026-08-16)
+
+
+### Bug Fixes
+
+* **shortlink:** [#519](https://github.com/Albert26193/vitepress-theme-link/issues/519) copy the servable .html shortlink URL ([#520](https://github.com/Albert26193/vitepress-theme-link/issues/520)) ([6e64389](https://github.com/Albert26193/vitepress-theme-link/commit/6e6438947ef7638148ae76f73e90cb2704894834))
+* **theme:** [#521](https://github.com/Albert26193/vitepress-theme-link/issues/521) read cleanUrls from markdown render env ([#522](https://github.com/Albert26193/vitepress-theme-link/issues/522)) ([165e465](https://github.com/Albert26193/vitepress-theme-link/commit/165e46581dfd5b7576f595255a0b8316800c1278))
+
 # 0.1.0 (2026-05-15)
 
 
