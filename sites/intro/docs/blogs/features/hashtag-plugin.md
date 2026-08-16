@@ -1,4 +1,5 @@
 ---
+page_id: "hashtag-plugin"
 date: 2026-05-13
 title: Hashtag 标签增强
 tags:

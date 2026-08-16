@@ -38,6 +38,8 @@ resolutionModes = ["repoRoot", "absolutePath", "relativeToCurrentFile", "obsidia
 # prefixes, so shared short URLs never drift across rebuilds.
 [shortlink]
 enabled = true
+scope = "blogs"
+idField = "page_id"
 keyLength = 6
 
 [nav]

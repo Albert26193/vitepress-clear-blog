@@ -1,4 +1,5 @@
 ---
+page_id: "features/index"
 date: 2026-01-25
 title: 功能特性 - MOC
 tags:

@@ -1,4 +1,5 @@
 ---
+page_id: "mathjax-showcase"
 title: MathJax 数学公式全展示
 date: 2026-05-09
 tags:

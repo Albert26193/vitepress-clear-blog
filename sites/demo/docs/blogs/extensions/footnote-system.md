@@ -1,4 +1,5 @@
 ---
+page_id: "footnote-system"
 title: 脚注系统详解
 date: 2026-05-11
 tags:

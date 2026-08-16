@@ -1,4 +1,5 @@
 ---
+page_id: "d3-force-graph"
 title: Understanding the D3 Force Graph
 date: 2026-05-03
 tags:

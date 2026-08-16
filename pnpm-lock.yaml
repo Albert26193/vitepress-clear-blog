@@ -425,6 +425,9 @@ importers:
 
   packages/vitepress-plugin-shortlink:
     dependencies:
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
       vitepress:
         specifier: ^1.5.0
         version: 1.6.4(@algolia/client-search@5.53.0)(@types/node@25.9.1)(lightningcss@1.32.0)(markdown-it-mathjax3@4.3.2)(postcss@8.5.15)(sass@1.100.0)(search-insights@2.17.3)(typescript@6.0.3)

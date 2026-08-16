@@ -1,4 +1,5 @@
 ---
+page_id: "ml-architectures"
 date: 2024-01-25
 title: Machine Learning Architectures Deep Dive
 tags:

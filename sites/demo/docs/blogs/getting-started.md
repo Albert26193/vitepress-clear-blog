@@ -1,4 +1,5 @@
 ---
+page_id: "getting-started"
 title: Getting Started with VitePress Theme Link
 date: 2026-05-01
 tags:

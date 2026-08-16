@@ -1,4 +1,5 @@
 ---
+page_id: "rss-seo-and-sitemap"
 title: RSS 订阅、SEO 与站点地图
 date: 2026-05-24
 tags:

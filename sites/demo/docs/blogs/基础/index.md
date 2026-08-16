@@ -1,4 +1,5 @@
 ---
+page_id: "基础/index"
 date created: 2026-05-24
 tags:
   - MOC

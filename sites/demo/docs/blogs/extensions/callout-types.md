@@ -1,4 +1,5 @@
 ---
+page_id: "callout-types"
 title: Callout 提示块类型全览
 date: 2026-05-12
 tags:

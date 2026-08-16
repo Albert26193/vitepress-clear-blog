@@ -1,4 +1,5 @@
 ---
+page_id: "graph-view"
 date: 2026-01-21
 title: 图谱视图
 tags:

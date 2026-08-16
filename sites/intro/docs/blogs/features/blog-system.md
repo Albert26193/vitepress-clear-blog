@@ -1,4 +1,5 @@
 ---
+page_id: "blog-system"
 date: 2026-01-21
 title: 博客系统
 tags:

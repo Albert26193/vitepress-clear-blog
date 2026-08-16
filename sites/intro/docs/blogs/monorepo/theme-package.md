@@ -1,4 +1,5 @@
 ---
+page_id: "theme-package"
 date: 2026-01-22
 title: Theme 核心包
 tags:

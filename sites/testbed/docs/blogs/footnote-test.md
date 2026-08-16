@@ -1,4 +1,5 @@
 ---
+page_id: "footnote-test"
 author: Albert
 date: 2024-03-21
 title: test-脚注

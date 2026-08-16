@@ -1,4 +1,5 @@
 ---
+page_id: "Linux-SSH操作"
 author: Albert
 category: CS-基础
 date modified: 2024-02-22

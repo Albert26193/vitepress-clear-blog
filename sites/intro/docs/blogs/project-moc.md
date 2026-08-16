@@ -1,4 +1,5 @@
 ---
+page_id: "project-moc"
 title: 项目文档导航 (MOC)
 date: 2026-01-25
 description: vitepress-theme-link 项目架构、技术选型、工程规范与功能介绍文档导航中心

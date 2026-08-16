@@ -1,4 +1,5 @@
 ---
+page_id: "Linux-Linux目录结构"
 author: Albert
 category: CS-基础
 date modified: 2024-02-22

@@ -1,4 +1,5 @@
 ---
+page_id: "k8s-metrics-collection"
 date: 2024-02-19
 title: Kubernetes指标收集方案
 tags:

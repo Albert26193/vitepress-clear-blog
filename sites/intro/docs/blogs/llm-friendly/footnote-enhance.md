@@ -1,4 +1,5 @@
 ---
+page_id: "footnote-enhance"
 date: 2026-01-25
 title: 脚注增强
 tags:

@@ -1,4 +1,5 @@
 ---
+page_id: "http"
 author: Albert
 date: 2024-03-11
 title: 计算机网络-HTTP1.1引入了哪些新特性

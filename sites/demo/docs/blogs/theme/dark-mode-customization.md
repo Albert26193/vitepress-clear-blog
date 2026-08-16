@@ -1,4 +1,5 @@
 ---
+page_id: "dark-mode-customization"
 title: 暗色模式定制指南
 date: 2026-05-21
 tags:

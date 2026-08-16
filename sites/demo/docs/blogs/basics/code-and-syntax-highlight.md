@@ -1,4 +1,5 @@
 ---
+page_id: "code-and-syntax-highlight"
 title: 代码块与语法高亮配置
 date: 2026-05-07
 tags:

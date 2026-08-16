@@ -1,4 +1,5 @@
 ---
+page_id: "search-and-nav"
 date: 2026-01-21
 title: 搜索与导航
 tags:

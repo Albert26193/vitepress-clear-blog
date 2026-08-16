@@ -1,4 +1,5 @@
 ---
+page_id: "数据库-BufferPool的原理"
 author: Albert
 date modified: 2024-02-24
 date created: 2024-02-19

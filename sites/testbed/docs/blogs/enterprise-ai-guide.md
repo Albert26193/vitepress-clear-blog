@@ -1,4 +1,5 @@
 ---
+page_id: "enterprise-ai-guide"
 date: 2024-01-20
 title: Enterprise AI Implementation Guide
 tags:

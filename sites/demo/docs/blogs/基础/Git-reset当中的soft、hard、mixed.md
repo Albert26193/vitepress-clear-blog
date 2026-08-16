@@ -1,4 +1,5 @@
 ---
+page_id: "Git-reset当中的soft、hard、mixed"
 author: Albert
 date modified: 2024-02-22
 date created: 2023-05-09 14:17

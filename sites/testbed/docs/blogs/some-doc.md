@@ -1,4 +1,5 @@
 ---
+page_id: "some-doc"
 author: Albert
 date: 2025-05-11
 tags:

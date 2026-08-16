@@ -23,9 +23,18 @@ export const sha256Base62: DigestFn = (input: string): string => {
   return hexToBase62(hex)
 }
 
-export interface ShortlinkEntry {
-  /** Canonical page identity the key points to. */
+export interface ShortlinkInput {
+  /** Canonical page identity the short link points to (its route path). */
   url: string
+  /**
+   * Stable page identity read from frontmatter (e.g. `page_id`). Keys are
+   * derived from this id rather than the route, so a page keeps its short link
+   * across renames as long as the id stays in its frontmatter.
+   */
+  id: string
+}
+
+export interface ShortlinkEntry extends ShortlinkInput {
   /** Final short key — always at least keyLength chars, unique across the set. */
   key: string
   /** True when keyLength had to be extended because a prefix collided. */
@@ -33,18 +42,35 @@ export interface ShortlinkEntry {
 }
 
 /**
- * Computes a short key for every URL. Each key is the shortest base62 prefix of
- * the URL's SHA-256 digest that is globally unique in the set, bounded below by
- * keyLength. This keeps keys deterministic and short while making collisions
- * impossible rather than merely improbable: a colliding URL simply receives a
- * longer prefix. `digest` is injectable so tests can force collisions.
+ * Computes a short key for every page. Each key is the shortest base62 prefix of
+ * the page id's SHA-256 digest that is globally unique in the set, bounded below
+ * by keyLength. This keeps keys deterministic and short while making collisions
+ * impossible rather than merely improbable: a colliding id simply receives a
+ * longer prefix.
+ *
+ * Two pages sharing the exact same id would share the same digest and degrade
+ * the prefix algorithm into duplicate full-length keys, so identical ids are
+ * rejected up front with the two offending pages named.
+ *
+ * `digest` is injectable so tests can force collisions.
  */
 export const computeShortlinks = (
-  urls: string[],
+  inputs: ShortlinkInput[],
   keyLength = 6,
   digest: DigestFn = sha256Base62
 ): ShortlinkEntry[] => {
-  const items = urls.map((url) => ({ url, encoded: digest(url) }))
+  const seen = new Map<string, string>()
+  for (const { url, id } of inputs) {
+    const existing = seen.get(id)
+    if (existing) {
+      throw new Error(
+        `duplicate shortlink id "${id}" declared in "${existing}" and "${url}"`
+      )
+    }
+    seen.set(id, url)
+  }
+
+  const items = inputs.map(({ url, id }) => ({ url, id, encoded: digest(id) }))
   const prefixCount = new Map<string, number>()
 
   // Count every prefix between keyLength and the full digest so that
@@ -56,7 +82,7 @@ export const computeShortlinks = (
     }
   }
 
-  return items.map(({ url, encoded }) => {
+  return items.map(({ url, id, encoded }) => {
     let len = keyLength
     while (
       len < encoded.length &&
@@ -66,6 +92,7 @@ export const computeShortlinks = (
     }
     return {
       url,
+      id,
       key: encoded.slice(0, len),
       extended: len > keyLength
     }

@@ -1,4 +1,5 @@
 ---
+page_id: "sidebar-and-outline"
 title: 侧边栏与目录大纲详解
 date: 2026-05-19
 tags:

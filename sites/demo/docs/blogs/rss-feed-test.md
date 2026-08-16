@@ -1,4 +1,5 @@
 ---
+page_id: "rss-feed-test"
 title: RSS Feed Integration Test
 date: 2026-05-09
 tags:

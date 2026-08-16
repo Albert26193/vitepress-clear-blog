@@ -1,4 +1,5 @@
 ---
+page_id: "ai-development"
 date: 2024-01-15
 title: AI Development Trends 2024
 tags:

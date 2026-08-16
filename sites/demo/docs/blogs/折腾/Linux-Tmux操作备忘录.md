@@ -1,4 +1,5 @@
 ---
+page_id: "Linux-Tmux操作备忘录"
 author: Albert
 category: CS-基础
 date modified: 2024-05-20

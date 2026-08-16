@@ -2,9 +2,10 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import type { Plugin, SiteConfig } from 'vitepress'
 
-import { canonicalizePath } from '../shared/canonicalize'
+import { toCsv } from './csv'
 import { renderRedirectPage } from './generate'
-import { computeShortlinks } from './keys'
+import { type ShortlinkEntry, computeShortlinks } from './keys'
+import { scanPages } from './scan'
 
 // VitePress exposes its resolved config as `config.vitepress` on the Vite
 // config; only the build-end hook carries the SiteConfig (with outDir).
@@ -14,13 +15,34 @@ type VitePressConfigWithHook = {
   }
 }
 
-export type { DigestFn, ShortlinkEntry } from './keys'
+export type { DigestFn, ShortlinkEntry, ShortlinkInput } from './keys'
 export { computeShortlinks, hexToBase62, sha256Base62 } from './keys'
 export { escapeHtml, renderRedirectPage } from './generate'
+export { toCsv } from './csv'
+export { scanPages, type ScanOptions } from './scan'
 
 export interface ShortlinkPluginOptions {
-  /** Canonical paths (e.g. "blogs/my-post") of the pages that get short links. */
-  posts: string[]
+  /**
+   * Whether short links are active. When false the plugin still resolves the
+   * virtual module (with an empty map) so the copy button can be imported
+   * unconditionally, but no pages are scanned and nothing is written. Defaults
+   * to true.
+   */
+  enabled?: boolean
+  /** VitePress site root; pages are scanned under this directory. */
+  srcDir: string
+  /**
+   * Directory (relative to srcDir) to scan for shortlinks. Pages outside the
+   * scope are never touched, so route pages like `about` or `tags` are skipped
+   * simply by living elsewhere. Defaults to the whole srcDir.
+   */
+  scope?: string
+  /**
+   * Frontmatter field carrying each page's stable id. Keys are derived from it
+   * (not from the route), so a page keeps its short link across renames as long
+   * as the id stays in its frontmatter. Defaults to "page_id".
+   */
+  idField?: string
   /** VitePress base path prefix (e.g. "/repo/"). Defaults to "/". */
   base?: string
   /** Whether clean URLs are enabled, so targets omit the ".html" suffix. */
@@ -58,29 +80,56 @@ export const buildTargetUrl = (
 }
 
 /**
- * Creates a VitePress plugin that auto-generates a short link (`/s/<key>`) for
- * every injected post. Keys are deterministic base62 prefixes of each URL's
- * SHA-256 digest (shortest unique prefix, bounded by keyLength), so shared
- * links stay stable across rebuilds. The plugin writes static redirect pages
- * at build time, answers `/s/<key>` during dev, and exposes the mapping to the
- * client through a virtual module consumed by the copy-short-link button.
+ * Creates a VitePress plugin that gives every page in `scope` a short link
+ * (`/s/<key>`) derived from the page's stable id (frontmatter `idField`).
  *
- * @param options - Post list plus URL shaping options.
+ * Keys are deterministic base62 prefixes of each id's SHA-256 digest (shortest
+ * unique prefix, bounded by keyLength), so shared links stay stable across
+ * rebuilds and renames as long as the id stays in the frontmatter. The plugin
+ * scans the scope itself and fails the build when a scoped page lacks an id or
+ * two pages declare the same id.
+ *
+ * Outputs at build end:
+ * - static redirect pages under `outDir/<prefix>/`
+ * - `outDir/site_map_readonly.csv` — the id → key → URL map (generated, never
+ *   consumed back by the plugin, stable across rebuilds)
+ * - a virtual module consumed by the copy-short-link button
+ *
+ * @param options - Scope plus URL shaping options.
  * @returns A VitePress plugin.
  */
 export const shortlinkPlugin = (options: ShortlinkPluginOptions): Plugin => {
-  const { posts, cleanUrls = false, keyLength = 6, prefix = 's' } = options
+  const {
+    enabled = true,
+    srcDir,
+    scope,
+    idField = 'page_id',
+    cleanUrls = false,
+    keyLength = 6,
+    prefix = 's'
+  } = options
   const siteBase = normalizeBase(options.base)
   const normalizedPrefix = normalizePrefix(prefix)
 
-  // Keys are computed once from the injected post list so build, dev and the
-  // client virtual module all share the exact same mapping.
-  const entries = computeShortlinks(posts.map(canonicalizePath), keyLength)
-  const shortToLong = new Map(entries.map((e) => [e.key, e.url]))
-  const longToShort = new Map(entries.map((e) => [e.url, e.key]))
+  // Computed once inside configResolved, then shared by the virtual module,
+  // the dev middleware and the build-end writers.
+  let entries: ShortlinkEntry[] = []
+  let shortToLong = new Map<string, string>()
+  let longToShort = new Map<string, string>()
+
+  if (!srcDir) {
+    throw new Error('[vitepress-plugin-shortlink] `srcDir` option is required')
+  }
 
   const toRoutable = (canonical: string): string =>
     buildTargetUrl(canonical, siteBase, cleanUrls)
+
+  const init = async (): Promise<void> => {
+    const inputs = await scanPages({ srcDir, scope, idField })
+    entries = computeShortlinks(inputs, keyLength)
+    shortToLong = new Map(entries.map((e) => [e.key, e.url]))
+    longToShort = new Map(entries.map((e) => [e.url, e.key]))
+  }
 
   const writeShortlinkPages = async (outDir: string): Promise<void> => {
     const outPath = join(outDir, normalizedPrefix)
@@ -97,6 +146,22 @@ export const shortlinkPlugin = (options: ShortlinkPluginOptions): Plugin => {
         )
       )
     )
+  }
+
+  const writeSiteMap = async (outDir: string): Promise<void> => {
+    const rows: (string | number)[][] = [
+      ['id', 'key', 'shortUrl', 'targetUrl'],
+      // Sorted by key so identical inputs always produce an identical file.
+      ...entries
+        .map(({ id, key, url }) => [
+          id,
+          key,
+          `${siteBase}${normalizedPrefix}/${key}${cleanUrls ? '' : '.html'}`,
+          toRoutable(url)
+        ])
+        .sort((a, b) => String(a[1]).localeCompare(String(b[1])))
+    ]
+    await writeFile(join(outDir, 'site_map_readonly.csv'), toCsv(rows), 'utf-8')
   }
 
   return {
@@ -137,18 +202,22 @@ export const shortlinks = ${JSON.stringify(Object.fromEntries(longToShort))}`
       })
     },
 
-    configResolved(config) {
-      // Static redirect pages must be written after VitePress finishes SSG, so
-      // wrap the resolved config's build-end hook (the same pattern used by
-      // vitepress-plugin-rss) instead of defining a Vite buildEnd hook, whose
-      // signature is `(error?)` and carries no SiteConfig.
+    async configResolved(config) {
+      if (enabled) await init()
+
+      // Static redirect pages and the site map must be written after VitePress
+      // finishes SSG, so wrap the resolved config's build-end hook (the same
+      // pattern used by vitepress-plugin-rss) instead of defining a Vite
+      // buildEnd hook, whose signature is `(error?)` and carries no SiteConfig.
       const vitepress = (config as unknown as VitePressConfigWithHook).vitepress
       if (!vitepress) return
 
       const selfBuildEnd = vitepress.buildEnd
       vitepress.buildEnd = async (siteConfig: SiteConfig) => {
         await selfBuildEnd?.(siteConfig)
+        if (!enabled || entries.length === 0) return
         await writeShortlinkPages(siteConfig.outDir)
+        await writeSiteMap(siteConfig.outDir)
       }
     }
   }

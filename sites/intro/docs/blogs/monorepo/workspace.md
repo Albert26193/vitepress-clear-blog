@@ -1,4 +1,5 @@
 ---
+page_id: "workspace"
 date: 2026-01-22
 title: pnpm Workspace
 tags:

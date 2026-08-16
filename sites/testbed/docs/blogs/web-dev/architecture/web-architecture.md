@@ -1,4 +1,5 @@
 ---
+page_id: "web-architecture"
 date: 2024-01-20
 title: Web架构设计指南
 tags:
