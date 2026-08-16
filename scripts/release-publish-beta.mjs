@@ -235,13 +235,24 @@ try {
     console.log('Will promote the latest dist-tag after a successful publish.')
   }
 
+  const skipped = []
   for (const pkg of packages) {
     const availabilityError = checkRegistryAvailability(
       pkg,
       options.version,
       options
     )
-    if (availabilityError) throw new Error(availabilityError)
+    if (availabilityError) {
+      // Resumable release: a version already present on npm (e.g. from a
+      // partial publish that failed mid-way) is skipped so re-running the
+      // workflow finishes the remaining packages instead of aborting on the
+      // first already-published hit.
+      skipped.push(pkg.manifest.name)
+      console.log(
+        `\nSkipping ${pkg.manifest.name}@${options.version}: already on npm`
+      )
+      continue
+    }
 
     const packed = packPackage(pkg, tarballDir)
     if (packed.error) throw new Error(packed.error)
@@ -260,7 +271,10 @@ try {
   }
 
   console.log(`\nNpm beta ${mode} completed for ${options.version}.`)
-  console.log(`Completed packages: ${completed.join(', ')}`)
+  console.log(`Completed packages: ${completed.join(', ') || '(none)'}`)
+  if (skipped.length > 0) {
+    console.log(`Skipped (already published): ${skipped.join(', ')}`)
+  }
 
   if (options.promoteLatest && options.publish) {
     console.log(`\nPromoting latest dist-tag to ${options.version}.`)
@@ -285,7 +299,7 @@ try {
   if (completed.length > 0) {
     console.error(`Completed before failure: ${completed.join(', ')}`)
     console.error(
-      'Do not unpublish automatically. Fix the issue, then rerun; already-published versions will need manual recovery planning.'
+      'Do not unpublish automatically. Fix the issue, then rerun; already-published versions are skipped on the next run.'
     )
   }
   process.exitCode = 1
