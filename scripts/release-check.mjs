@@ -154,6 +154,7 @@ function cleanErrors() {
 
 function registryErrors(packages, version) {
   const errors = []
+  const alreadyPublished = []
 
   for (const pkg of packages) {
     const result = run('npm', [
@@ -163,7 +164,9 @@ function registryErrors(packages, version) {
       '--silent'
     ])
     if (result.status === 0 && result.stdout.trim() === version) {
-      errors.push(`${pkg.manifest.name}@${version} already exists on npm`)
+      // Already on npm — the signature of a resumable run that is finishing a
+      // partially-published release. Not an error: publish skips these.
+      alreadyPublished.push(`${pkg.manifest.name}@${version}`)
       continue
     }
 
@@ -177,6 +180,12 @@ function registryErrors(packages, version) {
         `Unable to verify npm availability for ${pkg.manifest.name}@${version}: ${output}`
       )
     }
+  }
+
+  if (alreadyPublished.length > 0) {
+    console.log(
+      `Already published (will be skipped on publish): ${alreadyPublished.join(', ')}`
+    )
   }
 
   return errors
